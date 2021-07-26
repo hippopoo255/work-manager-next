@@ -16,7 +16,6 @@ export default function Home() {
   const [user, setUser] = useState<User|any>([])
   useEffect(() => {
     axios.get(requests.currentUser).then((res) => {
-      console.log(res.data)
       setUser(res.data)
     })
   }, [])
@@ -33,7 +32,7 @@ export default function Home() {
           <h1 className="title">
             Welcome to <a href="https://nextjs.org">Next.js!</a>
           </h1>
-
+          <span>{process.env.NEXT_PUBLIC_API_URL}</span>
           <p className={styles.description}>
             id: {user.id}<br />
             family_name: {user.family_name}<br />

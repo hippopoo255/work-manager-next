@@ -21,11 +21,6 @@ const Dashboard = () => {
     })
   }, [])
 
-  const check = async () => {
-    await axios.get(requests.currentUser).then(res => {
-      console.log(res)
-    })
-  }
   return (
     <MypageLayout>
       <Head>
@@ -33,9 +28,6 @@ const Dashboard = () => {
       </Head>
       <p>マイページ</p>
       <main>{user.family_name}さん、こんにちは</main>
-      <div>
-        <button onClick={() => check()}>確認</button>
-      </div>
     </MypageLayout>
   )
 }

@@ -26,11 +26,6 @@ const Login = () => {
         router.push('/mypage')
       }
     })
-    await axios.get(requests.currentUser).then(res => {
-      console.log(process.env.API_URL)
-
-      console.log(res)
-    })
   }
 
   return (
