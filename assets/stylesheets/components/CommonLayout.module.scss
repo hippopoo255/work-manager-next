@@ -1,0 +1,17 @@
+.container {
+  height: 100%;
+  background: green;
+  display: flex;
+  flex-direction: column;
+}
+.head {
+  background: red;
+}
+.body {
+  background: pink;
+  flex-grow: 1;
+}
+.tail {
+  flex-shrink: 0;
+  background: orange;
+}

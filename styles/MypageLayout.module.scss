@@ -1,0 +1,16 @@
+.container {
+  height: 100%;
+  background: green;
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  background: red;
+}
+.body {
+  background: pink;
+  flex-grow: 1;
+}
+.footer {
+  background: orange;
+}
