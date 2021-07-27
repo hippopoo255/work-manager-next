@@ -1,17 +1,35 @@
+@import '../partials/variables';
+@import '../partials/mixins';
+
 .container {
   height: 100%;
-  background: green;
   display: flex;
   flex-direction: column;
 }
+
 .head {
-  background: red;
+  background: $primary;
+  color: $white;
+  width: 100%;
 }
+
 .body {
-  background: pink;
   flex-grow: 1;
+}
+.main {
 }
 .tail {
   flex-shrink: 0;
-  background: orange;
+  background: $black;
+  color: $white;
+}
+
+.head {
+  margin-bottom: 56px;
+}
+
+@include media() {
+  .head {
+    margin-bottom: 64px;
+  }
 }

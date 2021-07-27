@@ -2,7 +2,7 @@ import React from 'react'
 import axios from '@/axios'
 import requests from '@/Requests'
 import { useState, useCallback } from 'react'
-import { Layout } from '@/components/templates'
+import { Layout } from '@/layouts'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 
@@ -32,6 +32,7 @@ const Login = () => {
     <Layout>
       <Head>
         <title>ログイン</title>
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"></meta>
       </Head>
       <div>        
         <div>

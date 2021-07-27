@@ -1,44 +1,106 @@
 import React from 'react'
-import Link from 'next/link'
+import clsx from 'clsx'
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
+import AppBar from '@material-ui/core/AppBar'
+import Drawer from '@material-ui/core/Drawer'
+import Toolbar from '@material-ui/core/Toolbar'
+import Typography from '@material-ui/core/Typography'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import ListItemText from '@material-ui/core/ListItemText'
+import IconButton from '@material-ui/core/IconButton'
+import LockOpenOutlinedIcon from '@material-ui/icons/LockOpenOutlined'
+import MenuIcon from '@material-ui/icons/Menu'
 import styles from '@/assets/stylesheets/components/Header.module.scss'
-import axios from '@/axios'
-import requests from '@/Requests'
-import { useRouter } from 'next/router'
-import PropTypes from 'prop-types'
+import Link from 'next/link'
 
-export type Props = {
-  className: string
+export type Menu = {
+  text: string
+  icon: any
+  to: string
 }
 
-const Header = ({className}: Props) => {
-  const router = useRouter()
-  const logout = async () => {
-    await axios.post(requests.logout).then(res => {
-      router.push('/login')
-    })
-  }
-  return (
-    <header className={className}>
-      <ul>
-        <li>
-          <Link href="/login">
-            <a className={styles.link}>ログイン</a>
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    list: {
+      width: 250,
+    },
+    fullList: {
+      width: 'auto',
+    },
+    title: {
+      flexGrow: 1,
+    },
+  })
+)
+
+type Anchor = 'top' | 'left' | 'bottom' | 'right'
+
+export default function TemporaryDrawer() {
+  const classes = useStyles()
+  const [state, setState] = React.useState(false)
+
+  const toggleDrawer =
+    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+      if (
+        event.type === 'keydown' &&
+        ((event as React.KeyboardEvent).key === 'Tab' ||
+          (event as React.KeyboardEvent).key === 'Shift')
+      ) {
+        return
+      }
+
+      setState(open)
+    }
+
+  const menus: Menu[] = [
+    {
+      text: 'ログイン',
+      icon: <LockOpenOutlinedIcon />,
+      to: '/login',
+    },
+  ]
+  const list = (menus: Menu[], anchor: Anchor) => (
+    <div
+      className={clsx(classes.list, {
+        [classes.fullList]: anchor === 'top' || anchor === 'bottom',
+      })}
+      role="presentation"
+      onClick={toggleDrawer(false)}
+      onKeyDown={toggleDrawer(false)}
+    >
+      <List>
+        {menus.map((menu, index) => (
+          <Link href={menu.to} key={`${index}_${menu.text}`}>
+            <ListItem button>
+              <ListItemIcon>{menu.icon}</ListItemIcon>
+              <ListItemText primary={menu.text} />
+            </ListItem>
           </Link>
-        </li>
-        <li>
-          <a onClick={logout} className={styles.link}>ログアウト</a>
-        </li>
-      </ul>
-    </header>
+        ))}
+      </List>
+    </div>
+  )
+
+  return (
+    <AppBar position="fixed">
+      <Toolbar className="container">
+        <Typography variant="h6" className={classes.title}>
+          <Link href="/">業務支援システム</Link>
+        </Typography>
+        <IconButton
+          color="inherit"
+          aria-label="open drawer"
+          edge="end"
+          onClick={toggleDrawer(true)}
+        >
+          <MenuIcon />
+        </IconButton>
+      </Toolbar>
+      <Drawer anchor={'right'} open={state} onClose={toggleDrawer(false)}>
+        {list(menus, 'right')}
+      </Drawer>
+    </AppBar>
   )
 }
-
-Header.propTypes = {
-  className: PropTypes.string,
-}
-
-Header.defaultProps = {
-  className: 'header'
-}
-
-export default Header
