@@ -1,5 +1,14 @@
-@import "./CommonLayout.module.scss";
+@import './CommonLayout.module.scss';
 
-.head {
-  background: skyblue;
+.body {
+  display: flex;
+}
+
+.side {
+  width: 280px;
+  flex-shrink: 0;
+}
+
+.main {
+  flex-grow: 1;
 }

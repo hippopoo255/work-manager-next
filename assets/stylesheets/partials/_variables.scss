@@ -1,2 +1,17 @@
-$red: #f32400ec;
-$blue: #0070f3;
+$blue: #1d86cc;
+$green: #04a72e;
+$primary: $green;
+$primaryDark: darken($primary, 20%);
+$black: #404040;
+$white: #fefefe;
+
+// size
+$baseWidth: 1280px;
+
+// breakpoints
+$breakpoints: (
+  'sm': 'screen and (min-width: 600px)',
+  'md': 'screen and (min-width: 768px)',
+  'lg': 'screen and (min-width: 1024px)',
+  'xl': 'screen and (min-width: 1280px)',
+) !default;

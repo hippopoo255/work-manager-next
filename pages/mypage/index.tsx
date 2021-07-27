@@ -1,11 +1,12 @@
 import React from 'react'
-import { MypageLayout } from '@/components/templates'
+import { MypageLayout } from '@/layouts'
 import { GetStaticProps, GetServerSideProps, GetStaticPropsContext } from 'next'
 import Head from 'next/head'
 import axios from '@/axios'
 import requests from '@/Requests'
 import { useState, useEffect } from 'react'
 import useSWR from 'swr'
+import {MuiButton} from '@/components/atoms'
 
 export type User = {
   id: number
@@ -26,8 +27,17 @@ const Dashboard = () => {
       <Head>
         <title>マイページ</title>
       </Head>
-      <p>マイページ</p>
-      <main>{user.family_name}さん、こんにちは</main>
+      <section>
+        <h2>マイページ</h2>
+        <div>
+          <MuiButton
+            label="わっしょい"
+            variant="contained"
+            color="primary"
+          />
+          <span>{user.family_name}さん、こんにちは</span>
+        </div>
+      </section>
     </MypageLayout>
   )
 }
