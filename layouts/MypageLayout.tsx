@@ -1,23 +1,87 @@
-import React from 'react'
-import { Header, Footer, Sidebar } from '@/components/organisms'
+import React, { useState, useEffect } from 'react'
+import axios from '@/axios'
+import requests from '@/Requests'
+import { MypageHeader as Header, Footer, Sidebar } from '@/components/organisms'
 import styles from '@/assets/stylesheets/components/MypageLayout.module.scss'
+import Head from 'next/head'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import {
+  makeStyles,
+  useTheme,
+  Theme,
+  createStyles,
+} from '@material-ui/core/styles'
 
-const MypageLayout = ({ children }: { children: React.ReactNode }) => {
+export type User = {
+  id: number
+  family_name: string
+  given_name: string
+  [k: string]: any
+}
+export type LayoutOrg = {
+  children: React.ReactNode
+  title?: string
+}
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      display: 'flex',
+      minHeight: '100%',
+    },
+    // necessary for main to be below app bar
+    appBarSpacer: theme.mixins.toolbar,
+    content: {
+      flexGrow: 1,
+      display: 'flex',
+      flexDirection: 'column',
+    },
+    main: {
+      padding: theme.spacing(3),
+      flexGrow: 1,
+    },
+  })
+)
+
+const MypageLayout = ({ children, title }: LayoutOrg) => {
+  const [user, setUser] = useState<User | any>([])
+  const classes = useStyles()
+  const suffix = process.env.NEXT_PUBLIC_SITE_NAME
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const handleDrawerToggle = (specified: boolean | null = null) => {
+    if (specified === null) {
+      setMobileOpen(!mobileOpen)
+    } else {
+      setMobileOpen(specified)
+    }
+  }
+
+  useEffect(() => {
+    axios.get(requests.currentUser).then((res) => {
+      setUser(res.data)
+    })
+  }, [])
+
   return (
-    <div className={styles.container}>
-      <div className={styles.head}>
-        <Header />
+    <>
+      <Head>
+        <title>{!!title ? `${title} | ${suffix}` : suffix}</title>
+      </Head>
+      <div className={classes.root}>
+        <CssBaseline />
+        <Header toggleMenu={handleDrawerToggle} user={user} />
+        <Sidebar open={mobileOpen} onClose={handleDrawerToggle} />
+        <div className={classes.content}>
+          <main className={classes.main}>
+            <div className={classes.appBarSpacer} />
+            {children}
+          </main>
+          <div className={styles.tail}>
+            <Footer />
+          </div>
+        </div>
       </div>
-      <div className={styles.body}>
-        <aside className={styles.side}>
-          <Sidebar />
-        </aside>
-        <main className={styles.main}>{children}</main>
-      </div>
-      <div className={styles.tail}>
-        <Footer />
-      </div>
-    </div>
+    </>
   )
 }
 

@@ -20,8 +20,13 @@
 }
 .tail {
   flex-shrink: 0;
-  background: $black;
+  background: radial-gradient(
+    circle,
+    lighten($black, 15%) 0 10%,
+    $black 80% 100%
+  );
   color: $white;
+  padding: 40px 24px;
 }
 
 .head {
