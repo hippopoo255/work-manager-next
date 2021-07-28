@@ -10,10 +10,14 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import IconButton from '@material-ui/core/IconButton'
-import LockOpenOutlinedIcon from '@material-ui/icons/LockOpenOutlined'
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
+import ExitToAppOutlinedIcon from '@material-ui/icons/ExitToAppOutlined'
 import MenuIcon from '@material-ui/icons/Menu'
-import styles from '@/assets/stylesheets/components/Header.module.scss'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
+import axios from '@/axios'
+import requests from '@/Requests'
+import { EventAvailable } from '@material-ui/icons'
 
 export type Menu = {
   text: string
@@ -21,8 +25,13 @@ export type Menu = {
   to: string
 }
 
+export type Anchor = 'top' | 'left' | 'bottom' | 'right'
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    header: {
+      background: `radial-gradient(circle at 40px 50px, #59be57 0 10%, ${theme.palette.primary.main} 70%)`,
+    },
     list: {
       width: 250,
     },
@@ -35,10 +44,9 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
-type Anchor = 'top' | 'left' | 'bottom' | 'right'
-
 export default function TemporaryDrawer() {
   const classes = useStyles()
+  const router = useRouter()
   const [state, setState] = React.useState(false)
 
   const toggleDrawer =
@@ -57,10 +65,31 @@ export default function TemporaryDrawer() {
   const menus: Menu[] = [
     {
       text: 'ログイン',
-      icon: <LockOpenOutlinedIcon />,
+      icon: <LockOutlinedIcon />,
       to: '/login',
     },
+    {
+      text: 'ログアウト',
+      icon: <ExitToAppOutlinedIcon />,
+      to: '/logout',
+    },
   ]
+  const onItem = (to: string) => {
+    if (to === '/logout') {
+      logout()
+    } else {
+      router.push(to)
+    }
+  }
+
+  const logout = async () => {
+    await axios.post(requests.logout).then((res) => {
+      if (res.status === 200) {
+        router.push('/login')
+      }
+    })
+  }
+
   const list = (menus: Menu[], anchor: Anchor) => (
     <div
       className={clsx(classes.list, {
@@ -72,22 +101,22 @@ export default function TemporaryDrawer() {
     >
       <List>
         {menus.map((menu, index) => (
-          <Link href={menu.to} key={`${index}_${menu.text}`}>
+          <li key={`${index}_${menu.text}`} onClick={() => onItem(menu.to)}>
             <ListItem button>
               <ListItemIcon>{menu.icon}</ListItemIcon>
               <ListItemText primary={menu.text} />
             </ListItem>
-          </Link>
+          </li>
         ))}
       </List>
     </div>
   )
 
   return (
-    <AppBar position="fixed">
+    <AppBar position="fixed" className={classes.header} color="inherit">
       <Toolbar className="container">
         <Typography variant="h6" className={classes.title}>
-          <Link href="/">業務支援システム</Link>
+          <Link href="/">{process.env.NEXT_PUBLIC_SITE_NAME}</Link>
         </Typography>
         <IconButton
           color="inherit"

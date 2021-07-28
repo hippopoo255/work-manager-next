@@ -2,14 +2,18 @@ import React from 'react'
 import { Header, Footer } from '@/components/organisms'
 import styles from '@/assets/stylesheets/components/Layout.module.scss'
 import Head from 'next/head'
-const Layout = ({ children }: { children: React.ReactNode }) => {
+
+export type LayoutOrg = {
+  children: React.ReactNode
+  title?: string
+}
+
+const Layout = ({ children, title }: LayoutOrg) => {
+  const suffix = process.env.NEXT_PUBLIC_SITE_NAME
   return (
     <>
       <Head>
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-        />
+        <title>{!!title ? `${title} | ${suffix}` : suffix}</title>
       </Head>
       <div className={styles.container}>
         <div className={styles.head}>
