@@ -7,7 +7,6 @@ import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core'
 import InboxIcon from '@material-ui/icons/MoveToInbox'
 import MailIcon from '@material-ui/icons/Mail'
 import HomeIcon from '@material-ui/icons/Home'
-
 import MenuBookOutlinedIcon from '@material-ui/icons/MenuBookOutlined'
 import EventAvailableOutlinedIcon from '@material-ui/icons/EventAvailableOutlined'
 import FolderOpenOutlinedIcon from '@material-ui/icons/FolderOpenOutlined'
@@ -15,7 +14,8 @@ import FormatListBulletedOutlinedIcon from '@material-ui/icons/FormatListBullete
 import SendOutlinedIcon from '@material-ui/icons/SendOutlined'
 import BookOutlinedIcon from '@material-ui/icons/BookOutlined'
 import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined'
-
+import { LinkBar } from '@/components/molecules'
+import { drawerWidth } from '@/lib/util'
 import {
   makeStyles,
   useTheme,
@@ -52,8 +52,6 @@ interface Props {
   open: any
   onClose: any
 }
-
-const drawerWidth = 240
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -161,37 +159,37 @@ const Sidebar = (props: Props) => {
       {
         id: 'meeting',
         icon: <MenuBookOutlinedIcon />,
-        to: '/meeting_record',
+        to: '/mypage/meeting_record',
         text: '会議議事録',
       },
       {
         id: 'schedule',
         icon: <EventAvailableOutlinedIcon />,
-        to: '/schedule',
+        to: '/mypage/schedule',
         text: 'スケジュール',
       },
       {
         id: 'document',
         icon: <FolderOpenOutlinedIcon />,
-        to: '/document',
+        to: '/mypage/document',
         text: 'ドキュメント',
       },
       {
         id: 'task',
         icon: <FormatListBulletedOutlinedIcon />,
-        to: '/task',
+        to: '/mypage/task',
         text: 'タスク',
       },
       {
         id: 'chat',
         icon: <SendOutlinedIcon />,
-        to: '/chat',
+        to: '/mypage/chat',
         text: 'チャット',
       },
       {
         id: 'blog',
         icon: <BookOutlinedIcon />,
-        to: '/blog',
+        to: '/mypage/blog',
         text: 'ブログ',
       },
     ],
@@ -200,7 +198,7 @@ const Sidebar = (props: Props) => {
         id: 'settings',
         text: '設定',
         icon: <SettingsOutlinedIcon />,
-        to: '/settings',
+        to: '/mypage/setting',
       },
     ],
   }
@@ -209,11 +207,13 @@ const Sidebar = (props: Props) => {
     router.push(to)
   }
 
+  const activeClass = (to: string): boolean => router.asPath == to
+
   const drawer = (
     <aside>
       <List>
-        <Link href="/">
-          <ListItem button>
+        <Link href="/" passHref>
+          <ListItem button component="a">
             <ListItemIcon>
               <HomeIcon />
             </ListItemIcon>
@@ -224,19 +224,23 @@ const Sidebar = (props: Props) => {
       <Divider />
       <List>
         {menus.top.map((menu: Menu) => (
-          <ListItem button key={menu.id} onClick={() => onItem(menu.to)}>
-            <ListItemIcon>{menu.icon || <InboxIcon />}</ListItemIcon>
-            <ListItemText primary={menu.text} />
-          </ListItem>
+          <LinkBar
+            key={menu.id}
+            item={menu}
+            activeClass={activeClass(menu.to)}
+            onItem={() => onItem(menu.to)}
+          />
         ))}
       </List>
       <Divider />
       <List>
         {menus.bottom.map((menu: Menu) => (
-          <ListItem button key={menu.id} onClick={() => onItem(menu.to)}>
-            <ListItemIcon>{menu.icon || <InboxIcon />}</ListItemIcon>
-            <ListItemText primary={menu.text} />
-          </ListItem>
+          <LinkBar
+            key={menu.id}
+            item={menu}
+            activeClass={activeClass(menu.to)}
+            onItem={() => onItem(menu.to)}
+          />
         ))}
       </List>
     </aside>
@@ -244,7 +248,6 @@ const Sidebar = (props: Props) => {
 
   return (
     <nav className={classes.drawer} aria-label="mailbox folders">
-      {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
       <Hidden smUp implementation="css">
         <Drawer
           container={container}

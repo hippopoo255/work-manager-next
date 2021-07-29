@@ -14,6 +14,7 @@ import { LocalDiningOutlined, MenuSharp } from '@material-ui/icons'
 import axios from '@/axios'
 import requests from '@/Requests'
 import { useRouter } from 'next/router'
+import { UserModel } from '@/interfaces'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -24,24 +25,21 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
+export type Letter = () => string
+export type UserMemo = () => UserModel | []
+
 interface Props {
-  user: {
-    id: number
-    family_name: string
-    given_name: string
-    [k: string]: any
-  }
-  letter: string
+  user: UserModel | []
 }
 
-const AvatarMenu = ({ user, letter }: Props) => {
+const AvatarMenu = ({ user }: Props) => {
   const classes = useStyles()
   const router = useRouter()
   const menus = [
     {
-      id: 'myAccount',
-      to: '/account',
-      text: 'My account',
+      id: 'mypage',
+      to: '/mypage',
+      text: 'マイページ',
     },
     {
       id: 'profile',
@@ -57,10 +55,19 @@ const AvatarMenu = ({ user, letter }: Props) => {
   const [open, setOpen] = useState(false)
   const anchorRef = useRef<HTMLButtonElement>(null)
 
+  const letter: Letter = () => {
+    if (!Array.isArray(user)) {
+      return user.family_name.slice(0, 1)
+    }
+    return ''
+  }
+
   const handleItem = async (to: string, e: React.MouseEvent<EventTarget>) => {
     handleClose(e)
     if (to === '/logout') {
       await logout()
+    } else {
+      router.push(to)
     }
   }
 
@@ -110,8 +117,12 @@ const AvatarMenu = ({ user, letter }: Props) => {
         onClick={handleToggle}
         component="span"
       >
-        <Avatar alt={user.family_name} src="" className={classes.orange}>
-          {letter}
+        <Avatar
+          alt={!Array.isArray(user) ? user.family_name : ''}
+          src=""
+          className={classes.orange}
+        >
+          {letter()}
         </Avatar>
       </IconButton>
       <Popper

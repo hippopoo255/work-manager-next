@@ -15,5 +15,8 @@ const theme = createTheme({
       contrastText: '#000',
     },
   },
+  typography: {
+    fontFamily: ['"Noto Sans JP Light"', 'Roboto', 'sans-serif'].join(', '),
+  },
 })
 export default theme
