@@ -1,7 +1,10 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Header, Footer } from '@/components/organisms'
 import styles from '@/assets/stylesheets/components/Layout.module.scss'
 import Head from 'next/head'
+import { UserModel } from '@/interfaces'
+import useApi, { httpClient } from '@/api/useApi'
+import requests from '@/Requests'
 
 export type LayoutOrg = {
   children: React.ReactNode
@@ -10,6 +13,11 @@ export type LayoutOrg = {
 
 const Layout = ({ children, title }: LayoutOrg) => {
   const suffix = process.env.NEXT_PUBLIC_SITE_NAME
+  const req = () => {
+    return httpClient.get(requests.currentUser)
+  }
+  const user = useApi<UserModel | []>(req, [])
+
   return (
     <>
       <Head>
@@ -17,7 +25,7 @@ const Layout = ({ children, title }: LayoutOrg) => {
       </Head>
       <div className={styles.container}>
         <div className={styles.head}>
-          <Header />
+          <Header user={user} />
         </div>
         <div className={styles.body}>
           <main className={styles.main}>{children}</main>

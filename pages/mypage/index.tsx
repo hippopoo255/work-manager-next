@@ -3,7 +3,7 @@ import { MypageLayout } from '@/layouts'
 import { GetStaticProps, GetServerSideProps, GetStaticPropsContext } from 'next'
 import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
-import { LatestNews } from '@/components/organisms'
+import { LatestNews, ScheduleCalendar } from '@/components/organisms'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import clsx from 'clsx'
 
@@ -40,7 +40,9 @@ const Dashboard = (props: Props) => {
             </Grid>{' '}
             {/* Schedule Calendar */}
             <Grid item xs={12} md={8} lg={9}>
-              <Paper className={fixedHeightPaper}></Paper>
+              <Paper className={fixedHeightPaper}>
+                <ScheduleCalendar />
+              </Paper>
             </Grid>
             {/* Recent Task */}
             <Grid item xs={12} md={4} lg={3}>
