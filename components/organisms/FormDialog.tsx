@@ -21,47 +21,44 @@ const useStyles = makeStyles({
 
 export type Props = {
   buttonText: string
+  onSubmit: () => Promise<any>
+  dialogTitle: string
   cancelText: string
   submitText: string
-  dialogTitle: string
   children: React.ReactNode
-  onSubmit: () => void
+  open: boolean
+  setOpen: (isOpen: boolean) => void
 }
 
 const FormDialog = ({
   buttonText,
+  onSubmit,
+  dialogTitle,
   cancelText,
   submitText,
-  dialogTitle,
   children,
-  onSubmit,
+  open,
+  setOpen,
 }: Props) => {
   const classes = useStyles()
-  const [open, setOpen] = React.useState(false)
+  // const [open, setOpen] = React.useState(false)
 
   const handleClickOpen = () => {
     setOpen(true)
   }
 
-  const handleClose = () => {
+  const handleClickClose = () => {
     setOpen(false)
   }
-  const handleCancel = () => {
-    handleClose()
-  }
-  const handleSubmit = () => {
-    handleClose()
-    onSubmit()
+  const handleSubmit = async () => {
+    await onSubmit()
   }
 
   return (
     <div>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        {buttonText}
-      </Button>
       <Dialog
         open={open}
-        onClose={handleClose}
+        onClose={handleClickClose}
         aria-labelledby="form-dialog-title"
       >
         <DialogTitle className={classes.title} id="form-dialog-title">
@@ -69,7 +66,7 @@ const FormDialog = ({
         </DialogTitle>
         <DialogContent className={classes.root}>{children}</DialogContent>
         <DialogActions>
-          <Button onClick={handleCancel} color="primary">
+          <Button onClick={handleClickClose} color="primary">
             {cancelText}
           </Button>
           <Button onClick={handleSubmit} color="primary">

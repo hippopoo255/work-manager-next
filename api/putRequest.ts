@@ -1,17 +1,29 @@
 import axios, { AxiosResponse } from 'axios'
 
+export type Config = {
+  headers: {
+    'X-HTTP-Method-Override': 'PUT'
+  }
+}
+
 let httpClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
   withCredentials: true,
 })
 
-const postRequest = async <T>(
+const putRequest = async <T>(
   path: string,
   data: any,
-  handleError: ((err: AxiosResponse) => unknown) | null = null
+  handleError: ((err: AxiosResponse) => void) | null = null
 ): Promise<T> => {
+  let config: Config = {
+    headers: {
+      'X-HTTP-Method-Override': 'PUT',
+    },
+  }
+
   const axiosFunc: () => Promise<AxiosResponse<T>> = () => {
-    return httpClient.post(path, data)
+    return httpClient.post(path, data, config)
   }
 
   const res = await axiosFunc().catch((err) => {
@@ -25,4 +37,4 @@ const postRequest = async <T>(
     return res.data
   }
 }
-export default postRequest
+export default putRequest

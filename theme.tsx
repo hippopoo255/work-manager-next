@@ -5,7 +5,7 @@ const theme = createTheme({
     primary: {
       main: '#3bb95b',
       dark: '#048f27',
-      light: '#3fe068',
+      light: '#52cc70',
       contrastText: '#fff',
     },
     secondary: {
@@ -17,6 +17,13 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: ['"Noto Sans JP Light"', 'Roboto', 'sans-serif'].join(', '),
+    button: {
+      textTransform: 'none',
+    },
+    h2: {
+      fontSize: '1.5rem',
+      fontWeight: 'bold',
+    },
   },
 })
 export default theme

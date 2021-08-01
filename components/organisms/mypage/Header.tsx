@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { AppBar, Typography, Toolbar, IconButton } from '@material-ui/core'
 import MenuIcon from '@material-ui/icons/Menu'

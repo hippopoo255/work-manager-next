@@ -10,6 +10,8 @@ const requests = {
   },
   task: {
     post: '/task',
+    put: '/task',
+    mytask: '/author/task',
   },
 }
 

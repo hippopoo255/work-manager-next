@@ -18,9 +18,9 @@ import { UserModel } from '@/interfaces'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    orange: {
+    avatar: {
       color: theme.palette.getContrastText(deepOrange[500]),
-      backgroundColor: deepOrange[500],
+      backgroundColor: theme.palette.secondary.main,
     },
   })
 )
@@ -120,7 +120,7 @@ const AvatarMenu = ({ user }: Props) => {
         <Avatar
           alt={!Array.isArray(user) ? user.family_name : ''}
           src=""
-          className={classes.orange}
+          className={classes.avatar}
         >
           {letter()}
         </Avatar>
