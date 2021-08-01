@@ -8,3 +8,15 @@ export function toStrData(date: Date): string {
   const minute = `0${date.getMinutes()}`.slice(-2)
   return `${year}/${month}/${day} ${hour}:${minute}`
 }
+
+export function toStrLabel(date: Date): string {
+  let year: string = ''
+  if (date.getFullYear() !== new Date().getFullYear()) {
+    year = date.getFullYear() + '年'
+  }
+  const month = `${date.getMonth() + 1}月`
+  const day = `${date.getDate()}日`
+  const hour = `${date.getHours()}:`
+  const minute = `0${date.getMinutes()}`.slice(-2)
+  return `${year}${month}${day} ${hour}${minute}`
+}

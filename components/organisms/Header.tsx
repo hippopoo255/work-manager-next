@@ -35,7 +35,7 @@ export type Props = {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     header: {
-      background: `radial-gradient(circle at 40px 50px, #59be57 0 10%, ${theme.palette.primary.main} 70%)`,
+      background: `radial-gradient(circle at 40px 50px, ${theme.palette.primary.light} 0 10%, ${theme.palette.primary.main} 70%)`,
     },
     list: {
       width: 250,

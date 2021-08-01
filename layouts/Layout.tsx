@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { Header, Footer } from '@/components/organisms'
 import styles from '@/assets/stylesheets/components/Layout.module.scss'
 import Head from 'next/head'
