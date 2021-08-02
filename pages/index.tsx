@@ -1,29 +1,8 @@
 import Head from 'next/head'
 import styles from '@/assets/stylesheets/pages/Home.module.scss'
 import { Layout } from '@/layouts'
-import { GetStaticProps, GetServerSideProps } from 'next'
-import { useState, useEffect } from 'react'
-import axios from '@/axios'
-import requests from '@/Requests'
-
-export type User = {
-  id: number
-  family_name: string
-  given_name: string
-  [k: string]: any
-}
 
 export default function Home() {
-  const [user, setUser] = useState<User | any>([])
-  useEffect(() => {
-    axios
-      .get(requests.currentUser)
-      .then((res) => {
-        setUser(res.data)
-      })
-      .catch((err) => console.log(err))
-  }, [])
-
   return (
     <Layout>
       <Head>

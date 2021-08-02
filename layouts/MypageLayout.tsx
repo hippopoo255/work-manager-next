@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import axios from '@/axios'
-import requests from '@/Requests'
 import { MypageHeader as Header, Footer, Sidebar } from '@/components/organisms'
 import styles from '@/assets/stylesheets/components/MypageLayout.module.scss'
 import Head from 'next/head'
@@ -11,13 +9,10 @@ import {
   Theme,
   createStyles,
 } from '@material-ui/core/styles'
+import { UserModel } from '@/interfaces'
+import useApi, { httpClient } from '@/api/useApi'
+import requests from '@/Requests'
 
-export type User = {
-  id: number
-  family_name: string
-  given_name: string
-  [k: string]: any
-}
 export type LayoutOrg = {
   children: React.ReactNode
   title?: string
@@ -35,6 +30,8 @@ const useStyles = makeStyles((theme: Theme) =>
       flexGrow: 1,
       display: 'flex',
       flexDirection: 'column',
+      maxWidth: '100%',
+      overflow: 'hidden',
     },
     main: {
       padding: theme.spacing(3),
@@ -44,7 +41,11 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 const MypageLayout = ({ children, title }: LayoutOrg) => {
-  const [user, setUser] = useState<User | any>([])
+  const req = () => {
+    return httpClient.get(requests.currentUser)
+  }
+  const user = useApi<UserModel | []>(req, [])
+
   const classes = useStyles()
   const suffix = process.env.NEXT_PUBLIC_SITE_NAME
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -55,12 +56,6 @@ const MypageLayout = ({ children, title }: LayoutOrg) => {
       setMobileOpen(specified)
     }
   }
-
-  useEffect(() => {
-    axios.get(requests.currentUser).then((res) => {
-      setUser(res.data)
-    })
-  }, [])
 
   return (
     <>
