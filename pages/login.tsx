@@ -5,7 +5,12 @@ import { useState, useCallback } from 'react'
 import { Layout } from '@/layouts'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
+import {
+  makeStyles,
+  createStyles,
+  lighten,
+  Theme,
+} from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
@@ -36,8 +41,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
-    // background: `radial-gradient(circle at 10px 20px, ${theme.palette.primary.main} 0 25%, ${theme.palette.primary.dark} 95%)`,
-    // color: '#fefefe',
+    background: `linear-gradient(-45deg, ${
+      theme.palette.primary.main
+    } 0 50%, ${lighten(theme.palette.primary.main, 0.2)} 90%)`,
+    color: '#ffffff',
   },
   label: {
     fontSize: '90%',
@@ -91,7 +98,7 @@ const Login = () => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Log in
           </Typography>
           <form
             className={classes.form}

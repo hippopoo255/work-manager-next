@@ -1,12 +1,11 @@
-import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { AppBar, Typography, Toolbar, IconButton } from '@material-ui/core'
 import MenuIcon from '@material-ui/icons/Menu'
 import { AvatarMenu } from '@/components/molecules'
 import clsx from 'clsx'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
-
-const drawerWidth = 240
+import { UserModel } from '@/interfaces'
+import { drawerWidth } from '@/lib/util'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,27 +36,15 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 interface Props {
-  user: {
-    id: number
-    family_name: string
-    given_name: string
-    [k: string]: any
-  }
+  user: UserModel | []
   toggleMenu: () => void
 }
 
 const MypageHeader = ({ user, toggleMenu }: Props) => {
   const classes = useStyles()
-  const [letter, setLetter] = useState('')
   const handleDrawerToggle = () => {
     toggleMenu()
   }
-
-  useEffect(() => {
-    if (!Array.isArray(user)) {
-      setLetter(user.family_name.slice(0, 1))
-    }
-  }, [user])
 
   return (
     <AppBar position="fixed" className={classes.appBar}>
@@ -75,7 +62,7 @@ const MypageHeader = ({ user, toggleMenu }: Props) => {
           <Typography variant="h6" noWrap className={classes.title}>
             <Link href="/">{process.env.NEXT_PUBLIC_SITE_NAME}</Link>
           </Typography>
-          <AvatarMenu user={user} letter={letter} />
+          {!Array.isArray(user) && <AvatarMenu user={user} />}
         </Toolbar>
       </div>
     </AppBar>
