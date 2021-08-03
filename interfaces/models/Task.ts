@@ -1,11 +1,11 @@
-import { UserModel, Priority, Progress } from './'
-export interface TaskModel {
+import { User, Priority, Progress } from './'
+export interface Task {
   readonly id: number
   body: string
   time_limit: string
   created_at: string
-  owner: UserModel
-  created_by: UserModel
+  owner: User
+  created_by: User
   priority: Priority
   progress: Progress
   [k: string]: any

@@ -1,15 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { MypageHeader as Header, Footer, Sidebar } from '@/components/organisms'
 import styles from '@/assets/stylesheets/components/MypageLayout.module.scss'
 import Head from 'next/head'
 import CssBaseline from '@material-ui/core/CssBaseline'
-import {
-  makeStyles,
-  useTheme,
-  Theme,
-  createStyles,
-} from '@material-ui/core/styles'
-import { UserModel } from '@/interfaces'
+import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
+import { User } from '@/interfaces/models'
 import useApi, { httpClient } from '@/api/useApi'
 import requests from '@/Requests'
 
@@ -44,7 +39,7 @@ const MypageLayout = ({ children, title }: LayoutOrg) => {
   const req = () => {
     return httpClient.get(requests.currentUser)
   }
-  const user = useApi<UserModel | []>(req, [])
+  const user = useApi<User | []>(req, [])
 
   const classes = useStyles()
   const suffix = process.env.NEXT_PUBLIC_SITE_NAME

@@ -1,4 +1,4 @@
-const requests = {
+const requestUri = {
   login: '/login',
   logout: '/logout',
   currentUser: '/user/current',
@@ -25,4 +25,4 @@ const requests = {
   },
 }
 
-export default requests
+export default requestUri
