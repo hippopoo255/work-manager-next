@@ -14,7 +14,7 @@ import { LocalDiningOutlined, MenuSharp } from '@material-ui/icons'
 import axios from '@/axios'
 import requests from '@/Requests'
 import { useRouter } from 'next/router'
-import { UserModel } from '@/interfaces'
+import { User } from '@/interfaces/models'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,10 +26,10 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 export type Letter = () => string
-export type UserMemo = () => UserModel | []
+export type UserMemo = () => User | []
 
 interface Props {
-  user: UserModel | []
+  user: User | []
 }
 
 const AvatarMenu = ({ user }: Props) => {

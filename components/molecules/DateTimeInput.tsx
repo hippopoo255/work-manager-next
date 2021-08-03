@@ -13,9 +13,18 @@ export type Props = {
   label: string
   onChange: any
   required: boolean
+  disablePast: boolean
+  error: boolean
 }
 
-const DateTimeInput = ({ value, label, onChange, required }: Props) => {
+const DateTimeInput = ({
+  value,
+  label,
+  onChange,
+  required,
+  disablePast,
+  error,
+}: Props) => {
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ja}>
       <KeyboardDateTimePicker
@@ -26,10 +35,10 @@ const DateTimeInput = ({ value, label, onChange, required }: Props) => {
         onChange={onChange}
         onError={console.log}
         fullWidth
-        disablePast
-        showTodayButton
+        disablePast={disablePast}
         format="yyyy/MM/dd HH:mm"
         required={required}
+        error={error}
       />
     </MuiPickersUtilsProvider>
   )
@@ -37,10 +46,12 @@ const DateTimeInput = ({ value, label, onChange, required }: Props) => {
 
 DateTimeInput.propTypes = {
   required: PropTypes.bool,
+  disablePast: PropTypes.bool,
 }
 
 DateTimeInput.defaultProps = {
   required: false,
+  disablePast: false,
 }
 
 export default DateTimeInput

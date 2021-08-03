@@ -9,9 +9,9 @@ import React from 'react'
 function MyApp({ Component, pageProps }: AppProps) {
   React.useEffect(() => {
     // Remove the server-side injected CSS.
-    const jssStyles: any = document.querySelector('#jss-server-side')
+    const jssStyles: Element | null = document.querySelector('#jss-server-side')
     if (jssStyles) {
-      jssStyles.parentElement.removeChild(jssStyles)
+      jssStyles.parentElement?.removeChild(jssStyles)
     }
   }, [])
 

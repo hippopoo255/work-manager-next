@@ -1,16 +1,10 @@
-import React from 'react'
-import axios from '@/axios'
+import React, { useState, useEffect } from 'react'
+import { postRequest } from '@/api'
 import requests from '@/Requests'
-import { useState, useCallback } from 'react'
 import { Layout } from '@/layouts'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import {
-  makeStyles,
-  createStyles,
-  lighten,
-  Theme,
-} from '@material-ui/core/styles'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
@@ -23,6 +17,11 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Typography from '@material-ui/core/Typography'
 import Container from '@material-ui/core/Container'
 import { useForm, Controller, SubmitHandler } from 'react-hook-form'
+import { User } from '@/interfaces/models'
+import { AxiosError } from 'axios'
+import { CustomAlert } from '@/components/atoms'
+import { AlertStatus } from '@/interfaces'
+import { darken } from '@material-ui/core'
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -33,7 +32,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    background: 'linear-gradient(135deg,#fad961,#f76b1c)',
+    boxShadow:
+      // '0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%)',
+      theme.shadows[2],
   },
   form: {
     width: '100%', // Fix IE 11 issue.
@@ -41,9 +43,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
-    background: `linear-gradient(-45deg, ${
-      theme.palette.primary.main
-    } 0 50%, ${lighten(theme.palette.primary.main, 0.2)} 90%)`,
+    background: `linear-gradient(165deg, ${darken('#5dff26', 0.1)}, #5cb363)`,
     color: '#ffffff',
   },
   label: {
@@ -59,7 +59,24 @@ export type Inputs = {
 const Login = () => {
   const router = useRouter()
   const classes = useStyles()
+  // TODO: 状態管理すべき
+  const [alertStatus, setAlertStatus] = useState<AlertStatus>({
+    severity: 'error',
+    variant: 'filled',
+    msg: '',
+    show: false,
+  })
 
+  const calc = alertStatus.show
+
+  useEffect(() => {
+    setTimeout(() => {
+      setAlertStatus((prev) => ({
+        ...prev,
+        show: false,
+      }))
+    }, 5000)
+  }, [calc])
   const {
     register,
     handleSubmit,
@@ -76,11 +93,24 @@ const Login = () => {
     const loginData: any = new FormData()
     loginData.append('login_id', data.login_id)
     loginData.append('password', data.password)
-    await axios.post(requests.login, loginData).then((res: any) => {
-      if (res.status === 200) {
-        router.push('/mypage')
+    await postRequest<User>(requests.login, loginData, (err) => {
+      if (err.status === 422) {
+        setAlertStatus((prev) => ({
+          ...prev,
+          msg: 'データ形式が正しくありません',
+          severity: 'error',
+          open: true,
+        }))
+        console.error(err)
       }
+      throw err
     })
+      .then((res: User) => {
+        router.push('/mypage')
+      })
+      .catch((err: AxiosError) => {
+        return false
+      })
   }
 
   return (
@@ -170,6 +200,7 @@ const Login = () => {
             </Grid>
           </form>
         </div>
+        <CustomAlert {...alertStatus} />
       </Container>
     </Layout>
   )

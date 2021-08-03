@@ -2,9 +2,10 @@ import React from 'react'
 import { Header, Footer } from '@/components/organisms'
 import styles from '@/assets/stylesheets/components/Layout.module.scss'
 import Head from 'next/head'
-import { UserModel } from '@/interfaces'
+import { User } from '@/interfaces/models'
 import useApi, { httpClient } from '@/api/useApi'
 import requests from '@/Requests'
+import { useRouter } from 'next/router'
 
 export type LayoutOrg = {
   children: React.ReactNode
@@ -13,10 +14,12 @@ export type LayoutOrg = {
 
 const Layout = ({ children, title }: LayoutOrg) => {
   const suffix = process.env.NEXT_PUBLIC_SITE_NAME
+  const router = useRouter()
+
   const req = () => {
     return httpClient.get(requests.currentUser)
   }
-  const user = useApi<UserModel | []>(req, [])
+  const user = useApi<User | []>(req, [])
 
   return (
     <>
