@@ -90,10 +90,10 @@ const Login = () => {
   }
 
   const login = async (data: Inputs) => {
-    const loginData: any = new FormData()
+    const loginData: FormData = new FormData()
     loginData.append('login_id', data.login_id)
     loginData.append('password', data.password)
-    await postRequest<User>(requests.login, loginData, (err) => {
+    await postRequest<User, FormData>(requests.login, loginData, (err) => {
       if (err.status === 422) {
         setAlertStatus((prev) => ({
           ...prev,

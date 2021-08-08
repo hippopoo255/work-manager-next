@@ -11,9 +11,9 @@ let httpClient = axios.create({
   withCredentials: true,
 })
 
-const putRequest = async <T>(
+const putRequest = async <T, U>(
   path: string,
-  data: any,
+  data: U,
   handleError: ((err: AxiosResponse) => void) | null = null
 ): Promise<T> => {
   let config: Config = {

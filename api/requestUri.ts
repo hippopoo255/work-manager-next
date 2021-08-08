@@ -8,6 +8,9 @@ const requestUri = {
   progress: {
     list: '/progress',
   },
+  meetingPlace: {
+    list: '/meeting_place',
+  },
   task: {
     post: '/task',
     put: '/task',
@@ -19,6 +22,7 @@ const requestUri = {
     put: '/meeting_record',
     post: '/meeting_record',
     delete: '/meeting_record',
+    ids: 'meeting_record/ids',
   },
   user: {
     list: '/user',
