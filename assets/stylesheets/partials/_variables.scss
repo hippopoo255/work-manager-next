@@ -1,13 +1,17 @@
 $blue: #1d86cc;
-$green: #04a72e;
+$green: #3bb95b;
+$lightGreen: #23e775;
 $primary: $green;
 $primaryDark: darken($primary, 20%);
 $black: #404040;
 $white: #fefefe;
 
+// font-family
+$fontFamilyBasis: 'Noto Sans JP', Roboto, sans-serif;
+
 // size
 $baseWidth: 1280px;
-
+$headerHeight: 64px;
 // breakpoints
 $breakpoints: (
   'sm': 'screen and (min-width: 600px)',
