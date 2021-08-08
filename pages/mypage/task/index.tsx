@@ -107,14 +107,14 @@ const Index = () => {
   }
 
   const save = async (data: Inputs) => {
-    const taskData = new FormData()
+    const taskData: FormData = new FormData()
     taskData.append('body', data.body)
     taskData.append('time_limit', toStrData(data.time_limit))
     taskData.append('owner_id', '1')
     taskData.append('priority_id', String(data.priority_id))
     taskData.append('progress_id', String(data.progress_id))
     if (!!updateFlag) {
-      await putRequest<Task>(
+      await putRequest<Task, FormData>(
         requests.task.put + `/${updateFlag}`,
         taskData,
         (err) => {
@@ -151,7 +151,7 @@ const Index = () => {
           return false
         })
     } else {
-      await postRequest<Promise<Task>>(requests.task.post, taskData, (err) => {
+      await postRequest<Task, FormData>(requests.task.post, taskData, (err) => {
         if (err.status === 422) {
           setAlertStatus((prev) => ({
             ...prev,
@@ -163,7 +163,7 @@ const Index = () => {
         }
         throw err
       })
-        .then((task: Promise<Task>) => {
+        .then((task: Task) => {
           const newData = [task, ...tasks.data]
           newData.splice(10, 1)
           const newTasks = {
@@ -242,6 +242,7 @@ const Index = () => {
                       type="text"
                       required
                       fullWidth
+                      error={!!errors.body}
                     />
                   )}
                   name="body"
@@ -258,7 +259,11 @@ const Index = () => {
                     },
                   }}
                 />
-                {errors.body && <FormErrorMessage msg={errors.body.message} />}
+                <p style={{ minHeight: 20 }}>
+                  {!!errors.body && (
+                    <FormErrorMessage msg={errors.body.message} />
+                  )}
+                </p>
               </Grid>
               <Grid item xs={12}>
                 <Controller
@@ -281,9 +286,11 @@ const Index = () => {
                     />
                   )}
                 />
-                <Typography color="error" component="small">
-                  {errors.time_limit && errors.time_limit?.message}
-                </Typography>
+                <p style={{ minHeight: 20 }}>
+                  {!!errors.time_limit && (
+                    <FormErrorMessage msg={errors.time_limit.message} />
+                  )}
+                </p>
               </Grid>
               <Grid item xs={6}>
                 <InputLabel shrink id="priority-id-select-label">

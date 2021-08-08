@@ -1,18 +1,19 @@
-import { GetStaticProps } from 'next'
-import React, { useState, useEffect } from 'react'
+import { GetStaticProps, GetStaticPaths } from 'next'
+import React, { useState, useMemo, useEffect } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import clsx from 'clsx'
 import { MypageLayout } from '@/layouts'
 import { MypageTitle } from '@/components/atoms'
 import { Avatar, Typography, Box } from '@material-ui/core'
 import MenuBookOutlinedIcon from '@material-ui/icons/MenuBookOutlined'
-import { postRequest, getRequest, requestUri } from '@/api'
+import { putRequest, getRequest, requestUri } from '@/api'
 import { User } from '@/interfaces/models'
 import { MeetingRecordForm } from '@/components/template'
 import { MeetingRecord, MeetingPlace } from '@/interfaces/models'
 import { MeetingRecordInputs, MemberInputs } from '@/interfaces/form/inputs'
 import { MeetingRecordSubmit } from '@/interfaces/form/submit'
-
+import { useRouter } from 'next/router'
+import { PROCESS_FLAG } from '@/lib/util'
 export type Props = {
   meetingPlaceList: MeetingPlace[]
 }
@@ -94,10 +95,25 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-const MeetingRecordCreate = ({ meetingPlaceList }: Props) => {
+const MeetingRecordUpdate = ({ meetingPlaceList }: Props) => {
   const classes = useStyles()
+  const router = useRouter()
+  const paramId = router.query.id
+  const meetingRecordId = useMemo(() => paramId, [paramId])
   // react hook form
-  const defaultValues: MeetingRecordInputs = {
+  const req = async (submitData: MeetingRecordSubmit) =>
+    await putRequest<MeetingRecord, MeetingRecordSubmit>(
+      `${requestUri.meetingRecord.put}/${meetingRecordId}`,
+      submitData,
+      (err) => {
+        console.error(err)
+        throw err
+      }
+    )
+
+  // Autocomlete members
+  const [memberList, setMemberList] = useState<MemberInputs[]>([])
+  const [defaultValues, setDefaultValues] = useState<MeetingRecordInputs>({
     recorded_by: 1,
     title: '',
     summary: '',
@@ -113,20 +129,9 @@ const MeetingRecordCreate = ({ meetingPlaceList }: Props) => {
         decided_by: null,
       },
     ],
-  }
-  const req = async (submitData: MeetingRecordSubmit) =>
-    await postRequest<MeetingRecord, MeetingRecordSubmit>(
-      requestUri.meetingRecord.post,
-      submitData,
-      (err) => {
-        console.error(err)
-        throw err
-      }
-    )
-
-  // Autocomlete members
-  const [memberList, setMemberList] = useState<MemberInputs[]>([])
+  })
   const fixedMember: MemberInputs[] = []
+
   useEffect(() => {
     const fetch = async () => {
       await getRequest<User[]>(requestUri.user.list).then((users: User[]) => {
@@ -140,19 +145,54 @@ const MeetingRecordCreate = ({ meetingPlaceList }: Props) => {
     fetch()
   }, [])
 
-  const handleStore = () => {
-    console.log('')
+  useEffect(() => {
+    const fetchUpdateRecord = async () => {
+      if (paramId !== undefined) {
+        return await getRequest<MeetingRecord>(
+          requestUri.meetingRecord.id + `/${paramId}`
+        ).then((meetingRecord: MeetingRecord) => {
+          setDefaultValues({
+            recorded_by: meetingRecord.recorded_by.id,
+            title: meetingRecord.title,
+            summary: meetingRecord.summary,
+            place_id: meetingRecord.place_id,
+            role_id: meetingRecord.role_id,
+            meeting_date: new Date(meetingRecord.meeting_date),
+            members: meetingRecord.members.map((member: User) => ({
+              id: member.id,
+              full_name: member.full_name,
+            })),
+            meeting_decisions: meetingRecord.decisions.map((decision) => ({
+              subject: decision.subject,
+              body: decision.body,
+              written_by: decision.written_by.id,
+              decided_by:
+                decision.decided_by === null ? null : decision.decided_by.id,
+              id: decision.id,
+              flag: PROCESS_FLAG.updateFlag,
+            })),
+          })
+        })
+      }
+    }
+    fetchUpdateRecord()
+  }, [paramId])
+  const handleUpdate = (title: string) => {
+    setDefaultValues((prev) => ({
+      ...prev,
+      title,
+    }))
   }
 
   return (
-    <MypageLayout title="議事録追加">
-      <MypageTitle>議事録</MypageTitle>
+    <MypageLayout title="議事録更新">
+      <MypageTitle>{defaultValues.title}</MypageTitle>
       <Box className={clsx([classes.wrap, classes.title])}>
         <Avatar className={classes.avatar}>
           <MenuBookOutlinedIcon />
         </Avatar>
         <Typography component="h3" variant="h5">
-          新規追加フォーム
+          更新フォーム
         </Typography>
       </Box>
       <MeetingRecordForm
@@ -162,13 +202,29 @@ const MeetingRecordCreate = ({ meetingPlaceList }: Props) => {
         req={req}
         classes={classes}
         meetingPlaceList={meetingPlaceList}
-        handleSuccess={handleStore}
+        handleSuccess={handleUpdate}
       />
     </MypageLayout>
   )
 }
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getStaticPaths: GetStaticPaths = async () => {
+  const paths = await getRequest<number[]>(requestUri.meetingRecord.ids).then(
+    (ids: number[]) =>
+      ids.map((id: number) => ({
+        params: {
+          id: String(id),
+        },
+      }))
+  )
+
+  return {
+    paths,
+    fallback: false,
+  }
+}
+
+export const getStaticProps: GetStaticProps = async ({ params }) => {
   const meetingPlaceList = await getRequest<MeetingPlace[]>(
     requestUri.meetingPlace.list
   ).then((meetingPlaceList: MeetingPlace[]) => meetingPlaceList)
@@ -179,4 +235,4 @@ export const getStaticProps: GetStaticProps = async () => {
   }
 }
 
-export default MeetingRecordCreate
+export default MeetingRecordUpdate

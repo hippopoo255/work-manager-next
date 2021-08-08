@@ -27,6 +27,10 @@ const theme = createTheme({
       fontSize: '1.5rem',
       fontWeight: 'bold',
     },
+    h6: {
+      fontSize: '1rem',
+      fontWeight: 'normal',
+    },
   },
 })
 export default theme

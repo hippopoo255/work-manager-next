@@ -194,8 +194,8 @@ const Index = () => {
       })
   }
 
-  const handleEditClick = () => {
-    console.log('Edit!')
+  const handleEditClick = (id: number) => {
+    router.push(`/mypage/meeting_record/update/${id}`)
   }
 
   const createRows = (list: MeetingRecord[]): Data[] =>

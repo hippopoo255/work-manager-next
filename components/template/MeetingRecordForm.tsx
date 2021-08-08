@@ -1,7 +1,8 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, isValidElement } from 'react'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import { useForm, Controller, useFieldArray } from 'react-hook-form'
-import { toStrData, toStrFormalLabel } from '@/lib/util'
-import { DateTimeInput } from '@/components/molecules'
+import { toStrData, toStrFormalLabel, PROCESS_FLAG } from '@/lib/util'
+import { AxiosError } from 'axios'
 import { Typography, Box, Paper, Grid, CssBaseline } from '@material-ui/core'
 // import Stepper from '@material-ui/core/Stepper'
 import { Stepper, Step, StepLabel } from '@material-ui/core'
@@ -17,9 +18,11 @@ import {
 } from '@material-ui/core'
 import CancelIcon from '@material-ui/icons/Cancel'
 import Autocomplete from '@material-ui/lab/Autocomplete'
-import { AxiosError } from 'axios'
 import { FormErrorMessage } from '@/components/atoms'
-import { MeetingRecord } from '@/interfaces/models'
+import { DateTimeInput } from '@/components/molecules'
+import { DefinitionList } from '@/components/organisms'
+
+import { MeetingRecord, MeetingPlace } from '@/interfaces/models'
 import {
   MeetingRecordInputs,
   MeetingDecisionInputs,
@@ -52,7 +55,23 @@ type Props = {
   defaultValues: MeetingRecordInputs
   req: (submitData: MeetingRecordSubmit) => Promise<MeetingRecord>
   classes: any
+  meetingPlaceList: MeetingPlace[]
+  handleSuccess: (title: string) => void
 }
+
+const useStyles = makeStyles((theme: Theme) => ({
+  item: {
+    '&:not(:first-of-type)': {
+      marginTop: theme.spacing(3),
+    },
+  },
+  groupTitle: {
+    color: theme.palette.primary.main,
+    margin: 0,
+    lineHeight: 1.75,
+    fontSize: theme.typography.fontSize,
+  },
+}))
 
 const MeetingRecordForm = ({
   memberList,
@@ -60,7 +79,11 @@ const MeetingRecordForm = ({
   defaultValues,
   req,
   classes,
+  meetingPlaceList,
+  handleSuccess,
 }: Props) => {
+  const definitionClasses = useStyles()
+
   // steps
   const [activeStep, setActiveStep] = useState(0)
   const steps = getSteps()
@@ -88,6 +111,7 @@ const MeetingRecordForm = ({
     getValues,
     watch,
     clearErrors,
+    reset,
     formState: { errors },
   } = useForm<MeetingRecordInputs>({
     defaultValues,
@@ -116,15 +140,25 @@ const MeetingRecordForm = ({
         place_id: data.place_id,
         role_id: data.role_id,
         members: data.members.map((m) => m.id),
-        meeting_decisions: data.meeting_decisions.map((d) => ({
-          subject: d.subject,
-          body: d.body,
-          written_by: d.written_by,
-          decided_by: d.decided_by,
-        })),
+        meeting_decisions: data.meeting_decisions.map((decision) => {
+          const meetingDecisionData: MeetingDecisionInputs = {
+            subject: decision.subject,
+            body: decision.body,
+            written_by: decision.written_by,
+            decided_by: decision.decided_by,
+          }
+          if (decision.id !== undefined) {
+            meetingDecisionData.id = decision.id
+          }
+          if (decision.flag !== undefined) {
+            meetingDecisionData.flag = decision.flag
+          }
+          return meetingDecisionData
+        }),
       }
       await req(submitData)
         .then(() => {
+          handleSuccess(submitData.title)
           handleNext()
         })
         .catch((err: AxiosError) => {
@@ -155,6 +189,101 @@ const MeetingRecordForm = ({
       clearErrors('members')
     }
   }
+
+  useEffect(() => {
+    Object.keys(defaultValues).forEach((key) => {
+      setValue(key, defaultValues[key])
+    })
+  }, [defaultValues])
+
+  const handleDecisionDelete = (index: number) => {
+    const removed = getValues('meeting_decisions')
+    if (removed[index].id !== undefined) {
+      removed[index].flag = PROCESS_FLAG.deleteFlag
+      setValue('meeting_decisions', removed)
+    } else {
+      remove(index)
+    }
+  }
+
+  const isDelete = (item: MeetingDecisionInputs): boolean =>
+    item.flag !== undefined && item.flag === PROCESS_FLAG.deleteFlag
+
+  const labels: { [k: string]: string } = {
+    recorded_by: '記録者',
+    title: '会議名',
+    meeting_date: '開催日時',
+    place_id: '開催場所',
+    role_id: '権限設定',
+    summary: '概要',
+    members: '参加者',
+    meeting_decisions: '決定事項',
+  }
+
+  type Item = {
+    term: string | number
+    key: string
+    el: React.ReactNode
+  } | null
+
+  const definitionList: Item[] = Object.keys(currentFormVals).map(
+    (key: string) => {
+      let el: React.ReactNode
+      if (key === 'meeting_decisions') {
+        el = (
+          <ul>
+            {currentFormVals[key].length > 0 &&
+              currentFormVals[key].map(
+                (decision: MeetingDecisionInputs, index) =>
+                  !isDelete(decision) && (
+                    <Box
+                      key={`decision_${index}`}
+                      component={'li'}
+                      className={definitionClasses.item}
+                    >
+                      <Box
+                        component={'h5'}
+                        className={definitionClasses.groupTitle}
+                      >{`決議事項${index + 1}`}</Box>
+                      <Box>件名：{decision.subject}</Box>
+                      <Box>内容：{decision.body}</Box>
+                    </Box>
+                  )
+              )}
+          </ul>
+        )
+      } else if (key === 'members') {
+        el = (
+          <span>
+            {currentFormVals[key]
+              .map((member: MemberInputs) => member.full_name)
+              .join(' / ')}
+          </span>
+        )
+      } else if (key === 'place_id') {
+        const index = meetingPlaceList.findIndex(
+          (meetingPlace) => meetingPlace.id === currentFormVals[key]
+        )
+        el = <span>{meetingPlaceList[index].name}</span>
+      } else if (key === 'meeting_date') {
+        el = <span>{toStrFormalLabel(currentFormVals.meeting_date)}</span>
+      } else if (key === 'recorded_by') {
+        const index = memberList.findIndex(
+          (member) => member.id === currentFormVals.recorded_by
+        )
+        el = <span>{memberList.length > 0 && memberList[index].full_name}</span>
+      } else {
+        el = <span>{currentFormVals[key]}</span>
+      }
+      return key !== 'role_id'
+        ? {
+            term: labels[key],
+            key,
+            el,
+          }
+        : null
+    }
+  )
 
   return (
     <Box component={'section'} className={classes.wrap}>
@@ -205,7 +334,7 @@ const MeetingRecordForm = ({
                       id="title"
                       label="会議名"
                       type="text"
-                      placeholder="ex)月次定例MTG"
+                      placeholder="ex)月次定例MTG（80文字以内）"
                       required
                       fullWidth
                       error={!!errors.title}
@@ -265,7 +394,7 @@ const MeetingRecordForm = ({
                       labelId="place-id-select-label"
                       fullWidth
                     >
-                      {[{ id: 1, name: '亀の間' }].map((place) => (
+                      {meetingPlaceList.map((place) => (
                         <MenuItem key={place.id} value={place.id}>
                           {place.name}
                         </MenuItem>
@@ -381,125 +510,143 @@ const MeetingRecordForm = ({
         {/* ステップ3 */}
         {activeStep === 2 && (
           <div>
-            {fields.map((item, index) => (
-              <Paper className={classes.body} key={item.id}>
-                <Typography component={'h4'} className={classes.instructions}>
-                  {getStepContent(activeStep) + `${index + 1}`}
-                </Typography>
-                <Box
-                  display="flex"
-                  flexDirection="row"
-                  alignItems={'flex-start'}
-                  className={classes.minHeight}
-                >
-                  <Box flexGrow={1}>
-                    <Box>
-                      <Controller
-                        control={control}
-                        name={`meeting_decisions[${index}].subject`}
-                        rules={{
-                          required: {
-                            value: true,
-                            message: '件名は必須です',
-                          },
-                          maxLength: {
-                            value: 80,
-                            message: '件名は80文字以内で入力してください',
-                          },
-                        }}
-                        render={({ field }) => (
-                          <TextField
-                            {...field}
-                            autoFocus
+            {fields.map(
+              (item, index) =>
+                !isDelete(item) && (
+                  <Paper className={classes.body} key={item.id}>
+                    <Typography
+                      component={'h4'}
+                      className={classes.instructions}
+                    >
+                      {getStepContent(activeStep) + `${index + 1}`}
+                    </Typography>
+                    <Box
+                      display="flex"
+                      flexDirection="row"
+                      alignItems={'flex-start'}
+                      className={classes.minHeight}
+                    >
+                      <Box flexGrow={1}>
+                        <Box>
+                          <Controller
+                            control={control}
                             name={`meeting_decisions[${index}].subject`}
-                            label="件名"
-                            type="text"
-                            required
-                            error={
-                              !!errors.meeting_decisions &&
-                              !!errors.meeting_decisions[index] &&
-                              !!errors.meeting_decisions[index]?.subject
-                            }
-                            fullWidth
+                            rules={{
+                              required: {
+                                value: true,
+                                message: '件名は必須です',
+                              },
+                              maxLength: {
+                                value: 80,
+                                message: '件名は80文字以内で入力してください',
+                              },
+                            }}
+                            render={({ field }) => (
+                              <TextField
+                                {...field}
+                                autoFocus
+                                name={`meeting_decisions[${index}].subject`}
+                                label="件名"
+                                type="text"
+                                placeholder="ex)コロナ対策の件（80文字以内）"
+                                required
+                                error={
+                                  !!errors.meeting_decisions &&
+                                  !!errors.meeting_decisions[index] &&
+                                  !!errors.meeting_decisions[index]?.subject
+                                }
+                                fullWidth
+                              />
+                            )}
                           />
-                        )}
-                      />
-                      <p style={{ minHeight: 20 }}>
-                        {!!errors.meeting_decisions &&
-                          !!errors.meeting_decisions[index] &&
-                          !!errors.meeting_decisions[index]?.subject && (
-                            <FormErrorMessage
-                              msg={
-                                errors.meeting_decisions[index]?.subject
-                                  ?.message
-                              }
-                            />
-                          )}
-                      </p>
-                    </Box>
-                    <Box style={{ marginTop: 16 }}>
-                      <Controller
-                        control={control}
-                        name={`meeting_decisions[${index}].body`}
-                        rules={{
-                          required: {
-                            value: true,
-                            message: '決議内容は必須です',
-                          },
-                          maxLength: {
-                            value: 80,
-                            message: '決議内容は80文字以内で入力してください',
-                          },
-                        }}
-                        render={({ field }) => (
-                          <TextField
-                            {...field}
+                          <p style={{ minHeight: 20 }}>
+                            {!!errors.meeting_decisions &&
+                              !!errors.meeting_decisions[index] &&
+                              !!errors.meeting_decisions[index]?.subject && (
+                                <FormErrorMessage
+                                  msg={
+                                    errors.meeting_decisions[index]?.subject
+                                      ?.message
+                                  }
+                                />
+                              )}
+                          </p>
+                        </Box>
+                        <Box style={{ marginTop: 16 }}>
+                          <Controller
+                            control={control}
                             name={`meeting_decisions[${index}].body`}
-                            label="決議内容"
-                            type="text"
-                            multiline
-                            minRows={1}
-                            required
-                            fullWidth
-                            error={
-                              !!errors.meeting_decisions &&
-                              !!errors.meeting_decisions[index] &&
-                              !!errors.meeting_decisions[index]?.body
-                            }
+                            rules={{
+                              required: {
+                                value: true,
+                                message: '決議内容は必須です',
+                              },
+                              maxLength: {
+                                value: 80,
+                                message:
+                                  '決議内容は80文字以内で入力してください',
+                              },
+                            }}
+                            render={({ field }) => (
+                              <TextField
+                                {...field}
+                                name={`meeting_decisions[${index}].body`}
+                                label="決議内容"
+                                type="text"
+                                multiline
+                                minRows={1}
+                                required
+                                placeholder="ex)従業員全員、毎朝体温を計測し、記帳・提出する（80文字以内）"
+                                fullWidth
+                                error={
+                                  !!errors.meeting_decisions &&
+                                  !!errors.meeting_decisions[index] &&
+                                  !!errors.meeting_decisions[index]?.body
+                                }
+                              />
+                            )}
                           />
-                        )}
-                      />
-                      <p style={{ minHeight: 20 }}>
-                        {!!errors.meeting_decisions &&
-                          !!errors.meeting_decisions[index] &&
-                          !!errors.meeting_decisions[index]?.body && (
-                            <FormErrorMessage
-                              msg={
-                                errors.meeting_decisions[index]?.body?.message
-                              }
+                          <p style={{ minHeight: 20 }}>
+                            {!!errors.meeting_decisions &&
+                              !!errors.meeting_decisions[index] &&
+                              !!errors.meeting_decisions[index]?.body && (
+                                <FormErrorMessage
+                                  msg={
+                                    errors.meeting_decisions[index]?.body
+                                      ?.message
+                                  }
+                                />
+                              )}
+                          </p>
+                        </Box>
+                      </Box>
+                      <Box
+                        style={{ marginLeft: 16, minWidth: 24 }}
+                        flexShrink={0}
+                      >
+                        {index > 0 && (
+                          <Tooltip title="削除する">
+                            <CancelIcon
+                              className={classes.deleteRow}
+                              onClick={() => handleDecisionDelete(index)}
                             />
-                          )}
-                      </p>
+                          </Tooltip>
+                        )}
+                      </Box>
                     </Box>
-                  </Box>
-                  <Box style={{ marginLeft: 16, minWidth: 24 }} flexShrink={0}>
-                    {index > 0 && (
-                      <Tooltip title="削除する">
-                        <CancelIcon
-                          className={classes.deleteRow}
-                          onClick={() => remove(index)}
-                        />
-                      </Tooltip>
-                    )}
-                  </Box>
-                </Box>
-              </Paper>
-            ))}
+                  </Paper>
+                )
+            )}
             <Box display={'flex'} justifyContent={'flex-end'}>
               <Tooltip
                 title="追加する"
                 onClick={() => {
-                  append({ subject: '', body: '', written_by: 1 })
+                  append({
+                    subject: '',
+                    body: '',
+                    written_by: 1,
+                    decided_by: null,
+                  })
                 }}
               >
                 <Button variant={'outlined'} size={'small'} color={'default'}>
@@ -517,22 +664,7 @@ const MeetingRecordForm = ({
             </Typography>
             <Grid container spacing={2} className={classes.minHeight}>
               <Grid item xs={12}>
-                <div>{currentFormVals.title}</div>
-                <div>{currentFormVals.summary}</div>
-                <div>
-                  {currentFormVals.meeting_date &&
-                    toStrFormalLabel(currentFormVals.meeting_date)}
-                </div>
-                <div>
-                  {currentFormVals.meeting_decisions.map(
-                    (meeting_decision: MeetingDecisionInputs) => (
-                      <>
-                        <div>{meeting_decision.subject}</div>
-                        <div>{meeting_decision.body}</div>
-                      </>
-                    )
-                  )}
-                </div>
+                <DefinitionList list={definitionList} />
               </Grid>
             </Grid>
           </Paper>

@@ -1,4 +1,10 @@
+import { ProcessFlag } from '@/interfaces/enums/ProcessFlag'
+
 export const drawerWidth: number = 250
+export const PROCESS_FLAG: { [k: string]: ProcessFlag } = {
+  updateFlag: 1,
+  deleteFlag: 2,
+}
 
 export function toStrData(date: Date): string {
   const year = date.getFullYear()

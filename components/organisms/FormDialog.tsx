@@ -6,10 +6,11 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
+import theme from '@/theme'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     width: '500px',
     maxWidth: '100%',
@@ -17,7 +18,14 @@ const useStyles = makeStyles({
   title: {
     textAlign: 'center',
   },
-})
+  cancel: {
+    color: theme.palette.action.disabled,
+  },
+  action: {
+    padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
+    justifyContent: 'center',
+  },
+}))
 
 export type Props = {
   buttonText: string
@@ -65,11 +73,15 @@ const FormDialog = ({
           {dialogTitle}
         </DialogTitle>
         <DialogContent className={classes.root}>{children}</DialogContent>
-        <DialogActions>
-          <Button onClick={handleClickClose} color="primary">
+        <DialogActions className={classes.action}>
+          <Button
+            onClick={handleClickClose}
+            color="inherit"
+            className={classes.cancel}
+          >
             {cancelText}
           </Button>
-          <Button onClick={handleSubmit} color="primary">
+          <Button onClick={handleSubmit} variant={'contained'} color="primary">
             {submitText}
           </Button>
         </DialogActions>

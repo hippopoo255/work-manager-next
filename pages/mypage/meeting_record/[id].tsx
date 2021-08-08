@@ -28,7 +28,6 @@ const MeetingRecordDetail = () => {
           })
           .catch((err) => {
             setError(err.response)
-            // console.log(err.response)
           })
       }
     }
