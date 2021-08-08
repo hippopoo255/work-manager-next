@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react'
 import { MypageLayout } from '@/layouts'
+import { MypageTitle } from '@/components/atoms'
 import { FormDialog } from '@/components/organisms'
 import { Typography } from '@material-ui/core'
 import { Grid, DialogContentText, TextField } from '@material-ui/core'
@@ -11,11 +12,13 @@ import { useForm, Controller, SubmitHandler } from 'react-hook-form'
 import { postRequest, putRequest } from '@/api'
 import { httpClient } from '@/api/useApi'
 import requests from '@/Requests'
-import { Pager, TaskModel, Priority, Progress } from '@/interfaces'
+import { Pager, AlertStatus } from '@/interfaces'
+import { Task, Priority, Progress } from '@/interfaces/models'
 import { toStrData } from '@/lib/util'
 import { TaskTable } from '@/components/organisms'
 import { AxiosError } from 'axios'
 import { CustomAlert } from '@/components/atoms'
+import { FormErrorMessage } from '@/components/atoms'
 
 export type Inputs = {
   body: string
@@ -24,24 +27,20 @@ export type Inputs = {
   priority_id: number
 }
 
-export type AlertStatus = {
-  severity: 'error' | 'warning' | 'info' | 'success'
-  variant: 'filled' | 'outlined' | 'standard'
-  msg: string
-}
-
 const Index = () => {
   const [open, setOpen] = useState<boolean>(false)
+  const [updateFlag, setUpdateFlag] = useState<number | null>(null)
+  const [priorityList, setPriorityList] = useState<Priority[]>([])
+  const [progressList, setProgressList] = useState<Progress[]>([])
+  const [tasks, setTasks] = useState<Pager<Task> | any>([])
+  const [lastUri, setLastUri] = useState<string>(requests.task.mytask)
+  // TODO: 状態管理すべき
   const [alertStatus, setAlertStatus] = useState<AlertStatus>({
     severity: 'error',
     variant: 'filled',
     msg: '',
+    show: false,
   })
-  const [updateFlag, setUpdateFlag] = useState<number | null>(null)
-  const [priorityList, setPriorityList] = useState<Priority[]>([])
-  const [progressList, setProgressList] = useState<Progress[]>([])
-  const [tasks, setTasks] = useState<Pager<TaskModel> | any>([])
-  const [lastUri, setLastUri] = useState<string>(requests.task.mytask)
 
   useEffect(() => {
     const init = async () => {
@@ -58,15 +57,15 @@ const Index = () => {
     init()
   }, [])
 
-  const calc = alertStatus.msg
+  const calc = alertStatus.show
 
   useEffect(() => {
     setTimeout(() => {
       setAlertStatus((prev) => ({
         ...prev,
-        msg: '',
+        show: false,
       }))
-    }, 3000)
+    }, 5000)
   }, [calc])
 
   const {
@@ -75,6 +74,7 @@ const Index = () => {
     watch,
     control,
     setValue,
+    setError,
     reset,
     formState: { errors },
   } = useForm<Inputs>()
@@ -89,9 +89,8 @@ const Index = () => {
   )
 
   const edit = (id: number) => {
-    const i: number = tasks.data.findIndex((task: TaskModel) => task.id === id)
+    const i: number = tasks.data.findIndex((task: Task) => task.id === id)
     setUpdateFlag(tasks.data[i].id)
-    // setEditTarget(tasks.data[i])
     setValue('body', tasks.data[i].body)
     setValue('time_limit', new Date(tasks.data[i].time_limit))
     setValue('priority_id', tasks.data[i].priority_id)
@@ -108,26 +107,31 @@ const Index = () => {
   }
 
   const save = async (data: Inputs) => {
-    const taskData = new FormData()
+    const taskData: FormData = new FormData()
     taskData.append('body', data.body)
     taskData.append('time_limit', toStrData(data.time_limit))
     taskData.append('owner_id', '1')
     taskData.append('priority_id', String(data.priority_id))
     taskData.append('progress_id', String(data.progress_id))
     if (!!updateFlag) {
-      await putRequest<TaskModel>(
+      await putRequest<Task, FormData>(
         requests.task.put + `/${updateFlag}`,
         taskData,
         (err) => {
           if (err.status === 422) {
-            console.log('データ形式が正しくありません')
+            setAlertStatus((prev) => ({
+              ...prev,
+              msg: 'データ形式が正しくありません',
+              severity: 'error',
+              show: true,
+            }))
             console.error(err)
           }
           throw err
         }
       )
         .then((task) => {
-          const i = tasks.data.findIndex((t: TaskModel) => t.id === task.id)
+          const i = tasks.data.findIndex((t: Task) => t.id === task.id)
           tasks.data.splice(i, 1, task)
           const newTasks = {
             ...tasks,
@@ -139,6 +143,7 @@ const Index = () => {
             ...prev,
             msg: '更新しました',
             severity: 'success',
+            show: true,
           }))
         })
         .catch((err: AxiosError) => {
@@ -146,17 +151,19 @@ const Index = () => {
           return false
         })
     } else {
-      await postRequest<Promise<TaskModel>>(
-        requests.task.post,
-        taskData,
-        (err) => {
-          if (err.status === 422) {
-            console.error(err)
-          }
-          throw err
+      await postRequest<Task, FormData>(requests.task.post, taskData, (err) => {
+        if (err.status === 422) {
+          setAlertStatus((prev) => ({
+            ...prev,
+            msg: 'データ形式が正しくありません',
+            severity: 'error',
+            show: true,
+          }))
+          console.error(err)
         }
-      )
-        .then((task: Promise<TaskModel>) => {
+        throw err
+      })
+        .then((task: Task) => {
           const newData = [task, ...tasks.data]
           newData.splice(10, 1)
           const newTasks = {
@@ -170,6 +177,7 @@ const Index = () => {
             ...prev,
             msg: '保存しました',
             severity: 'success',
+            show: true,
           }))
         })
         .catch((err: AxiosError) => {
@@ -205,6 +213,7 @@ const Index = () => {
           ...prev,
           msg: '削除しました',
           severity: 'error',
+          show: true,
         }))
       })
   }
@@ -212,9 +221,7 @@ const Index = () => {
   return (
     <MypageLayout title="タスク">
       <div className="container">
-        <Typography variant="h2" gutterBottom>
-          タスク
-        </Typography>
+        <MypageTitle>タスク</MypageTitle>
         <section>
           <FormDialog
             buttonText="＋"
@@ -235,6 +242,7 @@ const Index = () => {
                       type="text"
                       required
                       fullWidth
+                      error={!!errors.body}
                     />
                   )}
                   name="body"
@@ -251,7 +259,11 @@ const Index = () => {
                     },
                   }}
                 />
-                {errors.body && errors.body?.message}
+                <p style={{ minHeight: 20 }}>
+                  {!!errors.body && (
+                    <FormErrorMessage msg={errors.body.message} />
+                  )}
+                </p>
               </Grid>
               <Grid item xs={12}>
                 <Controller
@@ -265,10 +277,20 @@ const Index = () => {
                   }}
                   control={control}
                   render={({ field }) => (
-                    <DateTimeInput {...field} required label="期限日時" />
+                    <DateTimeInput
+                      {...field}
+                      required
+                      disablePast
+                      label="期限日時"
+                      error={!!errors.time_limit}
+                    />
                   )}
                 />
-                {errors.time_limit && errors.time_limit?.message}
+                <p style={{ minHeight: 20 }}>
+                  {!!errors.time_limit && (
+                    <FormErrorMessage msg={errors.time_limit.message} />
+                  )}
+                </p>
               </Grid>
               <Grid item xs={6}>
                 <InputLabel shrink id="priority-id-select-label">
