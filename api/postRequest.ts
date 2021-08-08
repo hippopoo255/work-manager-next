@@ -5,9 +5,9 @@ let httpClient = axios.create({
   withCredentials: true,
 })
 
-const postRequest = async <T>(
+const postRequest = async <T, U>(
   path: string,
-  data: any,
+  data: U,
   handleError: ((err: AxiosResponse) => unknown) | null = null
 ): Promise<T> => {
   const axiosFunc: () => Promise<AxiosResponse<T>> = () => {

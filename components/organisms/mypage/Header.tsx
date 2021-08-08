@@ -4,12 +4,14 @@ import MenuIcon from '@material-ui/icons/Menu'
 import { AvatarMenu } from '@/components/molecules'
 import clsx from 'clsx'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
-import { UserModel } from '@/interfaces'
+import { darken } from '@material-ui/core'
+import { User } from '@/interfaces/models'
 import { drawerWidth } from '@/lib/util'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     appBar: {
+      background: `linear-gradient(165deg, ${darken('#5dff26', 0.1)}, #5cb363)`,
       [theme.breakpoints.up('sm')]: {
         width: `calc(100% - ${drawerWidth}px)`,
         marginLeft: drawerWidth,
@@ -36,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 interface Props {
-  user: UserModel | []
+  user: User | []
   toggleMenu: () => void
 }
 

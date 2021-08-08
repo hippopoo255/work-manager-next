@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios'
-import Router from 'next/router'
+import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
 
 export let httpClient = axios.create({
@@ -13,12 +13,17 @@ const useApi = <T>(
   handleError: ((err: AxiosResponse) => void) | null = null
 ): T => {
   const [data, setData] = useState<T>(initialState)
+  const router = useRouter()
+
   useEffect(() => {
     const func = async () => {
       const res = await axiosFunc().catch((err): AxiosResponse => {
+        if (err.response.status === 401) {
+          router.push('/login')
+        }
         return err.response
       })
-      if (res.status !== 200) {
+      if (res.status >= 400) {
         handleError ? handleError(res) : console.error(res)
       } else {
         setData(res.data)

@@ -14,6 +14,9 @@ const theme = createTheme({
       dark: '#d66304',
       contrastText: '#000',
     },
+    common: {
+      black: '#444444',
+    },
   },
   typography: {
     fontFamily: ['"Noto Sans JP Light"', 'Roboto', 'sans-serif'].join(', '),
@@ -23,6 +26,10 @@ const theme = createTheme({
     h2: {
       fontSize: '1.5rem',
       fontWeight: 'bold',
+    },
+    h6: {
+      fontSize: '1rem',
+      fontWeight: 'normal',
     },
   },
 })

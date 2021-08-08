@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import clsx from 'clsx'
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
+import { darken } from '@material-ui/core'
 import AppBar from '@material-ui/core/AppBar'
 import Drawer from '@material-ui/core/Drawer'
 import Toolbar from '@material-ui/core/Toolbar'
@@ -18,7 +19,7 @@ import { useRouter } from 'next/router'
 import axios from '@/axios'
 import requests from '@/Requests'
 import { AvatarMenu } from '../molecules'
-import { UserModel } from '@/interfaces'
+import { User } from '@/interfaces/models'
 
 export type Menu = {
   text: string
@@ -29,13 +30,13 @@ export type Menu = {
 export type Anchor = 'top' | 'left' | 'bottom' | 'right'
 
 export type Props = {
-  user: UserModel | []
+  user: User | []
 }
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     header: {
-      background: `radial-gradient(circle at 40px 50px, ${theme.palette.primary.light} 0 10%, ${theme.palette.primary.main} 70%)`,
+      background: `linear-gradient(165deg, ${darken('#5dff26', 0.1)}, #5cb363)`,
     },
     list: {
       width: 250,

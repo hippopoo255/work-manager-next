@@ -16,6 +16,7 @@ import TablePagination from '@material-ui/core/TablePagination'
 import TableRow from '@material-ui/core/TableRow'
 import TableSortLabel from '@material-ui/core/TableSortLabel'
 import Toolbar from '@material-ui/core/Toolbar'
+import { Title } from '@/components/atoms'
 import Avatar from '@material-ui/core/Avatar'
 import Typography from '@material-ui/core/Typography'
 import Paper from '@material-ui/core/Paper'
@@ -25,7 +26,8 @@ import Tooltip from '@material-ui/core/Tooltip'
 import DeleteIcon from '@material-ui/icons/Delete'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined'
-import { TaskModel, Pager } from '@/interfaces'
+import { Pager } from '@/interfaces'
+import { Task } from '@/interfaces/models'
 import { toStrLabel } from '@/lib/util'
 import { ConfirmDialog } from '@/components/organisms'
 
@@ -166,14 +168,14 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 
   return (
     <TableHead>
-      <TableRow>
+      <TableRow className={classes.head}>
         <TableCell padding="checkbox">
           <Checkbox
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
             inputProps={{ 'aria-label': 'select all desserts' }}
-            className={classes.checkBox}
+            className={clsx([classes.headCheck, classes.checkBox])}
           />
         </TableCell>
         {headCells.map((headCell) => (
@@ -225,7 +227,7 @@ const useToolbarStyles = makeStyles((theme: Theme) =>
     },
     addBtn: {
       background: '#404040',
-      color: '#ffffff',
+      color: theme.palette.common.white,
       '&:hover': {
         background: lighten('#404040', 0.2),
       },
@@ -259,14 +261,9 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
           {numSelected} selected
         </Typography>
       ) : (
-        <Typography
-          className={classes.title}
-          variant="h6"
-          id="tableTitle"
-          component="div"
-        >
-          タスク一覧
-        </Typography>
+        <div className={classes.title}>
+          <Title>タスク一覧</Title>
+        </div>
       )}
       {numSelected > 0 ? (
         <Tooltip title="削除する">
@@ -290,6 +287,18 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       width: '100%',
     },
+    head: {
+      background: theme.palette.common.black,
+      '& .MuiTableSortLabel-root': {
+        color: theme.palette.common.white,
+        fontWeight: '800',
+      },
+      '& .MuiTableSortLabel-root.MuiTableSortLabel-active.MuiTableSortLabel-root.MuiTableSortLabel-active .MuiTableSortLabel-icon':
+        {
+          color: theme.palette.common.white,
+          fontWeight: '800',
+        },
+    },
     paper: {
       width: '100%',
       marginBottom: theme.spacing(2),
@@ -298,6 +307,9 @@ const useStyles = makeStyles((theme: Theme) =>
       minWidth: 750,
     },
     row: {
+      '&:nth-of-type(even)': {
+        backgroundColor: theme.palette.action.hover,
+      },
       '&.Mui-selected':
         theme.palette.type === 'light'
           ? {
@@ -316,6 +328,9 @@ const useStyles = makeStyles((theme: Theme) =>
       '&.Mui-checked': {
         color: theme.palette.error.light,
       },
+    },
+    headCheck: {
+      color: theme.palette.common.white,
     },
     visuallyHidden: {
       border: 0,
@@ -342,7 +357,7 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 export type Props = {
-  tasks: Pager<TaskModel>
+  tasks: Pager<Task>
   onPage: any
   onAdd: (isOpen: true) => void
   onEdit: (id: number) => void
@@ -362,9 +377,9 @@ const TaskTable: FC<Props> = ({
   const [selected, setSelected] = useState<number[]>([])
   const [rows, setRows] = useState<Data[]>([])
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false)
-  const getRows = (tasks: Pager<TaskModel>) => {
+  const getRows = (tasks: Pager<Task>) => {
     return tasks.data
-      ? tasks.data.map((task: TaskModel) =>
+      ? tasks.data.map((task: Task) =>
           createData(
             task.id,
             task.body,
@@ -533,7 +548,7 @@ const TaskTable: FC<Props> = ({
                 })
               ) : (
                 <TableRow>
-                  <TableCell style={{ height: 53 }} colSpan={6}>
+                  <TableCell style={{ height: 53 }} colSpan={8}>
                     データがまだありません。
                   </TableCell>
                 </TableRow>
@@ -553,9 +568,5 @@ const TaskTable: FC<Props> = ({
     </div>
   )
 }
-
-// const TaskTable = (props: EnhancedTableProps) => {
-//   return <div></div>
-// }
 
 export default TaskTable

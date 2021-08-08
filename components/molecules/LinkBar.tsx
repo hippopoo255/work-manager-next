@@ -1,5 +1,6 @@
 import React from 'react'
-import { Link, ListItem, ListItemIcon, ListItemText } from '@material-ui/core'
+import Link from 'next/link'
+import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core'
 import clsx from 'clsx'
 import { makeStyles } from '@material-ui/core/styles'
 import InboxIcon from '@material-ui/icons/MoveToInbox'
@@ -38,21 +39,20 @@ const LinkBar = ({ item, activeClass, onItem }: Props) => {
 
   const handleLink = (to: string, e: React.SyntheticEvent) => {
     e.preventDefault()
-    console.log(to)
     onItem(to)
   }
 
   return (
-    <Link
-      component="li"
-      href={item.to}
-      onClick={handleLink.bind(null, item.to)}
-      color="inherit"
-      className={clsx(classes.root, {
-        [classes.active]: activeClass,
-      })}
-    >
-      <ListItem button>
+    <Link href={item.to} passHref>
+      <ListItem
+        button
+        component="a"
+        color="inherit"
+        className={clsx(classes.root, {
+          [classes.active]: activeClass,
+        })}
+        onClick={handleLink.bind(null, item.to)}
+      >
         <ListItemIcon>{item.icon || <InboxIcon />}</ListItemIcon>
         <ListItemText primary={item.text} />
       </ListItem>
