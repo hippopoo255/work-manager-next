@@ -1,59 +1,58 @@
 import React from 'react'
 import { MypageLayout } from '@/layouts'
 import { GetStaticProps, GetServerSideProps, GetStaticPropsContext } from 'next'
-import Head from 'next/head'
-import axios from '@/axios'
-import requests from '@/Requests'
-import { useState, useEffect } from 'react'
-import useSWR from 'swr'
-import {MuiButton} from '@/components/atoms'
+import Grid from '@material-ui/core/Grid'
+import Paper from '@material-ui/core/Paper'
+import { LatestNews, ScheduleCalendar } from '@/components/organisms'
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import clsx from 'clsx'
 
-export type User = {
-  id: number
-  family_name: string
-  given_name: string
+const useStyles = makeStyles((theme: Theme) => ({
+  paper: {
+    padding: theme.spacing(2),
+    display: 'flex',
+    overflow: 'auto',
+    flexDirection: 'column',
+  },
+  fixedHeight: {
+    height: 240,
+  },
+}))
+interface Props {
+  window?: () => Window
 }
 
-const Dashboard = () => {
-  const [user, setUser] = useState<User|any>([])
-  useEffect(() => {
-    axios.get(requests.currentUser).then((res) => {
-      setUser(res.data)
-    })
-  }, [])
+const Dashboard = (props: Props) => {
+  const classes = useStyles()
+
+  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight)
 
   return (
-    <MypageLayout>
-      <Head>
-        <title>マイページ</title>
-      </Head>
-      <section>
-        <h2>マイページ</h2>
-        <div>
-          <MuiButton
-            label="わっしょい"
-            variant="contained"
-            color="primary"
-          />
-          <span>{user.family_name}さん、こんにちは</span>
-        </div>
-      </section>
+    <MypageLayout title="ダッシュボード">
+      <>
+        <section className="container">
+          <Grid container spacing={3}>
+            {/* Something Summary */}
+            <Grid item xs={12}>
+              <Paper className={classes.paper}>
+                <LatestNews />
+              </Paper>
+            </Grid>{' '}
+            {/* Schedule Calendar */}
+            <Grid item xs={12} md={8} lg={9}>
+              <Paper className={fixedHeightPaper}>
+                <ScheduleCalendar />
+              </Paper>
+            </Grid>
+            {/* Recent Task */}
+            <Grid item xs={12} md={4} lg={3}>
+              <Paper className={fixedHeightPaper}></Paper>
+            </Grid>
+          </Grid>
+        </section>
+      </>
     </MypageLayout>
   )
 }
-
-// export const getServerSideProps: GetServerSideProps<Props> = async (context) => {
-//   const header = {
-//     headers: {
-//       Cookie: context.req.cookies
-//     }
-//   }
-//   const response = await axios.get(requests.currentUser, header)
-//   return {
-//     props: {
-//       user: response.data,
-//     }
-//   }
-// }
 
 export default Dashboard

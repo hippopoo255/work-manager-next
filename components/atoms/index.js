@@ -1,1 +1,5 @@
-export  {default as MuiButton} from './MuiButton'
+export { default as CustomAlert } from './CustomAlert'
+export { default as MuiButton } from './MuiButton'
+export { default as MypageTitle } from './MypageTitle'
+export { default as Title } from './Title'
+export { default as FormErrorMessage } from './FormErrorMessage'
