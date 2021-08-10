@@ -6,10 +6,10 @@ import { NextPage } from 'next'
 export type Props = {
   statusCode: number
 }
-const Custom404Page: NextPage = () => {
+const Custom403Page: NextPage = () => {
   return (
     <>
-      <p>お探しのページは見つかりませんでした</p>
+      <p>閲覧権限がありません。</p>
       <Link onClick={() => Router.back()} component="button">
         <a>back</a>
       </Link>
@@ -17,4 +17,4 @@ const Custom404Page: NextPage = () => {
   )
 }
 
-export default Custom404Page
+export default Custom403Page
