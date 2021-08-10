@@ -2,8 +2,23 @@ const requestUri = {
   login: '/login',
   logout: '/logout',
   currentUser: '/user/current',
+  currentUserWithChat: '/user/current/chat_rooms',
   priority: {
     list: '/priority',
+  },
+  chatRoom: {
+    list: '/author/chat_room',
+    post: '/chat_room',
+    put: '/chat_room/',
+    delete: '/chat_room/',
+    id: '/chat_room/',
+  },
+  chatMessage: {
+    list: '/author/chat_room',
+    post: '/chat_room',
+    put: '/chat_room/',
+    delete: '/chat_room/',
+    id: '/chat_room/',
   },
   progress: {
     list: '/progress',

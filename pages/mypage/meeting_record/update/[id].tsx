@@ -177,11 +177,8 @@ const MeetingRecordUpdate = ({ meetingPlaceList }: Props) => {
     }
     fetchUpdateRecord()
   }, [paramId])
-  const handleUpdate = (title: string) => {
-    setDefaultValues((prev) => ({
-      ...prev,
-      title,
-    }))
+  const handleUpdate = (data: MeetingRecordInputs) => {
+    setDefaultValues(data)
   }
 
   return (

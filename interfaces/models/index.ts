@@ -1,3 +1,6 @@
+export type { ChatImage } from './ChatImage'
+export type { ChatMessage } from './ChatMessage'
+export type { ChatRoom } from './ChatRoom'
 export type { DocumentFolder } from './DocumentFolder'
 export type { DocumentFile } from './DocumentFile'
 export type { MeetingRecord } from './MeetingRecord'

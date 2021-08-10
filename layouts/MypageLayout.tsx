@@ -39,7 +39,7 @@ const MypageLayout = ({ children, title }: LayoutOrg) => {
   const req = () => {
     return httpClient.get(requests.currentUser)
   }
-  const user = useApi<User | []>(req, [])
+  const user = useApi<User | ''>(req, '')
 
   const classes = useStyles()
   const suffix = process.env.NEXT_PUBLIC_SITE_NAME

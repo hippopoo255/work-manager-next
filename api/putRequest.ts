@@ -14,7 +14,7 @@ let httpClient = axios.create({
 const putRequest = async <T, U>(
   path: string,
   data: U,
-  handleError: ((err: AxiosResponse) => void) | null = null
+  handleError: ((err: AxiosResponse) => unknown) | null = null
 ): Promise<T> => {
   let config: Config = {
     headers: {
