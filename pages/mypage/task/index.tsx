@@ -224,7 +224,6 @@ const Index = () => {
         <MypageTitle>タスク</MypageTitle>
         <section>
           <FormDialog
-            buttonText="＋"
             onSubmit={handleSubmit(handleSave)}
             dialogTitle={!!updateFlag ? 'タスクの更新' : 'タスクの新規登録'}
             open={open}

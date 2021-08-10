@@ -6,6 +6,8 @@ import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import { makeStyles, createStyles, Theme } from '@material-ui/core'
+import PropTypes from 'prop-types'
+import { CircularButton } from '@/components/molecules'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -34,10 +36,20 @@ const useStyles = makeStyles((theme: Theme) =>
 export type Props = {
   open: boolean
   setOpen: (isOpen: boolean) => void
+  execText: string
+  loading: boolean
+  isCircular: boolean
   onExec: () => void
 }
 
-const ConfirmDialog = ({ open, setOpen, onExec }: Props) => {
+const ConfirmDialog = ({
+  open,
+  setOpen,
+  execText,
+  onExec,
+  loading,
+  isCircular,
+}: Props) => {
   const handleClickOpen = (isOpen: boolean) => {
     setOpen(isOpen)
   }
@@ -46,9 +58,9 @@ const ConfirmDialog = ({ open, setOpen, onExec }: Props) => {
     setOpen(false)
   }
 
-  const handleExec = () => {
+  const handleExec = async () => {
     // setOpen(false)
-    onExec()
+    await onExec()
   }
 
   const classes = useStyles()
@@ -73,13 +85,39 @@ const ConfirmDialog = ({ open, setOpen, onExec }: Props) => {
           <Button onClick={handleClose} color="default">
             キャンセル
           </Button>
-          <Button onClick={handleExec} color="inherit" className={classes.exec}>
-            実行
-          </Button>
+
+          {isCircular ? (
+            <CircularButton
+              loading={loading}
+              onClick={handleExec}
+              submitText={execText}
+              color={'inherit'}
+            />
+          ) : (
+            <Button
+              onClick={handleExec}
+              color="inherit"
+              className={classes.exec}
+            >
+              {execText}
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
     </div>
   )
+}
+
+ConfirmDialog.propTypes = {
+  execText: PropTypes.string,
+  isCircular: PropTypes.bool,
+  loading: PropTypes.bool,
+}
+
+ConfirmDialog.defaultProps = {
+  execText: '削除',
+  isCircular: false,
+  loading: false,
 }
 
 export default ConfirmDialog
