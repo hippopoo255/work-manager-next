@@ -1,10 +1,11 @@
 $blue: #1d86cc;
 $green: #3bb95b;
 $lightGreen: #23e775;
-$primary: $green;
-$primaryDark: darken($primary, 20%);
+$primaryColor: $green;
+$primaryDark: darken($primaryColor, 20%);
 $black: #404040;
-$white: #fefefe;
+$lightGrey: #eeeeee;
+$white: #ffffff;
 
 // font-family
 $fontFamilyBasis: 'Noto Sans JP', Roboto, sans-serif;

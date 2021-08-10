@@ -30,7 +30,7 @@ export type Menu = {
 export type Anchor = 'top' | 'left' | 'bottom' | 'right'
 
 export type Props = {
-  user: User | []
+  user: User | ''
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const Header = ({ user }: Props) => {
   const classes = useStyles()
   const router = useRouter()
-  const isLogin: boolean = !Array.isArray(user)
+  const isLogin: boolean = !!user
   const [state, setState] = useState(false)
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -127,7 +127,7 @@ const Header = ({ user }: Props) => {
         <Typography variant="h6" className={classes.title}>
           <Link href="/">{process.env.NEXT_PUBLIC_SITE_NAME}</Link>
         </Typography>
-        {!Array.isArray(user) && <AvatarMenu user={user} />}
+        {!!user && <AvatarMenu user={user} />}
         <IconButton
           color="inherit"
           aria-label="open drawer"
