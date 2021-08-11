@@ -8,6 +8,7 @@ export { default as Header } from './Header'
 export { default as LatestNews } from './LatestNews'
 export { default as ScheduleCalendar } from './ScheduleCalendar'
 export { default as TaskTable } from './TaskTable'
+export { default as ChatRoomList } from './ChatRoomList'
 // マイページ
 export { default as Sidebar } from './mypage/Sidebar'
 export { default as MypageHeader } from './mypage/Header'

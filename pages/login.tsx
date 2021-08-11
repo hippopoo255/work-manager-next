@@ -22,6 +22,7 @@ import { AxiosError } from 'axios'
 import { CustomAlert } from '@/components/atoms'
 import { AlertStatus } from '@/interfaces'
 import { darken } from '@material-ui/core'
+import { FormErrorMessage } from '@/components/atoms'
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -38,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       theme.shadows[2],
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
+    width: '100%',
     marginTop: theme.spacing(1),
   },
   submit: {
@@ -82,6 +83,7 @@ const Login = () => {
     handleSubmit,
     watch,
     control,
+    setError,
     formState: { errors },
   } = useForm<Inputs>()
 
@@ -108,8 +110,16 @@ const Login = () => {
       .then((res: User) => {
         router.push('/mypage')
       })
-      .catch((err: AxiosError) => {
-        return false
+      .catch((err) => {
+        const errBody: { [k: string]: string[] } = err.data.errors
+        setError('login_id', {
+          type: 'invalid',
+          message: errBody.login_id[0],
+        })
+        setError('password', {
+          type: 'invalid',
+          message: errBody.login_id[0],
+        })
       })
   }
 
@@ -141,18 +151,30 @@ const Login = () => {
                   {...field}
                   fullWidth
                   variant="outlined"
-                  margin="normal"
                   required
+                  margin="normal"
                   label="ログインID"
                   autoFocus
                   id="login_id"
+                  error={!!errors.login_id}
                 />
               )}
               name="login_id"
               control={control}
               defaultValue=""
-              rules={{ required: true }}
+              rules={{
+                required: {
+                  value: true,
+                  message: 'ログインIDは必須です',
+                },
+              }}
             />
+            <p style={{ minHeight: 20 }}>
+              {!!errors.login_id && (
+                <FormErrorMessage msg={errors.login_id.message} />
+              )}
+            </p>
+
             <Controller
               render={({ field }) => (
                 <TextField
@@ -161,6 +183,7 @@ const Login = () => {
                   variant="outlined"
                   margin="normal"
                   required
+                  error={!!errors.password}
                   label="パスワード"
                   type="password"
                   id="password"
@@ -168,8 +191,19 @@ const Login = () => {
               )}
               name="password"
               control={control}
-              rules={{ required: true }}
+              rules={{
+                required: {
+                  value: true,
+                  message: 'パスワードは必須です',
+                },
+              }}
             />
+            <p style={{ minHeight: 20 }}>
+              {!!errors.password && (
+                <FormErrorMessage msg={errors.password.message} />
+              )}
+            </p>
+
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="パスワードを記憶する"

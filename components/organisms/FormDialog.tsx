@@ -9,6 +9,7 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
 import theme from '@/theme'
+import { CircularButton } from '../molecules'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -19,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'center',
   },
   cancel: {
-    color: theme.palette.action.disabled,
+    color: theme.palette.text.disabled,
   },
   action: {
     padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
@@ -28,7 +29,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 export type Props = {
-  buttonText: string
   onSubmit: () => Promise<any>
   dialogTitle: string
   cancelText: string
@@ -36,10 +36,11 @@ export type Props = {
   children: React.ReactNode
   open: boolean
   setOpen: (isOpen: boolean) => void
+  isCircular: boolean
+  loading: boolean
 }
 
 const FormDialog = ({
-  buttonText,
   onSubmit,
   dialogTitle,
   cancelText,
@@ -47,6 +48,8 @@ const FormDialog = ({
   children,
   open,
   setOpen,
+  isCircular,
+  loading,
 }: Props) => {
   const classes = useStyles()
   // const [open, setOpen] = React.useState(false)
@@ -81,9 +84,17 @@ const FormDialog = ({
           >
             {cancelText}
           </Button>
-          <Button onClick={handleSubmit} variant={'contained'} color="primary">
-            {submitText}
-          </Button>
+          {isCircular ? (
+            <CircularButton loading={loading} onClick={handleSubmit} />
+          ) : (
+            <Button
+              onClick={handleSubmit}
+              variant={'contained'}
+              color="primary"
+            >
+              {submitText}
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
     </div>
@@ -94,12 +105,16 @@ FormDialog.propTypes = {
   cancelText: PropTypes.string,
   submitText: PropTypes.string,
   dialogTitle: PropTypes.string,
+  isCircular: PropTypes.bool,
+  loading: PropTypes.bool,
 }
 
 FormDialog.defaultProps = {
   cancelText: 'キャンセル',
   submitText: '保存',
   dialogTitle: 'フォーム画面',
+  isCircular: false,
+  loading: false,
 }
 
 export default FormDialog
