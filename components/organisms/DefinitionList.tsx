@@ -1,22 +1,23 @@
 import React from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
+import { darken } from '@material-ui/core'
 import { grey } from '@material-ui/core/colors'
 import { Box } from '@material-ui/core'
-
-type Item = {
-  term: string | number
-  key: string
-  el: React.ReactNode
-} | null
+import { DefinitionListItem } from '@/interfaces/common'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     width: '100%',
-    borderColor: grey[400],
+    borderColor: theme.palette.grey[400],
   },
   row: {
     width: '100%',
-    borderColor: grey[400],
+    borderColor: theme.palette.grey[400],
+    display: 'flex',
+    flexDirection: 'column',
+    [theme.breakpoints.up('md')]: {
+      flexDirection: 'row',
+    },
     '&:last-of-type': {
       borderBottom: 0,
     },
@@ -28,10 +29,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'center',
     minWidth: 150,
     [theme.breakpoints.down('md')]: {
-      borderBottom: `1px solid ${grey[400]}`,
+      borderBottom: `1px solid ${theme.palette.grey[400]}`,
     },
     [theme.breakpoints.up('md')]: {
-      borderRight: `1px solid ${grey[400]}`,
+      borderRight: `1px solid ${theme.palette.grey[400]}`,
     },
   },
   data: {
@@ -42,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 interface Props {
-  list: Item[]
+  list: (DefinitionListItem | null)[]
 }
 const DefinitionList = ({ list }: Props) => {
   const classes = useStyles()
@@ -51,15 +52,9 @@ const DefinitionList = ({ list }: Props) => {
       <Box component="dl" border={1} className={classes.root}>
         {list.length > 0 &&
           list.map(
-            (item: Item) =>
+            (item: DefinitionListItem | null) =>
               item !== null && (
-                <Box
-                  display={'flex'}
-                  flexDirection={{ xs: 'column', md: 'row' }}
-                  key={item.key}
-                  borderBottom={1}
-                  className={classes.row}
-                >
+                <Box key={item.key} borderBottom={1} className={classes.row}>
                   <Box component={'dt'} className={classes.term}>
                     {item.term}
                   </Box>

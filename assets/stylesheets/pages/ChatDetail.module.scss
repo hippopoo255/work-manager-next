@@ -1,0 +1,31 @@
+@import '../partials/variables';
+
+.msgBody {
+  padding: 8px 16px;
+  background: $lightGrey;
+  border-radius: 12px;
+  position: relative;
+  white-space: pre-wrap;
+  &::after {
+    content: '';
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-width: 4px 12px 4px 0;
+    border-color: transparent $lightGrey transparent transparent;
+    border-style: solid;
+    position: absolute;
+    top: 16px;
+    left: -12px;
+  }
+  &.mine {
+    background: $primaryColor;
+    color: $white;
+    &::after {
+      border-width: 4px 0 4px 12px;
+      border-color: transparent transparent transparent $primaryColor;
+      left: initial;
+      right: -12px;
+    }
+  }
+}

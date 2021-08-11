@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 interface Props {
-  user: User | []
+  user: User | ''
   toggleMenu: () => void
 }
 
@@ -64,7 +64,7 @@ const MypageHeader = ({ user, toggleMenu }: Props) => {
           <Typography variant="h6" noWrap className={classes.title}>
             <Link href="/">{process.env.NEXT_PUBLIC_SITE_NAME}</Link>
           </Typography>
-          {!Array.isArray(user) && <AvatarMenu user={user} />}
+          {!!user && <AvatarMenu user={user} />}
         </Toolbar>
       </div>
     </AppBar>

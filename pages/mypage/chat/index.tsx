@@ -1,12 +1,12 @@
-import React from 'react'
-import { MypageLayout } from '@/layouts'
+import React, { useState, useMemo, useEffect } from 'react'
+import { ChatLayout } from '@/layouts'
+import { MypageTitle } from '@/components/atoms'
 
 const Index = () => {
   return (
-    <MypageLayout title="チャット">
-      <h2>チャット</h2>
-      <section></section>
-    </MypageLayout>
+    <ChatLayout title="チャット" mainNone sideNone={false}>
+      <div></div>
+    </ChatLayout>
   )
 }
 

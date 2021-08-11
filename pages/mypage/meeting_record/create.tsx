@@ -163,6 +163,7 @@ const MeetingRecordCreate = ({ meetingPlaceList }: Props) => {
         classes={classes}
         meetingPlaceList={meetingPlaceList}
         handleSuccess={handleStore}
+        saveAction="create"
       />
     </MypageLayout>
   )
