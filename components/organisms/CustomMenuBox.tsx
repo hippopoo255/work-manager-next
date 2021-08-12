@@ -3,6 +3,7 @@ import IconButton from '@material-ui/core/IconButton'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
 import clsx from 'clsx'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
@@ -16,6 +17,7 @@ type Props = {
   }[]
   id: number
   small: boolean
+  horizon: boolean
 }
 
 const ITEM_HEIGHT = 48
@@ -36,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-const CustomMenuBox = ({ options, small, id }: Props) => {
+const CustomMenuBox = ({ options, small, horizon, id }: Props) => {
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
@@ -61,8 +63,9 @@ const CustomMenuBox = ({ options, small, id }: Props) => {
         aria-controls="long-menu"
         aria-haspopup="true"
         onClick={handleClick}
+        size={small ? 'small' : 'medium'}
       >
-        <MoreVertIcon />
+        {horizon ? <MoreHorizIcon /> : <MoreVertIcon />}
       </IconButton>
       <Menu
         id="long-menu"
@@ -99,10 +102,12 @@ const CustomMenuBox = ({ options, small, id }: Props) => {
 
 CustomMenuBox.propTypes = {
   small: PropTypes.bool,
+  horizon: PropTypes.bool,
 }
 
 CustomMenuBox.defaultProps = {
   small: false,
+  horizon: false,
 }
 
 export default CustomMenuBox
