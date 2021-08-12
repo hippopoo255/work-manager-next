@@ -26,10 +26,9 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 export type Letter = () => string
-export type UserMemo = () => User | []
 
 interface Props {
-  user: User | []
+  user: User | ''
 }
 
 const AvatarMenu = ({ user }: Props) => {
@@ -55,12 +54,7 @@ const AvatarMenu = ({ user }: Props) => {
   const [open, setOpen] = useState(false)
   const anchorRef = useRef<HTMLButtonElement>(null)
 
-  const letter: Letter = () => {
-    if (!Array.isArray(user)) {
-      return user.family_name.slice(0, 1)
-    }
-    return ''
-  }
+  const letter: Letter = () => (!!user ? user.family_name.slice(0, 1) : '')
 
   const handleItem = async (to: string, e: React.MouseEvent<EventTarget>) => {
     handleClose(e)
@@ -118,7 +112,7 @@ const AvatarMenu = ({ user }: Props) => {
         component="span"
       >
         <Avatar
-          alt={!Array.isArray(user) ? user.family_name : ''}
+          alt={!!user ? user.family_name : ''}
           src=""
           className={classes.avatar}
         >

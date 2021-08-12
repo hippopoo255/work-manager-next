@@ -1,6 +1,7 @@
 import { ProcessFlag } from '@/interfaces/enums/ProcessFlag'
 
 export const drawerWidth: number = 250
+export const chatRoomListWidth: number = 360
 export const PROCESS_FLAG: { [k: string]: ProcessFlag } = {
   updateFlag: 1,
   deleteFlag: 2,
@@ -38,4 +39,31 @@ export function toStrFormalLabel(date: Date): string {
   const hour = `${date.getHours()}:`
   const minute = `0${date.getMinutes()}`.slice(-2)
   return `${year}${month}${day}(${dayOfWeekStr}) ${hour}${minute}`
+}
+
+export function postTiming(createDate: Date) {
+  const now = new Date()
+  const diff = now.getTime() - createDate.getTime()
+  const minutes = Math.floor(diff / 1000 / 60)
+  const hours = Math.floor(diff / 1000 / 60 / 60)
+  const days = Math.floor(diff / 1000 / 60 / 60 / 24)
+
+  if (minutes < 1) {
+    return 'たった今'
+  } else if (hours < 1) {
+    return `約${minutes}分前`
+  } else if (days < 1) {
+    return `約${hours}時間前`
+  } else if (now.getFullYear() > createDate.getFullYear()) {
+    const year = createDate.getFullYear()
+    const month = createDate.getMonth() + 1
+    const date = createDate.getDate()
+    return `${year}/${month}/${date}`
+  } else {
+    const month = createDate.getMonth() + 1
+    const date = createDate.getDate()
+    const hour = createDate.getHours()
+    const minute = createDate.getMinutes()
+    return `${month}/${date} ${hour}:${minute}`
+  }
 }
