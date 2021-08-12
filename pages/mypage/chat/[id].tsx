@@ -213,6 +213,7 @@ const useStyles = makeStyles((theme: Theme) =>
     none: {
       display: 'none',
     },
+
   })
 )
 
@@ -229,7 +230,6 @@ const ChatDetail = () => {
   const chatRoomId = router.query.id
   const fixedMember: MemberExtInputs[] = []
   const scrollRef = useRef<HTMLElement>(null)
-
   const scrollToLatest = () => {
     if (!!scrollRef) {
       scrollRef!.current!.scrollTop = scrollRef!.current!.scrollHeight
@@ -352,6 +352,7 @@ const ChatDetail = () => {
       body: data.body,
       written_by: userId,
     }
+
     await postRequest<ChatMessage, ChatMessageSubmit>(
       `/chat_room/${chatRoomId}/message`,
       messageSubmitData,

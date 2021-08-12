@@ -166,7 +166,6 @@ const ChatLayout = React.memo(
         })
       }
     }, [activeRoom])
-
     const chatRooms = useMemo(
       (): ChatRoom[] => (!!user ? user.chat_rooms! : []),
       [user]
