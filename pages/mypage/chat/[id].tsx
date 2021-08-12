@@ -13,11 +13,8 @@ import {
   TextField,
   IconButton,
 } from '@material-ui/core'
-import { MenuItem, Menu } from '@material-ui/core'
-
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom'
 import SendIcon from '@material-ui/icons/Send'
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
 import PanoramaOutlinedIcon from '@material-ui/icons/PanoramaOutlined'
 import { useRouter } from 'next/router'
 import { putRequest, getRequest, requestUri, postRequest } from '@/api'
@@ -33,13 +30,12 @@ import { ChatLayout } from '@/layouts'
 import Custom403Page from '@/pages/403'
 import Custom404Page from '@/pages/404'
 import { ChatDetailTitle } from '@/components/molecules'
-import { ConfirmDialog } from '@/components/organisms'
-import { CustomMenuBox } from '@/components/organisms'
-import { ChatRoomForm } from '@/components/template'
+import { ConfirmDialog, CustomMenuBox } from '@/components/organisms'
+import { ChatMessageForm, ChatRoomForm } from '@/components/template'
 import { drawerWidth } from '@/lib/util'
 import styles from '@/assets/stylesheets/pages/ChatDetail.module.scss'
 import { useForm, Controller } from 'react-hook-form'
-
+import { chatRoomListWidth, postTiming } from '@/lib/util'
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -61,11 +57,15 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     head: {
       position: 'fixed',
-      right: 0,
+      left: 0,
       zIndex: 1,
       width: '100%',
       [theme.breakpoints.up('sm')]: {
         paddingLeft: drawerWidth,
+      },
+      [theme.breakpoints.up('md')]: {
+        paddingLeft: drawerWidth + chatRoomListWidth,
+        maxWidth: drawerWidth + chatRoomListWidth + 640,
       },
     },
     top: {
@@ -145,17 +145,20 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     msgItem: {
       gap: theme.spacing(2),
+      maxWidth: 320,
+      [theme.breakpoints.up('sm')]: {
+        maxWidth: 450,
+      },
+      paddingTop: 24,
     },
     myMsgItem: {
       justifyContent: 'flex-end',
+      marginLeft: 'auto',
     },
     msgAvatar: {
       minWidth: theme.spacing(5),
       marginTop: theme.spacing(3),
       flexShrink: 0,
-    },
-    none: {
-      display: 'none',
     },
     horizontal: {
       display: 'flex',
@@ -174,15 +177,41 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     msgTime: {
       color: theme.palette.text.hint,
+      fontFamily: theme.typography.caption.fontFamily,
+      fontSize: theme.typography.caption.fontSize,
+      fontWeight: theme.typography.fontWeightBold,
     },
     msgBody: {
+      position: 'relative',
       '& .MuiTypography-body1': {
         fontSize: theme.typography.body2.fontSize,
         fontWeight: theme.typography.fontWeightBold,
       },
     },
+    msgUpdate: {
+      position: 'absolute',
+      bottom: 0,
+      right: 0,
+      transform: 'translate3d(0, 100%, 0)',
+      pointerEvents: 'none',
+      color: theme.palette.text.hint,
+      fontFamily: theme.typography.caption.fontFamily,
+      fontSize: theme.typography.caption.fontSize,
+      alignSelf: 'flex-end',
+      order: 0,
+      flexShrink: 0,
+    },
+    msgMenu: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      transform: 'translate3d(-100%, 0, 0)',
+    },
     nothing: {
       color: theme.palette.text.disabled,
+    },
+    none: {
+      display: 'none',
     },
   })
 )
@@ -191,6 +220,8 @@ const ChatDetail = () => {
   const classes = useStyles()
   const router = useRouter()
   const [chatRoom, setChatRoom] = useState<ChatRoom | null>(null)
+  const [activeRoom, setActiveRoom] = useState<ChatRoom | null>(null)
+  const [userId, setUserId] = useState<number>(0)
   const [responseError, setResponseError] = useState<any | null>(null)
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false)
   const [formOpen, setFormOpen] = useState<boolean>(false)
@@ -256,8 +287,9 @@ const ChatDetail = () => {
     setFormOpen(true)
   }
 
-  const handleSuccess = (newChatRoom: ChatRoom) => {
-    setChatRoom(newChatRoom)
+  const handleSuccess = (updateChatRoom: ChatRoom) => {
+    setChatRoom(updateChatRoom)
+    setActiveRoom(updateChatRoom)
   }
 
   const handleConfirm = () => {
@@ -281,7 +313,7 @@ const ChatDetail = () => {
 
   const defaultValues: ChatRoomInputs = useMemo(
     () => ({
-      created_by: 1,
+      created_by: chatRoom !== null ? chatRoom.created_by.id : userId,
       name: chatRoom !== null ? chatRoom.name : '',
       members:
         chatRoom !== null
@@ -295,9 +327,8 @@ const ChatDetail = () => {
     }),
     [chatRoom]
   )
-  const sharedBy = 1
 
-  // チャットメッセージの送信
+  // チャットメッセージの新規投稿
   const {
     handleSubmit,
     control,
@@ -312,14 +343,15 @@ const ChatDetail = () => {
     mode: 'onChange',
     defaultValues: {
       body: '',
+      written_by: userId,
     },
   })
+
   const saveMessage = async (data: ChatMessageInputs) => {
     const messageSubmitData = {
       body: data.body,
-      written_by: 1,
+      written_by: userId,
     }
-
     await postRequest<ChatMessage, ChatMessageSubmit>(
       `/chat_room/${chatRoomId}/message`,
       messageSubmitData,
@@ -344,10 +376,16 @@ const ChatDetail = () => {
   }
 
   // チャットメッセージ操作（更新・削除）
+  const [updateMsgInput, setUpdateMsgInput] = useState<ChatMessageInputs>({
+    body: '',
+    written_by: userId,
+  })
+  const [msgFormOpen, setMsgFormOpen] = useState<boolean>(false)
+
   const msgMenuOptions = [
     {
       text: '編集',
-      onClick: (id: number) => updateMessage(id),
+      onClick: (id: number) => handleMsgUpdateForm(id),
     },
     {
       text: '削除',
@@ -355,13 +393,18 @@ const ChatDetail = () => {
       danger: true,
     },
   ]
-
-  const updateMessage = async (id: number) => {
-    const submitData = {
-      body: '',
-      written_by: 1,
+  const handleMsgUpdateForm = (id: number) => {
+    const updateMsg = chatMessages.find((m) => m!.id! === id)
+    if (updateMsg !== null) {
+      setUpdateMsgInput({
+        id: updateMsg!.id!,
+        body: updateMsg!.body!,
+        written_by: userId,
+      })
+      setMsgFormOpen(true)
     }
-
+  }
+  const updateMessage = async (submitData: ChatMessageSubmit, id: number) =>
     await putRequest<ChatMessage, ChatMessageSubmit>(
       `/chat_room/${chatRoomId}/message/${id}`,
       submitData,
@@ -370,26 +413,22 @@ const ChatDetail = () => {
         throw err
       }
     )
-      .then((newMessage) => {
-        reset()
-        setChatRoom((prev) => {
-          if (prev !== null) {
-            const index = prev.messages.findIndex((msg) => msg!.id! === id)
-            prev.messages.splice(index, 1, newMessage)
-            return {
-              ...prev,
-              messages: prev.messages,
-            }
-          } else {
-            return null
-          }
-        })
-      })
-      .catch((err) => {
-        if (err.status === 401) {
-          router.push('/login')
+
+  const handleAfterUpdate = (updateMessage: ChatMessage) => {
+    setChatRoom((prev) => {
+      if (prev !== null) {
+        const index = prev.messages.findIndex(
+          (msg) => msg!.id! === updateMessage.id
+        )
+        prev.messages.splice(index, 1, updateMessage)
+        return {
+          ...prev,
+          messages: prev.messages,
         }
-      })
+      } else {
+        return null
+      }
+    })
   }
 
   const deleteMessage = async (id: number) => {
@@ -419,6 +458,8 @@ const ChatDetail = () => {
       title={!!chatRoom ? chatRoom.name : ''}
       sideNone
       mainNone={false}
+      supplyUserId={setUserId}
+      activeRoom={activeRoom}
     >
       {responseError !== null && responseError.status === 403 && (
         <Custom403Page />
@@ -449,13 +490,23 @@ const ChatDetail = () => {
           <ChatRoomForm
             defaultValues={defaultValues}
             fixedMember={fixedMember}
-            sharedBy={sharedBy}
+            sharedBy={userId}
             open={formOpen}
             setOpen={setFormOpen}
             req={saveReq}
             onSuccess={handleSuccess}
             dialogTitle={
-              chatRoom !== null ? chatRoom.name : 'チャットルームを更新'
+              chatRoom !== null ? chatRoom.name : 'チャットルームの更新'
+            }
+          />
+          <ChatMessageForm
+            defaultValues={updateMsgInput}
+            open={msgFormOpen}
+            setOpen={setMsgFormOpen}
+            req={updateMessage}
+            onSuccess={handleAfterUpdate}
+            dialogTitle={
+              chatRoom !== null ? chatRoom.name : 'チャットメッセージの更新'
             }
           />
           <Divider />
@@ -490,19 +541,25 @@ const ChatDetail = () => {
                             {message?.written_by.full_name}
                           </Typography>
                         </span>
-                        <span className={classes.msgTime}>time</span>
+                        <span className={classes.msgTime}>
+                          {postTiming(new Date(message?.created_at!))}
+                        </span>
                       </div>
                       <ListItemText
                         className={clsx([classes.msgBody, styles.msgBody], {
                           [styles.mine]: message?.mine,
                         })}
                       >
-                        {message?.body}
-                      </ListItemText>
-                      <div className={classes.horizontal}>
-                        <span>a</span>
+                        <small
+                          className={clsx(classes.msgUpdate, {
+                            [classes.none]:
+                              message?.created_at === message?.updated_at,
+                          })}
+                        >
+                          {'（編集済）'}
+                        </small>
                         <span
-                          className={clsx({
+                          className={clsx(classes.msgMenu, {
                             [classes.none]: !message?.mine,
                           })}
                         >
@@ -513,6 +570,10 @@ const ChatDetail = () => {
                             id={message?.id!}
                           />
                         </span>
+                        {message?.body}
+                      </ListItemText>
+                      <div className={classes.horizontal}>
+                        {/* <span>リアクションボタン</span> */}
                       </div>
                     </div>
                   </ListItem>

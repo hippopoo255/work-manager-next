@@ -126,7 +126,6 @@ const ChatRoomForm = ({
     }
     await req(submitData)
       .then((newChatRoom) => {
-        console.log('newChatRoom', newChatRoom)
         setOpen(false)
         reset()
         onSuccess(newChatRoom)
