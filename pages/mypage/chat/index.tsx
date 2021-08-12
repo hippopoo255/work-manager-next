@@ -3,8 +3,16 @@ import { ChatLayout } from '@/layouts'
 import { MypageTitle } from '@/components/atoms'
 
 const Index = () => {
+  const init = () => {}
+
   return (
-    <ChatLayout title="チャット" mainNone sideNone={false}>
+    <ChatLayout
+      supplyUserId={init}
+      title="チャット"
+      mainNone
+      sideNone={false}
+      activeRoom={null}
+    >
       <div></div>
     </ChatLayout>
   )

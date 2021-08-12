@@ -23,6 +23,10 @@ const theme = createTheme({
     button: {
       textTransform: 'none',
     },
+    h1: {
+      fontSize: '1.5rem',
+      fontWeight: 'bold',
+    },
     h2: {
       fontSize: '1.5rem',
       fontWeight: 'bold',

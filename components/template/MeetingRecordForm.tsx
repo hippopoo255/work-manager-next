@@ -340,7 +340,6 @@ const MeetingRecordForm = ({
                   render={({ field }) => (
                     <TextField
                       {...field}
-                      autoFocus
                       id="title"
                       label="会議名"
                       type="text"

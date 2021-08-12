@@ -4,6 +4,7 @@ export interface ChatRoom {
   name: string
   editable: boolean
   members: User[]
+  created_by: User
   messages: (ChatMessage | null)[]
   created_at: string
 }

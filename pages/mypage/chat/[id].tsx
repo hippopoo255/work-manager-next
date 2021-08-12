@@ -30,21 +30,46 @@ import { ChatLayout } from '@/layouts'
 import Custom403Page from '@/pages/403'
 import Custom404Page from '@/pages/404'
 import { ChatDetailTitle } from '@/components/molecules'
-import { ConfirmDialog } from '@/components/organisms'
-import { ChatRoomForm } from '@/components/template'
+import { ConfirmDialog, CustomMenuBox } from '@/components/organisms'
+import { ChatMessageForm, ChatRoomForm } from '@/components/template'
+import { drawerWidth } from '@/lib/util'
 import styles from '@/assets/stylesheets/pages/ChatDetail.module.scss'
 import { useForm, Controller } from 'react-hook-form'
-
+import { chatRoomListWidth, postTiming } from '@/lib/util'
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: 'flex',
       flexDirection: 'column',
       width: '100%',
-      height: '100%',
+      maxHeight: '100%',
+      position: 'fixed',
+      top: 64,
+      left: 0,
+      bottom: 0,
+      [theme.breakpoints.up('sm')]: {
+        position: 'initial',
+        top: 'initial',
+        left: 'initial',
+        bottom: 'initial',
+        height: '100%',
+      },
+    },
+    head: {
+      position: 'fixed',
+      left: 0,
+      zIndex: 1,
+      width: '100%',
+      [theme.breakpoints.up('sm')]: {
+        paddingLeft: drawerWidth,
+      },
+      [theme.breakpoints.up('md')]: {
+        paddingLeft: drawerWidth + chatRoomListWidth,
+        maxWidth: drawerWidth + chatRoomListWidth + 640,
+      },
     },
     top: {
-      padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
+      padding: `12px ${theme.spacing(2)}px`,
       margin: 0,
       background: 'white',
       fontWeight: theme.typography.fontWeightRegular,
@@ -52,11 +77,9 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
       flexShrink: 0,
       boxShadow: theme.shadows[2],
-    },
-    head: {
-      position: 'fixed',
-      zIndex: 1,
-      width: '100%',
+      [theme.breakpoints.down('sm')]: {
+        padding: theme.spacing(1),
+      },
     },
     titleList: {
       display: 'flex',
@@ -75,15 +98,14 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     body: {
       flexGrow: 1,
-      padding: `${theme.spacing(2)}px ${theme.spacing(2)}px ${theme.spacing(
-        1
-      )}px`,
+      flexShrink: 1,
+      padding: theme.spacing(1),
       overflowY: 'scroll',
       marginTop: theme.spacing(8),
     },
     tail: {
       flexShrink: 0,
-      height: theme.spacing(5),
+      minHeight: theme.spacing(5),
       display: 'flex',
     },
     msgForm: {
@@ -94,7 +116,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     msgField: {
       '& .MuiInputBase-multiline': {
-        padding: '10px 0',
+        padding: '13px 0',
       },
     },
     panoramaIcon: {
@@ -106,6 +128,8 @@ const useStyles = makeStyles((theme: Theme) =>
       background: theme.palette.primary.main,
       borderRadius: 0,
       color: 'white',
+      maxHeight: theme.spacing(6),
+      alignSelf: 'flex-end',
       '&:hover': {
         backgroundColor: theme.palette.primary.light,
       },
@@ -121,33 +145,75 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     msgItem: {
       gap: theme.spacing(2),
-      // maxWidth: 350,
+      maxWidth: 320,
+      [theme.breakpoints.up('sm')]: {
+        maxWidth: 450,
+      },
+      paddingTop: 24,
     },
     myMsgItem: {
       justifyContent: 'flex-end',
+      marginLeft: 'auto',
     },
     msgAvatar: {
       minWidth: theme.spacing(5),
       marginTop: theme.spacing(3),
       flexShrink: 0,
     },
-    none: {
-      display: 'none',
+    horizontal: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'flex-start',
+    },
+    between: {
+      display: 'flex',
+      alignItems: 'flex-end',
+      justifyContent: 'space-between',
+      padding: `0 4px`,
     },
     msgUserName: {
       color: theme.palette.text.hint,
       fontWeight: theme.typography.fontWeightBold,
     },
+    msgTime: {
+      color: theme.palette.text.hint,
+      fontFamily: theme.typography.caption.fontFamily,
+      fontSize: theme.typography.caption.fontSize,
+      fontWeight: theme.typography.fontWeightBold,
+    },
     msgBody: {
+      position: 'relative',
       '& .MuiTypography-body1': {
         fontSize: theme.typography.body2.fontSize,
-
         fontWeight: theme.typography.fontWeightBold,
       },
+    },
+    msgUpdate: {
+      position: 'absolute',
+      bottom: 0,
+      right: 0,
+      transform: 'translate3d(0, 100%, 0)',
+      pointerEvents: 'none',
+      color: theme.palette.text.hint,
+      fontFamily: theme.typography.caption.fontFamily,
+      fontSize: theme.typography.caption.fontSize,
+      alignSelf: 'flex-end',
+      order: 0,
+      flexShrink: 0,
+    },
+    msgMenu: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      transform: 'translate3d(-100%, 0, 0)',
     },
     nothing: {
       color: theme.palette.text.disabled,
     },
+    none: {
+      display: 'none',
+    },
+
   })
 )
 
@@ -155,6 +221,8 @@ const ChatDetail = () => {
   const classes = useStyles()
   const router = useRouter()
   const [chatRoom, setChatRoom] = useState<ChatRoom | null>(null)
+  const [activeRoom, setActiveRoom] = useState<ChatRoom | null>(null)
+  const [userId, setUserId] = useState<number>(0)
   const [responseError, setResponseError] = useState<any | null>(null)
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false)
   const [formOpen, setFormOpen] = useState<boolean>(false)
@@ -219,8 +287,9 @@ const ChatDetail = () => {
     setFormOpen(true)
   }
 
-  const handleSuccess = (newChatRoom: ChatRoom) => {
-    setChatRoom(newChatRoom)
+  const handleSuccess = (updateChatRoom: ChatRoom) => {
+    setChatRoom(updateChatRoom)
+    setActiveRoom(updateChatRoom)
   }
 
   const handleConfirm = () => {
@@ -244,7 +313,7 @@ const ChatDetail = () => {
 
   const defaultValues: ChatRoomInputs = useMemo(
     () => ({
-      created_by: 1,
+      created_by: chatRoom !== null ? chatRoom.created_by.id : userId,
       name: chatRoom !== null ? chatRoom.name : '',
       members:
         chatRoom !== null
@@ -258,9 +327,8 @@ const ChatDetail = () => {
     }),
     [chatRoom]
   )
-  const sharedBy = 1
 
-  // チャットメッセージの送信
+  // チャットメッセージの新規投稿
   const {
     handleSubmit,
     control,
@@ -275,12 +343,14 @@ const ChatDetail = () => {
     mode: 'onChange',
     defaultValues: {
       body: '',
+      written_by: userId,
     },
   })
+
   const saveMessage = async (data: ChatMessageInputs) => {
     const messageSubmitData = {
       body: data.body,
-      written_by: 1,
+      written_by: userId,
     }
 
     await postRequest<ChatMessage, ChatMessageSubmit>(
@@ -306,11 +376,91 @@ const ChatDetail = () => {
     })
   }
 
+  // チャットメッセージ操作（更新・削除）
+  const [updateMsgInput, setUpdateMsgInput] = useState<ChatMessageInputs>({
+    body: '',
+    written_by: userId,
+  })
+  const [msgFormOpen, setMsgFormOpen] = useState<boolean>(false)
+
+  const msgMenuOptions = [
+    {
+      text: '編集',
+      onClick: (id: number) => handleMsgUpdateForm(id),
+    },
+    {
+      text: '削除',
+      onClick: (id: number) => deleteMessage(id),
+      danger: true,
+    },
+  ]
+  const handleMsgUpdateForm = (id: number) => {
+    const updateMsg = chatMessages.find((m) => m!.id! === id)
+    if (updateMsg !== null) {
+      setUpdateMsgInput({
+        id: updateMsg!.id!,
+        body: updateMsg!.body!,
+        written_by: userId,
+      })
+      setMsgFormOpen(true)
+    }
+  }
+  const updateMessage = async (submitData: ChatMessageSubmit, id: number) =>
+    await putRequest<ChatMessage, ChatMessageSubmit>(
+      `/chat_room/${chatRoomId}/message/${id}`,
+      submitData,
+      (err) => {
+        console.error(err)
+        throw err
+      }
+    )
+
+  const handleAfterUpdate = (updateMessage: ChatMessage) => {
+    setChatRoom((prev) => {
+      if (prev !== null) {
+        const index = prev.messages.findIndex(
+          (msg) => msg!.id! === updateMessage.id
+        )
+        prev.messages.splice(index, 1, updateMessage)
+        return {
+          ...prev,
+          messages: prev.messages,
+        }
+      } else {
+        return null
+      }
+    })
+  }
+
+  const deleteMessage = async (id: number) => {
+    await httpClient
+      .delete(`/chat_room/${chatRoomId}/message/${id}`)
+      .then(() => {
+        setChatRoom((prev) => {
+          if (prev !== null) {
+            const index = prev.messages.findIndex((msg) => msg!.id! === id)
+            prev.messages.splice(index, 1)
+            return {
+              ...prev,
+              messages: prev.messages,
+            }
+          } else {
+            return null
+          }
+        })
+      })
+      .catch((err) => {
+        console.error(err.response)
+      })
+  }
+
   return (
     <ChatLayout
       title={!!chatRoom ? chatRoom.name : ''}
       sideNone
       mainNone={false}
+      supplyUserId={setUserId}
+      activeRoom={activeRoom}
     >
       {responseError !== null && responseError.status === 403 && (
         <Custom403Page />
@@ -341,20 +491,30 @@ const ChatDetail = () => {
           <ChatRoomForm
             defaultValues={defaultValues}
             fixedMember={fixedMember}
-            sharedBy={sharedBy}
+            sharedBy={userId}
             open={formOpen}
             setOpen={setFormOpen}
             req={saveReq}
             onSuccess={handleSuccess}
             dialogTitle={
-              chatRoom !== null ? chatRoom.name : 'チャットルームを更新'
+              chatRoom !== null ? chatRoom.name : 'チャットルームの更新'
+            }
+          />
+          <ChatMessageForm
+            defaultValues={updateMsgInput}
+            open={msgFormOpen}
+            setOpen={setMsgFormOpen}
+            req={updateMessage}
+            onSuccess={handleAfterUpdate}
+            dialogTitle={
+              chatRoom !== null ? chatRoom.name : 'チャットメッセージの更新'
             }
           />
           <Divider />
           <section ref={scrollRef} className={classes.body}>
             <List>
               {chatMessages.length > 0 ? (
-                chatMessages.map((message) => (
+                chatMessages.map((message, index) => (
                   <ListItem
                     key={`message_${message?.id}`}
                     alignItems={'flex-start'}
@@ -370,22 +530,52 @@ const ChatDetail = () => {
                       <Avatar alt={`Avatar n°${message?.id}`} />
                     </ListItemAvatar>
                     <div>
-                      <Typography
-                        className={clsx(classes.msgUserName, {
-                          [classes.none]: message?.mine,
-                        })}
-                        variant="caption"
-                        display="block"
-                      >
-                        {message?.written_by.full_name}
-                      </Typography>
+                      <div className={classes.between}>
+                        <span>
+                          <Typography
+                            className={clsx(classes.msgUserName, {
+                              [classes.none]: message?.mine,
+                            })}
+                            variant="caption"
+                            display="block"
+                          >
+                            {message?.written_by.full_name}
+                          </Typography>
+                        </span>
+                        <span className={classes.msgTime}>
+                          {postTiming(new Date(message?.created_at!))}
+                        </span>
+                      </div>
                       <ListItemText
                         className={clsx([classes.msgBody, styles.msgBody], {
                           [styles.mine]: message?.mine,
                         })}
                       >
+                        <small
+                          className={clsx(classes.msgUpdate, {
+                            [classes.none]:
+                              message?.created_at === message?.updated_at,
+                          })}
+                        >
+                          {'（編集済）'}
+                        </small>
+                        <span
+                          className={clsx(classes.msgMenu, {
+                            [classes.none]: !message?.mine,
+                          })}
+                        >
+                          <CustomMenuBox
+                            options={msgMenuOptions}
+                            small
+                            horizon
+                            id={message?.id!}
+                          />
+                        </span>
                         {message?.body}
                       </ListItemText>
+                      <div className={classes.horizontal}>
+                        {/* <span>リアクションボタン</span> */}
+                      </div>
                     </div>
                   </ListItem>
                 ))

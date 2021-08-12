@@ -31,11 +31,10 @@ type Props = {
 }
 
 // eslint-disable-next-line react/display-name
-const ChatRoomList = React.memo(({ chatRooms }: Props) => {
+const ChatRoomList = ({ chatRooms }: Props) => {
   const classes = useStyles()
   const router = useRouter()
   const activeClass = (to: string): boolean => router.asPath == to
-
   return (
     <List>
       {chatRooms.length > 0 &&
@@ -76,6 +75,6 @@ const ChatRoomList = React.memo(({ chatRooms }: Props) => {
         ))}
     </List>
   )
-})
+}
 
 export default ChatRoomList
