@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, isValidElement } from 'react'
+import React, { useState, useEffect, useMemo, useRef } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { useForm, Controller, useFieldArray } from 'react-hook-form'
 import { toStrData, toStrFormalLabel, PROCESS_FLAG } from '@/lib/util'
@@ -16,6 +16,7 @@ import {
   Tooltip,
   CircularProgress,
 } from '@material-ui/core'
+import PropTypes from 'prop-types'
 import CancelIcon from '@material-ui/icons/Cancel'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { FormErrorMessage } from '@/components/atoms'
@@ -29,6 +30,7 @@ import {
   MemberInputs,
 } from '@/interfaces/form/inputs'
 import { MeetingRecordSubmit } from '@/interfaces/form/submit'
+import { DefinitionListItem } from '@/interfaces/common'
 
 const getSteps = () => {
   return ['概要', '参加者', '決議事項', '入力内容確認']
@@ -56,7 +58,8 @@ type Props = {
   req: (submitData: MeetingRecordSubmit) => Promise<MeetingRecord>
   classes: any
   meetingPlaceList: MeetingPlace[]
-  handleSuccess: (title: string) => void
+  handleSuccess: (submitData: MeetingRecordInputs) => void
+  saveAction: 'update' | 'create'
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -81,12 +84,16 @@ const MeetingRecordForm = ({
   classes,
   meetingPlaceList,
   handleSuccess,
+  saveAction,
 }: Props) => {
   const definitionClasses = useStyles()
 
   // steps
   const [activeStep, setActiveStep] = useState(0)
   const steps = getSteps()
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const scrollToLatest = () =>
+    scrollRef?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 
   const handleNext = () => {
     if (activeStep === steps.length) {
@@ -158,7 +165,11 @@ const MeetingRecordForm = ({
       }
       await req(submitData)
         .then(() => {
-          handleSuccess(submitData.title)
+          if (saveAction === 'create') {
+            reset()
+          } else {
+            handleSuccess(data)
+          }
           handleNext()
         })
         .catch((err: AxiosError) => {
@@ -196,6 +207,10 @@ const MeetingRecordForm = ({
     })
   }, [defaultValues])
 
+  useEffect(() => {
+    scrollToLatest()
+  }, [activeStep])
+
   const handleDecisionDelete = (index: number) => {
     const removed = getValues('meeting_decisions')
     if (removed[index].id !== undefined) {
@@ -220,73 +235,68 @@ const MeetingRecordForm = ({
     meeting_decisions: '決定事項',
   }
 
-  type Item = {
-    term: string | number
-    key: string
-    el: React.ReactNode
-  } | null
-
-  const definitionList: Item[] = Object.keys(currentFormVals).map(
-    (key: string) => {
-      let el: React.ReactNode
-      if (key === 'meeting_decisions') {
-        el = (
-          <ul>
-            {currentFormVals[key].length > 0 &&
-              currentFormVals[key].map(
-                (decision: MeetingDecisionInputs, index) =>
-                  !isDelete(decision) && (
+  const definitionList: (DefinitionListItem | null)[] = Object.keys(
+    currentFormVals
+  ).map((key: string) => {
+    let el: React.ReactNode
+    if (key === 'meeting_decisions') {
+      el = (
+        <ul>
+          {currentFormVals[key].length > 0 &&
+            currentFormVals[key].map(
+              (decision: MeetingDecisionInputs, index) =>
+                !isDelete(decision) && (
+                  <Box
+                    key={`decision_${index}`}
+                    component={'li'}
+                    className={definitionClasses.item}
+                  >
                     <Box
-                      key={`decision_${index}`}
-                      component={'li'}
-                      className={definitionClasses.item}
-                    >
-                      <Box
-                        component={'h5'}
-                        className={definitionClasses.groupTitle}
-                      >{`決議事項${index + 1}`}</Box>
-                      <Box>件名：{decision.subject}</Box>
-                      <Box>内容：{decision.body}</Box>
-                    </Box>
-                  )
-              )}
-          </ul>
-        )
-      } else if (key === 'members') {
-        el = (
-          <span>
-            {currentFormVals[key]
-              .map((member: MemberInputs) => member.full_name)
-              .join(' / ')}
-          </span>
-        )
-      } else if (key === 'place_id') {
-        const index = meetingPlaceList.findIndex(
-          (meetingPlace) => meetingPlace.id === currentFormVals[key]
-        )
-        el = <span>{meetingPlaceList[index].name}</span>
-      } else if (key === 'meeting_date') {
-        el = <span>{toStrFormalLabel(currentFormVals.meeting_date)}</span>
-      } else if (key === 'recorded_by') {
-        const index = memberList.findIndex(
-          (member) => member.id === currentFormVals.recorded_by
-        )
-        el = <span>{memberList.length > 0 && memberList[index].full_name}</span>
-      } else {
-        el = <span>{currentFormVals[key]}</span>
-      }
-      return key !== 'role_id'
-        ? {
-            term: labels[key],
-            key,
-            el,
-          }
-        : null
+                      component={'h5'}
+                      className={definitionClasses.groupTitle}
+                    >{`決議事項${index + 1}`}</Box>
+                    <Box>件名：{decision.subject}</Box>
+                    <Box>内容：{decision.body}</Box>
+                  </Box>
+                )
+            )}
+        </ul>
+      )
+    } else if (key === 'members') {
+      el = (
+        <span>
+          {currentFormVals[key]
+            .map((member: MemberInputs) => member.full_name)
+            .join(' / ')}
+        </span>
+      )
+    } else if (key === 'place_id') {
+      const index = meetingPlaceList.findIndex(
+        (meetingPlace) => meetingPlace.id === currentFormVals[key]
+      )
+      el = <span>{meetingPlaceList[index].name}</span>
+    } else if (key === 'meeting_date') {
+      el = <span>{toStrFormalLabel(currentFormVals.meeting_date)}</span>
+    } else if (key === 'recorded_by') {
+      const index = memberList.findIndex(
+        (member) => member.id === currentFormVals.recorded_by
+      )
+      el = <span>{memberList.length > 0 && memberList[index].full_name}</span>
+    } else {
+      el = <span>{currentFormVals[key]}</span>
     }
-  )
+    return key !== 'role_id'
+      ? {
+          term: labels[key],
+          key,
+          el,
+        }
+      : null
+  })
 
   return (
     <Box component={'section'} className={classes.wrap}>
+      <div ref={scrollRef}></div>
       <CssBaseline />
       <Paper className={classes.head}>
         <Stepper
@@ -330,7 +340,6 @@ const MeetingRecordForm = ({
                   render={({ field }) => (
                     <TextField
                       {...field}
-                      autoFocus
                       id="title"
                       label="会議名"
                       type="text"
@@ -726,6 +735,14 @@ const MeetingRecordForm = ({
       </form>
     </Box>
   )
+}
+
+MeetingRecordForm.propTypes = {
+  saveAction: PropTypes.string,
+}
+
+MeetingRecordForm.defaultProps = {
+  saveAction: 'update',
 }
 
 export default MeetingRecordForm

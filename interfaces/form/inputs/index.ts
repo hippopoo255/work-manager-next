@@ -1,4 +1,7 @@
 export type { Inputs } from './Inputs'
 export type { MemberInputs } from './MemberInputs'
+export type { MemberExtInputs } from './MemberExtInputs'
 export type { MeetingRecordInputs } from './MeetingRecordInputs'
 export type { MeetingDecisionInputs } from './MeetingDecisionInputs'
+export type { ChatMessageInputs } from './ChatMessageInputs'
+export type { ChatRoomInputs } from './ChatRoomInputs'

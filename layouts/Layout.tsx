@@ -19,7 +19,7 @@ const Layout = ({ children, title }: LayoutOrg) => {
   const req = () => {
     return httpClient.get(requests.currentUser)
   }
-  const user = useApi<User | []>(req, [])
+  const user = useApi<User | ''>(req, '')
 
   return (
     <>
