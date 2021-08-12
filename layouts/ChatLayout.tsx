@@ -1,4 +1,5 @@
-import React, { useState, useMemo, useEffect, useRef } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
+import { useRouter } from 'next/router'
 import clsx from 'clsx'
 import { MypageHeader as Header, Sidebar } from '@/components/organisms'
 import Head from 'next/head'
@@ -8,13 +9,12 @@ import { User, ChatRoom } from '@/interfaces/models'
 import { getRequest, postRequest, requestUri } from '@/api'
 import { ChatRoomList } from '@/components/organisms'
 import { Box, TextField, Tooltip, IconButton } from '@material-ui/core'
-import { FormErrorMessage } from '@/components/atoms'
 import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined'
-import { useRouter } from 'next/router'
+import { chatRoomListWidth } from '@/lib/util'
 // 検索バー
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { ChatRoomForm } from '@/components/template'
-import { ChatRoomInputs, MemberExtInputs } from '@/interfaces/form/inputs'
+import { MemberExtInputs } from '@/interfaces/form/inputs'
 import { ChatRoomSubmit } from '@/interfaces/form/submit'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.palette.background.paper,
     flexGrow: 1,
     [theme.breakpoints.up('md')]: {
-      maxWidth: 360,
+      maxWidth: chatRoomListWidth,
       flexShrink: 0,
       borderRight: `1px solid ${theme.palette.divider}`,
     },
@@ -112,11 +112,20 @@ export type Props = {
   title?: string
   mainNone: boolean
   sideNone: boolean
+  supplyUserId: (id: number) => void
+  activeRoom: ChatRoom | null
 }
 
 // eslint-disable-next-line react/display-name
 const ChatLayout = React.memo(
-  ({ children, title, mainNone, sideNone }: Props) => {
+  ({
+    children,
+    title,
+    mainNone,
+    sideNone,
+    supplyUserId,
+    activeRoom = null,
+  }: Props) => {
     const classes = useStyles()
     const router = useRouter()
     const [user, setUser] = useState<User | ''>('')
@@ -130,6 +139,7 @@ const ChatLayout = React.memo(
         })
           .then((data) => {
             setUser(data)
+            supplyUserId(data.id)
           })
           .catch((err) => {
             console.error(err)
@@ -140,6 +150,22 @@ const ChatLayout = React.memo(
       }
       fetchCurrentUser()
     }, [])
+
+    useEffect(() => {
+      if (activeRoom !== null) {
+        setUser((prev: any) => {
+          const rooms: ChatRoom[] = !!prev ? prev!.chat_rooms! : []
+          const index = rooms.findIndex((room) => room.id === activeRoom.id)
+          if (index !== 0) {
+            rooms.splice(index, 1, activeRoom)
+          }
+          return {
+            ...prev,
+            chat_rooms: rooms,
+          }
+        })
+      }
+    }, [activeRoom])
 
     const chatRooms = useMemo(
       (): ChatRoom[] => (!!user ? user.chat_rooms! : []),
@@ -201,8 +227,6 @@ const ChatLayout = React.memo(
         }
       })
     }
-
-    // console.log(fixHeightRef)
 
     return (
       <>

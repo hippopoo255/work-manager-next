@@ -124,7 +124,7 @@ const Header = ({ user }: Props) => {
   return (
     <AppBar position="fixed" className={classes.header} color="inherit">
       <Toolbar className="container">
-        <Typography variant="h6" className={classes.title}>
+        <Typography variant="h1" className={classes.title}>
           <Link href="/">{process.env.NEXT_PUBLIC_SITE_NAME}</Link>
         </Typography>
         {!!user && <AvatarMenu user={user} />}
