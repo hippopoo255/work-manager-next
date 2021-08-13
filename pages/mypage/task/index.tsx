@@ -16,9 +16,10 @@ import { Pager, AlertStatus } from '@/interfaces'
 import { Task, Priority, Progress } from '@/interfaces/models'
 import { toStrData } from '@/lib/util'
 import { TaskTable } from '@/components/organisms'
-import { AxiosError } from 'axios'
+import { AxiosError, AxiosResponse } from 'axios'
 import { CustomAlert } from '@/components/atoms'
 import { FormErrorMessage } from '@/components/atoms'
+import { useRouter } from 'next/router'
 
 export type Inputs = {
   body: string
@@ -33,7 +34,9 @@ const Index = () => {
   const [priorityList, setPriorityList] = useState<Priority[]>([])
   const [progressList, setProgressList] = useState<Progress[]>([])
   const [tasks, setTasks] = useState<Pager<Task> | any>([])
+  const [userId, setUserId] = useState<number>(0)
   const [lastUri, setLastUri] = useState<string>(requests.task.mytask)
+  const router = useRouter()
   // TODO: 状態管理すべき
   const [alertStatus, setAlertStatus] = useState<AlertStatus>({
     severity: 'error',
@@ -77,7 +80,14 @@ const Index = () => {
     setError,
     reset,
     formState: { errors },
-  } = useForm<Inputs>()
+  } = useForm<Inputs>({
+    defaultValues: {
+      body: '',
+      time_limit: new Date(),
+      progress_id: 1,
+      priority_id: 1,
+    },
+  })
 
   const add = useCallback(
     (isOpen: boolean) => {
@@ -110,7 +120,7 @@ const Index = () => {
     const taskData: FormData = new FormData()
     taskData.append('body', data.body)
     taskData.append('time_limit', toStrData(data.time_limit))
-    taskData.append('owner_id', '1')
+    taskData.append('owner_id', String(userId))
     taskData.append('priority_id', String(data.priority_id))
     taskData.append('progress_id', String(data.progress_id))
     if (!!updateFlag) {
@@ -118,14 +128,11 @@ const Index = () => {
         requests.task.put + `/${updateFlag}`,
         taskData,
         (err) => {
-          if (err.status === 422) {
-            setAlertStatus((prev) => ({
-              ...prev,
-              msg: 'データ形式が正しくありません',
-              severity: 'error',
-              show: true,
-            }))
-            console.error(err)
+          if (err.status === 401) {
+            router.push('/login')
+          }
+          if (err.status === 403) {
+            router.push('/403', '/forbidden')
           }
           throw err
         }
@@ -146,8 +153,16 @@ const Index = () => {
             show: true,
           }))
         })
-        .catch((err: AxiosError) => {
-          // setError()
+        .catch((err: AxiosResponse) => {
+          if (err.status === 422) {
+            setAlertStatus((prev) => ({
+              ...prev,
+              msg: 'データ形式が正しくありません',
+              severity: 'error',
+              show: true,
+            }))
+            console.error(err)
+          }
           return false
         })
     } else {
@@ -219,7 +234,7 @@ const Index = () => {
   }
 
   return (
-    <MypageLayout title="タスク">
+    <MypageLayout title="タスク" supplyUserId={setUserId}>
       <div className="container">
         <MypageTitle>タスク</MypageTitle>
         <section>

@@ -240,14 +240,16 @@ const CommonTable = <T, U extends TableRowData>({
     setSelected(newSelected)
   }
 
-  const menuList = [
+  const menuList = (data: any) => [
     {
       text: '編集',
       onClick: (id: number) => onEdit(id),
+      disabled: !data.is_editable,
     },
     {
       text: '削除',
       onClick: (id: number) => handleTrash(id),
+      disabled: !data.is_editable,
     },
   ]
 
@@ -320,7 +322,10 @@ const CommonTable = <T, U extends TableRowData>({
                               align="center"
                               key={`row_${index}_${headCell.id}`}
                             >
-                              <CustomMenuBox options={menuList} id={row.id} />
+                              <CustomMenuBox
+                                options={menuList(row)}
+                                id={row.id}
+                              />
                             </TableCell>
                           ) : (
                             <TableCell

@@ -3,6 +3,7 @@ import styles from '@/assets/stylesheets/components/Footer.module.scss'
 import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
 import Link from '@material-ui/core/Link'
+import { SITE_TITLE } from '@/lib/util'
 
 const Footer = () => {
   const Copyright = () => {
@@ -10,7 +11,7 @@ const Footer = () => {
       <Typography variant="body2" align="center">
         {'Copyright © '}
         <Link color="inherit" href="https://material-ui.com/">
-          {process.env.NEXT_PUBLIC_SITE_NAME || ''}
+          {SITE_TITLE}
         </Link>{' '}
         {new Date().getFullYear()}
         {'.'}
@@ -20,9 +21,9 @@ const Footer = () => {
 
   return (
     <footer className={styles.footer}>
-      <Box className="container">
+      <div className="container">
         <Copyright />
-      </Box>
+      </div>
     </footer>
   )
 }
