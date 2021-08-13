@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { MypageHeader as Header, Footer, Sidebar } from '@/components/organisms'
 import styles from '@/assets/stylesheets/components/MypageLayout.module.scss'
 import Head from 'next/head'
@@ -7,10 +7,12 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import { User } from '@/interfaces/models'
 import useApi, { httpClient } from '@/api/useApi'
 import requests from '@/Requests'
+import { SITE_TITLE } from '@/lib/util'
 
 export type LayoutOrg = {
   children: React.ReactNode
   title?: string
+  supplyUserId?: (userId: number) => void
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -35,14 +37,14 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
-const MypageLayout = ({ children, title }: LayoutOrg) => {
+const MypageLayout = ({ children, title, supplyUserId }: LayoutOrg) => {
   const req = () => {
     return httpClient.get(requests.currentUser)
   }
   const user = useApi<User | ''>(req, '')
 
   const classes = useStyles()
-  const suffix = process.env.NEXT_PUBLIC_SITE_NAME
+  const suffix = SITE_TITLE
   const [mobileOpen, setMobileOpen] = useState(false)
   const handleDrawerToggle = (specified: boolean | null = null) => {
     if (specified === null) {
@@ -51,6 +53,12 @@ const MypageLayout = ({ children, title }: LayoutOrg) => {
       setMobileOpen(specified)
     }
   }
+
+  useEffect(() => {
+    if (!!user && supplyUserId !== undefined) {
+      supplyUserId(user.id)
+    }
+  }, [user, supplyUserId])
 
   return (
     <>

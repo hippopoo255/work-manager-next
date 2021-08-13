@@ -31,6 +31,7 @@ export interface Data extends TableRowData {
   created_at: string
   recorded_by: string
   id: number
+  is_editable: boolean
 }
 
 export type Inputs = {
@@ -139,7 +140,7 @@ const Index = () => {
       keyword: '',
     },
   })
-  // Todo: 議事録一覧のキーワード絞り込み
+  // TODO: 議事録一覧のキーワード絞り込み
   const handleSearch = async (data: Inputs) => {
     console.log(data)
   }
@@ -193,6 +194,15 @@ const Index = () => {
         //   show: true,
         // }))
       })
+      .catch((err) => {
+        console.error(err.response)
+        if (err.response.status === 401) {
+          router.push('/login')
+        }
+        if (err.response.status === 403) {
+          router.push('/403', '/forbidden')
+        }
+      })
   }
 
   const handleEditClick = (id: number) => {
@@ -214,6 +224,7 @@ const Index = () => {
       created_at: toStrLabel(new Date(meetingRecord.created_at)),
       recorded_by: meetingRecord.recorded_by.full_name,
       id: meetingRecord.id,
+      is_editable: meetingRecord.is_editable,
     }))
 
   return (
