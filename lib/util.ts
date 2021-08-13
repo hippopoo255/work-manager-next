@@ -2,6 +2,8 @@ import { ProcessFlag } from '@/interfaces/enums/ProcessFlag'
 
 export const drawerWidth: number = 250
 export const chatRoomListWidth: number = 360
+export const SITE_TITLE: string =
+  process.env.NEXT_PUBLIC_SITE_NAME || 'Next App'
 export const PROCESS_FLAG: { [k: string]: ProcessFlag } = {
   updateFlag: 1,
   deleteFlag: 2,
@@ -63,7 +65,7 @@ export function postTiming(createDate: Date) {
     const month = createDate.getMonth() + 1
     const date = createDate.getDate()
     const hour = createDate.getHours()
-    const minute = createDate.getMinutes()
+    const minute = `0${createDate.getMinutes()}`.slice(-2)
     return `${month}/${date} ${hour}:${minute}`
   }
 }

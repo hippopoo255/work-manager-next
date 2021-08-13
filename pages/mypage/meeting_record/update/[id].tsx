@@ -24,7 +24,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   head: {
     width: '100%',
-    padding: theme.spacing(2),
+    padding: `${theme.spacing(2)}px 0`,
+    [theme.breakpoints.up('md')]: {
+      padding: theme.spacing(2),
+    },
   },
   body: {
     width: '100%',
@@ -35,6 +38,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   stepper: {
     width: '100%',
     padding: 0,
+  },
+  stepperCol: {
+    padding: 0,
+    [theme.breakpoints.up('md')]: {
+      paddingLeft: theme.spacing(1),
+      paddingRight: theme.spacing(1),
+    },
   },
   tail: {
     marginTop: theme.spacing(2),
@@ -107,6 +117,12 @@ const MeetingRecordUpdate = ({ meetingPlaceList }: Props) => {
       submitData,
       (err) => {
         console.error(err)
+        if (err.status === 403) {
+          router.push('/403', '/forbidden')
+        }
+        if (err.status === 401) {
+          router.push('/login')
+        }
         throw err
       }
     )

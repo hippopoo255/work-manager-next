@@ -16,6 +16,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import { ChatRoomForm } from '@/components/template'
 import { MemberExtInputs } from '@/interfaces/form/inputs'
 import { ChatRoomSubmit } from '@/interfaces/form/submit'
+import { SITE_TITLE } from '@/lib/util'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -181,7 +182,6 @@ const ChatLayout = React.memo(
       [user]
     )
 
-    const suffix = process.env.NEXT_PUBLIC_SITE_NAME
     const [mobileOpen, setMobileOpen] = useState(false)
     const handleDrawerToggle = (specified: boolean | null = null) => {
       if (specified === null) {
@@ -230,7 +230,7 @@ const ChatLayout = React.memo(
     return (
       <>
         <Head>
-          <title>{!!title ? `${title} | ${suffix}` : suffix}</title>
+          <title>{!!title ? `${title} | ${SITE_TITLE}` : SITE_TITLE}</title>
         </Head>
         <div className={classes.root}>
           <CssBaseline />
