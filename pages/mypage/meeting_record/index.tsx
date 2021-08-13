@@ -22,17 +22,7 @@ import {
 import { useForm, Controller, SubmitHandler } from 'react-hook-form'
 import Link from 'next/link'
 import router from 'next/router'
-
-export interface Data extends TableRowData {
-  title: JSX.Element
-  meeting_date: string
-  place_id: string
-  summary: string
-  created_at: string
-  recorded_by: string
-  id: number
-  is_editable: boolean
-}
+import { MeetingTableRowData } from '@/interfaces/table/rowData'
 
 export type Inputs = {
   count: string // 6,10 -> min: 6 max: 10
@@ -58,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const Index = () => {
   const classes = useStyles()
 
-  const headCells: HeadCell<Data>[] = [
+  const headCells: HeadCell<MeetingTableRowData>[] = [
     {
       id: 'title',
       numeric: false,
@@ -119,7 +109,7 @@ const Index = () => {
   const [meetingRecords, setMeetingRecords] = useState<
     Pager<MeetingRecord> | any
   >([])
-  const [rows, setRows] = useState<Data[]>([])
+  const [rows, setRows] = useState<MeetingTableRowData[]>([])
   const [latestUri, setLatestUri] = useState<string>(
     requests.meetingRecord.list
   )
@@ -164,7 +154,7 @@ const Index = () => {
       | React.MouseEvent<unknown>
       | React.MouseEvent<HTMLButtonElement, MouseEvent>
       | null,
-    args: QueryParam<Data>
+    args: QueryParam<MeetingTableRowData>
   ) => {
     if (args.hasOwnProperty('sort_key')) {
       let uri = meetingRecords.path.replace(
@@ -209,7 +199,7 @@ const Index = () => {
     router.push(`/mypage/meeting_record/update/${id}`)
   }
 
-  const createRows = (list: MeetingRecord[]): Data[] =>
+  const createRows = (list: MeetingRecord[]): MeetingTableRowData[] =>
     list.map((meetingRecord: MeetingRecord) => ({
       title: (
         <Link href={`/mypage/meeting_record/${meetingRecord.id}`} passHref>

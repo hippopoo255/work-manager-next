@@ -24,18 +24,6 @@ import {
 } from '@material-ui/core/styles'
 import { useRouter } from 'next/router'
 
-// export type Menu = {
-//   title: string
-//   children: Child[]
-//   [k: string]: any
-// }
-
-// export type Child = {
-//   id: string
-//   label: string
-//   to: string
-// }
-
 export type Menu = {
   id: string
   to: string
@@ -75,84 +63,6 @@ const Sidebar = (props: Props) => {
     window !== undefined ? () => window().document.body : undefined
   const theme = useTheme()
   const router = useRouter()
-
-  // const menus: Menus = {
-  //   meeting: {
-  //     title: '会議',
-  //     children: [
-  //       // {
-  //       //   id: 'reservation',
-  //       //   to: '/meeting_reservation',
-  //       //   label: '会議予約',
-  //       // },
-  //       {
-  //         id: 'record',
-  //         to: '/meeting_record',
-  //         label: '議事録',
-  //       },
-  //     ],
-  //   },
-  //   schedule: {
-  //     title: 'スケジュール',
-  //     children: [
-  //       {
-  //         id: 'schedule',
-  //         to: '/schedule',
-  //         label: 'スケジュール',
-  //       },
-  //     ],
-  //   },
-  //   document: {
-  //     title: 'ドキュメント',
-  //     children: [
-  //       {
-  //         id: 'document',
-  //         to: '/document',
-  //         label: 'ドキュメント',
-  //       },
-  //     ],
-  //   },
-  //   task: {
-  //     title: 'タスク',
-  //     children: [
-  //       {
-  //         id: 'task',
-  //         to: '/task',
-  //         label: 'ドキュメント',
-  //       },
-  //     ],
-  //   },
-  //   chat: {
-  //     title: 'チャット',
-  //     children: [
-  //       {
-  //         id: 'chat',
-  //         to: '/chat',
-  //         label: 'チャット',
-  //       },
-  //     ],
-  //   },
-  //   blog: {
-  //     title: '社内ブログ',
-  //     children: [
-  //       {
-  //         id: 'index',
-  //         to: '/blog',
-  //         label: '一覧',
-  //       },
-  //       {
-  //         id: 'new',
-  //         to: '/blog/create',
-  //         label: '新規投稿',
-  //       },
-  //       {
-  //         id: 'history',
-  //         to: '/blog/history',
-  //         label: '投稿履歴',
-  //       },
-  //     ],
-  //   },
-  // }
 
   const menus: Menus = {
     top: [
