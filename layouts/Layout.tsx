@@ -6,6 +6,7 @@ import { User } from '@/interfaces/models'
 import useApi, { httpClient } from '@/api/useApi'
 import requests from '@/Requests'
 import { useRouter } from 'next/router'
+import { SITE_TITLE } from '@/lib/util'
 
 export type LayoutOrg = {
   children: React.ReactNode
@@ -13,7 +14,6 @@ export type LayoutOrg = {
 }
 
 const Layout = ({ children, title }: LayoutOrg) => {
-  const suffix = process.env.NEXT_PUBLIC_SITE_NAME
   const router = useRouter()
 
   const req = () => {
@@ -24,7 +24,7 @@ const Layout = ({ children, title }: LayoutOrg) => {
   return (
     <>
       <Head>
-        <title>{!!title ? `${title} | ${suffix}` : suffix}</title>
+        <title>{!!title ? `${title} | ${SITE_TITLE}` : SITE_TITLE}</title>
       </Head>
       <div className={styles.container}>
         <div className={styles.head}>
