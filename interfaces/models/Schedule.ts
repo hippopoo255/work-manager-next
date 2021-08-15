@@ -3,13 +3,14 @@ import { User } from '.'
 export interface Schedule {
   readonly id: number
   scheduled_by: User
-  content: string
-  start_date: string
-  end_date: string
+  title: string
+  start: string
+  end: string
   is_public: boolean
+  can_edit: boolean
   color: string
   memo: string
   created_at: string
-  shared_memners: User[]
+  shared_members: User[]
   [k: string]: any
 }

@@ -8,6 +8,7 @@ export type Props = {
   loading: boolean
   submitText: string
   color: 'default' | 'inherit' | 'primary' | 'secondary'
+  disabled: boolean
   onClick: () => Promise<void>
 }
 
@@ -39,6 +40,7 @@ const CircularButton = ({
   onClick,
   color,
   submitText = '保存',
+  disabled,
 }: Props) => {
   const classes = useStyles()
   return (
@@ -49,9 +51,8 @@ const CircularButton = ({
         className={clsx(classes.submitBtn, {
           [classes.danger]: color === 'inherit',
         })}
-        disabled={loading}
+        disabled={loading || disabled}
         onClick={() => onClick()}
-        // onClick={handleNext}
       >
         {submitText}
       </Button>
@@ -65,11 +66,13 @@ const CircularButton = ({
 CircularButton.propTypes = {
   submitText: PropTypes.string,
   color: PropTypes.string,
+  disabled: PropTypes.bool,
 }
 
 CircularButton.defaultProps = {
   submitText: '保存',
   color: 'primary',
+  disabled: false,
 }
 
 export default CircularButton
