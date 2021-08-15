@@ -1,5 +1,5 @@
 import { GetStaticProps } from 'next'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import clsx from 'clsx'
 import { MypageLayout } from '@/layouts'
@@ -108,9 +108,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 const MeetingRecordCreate = ({ meetingPlaceList }: Props) => {
   const router = useRouter()
   const classes = useStyles()
+  const [userId, setUserId] = useState<number>(0)
   // react hook form
-  const defaultValues: MeetingRecordInputs = {
-    recorded_by: 1,
+  const defaultValues = {
+    recorded_by: userId,
     title: '',
     summary: '',
     place_id: 1,
@@ -126,6 +127,7 @@ const MeetingRecordCreate = ({ meetingPlaceList }: Props) => {
       },
     ],
   }
+
   const req = async (submitData: MeetingRecordSubmit) =>
     await postRequest<MeetingRecord, MeetingRecordSubmit>(
       requestUri.meetingRecord.post,
@@ -163,7 +165,7 @@ const MeetingRecordCreate = ({ meetingPlaceList }: Props) => {
   }
 
   return (
-    <MypageLayout title="議事録追加">
+    <MypageLayout title="議事録追加" supplyUserId={setUserId}>
       <MypageTitle>議事録</MypageTitle>
       <Box className={clsx([classes.wrap, classes.title])}>
         <Avatar className={classes.avatar}>

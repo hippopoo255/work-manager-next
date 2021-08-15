@@ -8,18 +8,6 @@ import clsx from 'clsx'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
 
-type Props = {
-  options: {
-    text: string
-    onClick: (id: number) => void
-    disabled?: boolean
-    danger?: boolean
-  }[]
-  id: number
-  small: boolean
-  horizon: boolean
-}
-
 const ITEM_HEIGHT = 48
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -37,6 +25,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontWeight: theme.typography.fontWeightMedium,
   },
 }))
+
+type Props = {
+  options: {
+    text: string
+    onClick: (id: number) => void
+    disabled?: boolean
+    danger?: boolean
+  }[]
+  id: number
+  small: boolean
+  horizon: boolean
+}
 
 const CustomMenuBox = ({ options, small, horizon, id }: Props) => {
   const classes = useStyles()
