@@ -1,12 +1,13 @@
 import Link from 'next/link'
 import { AppBar, Typography, Toolbar, IconButton } from '@material-ui/core'
 import MenuIcon from '@material-ui/icons/Menu'
-import { AvatarMenu } from '@/components/molecules'
 import clsx from 'clsx'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import { darken } from '@material-ui/core'
 import { User } from '@/interfaces/models'
 import { drawerWidth } from '@/lib/util'
+import { SiteLogo } from '@/components/atoms'
+import { AvatarMenu } from '@/components/molecules'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -61,9 +62,9 @@ const MypageHeader = ({ user, toggleMenu }: Props) => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap className={classes.title}>
-            <Link href="/">{process.env.NEXT_PUBLIC_SITE_NAME}</Link>
-          </Typography>
+          <div className={classes.title}>
+            <SiteLogo />
+          </div>
           {!!user && <AvatarMenu user={user} />}
         </Toolbar>
       </div>

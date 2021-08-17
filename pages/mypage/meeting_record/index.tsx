@@ -22,16 +22,7 @@ import {
 import { useForm, Controller, SubmitHandler } from 'react-hook-form'
 import Link from 'next/link'
 import router from 'next/router'
-
-export interface Data extends TableRowData {
-  title: JSX.Element
-  meeting_date: string
-  place_id: string
-  summary: string
-  created_at: string
-  recorded_by: string
-  id: number
-}
+import { MeetingTableRowData } from '@/interfaces/table/rowData'
 
 export type Inputs = {
   count: string // 6,10 -> min: 6 max: 10
@@ -57,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const Index = () => {
   const classes = useStyles()
 
-  const headCells: HeadCell<Data>[] = [
+  const headCells: HeadCell<MeetingTableRowData>[] = [
     {
       id: 'title',
       numeric: false,
@@ -118,7 +109,7 @@ const Index = () => {
   const [meetingRecords, setMeetingRecords] = useState<
     Pager<MeetingRecord> | any
   >([])
-  const [rows, setRows] = useState<Data[]>([])
+  const [rows, setRows] = useState<MeetingTableRowData[]>([])
   const [latestUri, setLatestUri] = useState<string>(
     requests.meetingRecord.list
   )
@@ -139,7 +130,7 @@ const Index = () => {
       keyword: '',
     },
   })
-  // Todo: 議事録一覧のキーワード絞り込み
+  // TODO: 議事録一覧のキーワード絞り込み
   const handleSearch = async (data: Inputs) => {
     console.log(data)
   }
@@ -163,7 +154,7 @@ const Index = () => {
       | React.MouseEvent<unknown>
       | React.MouseEvent<HTMLButtonElement, MouseEvent>
       | null,
-    args: QueryParam<Data>
+    args: QueryParam<MeetingTableRowData>
   ) => {
     if (args.hasOwnProperty('sort_key')) {
       let uri = meetingRecords.path.replace(
@@ -193,13 +184,22 @@ const Index = () => {
         //   show: true,
         // }))
       })
+      .catch((err) => {
+        console.error(err.response)
+        if (err.response.status === 401) {
+          router.push('/login')
+        }
+        if (err.response.status === 403) {
+          router.push('/403', '/forbidden')
+        }
+      })
   }
 
   const handleEditClick = (id: number) => {
     router.push(`/mypage/meeting_record/update/${id}`)
   }
 
-  const createRows = (list: MeetingRecord[]): Data[] =>
+  const createRows = (list: MeetingRecord[]): MeetingTableRowData[] =>
     list.map((meetingRecord: MeetingRecord) => ({
       title: (
         <Link href={`/mypage/meeting_record/${meetingRecord.id}`} passHref>
@@ -214,6 +214,7 @@ const Index = () => {
       created_at: toStrLabel(new Date(meetingRecord.created_at)),
       recorded_by: meetingRecord.recorded_by.full_name,
       id: meetingRecord.id,
+      is_editable: meetingRecord.is_editable,
     }))
 
   return (

@@ -26,6 +26,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
     justifyContent: 'center',
   },
+  none: {
+    display: 'none',
+  },
 }))
 
 export type Props = {
@@ -38,6 +41,7 @@ export type Props = {
   setOpen: (isOpen: boolean) => void
   isCircular: boolean
   loading: boolean
+  disabled: boolean
 }
 
 const FormDialog = ({
@@ -50,6 +54,7 @@ const FormDialog = ({
   setOpen,
   isCircular,
   loading,
+  disabled,
 }: Props) => {
   const classes = useStyles()
   // const [open, setOpen] = React.useState(false)
@@ -85,12 +90,17 @@ const FormDialog = ({
             {cancelText}
           </Button>
           {isCircular ? (
-            <CircularButton loading={loading} onClick={handleSubmit} />
+            <CircularButton
+              loading={loading}
+              onClick={handleSubmit}
+              disabled={disabled}
+            />
           ) : (
             <Button
               onClick={handleSubmit}
               variant={'contained'}
               color="primary"
+              disabled={disabled}
             >
               {submitText}
             </Button>
@@ -107,6 +117,7 @@ FormDialog.propTypes = {
   dialogTitle: PropTypes.string,
   isCircular: PropTypes.bool,
   loading: PropTypes.bool,
+  disabled: PropTypes.bool,
 }
 
 FormDialog.defaultProps = {
@@ -115,6 +126,7 @@ FormDialog.defaultProps = {
   dialogTitle: 'フォーム画面',
   isCircular: false,
   loading: false,
+  disabled: false,
 }
 
 export default FormDialog

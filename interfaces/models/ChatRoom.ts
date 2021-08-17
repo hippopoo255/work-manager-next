@@ -2,7 +2,7 @@ import { User, ChatMessage } from '.'
 export interface ChatRoom {
   readonly id: number
   name: string
-  editable: boolean
+  can_edit: boolean
   members: User[]
   created_by: User
   messages: (ChatMessage | null)[]

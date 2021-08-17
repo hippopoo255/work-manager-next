@@ -1,46 +1,48 @@
 import React from 'react'
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
 import { darken } from '@material-ui/core'
 import { grey } from '@material-ui/core/colors'
 import { Box } from '@material-ui/core'
 import { DefinitionListItem } from '@/interfaces/common'
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    width: '100%',
-    borderColor: theme.palette.grey[400],
-  },
-  row: {
-    width: '100%',
-    borderColor: theme.palette.grey[400],
-    display: 'flex',
-    flexDirection: 'column',
-    [theme.breakpoints.up('md')]: {
-      flexDirection: 'row',
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      width: '100%',
+      borderColor: theme.palette.grey[400],
     },
-    '&:last-of-type': {
-      borderBottom: 0,
+    row: {
+      width: '100%',
+      borderColor: theme.palette.grey[400],
+      display: 'flex',
+      flexDirection: 'column',
+      [theme.breakpoints.up('md')]: {
+        flexDirection: 'row',
+      },
+      '&:last-of-type': {
+        borderBottom: 0,
+      },
     },
-  },
-  term: {
-    background: grey[200],
-    padding: theme.spacing(3),
-    flexShrink: 0,
-    textAlign: 'center',
-    minWidth: 150,
-    [theme.breakpoints.down('md')]: {
-      borderBottom: `1px solid ${theme.palette.grey[400]}`,
+    term: {
+      background: grey[200],
+      padding: theme.spacing(3),
+      flexShrink: 0,
+      textAlign: 'center',
+      minWidth: 150,
+      [theme.breakpoints.down('sm')]: {
+        borderBottom: `1px solid ${theme.palette.grey[400]}`,
+      },
+      [theme.breakpoints.up('md')]: {
+        borderRight: `1px solid ${theme.palette.grey[400]}`,
+      },
     },
-    [theme.breakpoints.up('md')]: {
-      borderRight: `1px solid ${theme.palette.grey[400]}`,
+    data: {
+      padding: theme.spacing(3),
+      flexShrink: 1,
+      flexGrow: 1,
     },
-  },
-  data: {
-    padding: theme.spacing(3),
-    flexShrink: 1,
-    flexGrow: 1,
-  },
-}))
+  })
+)
 
 interface Props {
   list: (DefinitionListItem | null)[]

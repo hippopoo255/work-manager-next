@@ -1,5 +1,5 @@
 import { GetStaticProps } from 'next'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import clsx from 'clsx'
 import { MypageLayout } from '@/layouts'
@@ -12,6 +12,7 @@ import { MeetingRecordForm } from '@/components/template'
 import { MeetingRecord, MeetingPlace } from '@/interfaces/models'
 import { MeetingRecordInputs, MemberInputs } from '@/interfaces/form/inputs'
 import { MeetingRecordSubmit } from '@/interfaces/form/submit'
+import { useRouter } from 'next/router'
 
 export type Props = {
   meetingPlaceList: MeetingPlace[]
@@ -23,7 +24,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   head: {
     width: '100%',
-    padding: theme.spacing(2),
+    padding: `${theme.spacing(2)}px 0`,
+    [theme.breakpoints.up('md')]: {
+      padding: theme.spacing(2),
+    },
   },
   body: {
     width: '100%',
@@ -34,6 +38,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   stepper: {
     width: '100%',
     padding: 0,
+  },
+  stepperCol: {
+    padding: 0,
+    [theme.breakpoints.up('md')]: {
+      paddingLeft: theme.spacing(1),
+      paddingRight: theme.spacing(1),
+    },
   },
   tail: {
     marginTop: theme.spacing(2),
@@ -95,10 +106,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 const MeetingRecordCreate = ({ meetingPlaceList }: Props) => {
+  const router = useRouter()
   const classes = useStyles()
+  const [userId, setUserId] = useState<number>(0)
   // react hook form
-  const defaultValues: MeetingRecordInputs = {
-    recorded_by: 1,
+  const defaultValues = {
+    recorded_by: userId,
     title: '',
     summary: '',
     place_id: 1,
@@ -114,12 +127,19 @@ const MeetingRecordCreate = ({ meetingPlaceList }: Props) => {
       },
     ],
   }
+
   const req = async (submitData: MeetingRecordSubmit) =>
     await postRequest<MeetingRecord, MeetingRecordSubmit>(
       requestUri.meetingRecord.post,
       submitData,
       (err) => {
         console.error(err)
+        if (err.status === 403) {
+          router.push('/403', '/forbidden')
+        }
+        if (err.status === 401) {
+          router.push('/login')
+        }
         throw err
       }
     )
@@ -145,7 +165,7 @@ const MeetingRecordCreate = ({ meetingPlaceList }: Props) => {
   }
 
   return (
-    <MypageLayout title="議事録追加">
+    <MypageLayout title="議事録追加" supplyUserId={setUserId}>
       <MypageTitle>議事録</MypageTitle>
       <Box className={clsx([classes.wrap, classes.title])}>
         <Avatar className={classes.avatar}>

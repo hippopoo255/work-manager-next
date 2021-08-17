@@ -15,6 +15,8 @@ export type Props = {
   required: boolean
   disablePast: boolean
   error: boolean
+  disabled: boolean
+  minDate: Date | null
 }
 
 const DateTimeInput = ({
@@ -24,6 +26,8 @@ const DateTimeInput = ({
   required,
   disablePast,
   error,
+  disabled,
+  minDate,
 }: Props) => {
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ja}>
@@ -39,6 +43,8 @@ const DateTimeInput = ({
         format="yyyy/MM/dd HH:mm"
         required={required}
         error={error}
+        disabled={disabled}
+        minDate={minDate}
       />
     </MuiPickersUtilsProvider>
   )
@@ -47,11 +53,15 @@ const DateTimeInput = ({
 DateTimeInput.propTypes = {
   required: PropTypes.bool,
   disablePast: PropTypes.bool,
+  disabled: PropTypes.bool,
+  minDate: PropTypes.any,
 }
 
 DateTimeInput.defaultProps = {
   required: false,
   disablePast: false,
+  disabled: false,
+  minDate: new Date('2010-01-01'),
 }
 
 export default DateTimeInput
