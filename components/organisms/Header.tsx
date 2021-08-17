@@ -20,6 +20,7 @@ import axios from '@/axios'
 import requests from '@/Requests'
 import { AvatarMenu } from '../molecules'
 import { User } from '@/interfaces/models'
+import { SiteLogo } from '@/components/atoms'
 
 export type Menu = {
   text: string
@@ -124,9 +125,9 @@ const Header = ({ user }: Props) => {
   return (
     <AppBar position="fixed" className={classes.header} color="inherit">
       <Toolbar className="container">
-        <Typography variant="h1" className={classes.title}>
-          <Link href="/">{process.env.NEXT_PUBLIC_SITE_NAME}</Link>
-        </Typography>
+        <div className={classes.title}>
+          <SiteLogo />
+        </div>
         {!!user && <AvatarMenu user={user} />}
         <IconButton
           color="inherit"

@@ -33,7 +33,7 @@ import { MeetingRecordSubmit } from '@/interfaces/form/submit'
 import { DefinitionListItem } from '@/interfaces/common'
 
 const getSteps = () => {
-  return ['概要', '参加者', '決議事項', '入力内容確認']
+  return ['概要', '参加者', '決定事項', '入力内容確認']
 }
 
 const getStepContent = (stepIndex: number) => {
@@ -43,7 +43,7 @@ const getStepContent = (stepIndex: number) => {
     case 1:
       return '参加者'
     case 2:
-      return '決議事項'
+      return '決定事項'
     case 3:
       return '入力内容確認'
     default:
@@ -208,7 +208,9 @@ const MeetingRecordForm = ({
   }, [defaultValues])
 
   useEffect(() => {
-    scrollToLatest()
+    if (activeStep !== 0) {
+      scrollToLatest()
+    }
   }, [activeStep])
 
   const handleDecisionDelete = (index: number) => {
@@ -254,9 +256,15 @@ const MeetingRecordForm = ({
                     <Box
                       component={'h5'}
                       className={definitionClasses.groupTitle}
-                    >{`決議事項${index + 1}`}</Box>
-                    <Box>件名：{decision.subject}</Box>
-                    <Box>内容：{decision.body}</Box>
+                    >{`決定事項${index + 1}`}</Box>
+                    <Box>
+                      <strong>件名：</strong>
+                      {decision.subject}
+                    </Box>
+                    <Box>
+                      <strong>内容：</strong>
+                      {decision.body}
+                    </Box>
                   </Box>
                 )
             )}
@@ -281,7 +289,11 @@ const MeetingRecordForm = ({
       const index = memberList.findIndex(
         (member) => member.id === currentFormVals.recorded_by
       )
-      el = <span>{memberList.length > 0 && memberList[index].full_name}</span>
+      if (index !== -1) {
+        el = <span>{memberList.length > 0 && memberList[index].full_name}</span>
+      } else {
+        el = <span></span>
+      }
     } else {
       el = <span>{currentFormVals[key]}</span>
     }
@@ -305,7 +317,7 @@ const MeetingRecordForm = ({
           alternativeLabel
         >
           {steps.map((label) => (
-            <Step key={label}>
+            <Step key={label} className={classes.stepperCol}>
               <StepLabel>{label}</StepLabel>
             </Step>
           ))}
@@ -557,7 +569,7 @@ const MeetingRecordForm = ({
                                 name={`meeting_decisions[${index}].subject`}
                                 label="件名"
                                 type="text"
-                                placeholder="ex)コロナ対策の件（80文字以内）"
+                                placeholder="ex)〇〇企画の件（80文字以内）"
                                 required
                                 error={
                                   !!errors.meeting_decisions &&
@@ -588,24 +600,24 @@ const MeetingRecordForm = ({
                             rules={{
                               required: {
                                 value: true,
-                                message: '決議内容は必須です',
+                                message: '決定内容は必須です',
                               },
                               maxLength: {
                                 value: 80,
                                 message:
-                                  '決議内容は80文字以内で入力してください',
+                                  '決定内容は80文字以内で入力してください',
                               },
                             }}
                             render={({ field }) => (
                               <TextField
                                 {...field}
                                 name={`meeting_decisions[${index}].body`}
-                                label="決議内容"
+                                label="決定内容"
                                 type="text"
                                 multiline
                                 minRows={1}
                                 required
-                                placeholder="ex)従業員全員、毎朝体温を計測し、記帳・提出する（80文字以内）"
+                                placeholder="ex)現状把握のため従業員にアンケート調査をする（80文字以内）"
                                 fullWidth
                                 error={
                                   !!errors.meeting_decisions &&

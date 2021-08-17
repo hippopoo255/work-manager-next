@@ -213,7 +213,6 @@ const useStyles = makeStyles((theme: Theme) =>
     none: {
       display: 'none',
     },
-
   })
 )
 
@@ -279,6 +278,12 @@ const ChatDetail = () => {
       submitData,
       (err) => {
         console.error(err)
+        if (err.status === 401) {
+          router.push('/login')
+        }
+        if (err.status === 403) {
+          router.push('/403', '/forbidden')
+        }
         throw err
       }
     )
@@ -301,13 +306,19 @@ const ChatDetail = () => {
     await httpClient
       .delete(requestUri.chatRoom.delete + chatRoomId)
       .then(() => {
-        setConfirmLoading(true)
+        setConfirmLoading(false)
         setConfirmOpen(false)
         router.push('/mypage/chat')
       })
       .catch((err) => {
-        setConfirmLoading(true)
+        setConfirmLoading(false)
         console.error(err.response)
+        if (err.response.status === 401) {
+          router.push('/login')
+        }
+        if (err.response.status === 403) {
+          router.push('/403', '/forbidden')
+        }
       })
   }
 
@@ -411,6 +422,12 @@ const ChatDetail = () => {
       submitData,
       (err) => {
         console.error(err)
+        if (err.status === 401) {
+          router.push('/login')
+        }
+        if (err.status === 403) {
+          router.push('/403', '/forbidden')
+        }
         throw err
       }
     )
@@ -451,6 +468,12 @@ const ChatDetail = () => {
       })
       .catch((err) => {
         console.error(err.response)
+        if (err.response.status === 401) {
+          router.push('/login')
+        }
+        if (err.response.status === 403) {
+          router.push('/403', '/forbidden')
+        }
       })
   }
 
@@ -478,7 +501,7 @@ const ChatDetail = () => {
               classes={classes}
               onEdit={handleEdit}
               onTrash={handleConfirm}
-              editable={chatRoom !== null ? chatRoom.editable : false}
+              editable={chatRoom !== null ? chatRoom.can_edit : false}
             />
           </div>
           <ConfirmDialog
