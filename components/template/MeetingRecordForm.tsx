@@ -289,7 +289,11 @@ const MeetingRecordForm = ({
       const index = memberList.findIndex(
         (member) => member.id === currentFormVals.recorded_by
       )
-      el = <span>{memberList.length > 0 && memberList[index].full_name}</span>
+      if (index !== -1) {
+        el = <span>{memberList.length > 0 && memberList[index].full_name}</span>
+      } else {
+        el = <span></span>
+      }
     } else {
       el = <span>{currentFormVals[key]}</span>
     }

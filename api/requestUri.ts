@@ -42,6 +42,12 @@ const requestUri = {
   user: {
     list: '/user',
   },
+  schedule: {
+    list: '/user/{id}/schedule',
+    post: '/schedule',
+    put: '/schedule/',
+    delete: '/schedule/',
+  },
 }
 
 export default requestUri
