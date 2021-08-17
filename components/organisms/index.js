@@ -1,5 +1,6 @@
 export { default as CommonTable } from './CommonTable'
 export { default as ConfirmDialog } from './ConfirmDialog'
+export { default as CustomCalendar } from './CustomCalendar'
 export { default as CustomMenuBox } from './CustomMenuBox'
 export { default as DefinitionList } from './DefinitionList'
 export { default as Footer } from './Footer'

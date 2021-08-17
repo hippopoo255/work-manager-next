@@ -129,8 +129,9 @@ const MeetingRecordUpdate = ({ meetingPlaceList }: Props) => {
 
   // Autocomlete members
   const [memberList, setMemberList] = useState<MemberInputs[]>([])
+  const [userId, setUserId] = useState<number>(0)
   const [defaultValues, setDefaultValues] = useState<MeetingRecordInputs>({
-    recorded_by: 1,
+    recorded_by: userId,
     title: '',
     summary: '',
     place_id: 1,
@@ -193,6 +194,7 @@ const MeetingRecordUpdate = ({ meetingPlaceList }: Props) => {
     }
     fetchUpdateRecord()
   }, [paramId])
+
   const handleUpdate = (data: MeetingRecordInputs) => {
     setDefaultValues(data)
   }

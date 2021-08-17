@@ -1,5 +1,6 @@
 export { default as postRequest } from './postRequest'
 export { default as putRequest } from './putRequest'
 export { default as getRequest } from './getRequest'
+export { default as deleteRequest } from './deleteRequest'
 export { default as useApi } from './useApi'
 export { default as requestUri } from './requestUri'

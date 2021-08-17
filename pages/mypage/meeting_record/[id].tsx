@@ -122,7 +122,6 @@ const MeetingRecordDetail = () => {
           }
         })
   }, [meetingRecord])
-  console.log('definitionList:', definitionList)
   return (
     <MypageLayout>
       {error !== null ? (
