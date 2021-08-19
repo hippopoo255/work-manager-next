@@ -17,19 +17,10 @@ import {
   ListItemText,
   Collapse,
 } from '@material-ui/core'
-import AttachFileOutlinedIcon from '@material-ui/icons/AttachFileOutlined'
-import BookOutlinedIcon from '@material-ui/icons/BookOutlined'
-import EventAvailableOutlinedIcon from '@material-ui/icons/EventAvailableOutlined'
 import ExpandLess from '@material-ui/icons/ExpandLess'
 import ExpandMore from '@material-ui/icons/ExpandMore'
-import FolderOpenOutlinedIcon from '@material-ui/icons/FolderOpenOutlined'
 import HomeIcon from '@material-ui/icons/Home'
-import LibraryAddOutlinedIcon from '@material-ui/icons/LibraryAddOutlined'
-import MenuBookOutlinedIcon from '@material-ui/icons/MenuBookOutlined'
-import SendOutlinedIcon from '@material-ui/icons/SendOutlined'
-import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined'
-import TocOutlinedIcon from '@material-ui/icons/TocOutlined'
-import { Menu, Child, Menus } from '@/lib/common'
+import { Menu, Child, Menus, sidebarMenus } from '@/lib/sidebar'
 import { LinkBar } from '@/components/molecules'
 import { drawerWidth } from '@/lib/util'
 import { useRouter } from 'next/router'
@@ -65,69 +56,7 @@ const Sidebar = (props: Props) => {
     window !== undefined ? () => window().document.body : undefined
   const theme = useTheme()
   const router = useRouter()
-  const [menus, setMenus] = useState<Menus>({
-    top: [
-      {
-        id: 'meeting',
-        icon: <MenuBookOutlinedIcon />,
-        to: '/mypage/meeting_record',
-        text: '会議',
-        open: false,
-        children: [
-          {
-            id: 'meeting_index',
-            to: '/mypage/meeting_record',
-            icon: <TocOutlinedIcon />,
-            text: '議事録一覧',
-          },
-          {
-            id: 'meeting_create',
-            to: '/mypage/meeting_record/create',
-            icon: <LibraryAddOutlinedIcon />,
-            text: '議事録追加',
-          },
-        ],
-      },
-      {
-        id: 'schedule',
-        icon: <EventAvailableOutlinedIcon />,
-        to: '/mypage/schedule',
-        text: 'スケジュール',
-      },
-      {
-        id: 'document',
-        icon: <FolderOpenOutlinedIcon />,
-        to: '/mypage/document',
-        text: 'ドキュメント',
-      },
-      {
-        id: 'task',
-        icon: <AttachFileOutlinedIcon />,
-        to: '/mypage/task',
-        text: 'タスク',
-      },
-      {
-        id: 'chat',
-        icon: <SendOutlinedIcon />,
-        to: '/mypage/chat',
-        text: 'チャット',
-      },
-      {
-        id: 'blog',
-        icon: <BookOutlinedIcon />,
-        to: '/mypage/blog',
-        text: 'ブログ',
-      },
-    ],
-    bottom: [
-      {
-        id: 'settings',
-        text: '設定',
-        icon: <SettingsOutlinedIcon />,
-        to: '/mypage/setting',
-      },
-    ],
-  })
+  const [menus, setMenus] = useState<Menus>({ ...sidebarMenus })
 
   const handleClick = (
     target: Menu,
@@ -168,6 +97,7 @@ const Sidebar = (props: Props) => {
       }
     })
   }, [])
+
   const drawer = (
     <aside>
       <List>
@@ -191,36 +121,38 @@ const Sidebar = (props: Props) => {
         }
       >
         {menus.top.map((menu, i) =>
-          menu.children === undefined ? (
-            <LinkBar
-              key={menu.id + `_${i}`}
-              item={menu}
-              activeClass={activeClass(menu.to!)}
-              onItem={() => onItem(menu.to!)}
-            />
-          ) : (
-            <div key={menu.id + `_${i}`}>
-              <ListItem button onClick={handleClick.bind(null, menu)}>
-                <ListItemIcon>{menu.icon}</ListItemIcon>
-                <ListItemText primary={menu.text} />
-                {menu.open! ? <ExpandLess /> : <ExpandMore />}
-              </ListItem>
-              <Collapse in={menu.open} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  {menu.children !== undefined &&
-                    menu.children.map((child) => (
-                      <LinkBar
-                        key={child.id}
-                        item={child}
-                        activeClass={activeClass(child.to!)}
-                        onItem={() => onItem(child.to!)}
-                        isChild
-                      />
-                    ))}
-                </List>
-              </Collapse>
-            </div>
-          )
+          menu.children === undefined
+            ? menu.disabled === undefined && (
+                <LinkBar
+                  key={menu.id + `_${i}`}
+                  item={menu}
+                  activeClass={activeClass(menu.to!)}
+                  onItem={() => onItem(menu.to!)}
+                />
+              )
+            : menu.disabled === undefined && (
+                <div key={menu.id + `_${i}`}>
+                  <ListItem button onClick={handleClick.bind(null, menu)}>
+                    <ListItemIcon>{menu.icon}</ListItemIcon>
+                    <ListItemText primary={menu.text} />
+                    {menu.open! ? <ExpandLess /> : <ExpandMore />}
+                  </ListItem>
+                  <Collapse in={menu.open} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                      {menu.children !== undefined &&
+                        menu.children.map((child) => (
+                          <LinkBar
+                            key={child.id}
+                            item={child}
+                            activeClass={activeClass(child.to!)}
+                            onItem={() => onItem(child.to!)}
+                            isChild
+                          />
+                        ))}
+                    </List>
+                  </Collapse>
+                </div>
+              )
         )}
       </List>
       <Divider />
