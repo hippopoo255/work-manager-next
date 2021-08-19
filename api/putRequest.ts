@@ -1,27 +1,28 @@
 import axios, { AxiosResponse } from 'axios'
+import { API_URL } from '@/lib/util'
 
 export type Config = {
   headers: {
     'X-HTTP-Method-Override': 'PUT'
+    'Content-Type'?: 'multipart/form-data'
   }
 }
 
 let httpClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: API_URL,
   withCredentials: true,
 })
 
 const putRequest = async <T, U>(
   path: string,
   data: U,
-  handleError: ((err: AxiosResponse) => unknown) | null = null
-): Promise<T> => {
-  let config: Config = {
+  handleError: ((err: AxiosResponse) => unknown) | null = null,
+  config: Config = {
     headers: {
       'X-HTTP-Method-Override': 'PUT',
     },
   }
-
+): Promise<T> => {
   const axiosFunc: () => Promise<AxiosResponse<T>> = () => {
     return httpClient.post(path, data, config)
   }

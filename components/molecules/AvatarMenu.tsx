@@ -42,8 +42,8 @@ const AvatarMenu = ({ user }: Props) => {
     },
     {
       id: 'profile',
-      to: '/profile',
-      text: 'Profile',
+      to: '/mypage/profile',
+      text: 'プロフィール',
     },
     {
       id: 'logout',

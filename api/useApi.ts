@@ -1,9 +1,10 @@
 import axios, { AxiosResponse } from 'axios'
 import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
+import { API_URL } from '@/lib/util'
 
 export let httpClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: API_URL,
   withCredentials: true,
 })
 
