@@ -76,6 +76,7 @@ export function postTiming(createDate: Date) {
 
 export const strPatterns = {
   password: /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)[=\w\-\?]{8,64}$/,
+  email: /^[\w\-._]+@[\w\-._]+\.[A-Za-z]+$/,
   katakana: /^[ァ-ヴーｦ-ﾟ]+$/,
   confirm: (compare: string) =>
     new RegExp(`^${compare.replace(/\?/g, '\\?')}$`),

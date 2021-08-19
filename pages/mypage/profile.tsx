@@ -33,11 +33,22 @@ const usePaperStyles = makeStyles((theme: Theme) =>
   createStyles({
     facePaper: {
       cursor: 'pointer',
+      overflow: 'hidden',
     },
     output: {
       zIndex: 1,
-      display: 'block',
       width: '100%',
+      minHeight: 100,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'relative',
+    },
+    trash: {
+      position: 'absolute',
+      bottom: -30,
+      right: 0,
+      color: theme.palette.grey[600],
     },
     fill: {
       position: 'relative',
@@ -46,7 +57,7 @@ const usePaperStyles = makeStyles((theme: Theme) =>
       width: '100%',
       height: 0,
       paddingBottom: '56.25%',
-      background: theme.palette.grey[300],
+      background: theme.palette.grey[200],
     },
     mark: {
       display: 'flex',
@@ -65,18 +76,19 @@ const FacePaper = ({ preview }: { preview: any }) => {
   const classes = usePaperStyles()
   return (
     <Tooltip title={'顔写真アップロード'}>
-      <Paper square className={classes.facePaper}>
-        <output className={classes.output}>
-          {preview !== null && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={preview} alt={'サムネイル画像'} />
-          )}
-        </output>
-        {preview === null && (
+      <Paper className={classes.facePaper}>
+        {preview !== null ? (
+          <output className={classes.output}>
+            {
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={preview} alt={'サムネイル画像'} />
+            }
+          </output>
+        ) : (
           <div className={classes.fill}>
             <div className={classes.mark}>
               <IconButton
-                color="inherit"
+                color="default"
                 aria-label="upload picture"
                 component="span"
               >
@@ -129,6 +141,12 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
     },
+    subFlag: {
+      color: theme.palette.text.secondary,
+      '& .MuiTypography-body1': {
+        fontSize: theme.typography.body2.fontSize,
+      },
+    },
   })
 )
 
@@ -175,66 +193,76 @@ const Profile = () => {
     setValue('password_confirmation', '')
   }
 
-  const handleUpdate = async (data: ProfileInputs) => {
-    setLoading(true)
-    const multiSubmit = new FormData()
-    multiSubmit.append('family_name', data.family_name)
-    multiSubmit.append('family_name_kana', data.family_name_kana)
-    multiSubmit.append('given_name', data.given_name)
-    multiSubmit.append('given_name_kana', data.given_name_kana)
-    if (thumbnailData !== null) {
-      multiSubmit.append('file', thumbnailData)
-    }
-    multiSubmit.append('delete_flag', data.delete_flag ? '1' : '0')
-    multiSubmit.append('change_password', data.change_password ? '1' : '0')
-    if (data.change_password) {
-      multiSubmit.append('current_password', data.current_password!)
-      multiSubmit.append('password', data.password!)
-      multiSubmit.append('password_confirmation', data.password_confirmation!)
-    }
+  const handleDeleteFlag = () => {
+    setValue('delete_flag', !getValues('delete_flag'))
+  }
 
-    await putRequest<User, FormData>(
-      '/user/1/profile',
-      multiSubmit,
-      (err) => {
-        console.error(err)
-        throw err
-      },
-      {
-        headers: {
-          'X-HTTP-Method-Override': 'PUT',
-          'Content-Type': 'multipart/form-data',
-        },
+  const handleUpdate = async (data: ProfileInputs) => {
+    if (!!user) {
+      setLoading(true)
+      const multiSubmit = new FormData()
+      multiSubmit.append('family_name', data.family_name)
+      multiSubmit.append('family_name_kana', data.family_name_kana)
+      multiSubmit.append('given_name', data.given_name)
+      multiSubmit.append('given_name_kana', data.given_name_kana)
+      multiSubmit.append('delete_flag', data.delete_flag ? '1' : '0')
+      if (!(thumbnailData === null || data.delete_flag)) {
+        multiSubmit.append('file', thumbnailData)
       }
-    )
-      .then((updateUser: User) => {
-        setUser(updateUser)
-        setThumbnailData(null)
-      })
-      .catch((err) => {
-        if (err.status === 401) {
-          router.push('/login')
+      multiSubmit.append('change_password', data.change_password ? '1' : '0')
+      if (data.change_password) {
+        multiSubmit.append('current_password', data.current_password!)
+        multiSubmit.append('password', data.password!)
+        multiSubmit.append('password_confirmation', data.password_confirmation!)
+      }
+
+      await putRequest<User, FormData>(
+        `/user/${user.id}/profile`,
+        multiSubmit,
+        (err) => {
+          console.error(err)
+          throw err
+        },
+        {
+          headers: {
+            'X-HTTP-Method-Override': 'PUT',
+            'Content-Type': 'multipart/form-data',
+          },
         }
-        if (err.status === 403) {
-          router.push('/403', '/forbidden')
-        }
-        if (err.status === 404) {
-          router.push('/404', '/notfound')
-        }
-        if (err.status === 422) {
-          const errBody: { [k: string]: string[] } = err.data.errors
-          Object.keys(errBody).forEach((key: string) => {
-            const targetKey: any = key
-            setError(targetKey, {
-              type: 'invalid',
-              message: errBody[key][0],
+      )
+        .then((updateUser: User) => {
+          if (data.delete_flag) {
+            setPreview(null)
+          }
+          setThumbnailData(null)
+          setUser(updateUser)
+          setThumbnailData(null)
+        })
+        .catch((err) => {
+          if (err.status === 401) {
+            router.push('/login')
+          }
+          if (err.status === 403) {
+            router.push('/403', '/forbidden')
+          }
+          if (err.status === 404) {
+            router.push('/404', '/notfound')
+          }
+          if (err.status === 422) {
+            const errBody: { [k: string]: string[] } = err.data.errors
+            Object.keys(errBody).forEach((key: string) => {
+              const targetKey: any = key
+              setError(targetKey, {
+                type: 'invalid',
+                message: errBody[key][0],
+              })
             })
-          })
-        }
-      })
-      .finally(() => {
-        setLoading(false)
-      })
+          }
+        })
+        .finally(() => {
+          setLoading(false)
+        })
+    }
   }
 
   const handlePreview = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -278,7 +306,7 @@ const Profile = () => {
       setValue('password_confirmation', undefined)
       setValue('file', null)
       setValue('delete_flag', false)
-      if (user.file_path !== null) {
+      if (!!user.file_path) {
         setPreview(`${STORAGE_URL}/${user.file_path}`)
       }
     }
@@ -470,6 +498,26 @@ const Profile = () => {
                         <label htmlFor="thumbnail">
                           <FacePaper preview={preview} />
                         </label>
+                        <Controller
+                          control={control}
+                          name="delete_flag"
+                          render={({ field }) => (
+                            <FormControlLabel
+                              {...field}
+                              control={
+                                <Checkbox
+                                  checked={getValues('delete_flag')}
+                                  onChange={handleDeleteFlag}
+                                  name="delete_flag"
+                                  color="primary"
+                                  size={'small'}
+                                />
+                              }
+                              label="顔写真を削除する"
+                              className={classes.subFlag}
+                            />
+                          )}
+                        />
                       </div>
                     )}
                   />
@@ -490,7 +538,7 @@ const Profile = () => {
                           <Checkbox
                             checked={getValues('change_password')}
                             onChange={handleChangePassword}
-                            name="changePassword"
+                            name="change_password"
                             color="primary"
                           />
                         }

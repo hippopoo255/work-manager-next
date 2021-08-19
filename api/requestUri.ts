@@ -3,6 +3,8 @@ const requestUri = {
   logout: '/logout',
   currentUser: '/user/current',
   currentUserWithChat: '/user/current/chat_rooms',
+  forgotPassword: '/password/email',
+  resetPassword: '/password/reset',
   priority: {
     list: '/priority',
   },
