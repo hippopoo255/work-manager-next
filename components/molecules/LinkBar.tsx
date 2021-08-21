@@ -4,7 +4,7 @@ import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core'
 import clsx from 'clsx'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import InboxIcon from '@material-ui/icons/MoveToInbox'
-import { Menu } from '@/lib/common'
+import { Menu } from '@/lib/sidebar'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

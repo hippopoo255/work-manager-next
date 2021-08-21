@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
+import clsx from 'clsx'
 import {
   ClickAwayListener,
   Grow,
@@ -6,6 +7,7 @@ import {
   MenuItem,
   Paper,
   Popper,
+  Divider,
 } from '@material-ui/core'
 import { Avatar, IconButton } from '@material-ui/core'
 import { deepOrange } from '@material-ui/core/colors'
@@ -15,12 +17,25 @@ import axios from '@/axios'
 import requests from '@/Requests'
 import { useRouter } from 'next/router'
 import { User } from '@/interfaces/models'
+import { STORAGE_URL } from '@/lib/util'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     avatar: {
       color: theme.palette.getContrastText(deepOrange[500]),
       backgroundColor: theme.palette.secondary.main,
+    },
+    onSrc: {
+      backgroundColor: theme.palette.grey[100],
+    },
+    menuBox: {
+      maxWidth: '100%',
+    },
+    menuLabel: {
+      whiteSpace: 'pre-wrap',
+      fontSize: theme.typography.subtitle2.fontSize,
+      color: theme.palette.text.secondary,
+      pointerEvents: 'none',
     },
   })
 )
@@ -42,8 +57,8 @@ const AvatarMenu = ({ user }: Props) => {
     },
     {
       id: 'profile',
-      to: '/profile',
-      text: 'Profile',
+      to: '/mypage/profile',
+      text: 'プロフィール',
     },
     {
       id: 'logout',
@@ -94,6 +109,8 @@ const AvatarMenu = ({ user }: Props) => {
     }
   }
   const prevOpen = useRef(open)
+  const avatarSrc =
+    !!user && !!user.file_path ? `${STORAGE_URL}/${user.file_path}` : ''
 
   useEffect(() => {
     if (prevOpen.current === true && open === false) {
@@ -104,21 +121,26 @@ const AvatarMenu = ({ user }: Props) => {
 
   return (
     <div>
-      <IconButton
-        ref={anchorRef}
-        aria-controls={open ? 'menu-list-grow' : undefined}
-        aria-haspopup="true"
-        onClick={handleToggle}
-        component="span"
-      >
-        <Avatar
-          alt={!!user ? user.family_name : ''}
-          src=""
-          className={classes.avatar}
+      {!!user && (
+        <IconButton
+          ref={anchorRef}
+          aria-controls={open ? 'menu-list-grow' : undefined}
+          aria-haspopup="true"
+          onClick={handleToggle}
+          component="span"
         >
-          {letter()}
-        </Avatar>
-      </IconButton>
+          <Avatar
+            alt={user.family_name}
+            src={avatarSrc}
+            className={clsx({
+              [classes.avatar]: !user.file_path,
+              [classes.onSrc]: user.file_path,
+            })}
+          >
+            {letter()}
+          </Avatar>
+        </IconButton>
+      )}
       <Popper
         open={open}
         anchorEl={anchorRef.current}
@@ -134,23 +156,31 @@ const AvatarMenu = ({ user }: Props) => {
                 placement === 'bottom' ? 'center top' : 'center bottom',
             }}
           >
-            <Paper>
+            <Paper className={classes.menuBox}>
               <ClickAwayListener onClickAway={handleClose}>
-                <MenuList
-                  autoFocusItem={open}
-                  id="menu-list-grow"
-                  onKeyDown={handleListKeyDown}
-                >
-                  {menus.length > 0 &&
-                    menus.map((menu) => (
-                      <MenuItem
-                        key={menu.id}
-                        onClick={handleItem.bind(null, menu.to)}
-                      >
-                        {menu.text}
-                      </MenuItem>
-                    ))}
-                </MenuList>
+                <nav>
+                  <MenuList>
+                    <MenuItem className={classes.menuLabel}>
+                      {!!user && user.full_name}
+                    </MenuItem>
+                  </MenuList>
+                  <Divider />
+                  <MenuList
+                    autoFocusItem={open}
+                    id="menu-list-grow"
+                    onKeyDown={handleListKeyDown}
+                  >
+                    {menus.length > 0 &&
+                      menus.map((menu) => (
+                        <MenuItem
+                          key={menu.id}
+                          onClick={handleItem.bind(null, menu.to)}
+                        >
+                          {menu.text}
+                        </MenuItem>
+                      ))}
+                  </MenuList>
+                </nav>
               </ClickAwayListener>
             </Paper>
           </Grow>

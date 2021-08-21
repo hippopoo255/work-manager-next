@@ -23,6 +23,7 @@ import { useForm, Controller, SubmitHandler } from 'react-hook-form'
 import Link from 'next/link'
 import router from 'next/router'
 import { MeetingTableRowData } from '@/interfaces/table/rowData'
+import { API_URL } from '@/lib/util'
 
 export type Inputs = {
   count: string // 6,10 -> min: 6 max: 10
@@ -157,10 +158,7 @@ const Index = () => {
     args: QueryParam<MeetingTableRowData>
   ) => {
     if (args.hasOwnProperty('sort_key')) {
-      let uri = meetingRecords.path.replace(
-        String(process.env.NEXT_PUBLIC_API_URL),
-        ''
-      )
+      let uri = meetingRecords.path.replace(API_URL, '')
       uri += `?page=${args.page}&sort_key=${args.sort_key}&order_by=${args.order_by}`
       await httpClient.get(uri).then((res) => {
         setMeetingRecords(res.data)

@@ -12,7 +12,8 @@ import { useForm, Controller, SubmitHandler } from 'react-hook-form'
 import { postRequest, putRequest } from '@/api'
 import { httpClient } from '@/api/useApi'
 import requests from '@/Requests'
-import { Pager, AlertStatus } from '@/interfaces'
+import { Pager } from '@/interfaces'
+import { AlertStatus } from '@/interfaces/common'
 import { Task, Priority, Progress } from '@/interfaces/models'
 import { toStrData } from '@/lib/util'
 import { TaskTable } from '@/components/organisms'
@@ -20,7 +21,7 @@ import { AxiosError, AxiosResponse } from 'axios'
 import { CustomAlert } from '@/components/atoms'
 import { FormErrorMessage } from '@/components/atoms'
 import { useRouter } from 'next/router'
-
+import { API_URL } from '@/lib/util'
 export type Inputs = {
   body: string
   time_limit: Date
@@ -207,7 +208,7 @@ const Index = () => {
     args: any
   ) => {
     if (args.hasOwnProperty('sort_key')) {
-      let uri = tasks.path.replace(String(process.env.NEXT_PUBLIC_API_URL), '')
+      let uri = tasks.path.replace(API_URL, '')
       uri += `?page=${args.page}&sort_key=${args.sort_key}&order_by=${args.order_by}`
       await httpClient.get(uri).then((res) => {
         setTasks(res.data)

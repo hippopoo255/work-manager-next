@@ -11,22 +11,22 @@ import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
-import Link from '@material-ui/core/Link'
+// import Link from '@material-ui/core/Link'
+import Link from 'next/link'
+
 import Grid from '@material-ui/core/Grid'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Typography from '@material-ui/core/Typography'
 import Container from '@material-ui/core/Container'
 import { useForm, Controller, SubmitHandler } from 'react-hook-form'
 import { User } from '@/interfaces/models'
-import { AxiosError } from 'axios'
-import { CustomAlert } from '@/components/atoms'
-import { AlertStatus } from '@/interfaces'
+import { CustomAlert, FormErrorMessage } from '@/components/atoms'
+import { AlertStatus } from '@/interfaces/common'
 import { darken } from '@material-ui/core'
-import { FormErrorMessage } from '@/components/atoms'
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
-    marginTop: theme.spacing(8),
+    width: '100%',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -34,9 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   avatar: {
     margin: theme.spacing(1),
     background: 'linear-gradient(135deg,#fad961,#f76b1c)',
-    boxShadow:
-      // '0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%)',
-      theme.shadows[2],
+    boxShadow: theme.shadows[2],
   },
   form: {
     width: '100%',
@@ -49,6 +47,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   label: {
     fontSize: '90%',
+  },
+  body: {
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 }))
 
@@ -131,7 +136,7 @@ const Login = () => {
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
         ></meta>
       </Head>
-      <Container component="main" maxWidth="xs">
+      <Container component="section" maxWidth="xs" className={classes.body}>
         <CssBaseline />
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
@@ -222,14 +227,24 @@ const Login = () => {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
+                <Link
+                  href="/password/forgot_password"
+                  as="/forgot_password"
+                  passHref
+                >
+                  <Typography
+                    variant={'button'}
+                    component={'a'}
+                    color={'primary'}
+                  >
+                    パスワードをお忘れの方
+                  </Typography>
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
+                {/* <Link href="#" variant="body2">
                   {'アカウントの作成はこちら'}
-                </Link>
+                </Link> */}
               </Grid>
             </Grid>
           </form>
