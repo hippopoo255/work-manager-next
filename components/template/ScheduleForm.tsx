@@ -10,6 +10,8 @@ import {
   Typography,
   Select,
   MenuItem,
+  FormControl,
+  InputLabel,
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import Autocomplete from '@material-ui/lab/Autocomplete'
@@ -60,7 +62,6 @@ const ScheduleForm = ({
   dialogTitle,
   onDelete,
 }: Props) => {
-  // const [open, setOpen] = useState<boolean>(false)
   const classes = useStyles()
   const [loading, setLoading] = useState<boolean>(false)
   const [memberList, setMemberList] = useState<MemberExtInputs[]>([])
@@ -371,25 +372,29 @@ const ScheduleForm = ({
               name="color"
               control={control}
               render={({ field }) => (
-                <Select
-                  {...field}
-                  labelId="color-select-label"
-                  id="color"
-                  name="color"
-                  fullWidth
-                  value={getValues('color')}
-                  disabled={getValues('disabled')}
-                >
-                  {scheduleColors.map((color) => (
-                    <MenuItem key={color.value} value={color.value}>
-                      <span
-                        className={classes.label}
-                        style={{ background: color.value }}
-                      ></span>
-                      {color.label}
-                    </MenuItem>
-                  ))}
-                </Select>
+                <FormControl variant="outlined" fullWidth>
+                  <InputLabel htmlFor="color">カラー</InputLabel>
+                  <Select
+                    {...field}
+                    labelId="color-select-label"
+                    id="color"
+                    name="color"
+                    label="カラー"
+                    fullWidth
+                    value={getValues('color')}
+                    disabled={getValues('disabled')}
+                  >
+                    {scheduleColors.map((color) => (
+                      <MenuItem key={color.value} value={color.value}>
+                        <span
+                          className={classes.label}
+                          style={{ background: color.value }}
+                        ></span>
+                        {color.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               )}
             />
           </Grid>

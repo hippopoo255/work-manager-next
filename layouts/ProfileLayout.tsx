@@ -12,8 +12,7 @@ import { SITE_TITLE } from '@/lib/util'
 export type LayoutOrg = {
   children: React.ReactNode
   title?: string
-  supplyUserId?: (userId: number) => void
-  supplyUser?: (user: User) => void
+  user: User | ''
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -38,17 +37,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
-const MypageLayout = ({
-  children,
-  title,
-  supplyUserId,
-  supplyUser,
-}: LayoutOrg) => {
-  const req = () => {
-    return httpClient.get(requests.currentUser)
-  }
-  const user = useApi<User | ''>(req, '')
-
+const ProfileLayout = ({ children, title, user }: LayoutOrg) => {
   const classes = useStyles()
   const suffix = SITE_TITLE
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -59,15 +48,6 @@ const MypageLayout = ({
       setMobileOpen(specified)
     }
   }
-
-  useEffect(() => {
-    if (!!user && supplyUserId !== undefined) {
-      supplyUserId(user.id)
-    }
-    if (!!user && supplyUser !== undefined) {
-      supplyUser(user)
-    }
-  }, [user, supplyUserId, supplyUser])
 
   return (
     <>
@@ -92,4 +72,4 @@ const MypageLayout = ({
   )
 }
 
-export default MypageLayout
+export default ProfileLayout

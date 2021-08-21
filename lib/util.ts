@@ -6,6 +6,8 @@ export const SITE_TITLE: string =
   process.env.NEXT_PUBLIC_SITE_NAME || 'Next App'
 export const API_URL: string =
   process.env.NEXT_PUBLIC_API_URL || 'http://localhost/api'
+export const STORAGE_URL: string =
+  process.env.NEXT_PUBLIC_STORAGE_URL || 'http://localhost:8080/storage'
 export const PROCESS_FLAG: { [k: string]: ProcessFlag } = {
   updateFlag: 1,
   deleteFlag: 2,
@@ -70,4 +72,12 @@ export function postTiming(createDate: Date) {
     const minute = `0${createDate.getMinutes()}`.slice(-2)
     return `${month}/${date} ${hour}:${minute}`
   }
+}
+
+export const strPatterns = {
+  password: /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)[=\w\-\?]{8,64}$/,
+  email: /^[\w\-._]+@[\w\-._]+\.[A-Za-z]+$/,
+  katakana: /^[ァ-ヴーｦ-ﾟ]+$/,
+  confirm: (compare: string) =>
+    new RegExp(`^${compare.replace(/\?/g, '\\?')}$`),
 }
