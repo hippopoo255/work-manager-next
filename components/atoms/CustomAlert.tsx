@@ -3,7 +3,7 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import Alert from '@material-ui/lab/Alert'
 import PropTypes from 'prop-types'
 import { Box } from '@material-ui/core'
-import { AlertStatus } from '@/interfaces'
+import { AlertStatus } from '@/interfaces/common'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
