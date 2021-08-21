@@ -79,11 +79,10 @@ const HelpBox = () => {
           <ul>
             <li className={classes.item}>条件1: 8文字以上64文字以下</li>
             <li className={classes.item}>
-              条件2: 大文字[A-Z]、小文字[a-z]、数字[0-9]を必ず含める
+              条件2: ①大文字[A-Z]、②小文字[a-z]、③数字[0-9]を必ず含める
             </li>
             <li className={classes.item}>
-              条件3:
-              「-（ハイフン）」「_（アンダーバー）」「=（イコール）」「?（クエスチョン）」は使用可能
+              その他使用可能文字：「-（ハイフン）」「_（アンダーバー）」「=（イコール）」「?（クエスチョン）」
             </li>
           </ul>
         </Typography>
