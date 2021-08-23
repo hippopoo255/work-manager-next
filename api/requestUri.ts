@@ -14,6 +14,7 @@ const requestUri = {
     put: '/chat_room/',
     delete: '/chat_room/',
     id: '/chat_room/',
+    read: '/chat_room/',
   },
   chatMessage: {
     list: '/author/chat_room',

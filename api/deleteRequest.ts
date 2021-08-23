@@ -6,10 +6,10 @@ let httpClient = axios.create({
   withCredentials: true,
 })
 
-const deleteRequest = async (
+const deleteRequest = async <T = null>(
   path: string,
   handleError: ((err: AxiosResponse) => unknown) | null = null
-): Promise<null> => {
+): Promise<T> => {
   const axiosFunc: () => Promise<AxiosResponse<null>> = () => {
     return httpClient.delete(path)
   }

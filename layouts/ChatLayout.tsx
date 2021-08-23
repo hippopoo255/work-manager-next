@@ -5,7 +5,7 @@ import { MypageHeader as Header, Sidebar } from '@/components/organisms'
 import Head from 'next/head'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { User, ChatRoom } from '@/interfaces/models'
+import { User, ChatRoom, ChatMessage } from '@/interfaces/models'
 import { getRequest, postRequest, requestUri } from '@/api'
 import { ChatRoomList } from '@/components/organisms'
 import { Box, TextField, Tooltip, IconButton } from '@material-ui/core'
@@ -16,7 +16,8 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import { ChatRoomForm } from '@/components/template'
 import { MemberExtInputs } from '@/interfaces/form/inputs'
 import { ChatRoomSubmit } from '@/interfaces/form/submit'
-import { SITE_TITLE } from '@/lib/util'
+import { SITE_TITLE, mine } from '@/lib/util'
+import { listenMessageSent, listenMessageRead } from '@/lib/pusher'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -59,10 +60,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflowY: 'scroll',
     backgroundColor: theme.palette.background.paper,
     flexGrow: 1,
+
     [theme.breakpoints.up('md')]: {
       maxWidth: chatRoomListWidth,
       flexShrink: 0,
       borderRight: `1px solid ${theme.palette.divider}`,
+      zIndex: 2,
     },
   },
   chatMain: {
@@ -133,40 +136,6 @@ const ChatLayout = React.memo(
     const [open, setOpen] = useState<boolean>(false)
     const fixedMember: MemberExtInputs[] = []
 
-    useEffect(() => {
-      const fetchCurrentUser = async () => {
-        await getRequest<User>(requestUri.currentUserWithChat, (err) => {
-          throw err
-        })
-          .then((data) => {
-            setUser(data)
-            supplyUserId(data.id)
-          })
-          .catch((err) => {
-            console.error(err)
-            if (err.status === 401) {
-              router.push('/login')
-            }
-          })
-      }
-      fetchCurrentUser()
-    }, [])
-
-    useEffect(() => {
-      if (activeRoom !== null) {
-        setUser((prev: any) => {
-          const rooms: ChatRoom[] = !!prev ? prev!.chat_rooms! : []
-          const index = rooms.findIndex((room) => room.id === activeRoom.id)
-          if (index !== 0) {
-            rooms.splice(index, 1, activeRoom)
-          }
-          return {
-            ...prev,
-            chat_rooms: rooms,
-          }
-        })
-      }
-    }, [activeRoom])
     const chatRooms = useMemo(
       (): ChatRoom[] => (!!user ? user.chat_rooms! : []),
       [user]
@@ -227,6 +196,88 @@ const ChatLayout = React.memo(
       })
     }
 
+    useEffect(() => {
+      const fetchCurrentUser = async () => {
+        await getRequest<User>(requestUri.currentUserWithChat, (err) => {
+          throw err
+        })
+          .then((data) => {
+            setUser(data)
+            supplyUserId(data.id)
+          })
+          .catch((err) => {
+            console.error(err)
+            if (err.status === 401) {
+              router.push('/login')
+            }
+          })
+      }
+      fetchCurrentUser()
+    }, [])
+
+    useEffect(() => {
+      if (activeRoom !== null) {
+        setUser((prev: any) => {
+          const rooms: ChatRoom[] = !!prev ? prev!.chat_rooms! : []
+          const index = rooms.findIndex((room) => room.id === activeRoom.id)
+          if (index !== 0) {
+            rooms.splice(index, 1, activeRoom)
+          }
+          return {
+            ...prev,
+            chat_rooms: rooms,
+          }
+        })
+      }
+    }, [activeRoom])
+
+    useEffect(() => {
+      if (chatRooms.length > 0) {
+        listenMessageSent((message: ChatMessage) => {
+          if (!!user && message.written_by.id !== user.id) {
+            const index = chatRooms.findIndex(
+              (chatRoom) => chatRoom.id === message.chat_room_id
+            )
+            if (index !== -1) {
+              setUser((prev) => {
+                if (!!prev) {
+                  const newRooms = chatRooms
+                  newRooms[index].unread_count++
+                  return {
+                    ...prev,
+                    chat_rooms: newRooms,
+                  }
+                }
+                return ''
+              })
+            }
+          }
+        })
+        listenMessageRead(({ readUser, chatRoomId }) => {
+          if (!user || readUser.id !== user.id) {
+            console.log('userId is invalid.')
+            return true
+          }
+          const index = chatRooms.findIndex(
+            (chatRoom) => chatRoom.id === chatRoomId
+          )
+          if (index !== -1) {
+            setUser((prev) => {
+              if (!!prev) {
+                const newRooms = chatRooms
+                newRooms[index].unread_count = 0
+                return {
+                  ...prev,
+                  chat_rooms: newRooms,
+                }
+              }
+              return ''
+            })
+          }
+        })
+      }
+    }, [chatRooms])
+
     return (
       <>
         <Head>
@@ -253,7 +304,7 @@ const ChatLayout = React.memo(
                   <Box className={classes.chatHead}>
                     <div className={classes.keywordBox}>
                       <Autocomplete
-                        id="country-select-demo"
+                        id="chat-room-select-demo"
                         style={{ width: '100%' }}
                         options={chatRooms as ChatRoom[]}
                         autoHighlight

@@ -1,5 +1,12 @@
 import React from 'react'
-import { List, ListItem, IconButton, Avatar, Tooltip } from '@material-ui/core'
+import {
+  List,
+  ListItem,
+  IconButton,
+  Typography,
+  Avatar,
+  Tooltip,
+} from '@material-ui/core'
 import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined'
 import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined'
 import Router from 'next/router'
@@ -38,20 +45,24 @@ const ChatDetailTitle = ({
   ]
 
   return (
-    <h2 className={classes.top}>
+    <div className={classes.top}>
       <List className={classes.titleList}>
         <Tooltip title="設定">
-          <IconButton className={classes.allow} onClick={() => Router.back()}>
+          <IconButton
+            className={classes.allow}
+            onClick={() => Router.back()}
+            size={'small'}
+          >
             <ArrowBackOutlinedIcon />
           </IconButton>
         </Tooltip>
-        <div className={classes.titleMain}>
+        <Typography component={'h2'} className={classes.titleMain}>
           <Avatar>{icon}</Avatar>
           <span>{title}</span>
-        </div>
+        </Typography>
         <CustomMenuBox options={menuList} id={1} small />
       </List>
-    </h2>
+    </div>
   )
 }
 
