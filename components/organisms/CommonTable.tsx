@@ -145,7 +145,7 @@ export type Props<T, U extends TableRowData> = {
       | null,
     obj: QueryParam<U>
   ) => Promise<void>
-  pagerData: Pager<T>
+  pagerData: Pager<T> | null
   rows: U[]
   title: string
   children: React.ReactNode
@@ -375,14 +375,16 @@ const CommonTable = <T, U extends TableRowData>({
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[pagerData.per_page || 10]}
-          component="div"
-          count={pagerData.total || 0}
-          rowsPerPage={pagerData.per_page || 10}
-          page={pagerData.current_page ? pagerData.current_page - 1 : 0}
-          onPageChange={handleChangePage}
-        />
+        {pagerData !== null && (
+          <TablePagination
+            rowsPerPageOptions={[pagerData.per_page! || 10]}
+            component="div"
+            count={pagerData.total || 0}
+            rowsPerPage={pagerData.per_page || 10}
+            page={pagerData.current_page ? pagerData.current_page - 1 : 0}
+            onPageChange={handleChangePage}
+          />
+        )}
       </Paper>
     </div>
   )

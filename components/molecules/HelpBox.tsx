@@ -24,7 +24,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-const HelpBox = () => {
+export type Props = {
+  children?: React.ReactNode
+  point?: React.ReactNode
+}
+
+const HelpBox = ({ children, point }: Props) => {
   const classes = useStyles()
   const [helpEl, setHelpEl] = useState<HTMLElement | null>(null)
   const handleHelpOpen = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
@@ -45,15 +50,19 @@ const HelpBox = () => {
         onMouseEnter={handleHelpOpen}
         onMouseLeave={handleHelpClose}
       >
-        <IconButton
-          color="inherit"
-          aria-label="upload picture"
-          component="span"
-          size="small"
-          className={classes.help}
-        >
-          <HelpOutlineOutlinedIcon />
-        </IconButton>
+        {point !== undefined ? (
+          point
+        ) : (
+          <IconButton
+            color="inherit"
+            aria-label="upload picture"
+            component="span"
+            size="small"
+            className={classes.help}
+          >
+            <HelpOutlineOutlinedIcon />
+          </IconButton>
+        )}
       </Typography>
       <Popover
         id="mouse-over-popover"
@@ -74,18 +83,22 @@ const HelpBox = () => {
         onClose={handleHelpClose}
         disableRestoreFocus
       >
-        <Typography className={classes.helpText} component={'div'}>
-          <p>パスワードの条件</p>
-          <ul>
-            <li className={classes.item}>条件1: 8文字以上64文字以下</li>
-            <li className={classes.item}>
-              条件2: ①大文字[A-Z]、②小文字[a-z]、③数字[0-9]を必ず含める
-            </li>
-            <li className={classes.item}>
-              その他使用可能文字：「-（ハイフン）」「_（アンダーバー）」「=（イコール）」「?（クエスチョン）」
-            </li>
-          </ul>
-        </Typography>
+        {children !== undefined ? (
+          children
+        ) : (
+          <Typography className={classes.helpText} component={'div'}>
+            <p>パスワードの条件</p>
+            <ul>
+              <li className={classes.item}>条件1: 8文字以上64文字以下</li>
+              <li className={classes.item}>
+                条件2: ①大文字[A-Z]、②小文字[a-z]、③数字[0-9]を必ず含める
+              </li>
+              <li className={classes.item}>
+                その他使用可能文字：「-（ハイフン）」「_（アンダーバー）」「=（イコール）」「?（クエスチョン）」
+              </li>
+            </ul>
+          </Typography>
+        )}
       </Popover>
     </div>
   )

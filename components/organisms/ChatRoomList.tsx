@@ -10,10 +10,11 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
+  Badge,
 } from '@material-ui/core'
-import AccountCircleIcon from '@material-ui/icons/AccountCircle'
+import MeetingRoomIcon from '@material-ui/icons/MeetingRoom'
 import { ChatRoom } from '@/interfaces/models'
-import { useRouter } from 'next/router'
+import router, { useRouter } from 'next/router'
 import clsx from 'clsx'
 import { lighten } from '@material-ui/core'
 
@@ -21,8 +22,25 @@ const useStyles = makeStyles((theme: Theme) => ({
   item: {
     margin: 0,
   },
+  row: {
+    position: 'relative',
+  },
   active: {
     background: lighten(theme.palette.primary.main, 0.9),
+    pointerEvents: 'none',
+  },
+  unread: {
+    position: 'absolute',
+    top: '50%',
+    right: theme.spacing(3),
+    transform: 'translate3d(0, -50%, 0)',
+  },
+  badge: {
+    '& .MuiBadge-badge': {
+      backgroundColor: '#f50057',
+      color: theme.palette.common.white,
+      fontWeight: theme.typography.fontWeightBold,
+    },
   },
 }))
 
@@ -30,13 +48,17 @@ type Props = {
   chatRooms: ChatRoom[]
 }
 
-// eslint-disable-next-line react/display-name
 const ChatRoomList = ({ chatRooms }: Props) => {
   const classes = useStyles()
   const router = useRouter()
   const activeClass = (to: string): boolean => router.asPath == to
+  const handleLink = async (chatRoomId: number, e: React.SyntheticEvent) => {
+    e.preventDefault()
+    router.push(`/mypage/chat/${chatRoomId}`)
+  }
+
   return (
-    <List>
+    <List style={{ padding: 0 }}>
       {chatRooms.length > 0 &&
         chatRooms.map((chatRoom: ChatRoom) => (
           <li key={chatRoom.id}>
@@ -52,21 +74,32 @@ const ChatRoomList = ({ chatRooms }: Props) => {
                   button
                   alignItems={'flex-start'}
                   component="a"
-                  className={clsx({
+                  className={clsx(classes.row, {
                     [classes.active]: activeClass(
                       `/mypage/chat/${chatRoom.id}`
                     ),
                   })}
+                  onClick={handleLink.bind(null, chatRoom.id)}
                 >
                   <ListItemAvatar>
                     <Avatar>
-                      <AccountCircleIcon />
+                      <MeetingRoomIcon />
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText
                     primary={chatRoom.name + `(${chatRoom.members.length})`}
                     secondary="Jan 9, 2014"
                   />
+                  {chatRoom.unread_count > 0 && (
+                    <strong className={classes.unread}>
+                      <Badge
+                        badgeContent={chatRoom.unread_count}
+                        max={99}
+                        color={'default'}
+                        className={classes.badge}
+                      />
+                    </strong>
+                  )}
                 </ListItem>
               </Link>
             </Box>
