@@ -1,15 +1,11 @@
 import React, { useEffect, useState, useMemo } from 'react'
-import { GetStaticProps, GetStaticPaths } from 'next'
-import { AxiosResponse } from 'axios'
-import router, { useRouter, SingletonRouter } from 'next/router'
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
-import { httpClient } from '@/api/useApi'
-import requests from '@/Requests'
+import { useRouter } from 'next/router'
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import { getRequest, requestUri } from '@/api'
 import { MypageLayout } from '@/layouts'
-import { Box, Typography, Paper, Grid } from '@material-ui/core'
+import { Box, Paper, Grid } from '@material-ui/core'
 import { MeetingRecord, MeetingDecision, User } from '@/interfaces/models'
 import { DefinitionListItem } from '@/interfaces/common'
-import Custom404Page from '@/pages/404'
 import { MypageTitle } from '@/components/atoms'
 import { DefinitionList } from '@/components/organisms'
 import { toStrFormalLabel } from '@/lib/util'
@@ -41,19 +37,15 @@ const MeetingRecordDetail = () => {
   const classes = useStyles()
   const router = useRouter()
   const [meetingRecord, setMeetingRecord] = useState<MeetingRecord | null>(null)
-  const [error, setError] = useState<any | null>(null)
   const paramId = router.query.id
   useEffect(() => {
     const fetch = async () => {
       if (paramId !== undefined) {
-        await httpClient
-          .get(requests.meetingRecord.id + `/${paramId}`)
-          .then((res: AxiosResponse) => {
-            setMeetingRecord(res.data)
-          })
-          .catch((err) => {
-            setError(err.response)
-          })
+        await getRequest<MeetingRecord>(
+          requestUri.meetingRecord.id + `/${paramId}`
+        ).then((res) => {
+          setMeetingRecord(res)
+        })
       }
     }
     fetch()
@@ -124,24 +116,18 @@ const MeetingRecordDetail = () => {
   }, [meetingRecord])
   return (
     <MypageLayout>
-      {error !== null ? (
-        error.status === 404 && <Custom404Page />
-      ) : (
-        <>
-          <MypageTitle>
-            {meetingRecord === null ? '' : meetingRecord.title}
-          </MypageTitle>
-          <section>
-            <Paper className={classes.body}>
-              <Grid container spacing={2} className={classes.minHeight}>
-                <Grid item xs={12}>
-                  <DefinitionList list={definitionList} />
-                </Grid>
-              </Grid>
-            </Paper>
-          </section>
-        </>
-      )}
+      <MypageTitle>
+        {meetingRecord === null ? '' : meetingRecord.title}
+      </MypageTitle>
+      <section>
+        <Paper className={classes.body}>
+          <Grid container spacing={2} className={classes.minHeight}>
+            <Grid item xs={12}>
+              <DefinitionList list={definitionList} />
+            </Grid>
+          </Grid>
+        </Paper>
+      </section>{' '}
     </MypageLayout>
   )
 }

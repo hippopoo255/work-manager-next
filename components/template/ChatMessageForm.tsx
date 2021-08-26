@@ -209,8 +209,6 @@ const ChatRoomForm = ({
               })
             }
           })
-        } else if (err.status === 401) {
-          router.push('/login')
         }
       })
       .finally(() => {

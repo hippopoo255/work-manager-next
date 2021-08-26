@@ -1,10 +1,5 @@
-import axios, { AxiosResponse } from 'axios'
-import { API_URL } from '@/lib/util'
-
-let httpClient = axios.create({
-  baseURL: API_URL,
-  withCredentials: true,
-})
+import { AxiosResponse } from 'axios'
+import { defaultErrorHandler, httpClient } from '@/lib/axios'
 
 const getRequest = async <T>(
   path: string,
@@ -19,7 +14,7 @@ const getRequest = async <T>(
   })
 
   if (res.status >= 400) {
-    handleError ? handleError(res) : console.error(res)
+    handleError ? handleError(res) : defaultErrorHandler(res)
     return res
   } else {
     return res.data

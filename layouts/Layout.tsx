@@ -2,10 +2,7 @@ import React from 'react'
 import { Header, Footer } from '@/components/organisms'
 import styles from '@/assets/stylesheets/components/Layout.module.scss'
 import Head from 'next/head'
-import { User } from '@/interfaces/models'
-import useApi, { httpClient } from '@/api/useApi'
-import requests from '@/Requests'
-import { useRouter } from 'next/router'
+import { useAuth } from '@/hooks'
 import { SITE_TITLE } from '@/lib/util'
 
 export type LayoutOrg = {
@@ -14,12 +11,7 @@ export type LayoutOrg = {
 }
 
 const Layout = ({ children, title }: LayoutOrg) => {
-  const router = useRouter()
-
-  const req = () => {
-    return httpClient.get(requests.currentUser)
-  }
-  const user = useApi<User | ''>(req, '')
+  const user = useAuth(true)
 
   return (
     <>

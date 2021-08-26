@@ -51,6 +51,7 @@ const requestUri = {
     put: '/schedule/',
     delete: '/schedule/',
   },
+  notifyStatus: '/user/',
 }
 
 export default requestUri

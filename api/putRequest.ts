@@ -1,5 +1,5 @@
-import axios, { AxiosResponse } from 'axios'
-import { API_URL } from '@/lib/util'
+import { AxiosResponse } from 'axios'
+import { defaultErrorHandler, httpClient } from '@/lib/axios'
 
 export type Config = {
   headers: {
@@ -7,11 +7,6 @@ export type Config = {
     'Content-Type'?: 'multipart/form-data'
   }
 }
-
-let httpClient = axios.create({
-  baseURL: API_URL,
-  withCredentials: true,
-})
 
 const putRequest = async <T, U>(
   path: string,
@@ -32,7 +27,7 @@ const putRequest = async <T, U>(
   })
 
   if (res.status >= 400) {
-    handleError ? handleError(res) : console.error(res)
+    handleError ? handleError(res) : defaultErrorHandler(res)
     return res
   } else {
     return res.data

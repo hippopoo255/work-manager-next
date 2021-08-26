@@ -9,8 +9,10 @@ import { STORAGE_URL } from '@/lib/util'
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     avatar: {
-      color: theme.palette.getContrastText(deepOrange[500]),
-      backgroundColor: theme.palette.secondary.main,
+      color: theme.palette.primary.main,
+      backgroundColor: theme.palette.common.white,
+      fontWeight: theme.typography.fontWeightBold,
+      border: `2px solid ${theme.palette.primary.main}`,
     },
     onSrc: {
       backgroundColor: theme.palette.grey[100],

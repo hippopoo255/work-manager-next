@@ -5,9 +5,10 @@ import clsx from 'clsx'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import InboxIcon from '@material-ui/icons/MoveToInbox'
 import { Menu } from '@/lib/sidebar'
-
+import Badge from '@material-ui/core/Badge'
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    position: 'relative',
     '&:hover': {
       textDecoration: 'none',
     },
@@ -28,6 +29,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   subIconActive: {
     color: theme.palette.text.secondary,
+  },
+  badge: {
+    '& .MuiBadge-badge': {
+      backgroundColor: '#f50057',
+    },
   },
 }))
 
@@ -71,8 +77,15 @@ const LinkBar = ({ item, activeClass, onItem, isChild }: Props) => {
             [classes.subIcon]: !!isChild,
           })}
         >
-          {item.icon || <InboxIcon />}
+          {!!item.is_notify ? (
+            <Badge color="default" variant="dot" className={classes.badge}>
+              {item.icon || <InboxIcon />}
+            </Badge>
+          ) : (
+            item.icon || <InboxIcon />
+          )}
         </ListItemIcon>
+
         <ListItemText primary={item.text} />
       </ListItem>
     </Link>

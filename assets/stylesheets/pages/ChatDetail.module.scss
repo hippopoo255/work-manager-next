@@ -32,4 +32,12 @@
       right: -12px;
     }
   }
+  &.disabled {
+    background: darken($lightGrey, 25%);
+    color: $white;
+    text-decoration: line-through;
+    &::after {
+      border-color: transparent;
+    }
+  }
 }

@@ -26,7 +26,7 @@ import Tooltip from '@material-ui/core/Tooltip'
 import DeleteIcon from '@material-ui/icons/Delete'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined'
-import { Pager } from '@/interfaces'
+import { Pager } from '@/interfaces/common'
 import { Task } from '@/interfaces/models'
 import { toStrLabel } from '@/lib/util'
 import { ConfirmDialog } from '@/components/organisms'
@@ -345,12 +345,12 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     editIcon: {
       color: '#fff',
-      backgroundColor: theme.palette.primary.main,
+      backgroundColor: theme.palette.success.main,
       width: 32,
       height: 32,
       cursor: 'pointer',
       '&:hover': {
-        backgroundColor: theme.palette.primary.dark,
+        backgroundColor: theme.palette.success.dark,
       },
     },
   })

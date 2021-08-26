@@ -216,8 +216,6 @@ const ScheduleForm = ({
               message: errBody[key][0],
             })
           })
-        } else if (err.status === 401) {
-          router.push('/login')
         }
       })
       .finally(() => {
@@ -429,7 +427,7 @@ const ScheduleForm = ({
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="共有者"
+                      label="スケジュールの共有相手"
                       variant="outlined"
                       placeholder="＋"
                       error={!!errors.sharedMembers}

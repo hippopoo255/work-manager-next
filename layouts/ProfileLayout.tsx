@@ -5,8 +5,6 @@ import Head from 'next/head'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import { User } from '@/interfaces/models'
-import useApi, { httpClient } from '@/api/useApi'
-import requests from '@/Requests'
 import { SITE_TITLE } from '@/lib/util'
 
 export type LayoutOrg = {

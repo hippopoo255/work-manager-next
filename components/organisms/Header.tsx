@@ -16,8 +16,7 @@ import ExitToAppOutlinedIcon from '@material-ui/icons/ExitToAppOutlined'
 import MenuIcon from '@material-ui/icons/Menu'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import axios from '@/axios'
-import requests from '@/Requests'
+import { postRequest, requestUri } from '@/api'
 import { AvatarMenu } from '../molecules'
 import { User } from '@/interfaces/models'
 import { SiteLogo } from '@/components/atoms'
@@ -37,7 +36,8 @@ export type Props = {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     header: {
-      background: `linear-gradient(165deg, ${darken('#5dff26', 0.1)}, #5cb363)`,
+      // background: `linear-gradient(165deg, ${darken('#5dff26', 0.1)}, #5cb363)`,
+      background: theme.palette.primary.main,
     },
     list: {
       width: 250,
@@ -94,10 +94,8 @@ const Header = ({ user }: Props) => {
   }
 
   const logout = async () => {
-    await axios.post(requests.logout).then((res) => {
-      if (res.status === 200) {
-        router.push('/login')
-      }
+    await postRequest<null, {}>(requestUri.logout, {}).then(() => {
+      router.push('/login')
     })
   }
 
