@@ -1,4 +1,4 @@
-import { User, ChatMessage } from '.'
+import { User, ChatMessage, LastRead } from '.'
 export interface ChatRoom {
   readonly id: number
   name: string
@@ -6,5 +6,7 @@ export interface ChatRoom {
   members: User[]
   created_by: User
   messages: (ChatMessage | null)[]
+  last_reads: (LastRead | null)[]
+  unread_count: number
   created_at: string
 }

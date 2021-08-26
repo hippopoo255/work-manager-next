@@ -1,5 +1,5 @@
-export interface ChatMessageSubmit {
-  written_by: number
-  body: string
-  mentioned_to?: number | null
+export interface ChatMessageSubmit extends FormData {
+  // written_by: number
+  // body: string
+  // mentioned_to?: number | null
 }
