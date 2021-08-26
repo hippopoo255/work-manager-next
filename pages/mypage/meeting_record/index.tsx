@@ -4,32 +4,19 @@ import { MypageLayout } from '@/layouts'
 import { MypageTitle } from '@/components/atoms'
 import { CommonTable } from '@/components/organisms'
 import { AddButton } from '@/components/molecules'
-import { httpClient } from '@/api/useApi'
-import requests from '@/Requests'
 import { Pager } from '@/interfaces'
-import { HeadCell, TableRowData, QueryParam } from '@/interfaces/table'
+import { HeadCell, QueryParam } from '@/interfaces/table'
 import { MeetingRecord } from '@/interfaces/models'
 import { toStrLabel } from '@/lib/util'
-import { Typography, Tooltip } from '@material-ui/core'
-import {
-  Grid,
-  InputLabel,
-  MenuItem,
-  FormControl,
-  Select,
-  TextField,
-} from '@material-ui/core'
-import { useForm, Controller, SubmitHandler } from 'react-hook-form'
+import { Tooltip } from '@material-ui/core'
 import Link from 'next/link'
 import router from 'next/router'
 import { MeetingTableRowData } from '@/interfaces/table/rowData'
 import { API_URL } from '@/lib/util'
-
-export type Inputs = {
-  count: string // 6,10 -> min: 6 max: 10
-  meeting_date: string
-  keyword: string
-}
+import { SearchMeetingRecordForm } from '@/components/organisms'
+import { SearchMeetingRecordInputs } from '@/interfaces/form/inputs'
+import { getRequest, deleteRequest, requestUri } from '@/api'
+import { getQueryParams, handlePageUri } from '@/lib/util'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -42,6 +29,13 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     link: {
       color: theme.palette.primary.main,
+    },
+    SearchIcon: {
+      background: theme.palette.primary.main,
+      color: theme.palette.common.white,
+      '&:hover': {
+        color: theme.palette.primary.main,
+      },
     },
   })
 )
@@ -107,44 +101,33 @@ const Index = () => {
       align: 'center',
     },
   ]
-  const [meetingRecords, setMeetingRecords] = useState<
-    Pager<MeetingRecord> | any
-  >([])
+  const [meetingRecords, setMeetingRecords] =
+    useState<Pager<MeetingRecord> | null>(null)
   const [rows, setRows] = useState<MeetingTableRowData[]>([])
   const [latestUri, setLatestUri] = useState<string>(
-    requests.meetingRecord.list
+    requestUri.meetingRecord.list
   )
-
-  const {
-    register,
-    handleSubmit,
-    watch,
-    control,
-    setValue,
-    reset,
-    formState: { errors },
-  } = useForm<Inputs>({
-    mode: 'onChange',
-    defaultValues: {
-      count: '2,5',
-      meeting_date: '2021/07',
-      keyword: '',
-    },
-  })
-  // TODO: 議事録一覧のキーワード絞り込み
-  const handleSearch = async (data: Inputs) => {
-    console.log(data)
+  const handleSearch = async (data: SearchMeetingRecordInputs) => {
+    const path = requestUri.meetingRecord.list + getQueryParams(data)
+    setLatestUri(path)
+    return await getRequest<Pager<MeetingRecord>>(path, (err) => {
+      if (err.status === 401) {
+        router.push('/login')
+      }
+      if (err.status === 403) {
+        router.push('/403', '/forbidden')
+      }
+      if (err.status === 404) {
+        router.push('/404', '/notfound')
+      }
+      throw err
+    })
   }
 
-  useEffect(() => {
-    const init = async () => {
-      await httpClient.get(requests.meetingRecord.list).then((res) => {
-        setMeetingRecords(res.data)
-        setRows(createRows(res.data.data))
-      })
-    }
-    init()
-  }, [])
+  const handleSuccess = (res: Pager<MeetingRecord>) => {
+    setMeetingRecords(res)
+    setRows(createRows(res.data))
+  }
 
   const handleAdd = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     router.push('/mypage/meeting_record/create')
@@ -157,24 +140,24 @@ const Index = () => {
       | null,
     args: QueryParam<MeetingTableRowData>
   ) => {
-    if (args.hasOwnProperty('sort_key')) {
-      let uri = meetingRecords.path.replace(API_URL, '')
-      uri += `?page=${args.page}&sort_key=${args.sort_key}&order_by=${args.order_by}`
-      await httpClient.get(uri).then((res) => {
-        setMeetingRecords(res.data)
+    if (args.hasOwnProperty('sort_key') && meetingRecords !== null) {
+      const uri = handlePageUri(latestUri, meetingRecords.path, args)
+      await getRequest<Pager<MeetingRecord>>(uri).then((res) => {
+        setMeetingRecords(res)
         setLatestUri(uri)
-        setRows(createRows(res.data.data))
+        setRows(createRows(res.data))
       })
     }
   }
 
   const handleDeleteClick = async (ids: number[]) => {
     const queryParams = latestUri.match(/\?.+$/)
-    await httpClient
-      .delete(`${requests.meetingRecord.delete}/${ids[0]}${queryParams || ''}`)
+    await deleteRequest<Pager<MeetingRecord>>(
+      `${requestUri.meetingRecord.delete}/${ids[0]}${queryParams || ''}`
+    )
       .then((res) => {
-        setMeetingRecords(res.data)
-        setRows(createRows(res.data.data))
+        setMeetingRecords(res)
+        setRows(createRows(res.data))
         // setAlertStatus((prev) => ({
         //   ...prev,
         //   msg: '削除しました',
@@ -215,94 +198,40 @@ const Index = () => {
       is_editable: meetingRecord.is_editable,
     }))
 
+  useEffect(() => {
+    const init = async () => {
+      await getRequest<Pager<MeetingRecord>>(
+        requestUri.meetingRecord.list
+      ).then((res) => {
+        setMeetingRecords(res)
+        setRows(createRows(res.data))
+      })
+    }
+    init()
+  }, [])
+
   return (
     <MypageLayout title="議事録">
       <div className="container">
         <MypageTitle>議事録</MypageTitle>
       </div>
       <section className="container">
-        <form noValidate onSubmit={handleSubmit(handleSearch)}>
-          <CommonTable
-            headCells={headCells}
-            onDelete={handleDeleteClick}
-            onEdit={handleEditClick}
-            onPage={handlePage}
-            pagerData={meetingRecords}
-            rows={rows}
-            title="会議議事録一覧"
-            // multiSelect
-          >
-            <Grid container alignItems="center" spacing={3}>
-              <Grid item xs={6} md={3}>
-                <InputLabel shrink id="meeting-date-select-label">
-                  年月選択
-                </InputLabel>
-                <Controller
-                  name="meeting_date"
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                      {...field}
-                      labelId="meeting-date-select-label"
-                      id="meeting_date"
-                      name="meeting_date"
-                      fullWidth
-                    >
-                      <MenuItem value={'2021/07'}>2021年7月</MenuItem>
-                      <MenuItem value={'2021/06'}>2021年6月</MenuItem>
-                      <MenuItem value={'2021/05'}>2021年5月</MenuItem>
-                      <MenuItem value={'2021/04'}>2021年4月</MenuItem>
-                    </Select>
-                  )}
-                />
-              </Grid>
-              <Grid item xs={6} md={3}>
-                <FormControl className={classes.formControl} fullWidth>
-                  <InputLabel shrink id="count-select-label">
-                    人数選択
-                  </InputLabel>
-                  <Controller
-                    name="count"
-                    control={control}
-                    render={({ field }) => (
-                      <Select
-                        {...field}
-                        labelId="priority-id-select-label"
-                        id="count"
-                        name="count"
-                        fullWidth
-                      >
-                        <MenuItem value={'2,5'}>2〜5人</MenuItem>
-                        <MenuItem value={'6,10'}>6〜10人</MenuItem>
-                        <MenuItem value={'11,15'}>11〜15人</MenuItem>
-                        <MenuItem value={'16,20'}>16〜20人</MenuItem>
-                        <MenuItem value={'21'}>21人〜</MenuItem>
-                      </Select>
-                    )}
-                  />
-                </FormControl>{' '}
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <Controller
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      variant="outlined"
-                      margin="dense"
-                      required
-                      placeholder="キーワード"
-                      id="keyword"
-                    />
-                  )}
-                  name="keyword"
-                  control={control}
-                  rules={{ required: true }}
-                />
-              </Grid>
-            </Grid>
-          </CommonTable>
-        </form>
+        <CommonTable
+          headCells={headCells}
+          onDelete={handleDeleteClick}
+          onEdit={handleEditClick}
+          onPage={handlePage}
+          pagerData={meetingRecords}
+          rows={rows}
+          title="会議議事録一覧"
+          // multiSelect
+        >
+          <SearchMeetingRecordForm
+            onSuccess={handleSuccess}
+            req={handleSearch}
+            classes={classes}
+          />
+        </CommonTable>
         <AddButton onClick={handleAdd} title="議事録を追加する" />
       </section>
     </MypageLayout>

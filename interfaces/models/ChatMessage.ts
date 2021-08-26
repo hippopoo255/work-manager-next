@@ -1,4 +1,4 @@
-import { User, ChatImage } from '.'
+import { User, ChatImage, ChatMessageRead, Reaction } from '.'
 
 export interface ChatMessage {
   readonly id: number
@@ -6,7 +6,10 @@ export interface ChatMessage {
   written_by: User
   to: User | null
   images: (ChatImage | null)[]
+  reactions: (Reaction | null)[]
+  chat_message_reads: User[]
   created_at: string
-  mine: boolean
+  mine?: boolean
+  isUpdate?: boolean
   [k: string]: any
 }
