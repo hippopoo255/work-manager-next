@@ -110,7 +110,7 @@ const Index = () => {
     const targetSchedule = schedules.find(
       (schedule) => schedule.id === Number(e.event._def.publicId)
     )
-    if (targetSchedule !== undefined) {
+    if (targetSchedule !== undefined && !!targetSchedule.is_show) {
       setDefaultValues({
         id: targetSchedule.id,
         scheduled_by: targetSchedule.scheduled_by!.id!,
@@ -128,8 +128,8 @@ const Index = () => {
           shared_by: member.option.shared_by,
         })),
       })
+      setOpen(true)
     }
-    setOpen(true)
   }
 
   const handleDateClick = (e: DateClickArg) => {
@@ -179,20 +179,7 @@ const Index = () => {
 
       await putRequest<Schedule, ScheduleSubmit>(
         `/schedule/${targetSchedule.id}`,
-        submitData,
-        (err) => {
-          console.error(err)
-          if (err.status === 401) {
-            router.push('/login')
-          }
-          if (err.status === 403) {
-            router.push('/403', '/forbidden')
-          }
-          if (err.status === 404) {
-            router.push('/404', '/notfound')
-          }
-          throw err
-        }
+        submitData
       )
         .then((newSchedule) => {
           handleSuccess(newSchedule)
@@ -250,19 +237,7 @@ const Index = () => {
   const execDelete = async () => {
     setDeleteLoading(true)
     if (delScheduleId > 0) {
-      await deleteRequest(`/schedule/${delScheduleId}`, (err) => {
-        console.error(err)
-        if (err.status === 401) {
-          router.push('/login')
-        }
-        if (err.status === 403) {
-          router.push('/403', '/forbidden')
-        }
-        if (err.status === 404) {
-          router.push('/404', '/notfound')
-        }
-        throw err
-      })
+      await deleteRequest(`/schedule/${delScheduleId}`)
         .then((res) => {
           setSchedules((prev: Schedule[]) => {
             const index = prev.findIndex(
@@ -295,30 +270,21 @@ const Index = () => {
     const fetchSchedules = async () => {
       const id = userId === 0 ? ownerId : userId
       if (id > 0) {
-        await getRequest<Schedule[]>(`/user/${id}/schedule`, (err) => {
-          console.error(err)
-          if (err.status === 401) {
-            router.push('/login')
+        await getRequest<Schedule[]>(`/user/${id}/schedule`).then(
+          (schedules: Schedule[]) => {
+            setSchedules(schedules)
+            setScheduleEvents(
+              schedules.map((schedule) => ({
+                id: String(schedule.id),
+                title: schedule.title,
+                start: new Date(schedule.start),
+                end: new Date(schedule.end),
+                color: !!schedule.color ? schedule.color : defaultScheduleColor,
+                editable: schedule.can_edit,
+              }))
+            )
           }
-          if (err.status === 403) {
-            router.push('/403', 'forbidden')
-          }
-          if (err.status === 404) {
-            router.push('/404', 'notfound')
-          }
-        }).then((schedules: Schedule[]) => {
-          setSchedules(schedules)
-          setScheduleEvents(
-            schedules.map((schedule) => ({
-              id: String(schedule.id),
-              title: schedule.title,
-              start: new Date(schedule.start),
-              end: new Date(schedule.end),
-              color: !!schedule.color ? schedule.color : defaultScheduleColor,
-              editable: schedule.can_edit,
-            }))
-          )
-        })
+        )
       }
     }
     fetchSchedules()
@@ -342,38 +308,12 @@ const Index = () => {
       if (defaultValues.id !== undefined) {
         return await putRequest<Schedule, ScheduleSubmit>(
           `/schedule/${defaultValues.id}`,
-          submitData,
-          (err) => {
-            console.error(err)
-            if (err.status === 401) {
-              router.push('/login')
-            }
-            if (err.status === 403) {
-              router.push('/403', '/forbidden')
-            }
-            if (err.status === 404) {
-              router.push('/404', '/notfound')
-            }
-            throw err
-          }
+          submitData
         )
       } else {
         return await postRequest<Schedule, ScheduleSubmit>(
           requestUri.schedule.post,
-          submitData,
-          (err) => {
-            console.error(err)
-            if (err.status === 401) {
-              router.push('/login')
-            }
-            if (err.status === 403) {
-              router.push('/403', '/forbidden')
-            }
-            if (err.status === 404) {
-              router.push('/404', '/notfound')
-            }
-            throw err
-          }
+          submitData
         )
       }
     },

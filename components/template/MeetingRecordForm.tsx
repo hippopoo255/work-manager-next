@@ -719,7 +719,11 @@ const MeetingRecordForm = ({
                 ) : (
                   <div className={classes.tailWrap}>
                     <Button
-                      variant="contained"
+                      variant={
+                        activeStep !== steps.length - 1
+                          ? 'outlined'
+                          : 'contained'
+                      }
                       color={
                         activeStep !== steps.length - 1
                           ? 'secondary'

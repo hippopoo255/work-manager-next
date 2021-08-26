@@ -1,8 +1,12 @@
 import Head from 'next/head'
 import styles from '@/assets/stylesheets/pages/Home.module.scss'
 import { Layout } from '@/layouts'
+import { useApi, getRequest, requestUri } from '@/api'
+import { User } from '@/interfaces/models'
 
 export default function Home() {
+  const user = useApi<User | ''>(getRequest(requestUri.currentUser), '')
+  console.log(user)
   return (
     <Layout>
       <Head>

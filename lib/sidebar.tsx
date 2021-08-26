@@ -23,6 +23,7 @@ export type Menu = {
   children?: Child[]
   open?: boolean
   disabled?: boolean
+  is_notify?: boolean
 }
 
 export type Menus = {

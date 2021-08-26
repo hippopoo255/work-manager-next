@@ -4,6 +4,7 @@ import { makeStyles, Theme } from '@material-ui/core/styles'
 import clsx from 'clsx'
 import { MypageLayout } from '@/layouts'
 import { MypageTitle } from '@/components/atoms'
+import { FormTitle } from '@/components/molecules'
 import { Avatar, Typography, Box } from '@material-ui/core'
 import MenuBookOutlinedIcon from '@material-ui/icons/MenuBookOutlined'
 import { putRequest, getRequest, requestUri } from '@/api'
@@ -21,6 +22,7 @@ export type Props = {
 const useStyles = makeStyles((theme: Theme) => ({
   wrap: {
     maxWidth: 800,
+    // marginBottom: theme.spacing(4),
   },
   head: {
     width: '100%',
@@ -50,12 +52,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(2),
     padding: theme.spacing(2),
   },
-  title: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: theme.spacing(4),
-  },
   form: {
     width: '100%',
   },
@@ -67,9 +63,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderColor: theme.palette.error.main,
     cursor: 'pointer',
   },
-  submitBtn: {
-    color: '#fff',
-  },
+  // submitBtn: {
+  //   color: '#fff',
+  // },
   avatar: {
     margin: theme.spacing(1),
     background: 'linear-gradient(135deg,#fad961,#f76b1c)',
@@ -114,17 +110,7 @@ const MeetingRecordUpdate = ({ meetingPlaceList }: Props) => {
   const req = async (submitData: MeetingRecordSubmit) =>
     await putRequest<MeetingRecord, MeetingRecordSubmit>(
       `${requestUri.meetingRecord.put}/${meetingRecordId}`,
-      submitData,
-      (err) => {
-        console.error(err)
-        if (err.status === 403) {
-          router.push('/403', '/forbidden')
-        }
-        if (err.status === 401) {
-          router.push('/login')
-        }
-        throw err
-      }
+      submitData
     )
 
   // Autocomlete members
@@ -202,13 +188,8 @@ const MeetingRecordUpdate = ({ meetingPlaceList }: Props) => {
   return (
     <MypageLayout title="議事録更新">
       <MypageTitle>{defaultValues.title}</MypageTitle>
-      <Box className={clsx([classes.wrap, classes.title])}>
-        <Avatar className={classes.avatar}>
-          <MenuBookOutlinedIcon />
-        </Avatar>
-        <Typography component="h3" variant="h5">
-          更新フォーム
-        </Typography>
+      <Box className={classes.wrap}>
+        <FormTitle title={'更新フォーム'} icon={<MenuBookOutlinedIcon />} />
       </Box>
       <MeetingRecordForm
         memberList={memberList}

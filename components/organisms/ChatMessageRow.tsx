@@ -87,6 +87,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignSelf: 'flex-end',
     order: 0,
     flexShrink: 0,
+    wordBreak: 'keep-all',
   },
   msgMenu: {
     position: 'absolute',
@@ -219,7 +220,7 @@ const ChatMessageRow = ({ message, mine, onEdit, onDelete }: Props) => {
         <div className={classes.msgBody}>
           <span
             className={clsx(classes.msgMenu, {
-              [classes.none]: !mine,
+              [classes.none]: !(mine && !message.isDelete),
             })}
           >
             <CustomMenuBox
@@ -241,7 +242,8 @@ const ChatMessageRow = ({ message, mine, onEdit, onDelete }: Props) => {
           </div>
           <div
             className={clsx([styles.msgBody], {
-              [styles.mine]: mine,
+              [styles.mine]: mine && !message.isDelete,
+              [styles.disabled]: message.isDelete,
             })}
           >
             <span className={styles.msgBody_text}>{message.body}</span>

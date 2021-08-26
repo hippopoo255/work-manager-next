@@ -139,8 +139,6 @@ const ChatRoomForm = ({
               message: errBody[key][0],
             })
           })
-        } else if (err.status === 401) {
-          router.push('/login')
         }
       })
       .finally(() => {

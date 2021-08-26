@@ -10,6 +10,9 @@ export type Props = {
   color: 'default' | 'inherit' | 'primary' | 'secondary'
   disabled: boolean
   onClick: () => Promise<void>
+  options?: {
+    [k: string]: boolean
+  }
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -41,6 +44,7 @@ const CircularButton = ({
   color,
   submitText = '保存',
   disabled,
+  options,
 }: Props) => {
   const classes = useStyles()
   return (
@@ -53,6 +57,7 @@ const CircularButton = ({
         })}
         disabled={loading || disabled}
         onClick={() => onClick()}
+        {...options}
       >
         {submitText}
       </Button>

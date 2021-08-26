@@ -5,9 +5,8 @@ import Head from 'next/head'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import { User } from '@/interfaces/models'
-import useApi, { httpClient } from '@/api/useApi'
-import requests from '@/Requests'
 import { SITE_TITLE } from '@/lib/util'
+import { useAuth } from '@/hooks'
 
 export type LayoutOrg = {
   children: React.ReactNode
@@ -44,12 +43,8 @@ const MypageLayout = ({
   supplyUserId,
   supplyUser,
 }: LayoutOrg) => {
-  const req = () => {
-    return httpClient.get(requests.currentUser)
-  }
-  const user = useApi<User | ''>(req, '')
-
   const classes = useStyles()
+  const user = useAuth()
   const suffix = SITE_TITLE
   const [mobileOpen, setMobileOpen] = useState(false)
   const handleDrawerToggle = (specified: boolean | null = null) => {
@@ -77,7 +72,7 @@ const MypageLayout = ({
       <div className={classes.root}>
         <CssBaseline />
         <Header toggleMenu={handleDrawerToggle} user={user} />
-        <Sidebar open={mobileOpen} onClose={handleDrawerToggle} />
+        <Sidebar open={mobileOpen} onClose={handleDrawerToggle} user={user} />
         <div className={classes.content}>
           <main className={classes.main}>
             <div className={classes.appBarSpacer} />

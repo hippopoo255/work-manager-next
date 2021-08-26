@@ -3,19 +3,24 @@ import orange from '@material-ui/core/colors/orange'
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#3bb95b',
-      dark: '#048f27',
-      light: '#52cc70',
+      main: '#43a047',
+      dark: '#2d7130',
+      light: '#9beb9f',
       contrastText: '#fff',
     },
     secondary: {
-      light: orange[300],
-      main: '#f6a522',
-      dark: '#d66304',
+      main: '#0188CB',
+      dark: '#2661A1',
+      light: '#9ccbeb',
       contrastText: '#000',
     },
     common: {
       black: '#444444',
+    },
+    success: {
+      main: '#43a047',
+      dark: '#2d7130',
+      light: '#87dd8b',
     },
   },
   typography: {
@@ -29,6 +34,10 @@ const theme = createTheme({
     },
     h2: {
       fontSize: '1.5rem',
+      fontWeight: 'bold',
+    },
+    h4: {
+      fontSize: '1.25rem',
       fontWeight: 'bold',
     },
     h6: {
