@@ -24,11 +24,14 @@ import { Menu, Child, Menus, sidebarMenus } from '@/lib/sidebar'
 import { LinkBar } from '@/components/molecules'
 import { drawerWidth } from '@/lib/util'
 import { useRouter } from 'next/router'
+import { ChatMessage, User } from '@/interfaces/models'
+import { listenMessageSent, listenMessageRead } from '@/lib/pusher'
 
 interface Props {
   window?: () => Window
   open: boolean
   onClose: any
+  user?: User | ''
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -50,7 +53,7 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 const Sidebar = (props: Props) => {
-  const { window } = props
+  const { window, open, onClose, user } = props
   const classes = useStyles()
   const container =
     window !== undefined ? () => window().document.body : undefined
@@ -97,6 +100,35 @@ const Sidebar = (props: Props) => {
       }
     })
   }, [])
+
+  // useEffect(() => {
+  //   listenMessageSent((message: ChatMessage) => {
+  //     if (!!user && message.written_by.id !== user.id) {
+  //       setMenus((prev) => {
+  //         const newTop = prev.top
+  //         const index = newTop.findIndex((menu) => menu.id === 'chat')
+  //         newTop[index].is_notify = true
+  //         return {
+  //           ...prev,
+  //           top: [...newTop],
+  //         }
+  //       })
+  //     }
+  //   })
+  //   listenMessageRead(({ readUser, chatRoomId }) => {
+  //     if (!!user && readUser.id === user.id) {
+  //       setMenus((prev) => {
+  //         const newTop = prev.top
+  //         const index = newTop.findIndex((menu) => menu.id === 'chat')
+  //         newTop[index].is_notify = false
+  //         return {
+  //           ...prev,
+  //           top: [...newTop],
+  //         }
+  //       })
+  //     }
+  //   })
+  // }, [user])
 
   const drawer = (
     <aside>
@@ -176,8 +208,8 @@ const Sidebar = (props: Props) => {
           container={container}
           variant="temporary"
           anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-          open={props.open}
-          onClose={() => props.onClose(false)}
+          open={open}
+          onClose={() => onClose(false)}
           classes={{
             paper: classes.drawerPaper,
           }}

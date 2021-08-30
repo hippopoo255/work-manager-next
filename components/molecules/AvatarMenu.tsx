@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react'
-import clsx from 'clsx'
 import {
   ClickAwayListener,
   Grow,
@@ -9,25 +8,16 @@ import {
   Popper,
   Divider,
 } from '@material-ui/core'
-import { Avatar, IconButton } from '@material-ui/core'
-import { deepOrange } from '@material-ui/core/colors'
+import { IconButton } from '@material-ui/core'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
-import { LocalDiningOutlined, MenuSharp } from '@material-ui/icons'
-import axios from '@/axios'
-import requests from '@/Requests'
 import { useRouter } from 'next/router'
 import { User } from '@/interfaces/models'
 import { STORAGE_URL } from '@/lib/util'
+import { UserAvatar } from '@/components/atoms'
+import { postRequest, requestUri } from '@/api'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    avatar: {
-      color: theme.palette.getContrastText(deepOrange[500]),
-      backgroundColor: theme.palette.secondary.main,
-    },
-    onSrc: {
-      backgroundColor: theme.palette.grey[100],
-    },
     menuBox: {
       maxWidth: '100%',
     },
@@ -63,13 +53,11 @@ const AvatarMenu = ({ user }: Props) => {
     {
       id: 'logout',
       to: '/logout',
-      text: 'Logout',
+      text: 'ログアウト',
     },
   ]
   const [open, setOpen] = useState(false)
   const anchorRef = useRef<HTMLButtonElement>(null)
-
-  const letter: Letter = () => (!!user ? user.family_name.slice(0, 1) : '')
 
   const handleItem = async (to: string, e: React.MouseEvent<EventTarget>) => {
     handleClose(e)
@@ -81,10 +69,8 @@ const AvatarMenu = ({ user }: Props) => {
   }
 
   const logout = async () => {
-    await axios.post(requests.logout).then((res) => {
-      if (res.status === 200) {
-        router.push('/login')
-      }
+    await postRequest<null, {}>(requestUri.logout, {}).then(() => {
+      router.push('/login')
     })
   }
 
@@ -129,16 +115,7 @@ const AvatarMenu = ({ user }: Props) => {
           onClick={handleToggle}
           component="span"
         >
-          <Avatar
-            alt={user.family_name}
-            src={avatarSrc}
-            className={clsx({
-              [classes.avatar]: !user.file_path,
-              [classes.onSrc]: user.file_path,
-            })}
-          >
-            {letter()}
-          </Avatar>
+          <UserAvatar user={user} />
         </IconButton>
       )}
       <Popper

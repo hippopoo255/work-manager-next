@@ -12,7 +12,8 @@ import { AvatarMenu } from '@/components/molecules'
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     appBar: {
-      background: `linear-gradient(165deg, ${darken('#5dff26', 0.1)}, #5cb363)`,
+      // background: `linear-gradient(165deg, ${darken('#5dff26', 0.1)}, #5cb363)`,
+      background: theme.palette.primary.main,
       [theme.breakpoints.up('sm')]: {
         width: `calc(100% - ${drawerWidth}px)`,
         marginLeft: drawerWidth,

@@ -1,28 +1,26 @@
 import React, { useState, useEffect } from 'react'
-import { postRequest } from '@/api'
-import requests from '@/Requests'
-import { Layout } from '@/layouts'
 import Head from 'next/head'
+import Link from 'next/link'
+import { postRequest, requestUri } from '@/api'
+import { Layout } from '@/layouts'
 import { useRouter } from 'next/router'
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import TextField from '@material-ui/core/TextField'
-import Avatar from '@material-ui/core/Avatar'
-import Button from '@material-ui/core/Button'
-import CssBaseline from '@material-ui/core/CssBaseline'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Checkbox from '@material-ui/core/Checkbox'
-// import Link from '@material-ui/core/Link'
-import Link from 'next/link'
-
-import Grid from '@material-ui/core/Grid'
+import {
+  darken,
+  Avatar,
+  Container,
+  CssBaseline,
+  Grid,
+  Typography,
+} from '@material-ui/core'
+import { Checkbox, FormControlLabel, TextField } from '@material-ui/core'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
-import Typography from '@material-ui/core/Typography'
-import Container from '@material-ui/core/Container'
 import { useForm, Controller, SubmitHandler } from 'react-hook-form'
-import { User } from '@/interfaces/models'
 import { CustomAlert, FormErrorMessage } from '@/components/atoms'
+import { User } from '@/interfaces/models'
+import { CircularButton } from '@/components/molecules'
 import { AlertStatus } from '@/interfaces/common'
-import { darken } from '@material-ui/core'
+import { LoginInputs } from '@/interfaces/form/inputs'
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -57,11 +55,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-export type Inputs = {
-  login_id: string
-  password: string
-}
-
 const Login = () => {
   const router = useRouter()
   const classes = useStyles()
@@ -72,6 +65,7 @@ const Login = () => {
     msg: '',
     show: false,
   })
+  const [loading, setLoading] = useState<boolean>(false)
 
   const calc = alertStatus.show
 
@@ -90,32 +84,23 @@ const Login = () => {
     control,
     setError,
     formState: { errors },
-  } = useForm<Inputs>()
+  } = useForm<LoginInputs>()
 
-  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+  const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
     await login(data)
   }
 
-  const login = async (data: Inputs) => {
+  const login = async (data: LoginInputs) => {
+    setLoading(true)
     const loginData: FormData = new FormData()
     loginData.append('login_id', data.login_id)
     loginData.append('password', data.password)
-    await postRequest<User, FormData>(requests.login, loginData, (err) => {
-      if (err.status === 422) {
-        setAlertStatus((prev) => ({
-          ...prev,
-          msg: 'データ形式が正しくありません',
-          severity: 'error',
-          open: true,
-        }))
-        console.error(err)
-      }
-      throw err
-    })
+    await postRequest<User, FormData>(requestUri.login, loginData)
       .then((res: User) => {
         router.push('/mypage')
       })
       .catch((err) => {
+        setLoading(false)
         const errBody: { [k: string]: string[] } = err.data.errors
         setError('login_id', {
           type: 'invalid',
@@ -126,6 +111,7 @@ const Login = () => {
           message: errBody.login_id[0],
         })
       })
+      .finally(() => {})
   }
 
   return (
@@ -208,23 +194,21 @@ const Login = () => {
                 <FormErrorMessage msg={errors.password.message} />
               )}
             </p>
-
-            <FormControlLabel
+            {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="パスワードを記憶する"
               classes={{
                 label: classes.label, // class name, e.g. `classes-nesting-label-x`
               }}
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-            >
-              ログイン
-            </Button>
+            /> */}
+            <div style={{ margin: '16px 0' }}>
+              <CircularButton
+                loading={loading}
+                submitText="ログイン"
+                onClick={handleSubmit(onSubmit)}
+                options={{ fullWidth: true }}
+              />
+            </div>
             <Grid container>
               <Grid item xs>
                 <Link
