@@ -1,2 +1,2 @@
-export type { TableRowData } from './TableRowData'
 export type { MeetingTableRowData } from './MeetingTableRowData'
+export type { TaskTableRowData } from './TaskTableRowData'

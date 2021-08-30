@@ -30,7 +30,7 @@ import {
   MemberInputs,
 } from '@/interfaces/form/inputs'
 import { MeetingRecordSubmit } from '@/interfaces/form/submit'
-import { DefinitionListItem } from '@/interfaces/common'
+import { DefinitionListItem } from '@/interfaces/common/definitionList'
 
 const getSteps = () => {
   return ['概要', '参加者', '決定事項', '入力内容確認']

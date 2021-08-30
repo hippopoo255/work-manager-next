@@ -26,7 +26,6 @@ import { NotifyStatus } from '@/interfaces/common'
 import { SettingSubmit } from '@/interfaces/form/submit'
 import { SettingInputs } from '@/interfaces/form/inputs'
 import { useAuth } from '@/hooks'
-import { defaultErrorHandler } from '@/lib/axios'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -104,10 +103,7 @@ const Index = () => {
       }
 
       await putRequest<User, FormData>(`/user/${user.id}/setting`, submitData)
-        .then((updateUser: User) => {
-          console.log(updateUser)
-          // setUser(updateUser)
-        })
+        .then((updateUser: User) => {})
         .catch((err) => {
           if (err.status === 422) {
             const errBody: { [k: string]: string[] } = err.data.errors
@@ -155,12 +151,12 @@ const Index = () => {
             <form onSubmit={handleSubmit(handleUpdate)}>
               <CardContent className={classes.wrap}>
                 <Grid container spacing={2} className={classes.wrap}>
-                  <Grid item xs={12}>
-                    <Typography component={'h4'} variant={'h4'} gutterBottom>
-                      メール通知設定
-                    </Typography>
-                    {!!notifyStatus.length &&
-                      notifyStatus.map((sts: NotifyStatus, index) => (
+                  {!!notifyStatus.length && (
+                    <Grid item xs={12}>
+                      <Typography component={'h4'} variant={'h4'} gutterBottom>
+                        メール通知設定
+                      </Typography>
+                      {notifyStatus.map((sts: NotifyStatus, index) => (
                         <Controller
                           key={sts.key}
                           name={`notify_validation.${sts.id}`}
@@ -182,7 +178,8 @@ const Index = () => {
                           )}
                         />
                       ))}
-                  </Grid>
+                    </Grid>
+                  )}
                   <Grid item xs={12} className={classes.checkRow}>
                     <Controller
                       control={control}

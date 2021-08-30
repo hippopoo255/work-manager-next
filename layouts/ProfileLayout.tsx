@@ -39,11 +39,26 @@ const ProfileLayout = ({ children, title, user }: LayoutOrg) => {
   const classes = useStyles()
   const suffix = SITE_TITLE
   const [mobileOpen, setMobileOpen] = useState(false)
-  const handleDrawerToggle = (specified: boolean | null = null) => {
+  const [tabletOpen, setTabletOpen] = useState(false)
+  const handleDrawerToggle = (flag: string) => {
+    if (flag === 'mobile') {
+      handleMobileDrawer()
+    } else {
+      handleFlexibleDrawer()
+    }
+  }
+  const handleMobileDrawer = (specified: boolean | null = null) => {
     if (specified === null) {
       setMobileOpen(!mobileOpen)
     } else {
       setMobileOpen(specified)
+    }
+  }
+  const handleFlexibleDrawer = (specified: boolean | null = null) => {
+    if (specified === null) {
+      setTabletOpen(!tabletOpen)
+    } else {
+      setTabletOpen(specified)
     }
   }
 
@@ -55,7 +70,12 @@ const ProfileLayout = ({ children, title, user }: LayoutOrg) => {
       <div className={classes.root}>
         <CssBaseline />
         <Header toggleMenu={handleDrawerToggle} user={user} />
-        <Sidebar open={mobileOpen} onClose={handleDrawerToggle} />
+        <Sidebar
+          open={mobileOpen}
+          onClose={handleMobileDrawer}
+          flexibleOpen={tabletOpen}
+          handleFlexibleOpen={handleFlexibleDrawer}
+        />
         <div className={classes.content}>
           <main className={classes.main}>
             <div className={classes.appBarSpacer} />

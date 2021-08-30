@@ -9,9 +9,9 @@ export type Props = {
   submitText: string
   color: 'default' | 'inherit' | 'primary' | 'secondary'
   disabled: boolean
-  onClick: () => Promise<void>
+  onClick?: () => Promise<void>
   options?: {
-    [k: string]: boolean
+    [k: string]: boolean | string
   }
 }
 
@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative',
   },
   submitBtn: {
-    color: '#fff',
+    // color: '#fff',
   },
   danger: {
     backgroundColor: theme.palette.error.main,
@@ -56,7 +56,7 @@ const CircularButton = ({
           [classes.danger]: color === 'inherit',
         })}
         disabled={loading || disabled}
-        onClick={() => onClick()}
+        onClick={() => !!onClick && onClick()}
         {...options}
       >
         {submitText}

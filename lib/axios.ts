@@ -7,13 +7,13 @@ export const defaultErrorHandler = (err: AxiosResponse) => {
   switch (err.status) {
     case 401:
       router.push('/login')
-      break
+      throw err
     case 403:
       router.push('/403', '/forbidden')
-      break
+      throw err
     case 404:
       router.push('/404', '/notfound')
-      break
+      throw err
     default:
       throw err
   }

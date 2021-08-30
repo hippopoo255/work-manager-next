@@ -22,8 +22,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     gap: theme.spacing(2),
     maxWidth: 320,
-    [theme.breakpoints.up('sm')]: {
-      maxWidth: 450,
+    [theme.breakpoints.up('md')]: {
+      maxWidth: 420,
     },
     paddingTop: theme.spacing(2),
     paddingRight: theme.spacing(2),

@@ -17,17 +17,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 const Index = () => {
-  const init = () => {}
+  const init = () => true
   const classes = useStyles()
 
   return (
-    <ChatLayout
-      supplyUserId={init}
-      title="チャット"
-      mainNone
-      sideNone={false}
-      activeRoom={null}
-    >
+    <ChatLayout title="チャット" mainNone sideNone={false} activeRoom={null}>
       <div className={classes.index}>
         <ListItem>
           <ListItemText className={classes.hint}>

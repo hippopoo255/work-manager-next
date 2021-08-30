@@ -1,6 +1,6 @@
-import { SelectBox } from '@/interfaces/form/inputs'
-
-export type Pager<T> = {
+import { SearchInputs, SelectBox } from '@/interfaces/form/inputs'
+import { SortParam } from '@/interfaces/table'
+export type Pager<T, U extends SearchInputs = SearchInputs> = {
   current_page: number
   data: T[]
   first_page_url: string
@@ -14,4 +14,5 @@ export type Pager<T> = {
   to: number
   total: number
   year_month?: SelectBox[]
+  query_params?: { [k in keyof U | keyof SortParam<any>]: string }
 }

@@ -8,20 +8,21 @@ import { User } from '@/interfaces/models'
 import { drawerWidth } from '@/lib/util'
 import { SiteLogo } from '@/components/atoms'
 import { AvatarMenu } from '@/components/molecules'
+import { Hidden } from '@material-ui/core'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     appBar: {
       // background: `linear-gradient(165deg, ${darken('#5dff26', 0.1)}, #5cb363)`,
       background: theme.palette.primary.main,
-      [theme.breakpoints.up('sm')]: {
+      [theme.breakpoints.up('lg')]: {
         width: `calc(100% - ${drawerWidth}px)`,
         marginLeft: drawerWidth,
       },
     },
     menuButton: {
       marginRight: theme.spacing(2),
-      [theme.breakpoints.up('sm')]: {
+      [theme.breakpoints.up('lg')]: {
         display: 'none',
       },
     },
@@ -41,28 +42,44 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface Props {
   user: User | ''
-  toggleMenu: () => void
+  toggleMenu: (flag: string) => void
 }
 
 const MypageHeader = ({ user, toggleMenu }: Props) => {
   const classes = useStyles()
   const handleDrawerToggle = () => {
-    toggleMenu()
+    toggleMenu('mobile')
+  }
+  const handleFlexibleDrawerToggle = () => {
+    toggleMenu('tablet')
   }
 
   return (
     <AppBar position="fixed" className={classes.appBar}>
       <div className={classes.toolBarWrap}>
         <Toolbar className={clsx([classes.toolBar, 'container'])}>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            className={classes.menuButton}
-          >
-            <MenuIcon />
-          </IconButton>
+          <Hidden mdUp implementation="css">
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="start"
+              onClick={handleDrawerToggle}
+              className={classes.menuButton}
+            >
+              <MenuIcon />
+            </IconButton>
+          </Hidden>
+          <Hidden lgUp smDown implementation="css">
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="start"
+              onClick={handleFlexibleDrawerToggle}
+              className={classes.menuButton}
+            >
+              <MenuIcon />
+            </IconButton>
+          </Hidden>
           <div className={classes.title}>
             <SiteLogo />
           </div>

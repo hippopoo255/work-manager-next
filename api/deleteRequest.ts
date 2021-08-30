@@ -3,8 +3,8 @@ import { defaultErrorHandler, httpClient } from '@/lib/axios'
 
 const deleteRequest = async <T = null>(
   path: string,
-  handleError: ((err: AxiosResponse) => unknown) | null = null,
-  data: any = null
+  data: any = null,
+  handleError: ((err: AxiosResponse) => unknown) | null = null
 ): Promise<T> => {
   const axiosFunc: () => Promise<AxiosResponse<null>> = () => {
     if (!!data) {

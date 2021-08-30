@@ -1,11 +1,10 @@
 import { GetStaticProps, GetStaticPaths } from 'next'
 import React, { useState, useMemo, useEffect } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import clsx from 'clsx'
 import { MypageLayout } from '@/layouts'
 import { MypageTitle } from '@/components/atoms'
 import { FormTitle } from '@/components/molecules'
-import { Avatar, Typography, Box } from '@material-ui/core'
+import { Box } from '@material-ui/core'
 import MenuBookOutlinedIcon from '@material-ui/icons/MenuBookOutlined'
 import { putRequest, getRequest, requestUri } from '@/api'
 import { User } from '@/interfaces/models'
@@ -15,6 +14,9 @@ import { MeetingRecordInputs, MemberInputs } from '@/interfaces/form/inputs'
 import { MeetingRecordSubmit } from '@/interfaces/form/submit'
 import { useRouter } from 'next/router'
 import { PROCESS_FLAG } from '@/lib/util'
+import { Breadcrumbs } from '@/components/molecules'
+import { BreadcrumbItem } from '@/interfaces/common'
+
 export type Props = {
   meetingPlaceList: MeetingPlace[]
 }
@@ -63,9 +65,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderColor: theme.palette.error.main,
     cursor: 'pointer',
   },
-  // submitBtn: {
-  //   color: '#fff',
-  // },
   avatar: {
     margin: theme.spacing(1),
     background: 'linear-gradient(135deg,#fad961,#f76b1c)',
@@ -185,8 +184,19 @@ const MeetingRecordUpdate = ({ meetingPlaceList }: Props) => {
     setDefaultValues(data)
   }
 
+  const breadcrumbs: BreadcrumbItem[] = [
+    {
+      to: '/mypage/meeting_record',
+      label: '議事録一覧',
+    },
+    {
+      label: defaultValues.title,
+    },
+  ]
+
   return (
     <MypageLayout title="議事録更新">
+      <Breadcrumbs links={breadcrumbs} />
       <MypageTitle>{defaultValues.title}</MypageTitle>
       <Box className={classes.wrap}>
         <FormTitle title={'更新フォーム'} icon={<MenuBookOutlinedIcon />} />
@@ -220,6 +230,13 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }
 }
 
+// export const getStaticPaths = async () => {
+//   return {
+//     paths: [],
+//     fallback: true,
+//   }
+// }
+//
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const meetingPlaceList = await getRequest<MeetingPlace[]>(
     requestUri.meetingPlace.list
