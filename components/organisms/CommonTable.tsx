@@ -18,16 +18,10 @@ import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
 import TablePagination from '@material-ui/core/TablePagination'
-
-import Avatar from '@material-ui/core/Avatar'
-import { Grid, Hidden } from '@material-ui/core'
 import { CustomMenuBox } from '@/components/organisms'
-
 import Paper from '@material-ui/core/Paper'
 import Checkbox from '@material-ui/core/Checkbox'
-import EditOutlinedIcon from '@material-ui/icons/EditOutlined'
-import DeleteOutlineOutlinedIcon from '@material-ui/icons/DeleteOutlineOutlined'
-import { Pager } from '@/interfaces'
+import { Pager } from '@/interfaces/common'
 import { ConfirmDialog } from '@/components/organisms'
 import { QueryParam, Order, HeadCell, TableRowData } from '@/interfaces/table'
 

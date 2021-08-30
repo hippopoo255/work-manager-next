@@ -1,42 +1,39 @@
-import React, { useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
+import { useRouter } from 'next/router'
 import { MypageLayout } from '@/layouts'
-import { MypageTitle } from '@/components/atoms'
-import { FormDialog } from '@/components/organisms'
-import { Typography } from '@material-ui/core'
-import { Grid, DialogContentText, TextField } from '@material-ui/core'
-import { InputLabel, Select, MenuItem } from '@material-ui/core'
+import { CustomAlert, FormErrorMessage, MypageTitle } from '@/components/atoms'
 import { DateTimeInput } from '@/components/molecules'
-import { useEffect } from 'react'
+import { FormDialog, TaskTable } from '@/components/organisms'
+import {
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from '@material-ui/core'
 import { useForm, Controller, SubmitHandler } from 'react-hook-form'
-// import { ErrorMessage } from '@hookform/error-message';
-import { postRequest, putRequest } from '@/api'
-import { httpClient } from '@/api/useApi'
-import requests from '@/Requests'
-import { Pager } from '@/interfaces'
+import {
+  requestUri,
+  getRequest,
+  postRequest,
+  putRequest,
+  deleteRequest,
+} from '@/api'
+import { Pager } from '@/interfaces/common'
 import { AlertStatus } from '@/interfaces/common'
 import { Task, Priority, Progress } from '@/interfaces/models'
-import { toStrData } from '@/lib/util'
-import { TaskTable } from '@/components/organisms'
-import { AxiosError, AxiosResponse } from 'axios'
-import { CustomAlert } from '@/components/atoms'
-import { FormErrorMessage } from '@/components/atoms'
-import { useRouter } from 'next/router'
-import { API_URL } from '@/lib/util'
-export type Inputs = {
-  body: string
-  time_limit: Date
-  progress_id: number
-  priority_id: number
-}
+import { TaskInputs } from '@/interfaces/form/inputs'
+import { toStrData, API_URL } from '@/lib/util'
+import { AxiosResponse } from 'axios'
 
 const Index = () => {
   const [open, setOpen] = useState<boolean>(false)
   const [updateFlag, setUpdateFlag] = useState<number | null>(null)
   const [priorityList, setPriorityList] = useState<Priority[]>([])
   const [progressList, setProgressList] = useState<Progress[]>([])
-  const [tasks, setTasks] = useState<Pager<Task> | any>([])
+  const [tasks, setTasks] = useState<Pager<Task> | null>(null)
   const [userId, setUserId] = useState<number>(0)
-  const [lastUri, setLastUri] = useState<string>(requests.task.mytask)
+  const [lastUri, setLastUri] = useState<string>(requestUri.task.mytask)
   const router = useRouter()
   // TODO: 状態管理すべき
   const [alertStatus, setAlertStatus] = useState<AlertStatus>({
@@ -48,15 +45,15 @@ const Index = () => {
 
   useEffect(() => {
     const init = async () => {
-      await httpClient
-        .get(requests.priority.list)
-        .then((res) => setPriorityList(res.data))
-      await httpClient
-        .get(requests.progress.list)
-        .then((res) => setProgressList(res.data))
-      await httpClient
-        .get(requests.task.mytask)
-        .then((res) => setTasks(res.data))
+      await getRequest<Priority[]>(requestUri.priority.list).then((res) =>
+        setPriorityList(res)
+      )
+      await getRequest<Progress[]>(requestUri.progress.list).then((res) =>
+        setProgressList(res)
+      )
+      await getRequest<Pager<Task>>(requestUri.task.mytask).then((res) =>
+        setTasks(res)
+      )
     }
     init()
   }, [])
@@ -81,7 +78,7 @@ const Index = () => {
     setError,
     reset,
     formState: { errors },
-  } = useForm<Inputs>({
+  } = useForm<TaskInputs>({
     defaultValues: {
       body: '',
       time_limit: new Date(),
@@ -100,16 +97,18 @@ const Index = () => {
   )
 
   const edit = (id: number) => {
-    const i: number = tasks.data.findIndex((task: Task) => task.id === id)
-    setUpdateFlag(tasks.data[i].id)
-    setValue('body', tasks.data[i].body)
-    setValue('time_limit', new Date(tasks.data[i].time_limit))
-    setValue('priority_id', tasks.data[i].priority_id)
-    setValue('progress_id', tasks.data[i].progress_id)
-    setOpen(true)
+    if (tasks !== null) {
+      const i: number = tasks.data.findIndex((task: Task) => task.id === id)
+      setUpdateFlag(tasks.data[i].id)
+      setValue('body', tasks.data[i].body)
+      setValue('time_limit', new Date(tasks.data[i].time_limit))
+      setValue('priority_id', tasks.data[i].priority_id)
+      setValue('progress_id', tasks.data[i].progress_id)
+      setOpen(true)
+    }
   }
 
-  const handleSave: SubmitHandler<Inputs> = async (data) => {
+  const handleSave: SubmitHandler<TaskInputs> = async (data) => {
     if (!!updateFlag) {
       await save(data)
     } else {
@@ -117,7 +116,7 @@ const Index = () => {
     }
   }
 
-  const save = async (data: Inputs) => {
+  const save = async (data: TaskInputs) => {
     const taskData: FormData = new FormData()
     taskData.append('body', data.body)
     taskData.append('time_limit', toStrData(data.time_limit))
@@ -126,26 +125,19 @@ const Index = () => {
     taskData.append('progress_id', String(data.progress_id))
     if (!!updateFlag) {
       await putRequest<Task, FormData>(
-        requests.task.put + `/${updateFlag}`,
-        taskData,
-        (err) => {
-          if (err.status === 401) {
-            router.push('/login')
-          }
-          if (err.status === 403) {
-            router.push('/403', '/forbidden')
-          }
-          throw err
-        }
+        requestUri.task.put + `/${updateFlag}`,
+        taskData
       )
         .then((task) => {
-          const i = tasks.data.findIndex((t: Task) => t.id === task.id)
-          tasks.data.splice(i, 1, task)
-          const newTasks = {
-            ...tasks,
-            data: [...tasks.data],
+          if (tasks !== null) {
+            const i = tasks.data.findIndex((t: Task) => t.id === task.id)
+            tasks.data.splice(i, 1, task)
+            const newTasks = {
+              ...tasks,
+              data: [...tasks.data],
+            }
+            setTasks(newTasks)
           }
-          setTasks(newTasks)
           setOpen(false)
           setAlertStatus((prev) => ({
             ...prev,
@@ -167,27 +159,20 @@ const Index = () => {
           return false
         })
     } else {
-      await postRequest<Task, FormData>(requests.task.post, taskData, (err) => {
-        if (err.status === 422) {
-          setAlertStatus((prev) => ({
-            ...prev,
-            msg: 'データ形式が正しくありません',
-            severity: 'error',
-            show: true,
-          }))
-          console.error(err)
-        }
-        throw err
-      })
+      await postRequest<Task, FormData>(requestUri.task.post, taskData)
         .then((task: Task) => {
-          const newData = [task, ...tasks.data]
-          newData.splice(10, 1)
-          const newTasks = {
-            ...tasks,
-            total: tasks.total + 1,
-            data: [...newData],
-          }
-          setTasks(newTasks)
+          setTasks((prev) => {
+            if (prev !== null) {
+              const newData = [task, ...prev.data]
+              newData.splice(10, 1)
+              return {
+                ...prev,
+                total: prev.total + 1,
+                data: [...newData],
+              }
+            }
+            return null
+          })
           setOpen(false)
           setAlertStatus((prev) => ({
             ...prev,
@@ -196,9 +181,17 @@ const Index = () => {
             show: true,
           }))
         })
-        .catch((err: AxiosError) => {
-          // setError()
-          return false
+        .catch((err: AxiosResponse) => {
+          if (err.status === 422) {
+            setAlertStatus((prev) => ({
+              ...prev,
+              msg: 'データ形式が正しくありません',
+              severity: 'error',
+              show: true,
+            }))
+            console.error(err)
+          }
+          throw err
         })
     }
   }
@@ -207,11 +200,11 @@ const Index = () => {
     event: React.MouseEvent<unknown> | React.ChangeEvent<unknown>,
     args: any
   ) => {
-    if (args.hasOwnProperty('sort_key')) {
+    if (args.hasOwnProperty('sort_key') && tasks !== null) {
       let uri = tasks.path.replace(API_URL, '')
       uri += `?page=${args.page}&sort_key=${args.sort_key}&order_by=${args.order_by}`
-      await httpClient.get(uri).then((res) => {
-        setTasks(res.data)
+      await getRequest<Pager<Task>>(uri).then((res) => {
+        setTasks(res)
         setLastUri(uri)
       })
     }
@@ -219,19 +212,15 @@ const Index = () => {
 
   const handleDelete = async (ids: number[]) => {
     const data: { ids: number[] } = { ids }
-    await httpClient
-      .delete(lastUri, {
-        data,
-      })
-      .then((res) => {
-        setTasks(res.data)
-        setAlertStatus((prev) => ({
-          ...prev,
-          msg: '削除しました',
-          severity: 'error',
-          show: true,
-        }))
-      })
+    await deleteRequest<Pager<Task>>(lastUri, null, { data }).then((res) => {
+      setTasks(res)
+      setAlertStatus((prev) => ({
+        ...prev,
+        msg: '削除しました',
+        severity: 'error',
+        show: true,
+      }))
+    })
   }
 
   return (
@@ -359,13 +348,15 @@ const Index = () => {
               </Grid>
             </Grid>
           </FormDialog>
-          <TaskTable
-            tasks={tasks}
-            onPage={handleChangePage}
-            onAdd={add}
-            onEdit={edit}
-            onDelete={handleDelete}
-          />
+          {tasks !== null && (
+            <TaskTable
+              tasks={tasks}
+              onPage={handleChangePage}
+              onAdd={add}
+              onEdit={edit}
+              onDelete={handleDelete}
+            />
+          )}
         </section>
         <CustomAlert {...alertStatus} />
       </div>

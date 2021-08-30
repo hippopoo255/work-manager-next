@@ -1,3 +1,5 @@
+import { SelectBox } from '@/interfaces/form/inputs'
+
 export type Pager<T> = {
   current_page: number
   data: T[]
@@ -11,4 +13,5 @@ export type Pager<T> = {
   prev_page_url: string | null
   to: number
   total: number
+  year_month?: SelectBox[]
 }

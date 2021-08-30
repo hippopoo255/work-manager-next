@@ -1,16 +1,15 @@
-import axios, { AxiosResponse } from 'axios'
-import { API_URL } from '@/lib/util'
-
-let httpClient = axios.create({
-  baseURL: API_URL,
-  withCredentials: true,
-})
+import { AxiosResponse } from 'axios'
+import { defaultErrorHandler, httpClient } from '@/lib/axios'
 
 const deleteRequest = async <T = null>(
   path: string,
-  handleError: ((err: AxiosResponse) => unknown) | null = null
+  handleError: ((err: AxiosResponse) => unknown) | null = null,
+  data: any = null
 ): Promise<T> => {
   const axiosFunc: () => Promise<AxiosResponse<null>> = () => {
+    if (!!data) {
+      return httpClient.delete(path, data)
+    }
     return httpClient.delete(path)
   }
 
@@ -19,7 +18,7 @@ const deleteRequest = async <T = null>(
   })
 
   if (res.status >= 400) {
-    handleError ? handleError(res) : console.error(res)
+    handleError ? handleError(res) : defaultErrorHandler(res)
     return res
   } else {
     return res.data

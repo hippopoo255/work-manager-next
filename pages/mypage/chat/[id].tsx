@@ -15,8 +15,13 @@ import MeetingRoomIcon from '@material-ui/icons/MeetingRoom'
 import SendIcon from '@material-ui/icons/Send'
 import PanoramaOutlinedIcon from '@material-ui/icons/PanoramaOutlined'
 import { useRouter } from 'next/router'
-import { putRequest, getRequest, requestUri, postRequest } from '@/api'
-import { httpClient } from '@/api/useApi'
+import {
+  putRequest,
+  getRequest,
+  postRequest,
+  deleteRequest,
+  requestUri,
+} from '@/api'
 import {
   ChatRoom,
   ChatMessage,
@@ -42,7 +47,12 @@ import {
 import { ChatMessageForm, ChatRoomForm } from '@/components/template'
 import { useForm, Controller } from 'react-hook-form'
 import { drawerWidth, chatRoomListWidth, mine, STORAGE_URL } from '@/lib/util'
-import { listenMessageSent, listenMessageRead } from '@/lib/pusher'
+import {
+  listenMessageSent,
+  listenMessageRead,
+  listenMessageDelete,
+} from '@/lib/pusher'
+import { deletedMessage } from '@/lib/initialData'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -240,14 +250,30 @@ const ChatDetail = () => {
 
   useEffect(() => {
     if (userId > 0) {
-      listenMessageSent((newMessage: ChatMessage) => {
+      listenMessageSent(
+        ({ message, flag }: { message: ChatMessage; flag: string }) => {
+          console.log(message)
+          if (
+            message.chat_room_id === getChatRoomId() &&
+            !mine(message.written_by.id, userId)
+          ) {
+            if (flag === 'update') {
+              addUpdateMessage(message)
+            } else {
+              const isLast = cantScroll()
+              addNewMessage(message)
+              isLast ? handleSentMsg() : setSilentMessage(message)
+            }
+          }
+        }
+      )
+
+      listenMessageDelete((message: ChatMessage) => {
         if (
-          newMessage.chat_room_id === getChatRoomId() &&
-          !mine(newMessage.written_by.id, userId)
+          message.chat_room_id === getChatRoomId() &&
+          !mine(message.written_by.id, userId)
         ) {
-          const isLast = cantScroll()
-          addNewMessage(newMessage)
-          isLast ? handleSentMsg() : setSilentMessage(newMessage)
+          replaceDeleteMessage(message.id)
         }
       })
     }
@@ -301,18 +327,8 @@ const ChatDetail = () => {
     const chatRoomId = getChatRoomId()
     await postRequest<ChatRoom, {}>(
       requestUri.chatRoom.read + `${chatRoomId}/read`,
-      {},
-      (err) => {
-        console.error(err)
-        throw err
-      }
+      {}
     )
-      .then((chatRoom) => {})
-      .catch((err) => {
-        if (err.status === 401) {
-          router.push('/login')
-        }
-      })
   }, [getChatRoomId, router])
 
   const title = useMemo(
@@ -325,12 +341,51 @@ const ChatDetail = () => {
     [chatRoom]
   )
 
-  const addNewMessage = (newMessage: ChatMessage) => {
+  const addNewMessage = (targetMessage: ChatMessage) => {
     setChatRoom((prev) => {
       if (prev !== null) {
         return {
           ...prev,
-          messages: prev.messages.concat([newMessage]),
+          messages: prev.messages.concat([targetMessage]),
+        }
+      } else {
+        return null
+      }
+    })
+  }
+
+  const addUpdateMessage = (targetMessage: ChatMessage) => {
+    setChatRoom((prev) => {
+      if (prev !== null) {
+        const newMessages = [...prev.messages]
+        const index = newMessages.findIndex(
+          (msg) => msg !== null && msg.id === targetMessage.id
+        )
+        newMessages.splice(index, 1, targetMessage)
+        return {
+          ...prev,
+          messages: newMessages,
+        }
+      } else {
+        return null
+      }
+    })
+  }
+
+  const replaceDeleteMessage = (id: number) => {
+    setChatRoom((prev) => {
+      if (prev !== null) {
+        const newMessages = [...prev.messages]
+        const index = newMessages.findIndex(
+          (msg) => msg !== null && msg.id === id
+        )
+        const targetMessage = newMessages[index]
+        if (targetMessage !== null) {
+          newMessages.splice(index, 1, deletedMessage(targetMessage))
+        }
+        return {
+          ...prev,
+          messages: newMessages,
         }
       } else {
         return null
@@ -342,17 +397,7 @@ const ChatDetail = () => {
   const saveReq = async (submitData: ChatRoomSubmit) =>
     await putRequest<ChatRoom, ChatRoomSubmit>(
       `${requestUri.chatRoom.put}${getChatRoomId()}`,
-      submitData,
-      (err) => {
-        console.error(err)
-        if (err.status === 401) {
-          router.push('/login')
-        }
-        if (err.status === 403) {
-          router.push('/403', '/forbidden')
-        }
-        throw err
-      }
+      submitData
     )
 
   const handleEdit = () => {
@@ -370,23 +415,13 @@ const ChatDetail = () => {
   // チャットルーム削除
   const handleDelete = async () => {
     setConfirmLoading(true)
-    await httpClient
-      .delete(requestUri.chatRoom.delete + getChatRoomId())
-      .then(() => {
+    await deleteRequest(requestUri.chatRoom.delete + getChatRoomId()).then(
+      () => {
         setConfirmLoading(false)
         setConfirmOpen(false)
         router.push('/mypage/chat')
-      })
-      .catch((err) => {
-        setConfirmLoading(false)
-        console.error(err.response)
-        if (err.response.status === 401) {
-          router.push('/login')
-        }
-        if (err.response.status === 403) {
-          router.push('/403', '/forbidden')
-        }
-      })
+      }
+    )
   }
 
   const defaultValues: ChatRoomInputs = useMemo(
@@ -452,7 +487,7 @@ const ChatDetail = () => {
         setUpdateMsgInput({
           id: updateMsg!.id!,
           body: updateMsg!.body!,
-          written_by: userId,
+          written_by: updateMsg!.written_by.id,
           previews:
             updateMsg !== undefined
               ? updateMsg.images.map((image: ChatImage | null) =>
@@ -488,11 +523,7 @@ const ChatDetail = () => {
   const storeMessage = async (messageSubmitData: FormData, id: number = 0) =>
     await postRequest<ChatMessage, ChatMessageSubmit>(
       `/chat_room/${getChatRoomId()}/message`,
-      messageSubmitData,
-      (err) => {
-        console.error(err)
-        throw err
-      }
+      messageSubmitData
     )
 
   const handleAfterStore = (responseMessage: ChatMessage) => {
@@ -504,17 +535,7 @@ const ChatDetail = () => {
   const updateMessage = async (submitData: ChatMessageSubmit, id: number) =>
     await putRequest<ChatMessage, ChatMessageSubmit>(
       `/chat_room/${getChatRoomId()}/message/${id}`,
-      submitData,
-      (err) => {
-        console.error(err)
-        if (err.status === 401) {
-          router.push('/login')
-        }
-        if (err.status === 403) {
-          router.push('/403', '/forbidden')
-        }
-        throw err
-      }
+      submitData
     )
 
   const handleAfterUpdate = (responseMessage: ChatMessage) => {
@@ -557,31 +578,11 @@ const ChatDetail = () => {
   )
 
   const deleteMessage = async (id: number) => {
-    await httpClient
-      .delete(`/chat_room/${getChatRoomId()}/message/${id}`)
-      .then(() => {
-        setChatRoom((prev) => {
-          if (prev !== null) {
-            const index = prev.messages.findIndex((msg) => msg!.id! === id)
-            prev.messages.splice(index, 1)
-            return {
-              ...prev,
-              messages: prev.messages,
-            }
-          } else {
-            return null
-          }
-        })
-      })
-      .catch((err) => {
-        console.error(err.response)
-        if (err.response.status === 401) {
-          router.push('/login')
-        }
-        if (err.response.status === 403) {
-          router.push('/403', '/forbidden')
-        }
-      })
+    await deleteRequest(`/chat_room/${getChatRoomId()}/message/${id}`).then(
+      () => {
+        replaceDeleteMessage(id)
+      }
+    )
   }
 
   return (
@@ -641,7 +642,7 @@ const ChatDetail = () => {
           <Divider />
           <section ref={scrollRef} className={classes.body}>
             <List>
-              {chatMessages.length > 0 ? (
+              {chatRoom !== null && chatRoom!.messages.length > 0 ? (
                 chatMessages.map((message, index) => (
                   <ListItem key={`message_${message?.id}`}>
                     {message !== null && (

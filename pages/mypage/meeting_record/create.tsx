@@ -4,6 +4,7 @@ import { makeStyles, Theme } from '@material-ui/core/styles'
 import clsx from 'clsx'
 import { MypageLayout } from '@/layouts'
 import { MypageTitle } from '@/components/atoms'
+import { FormTitle } from '@/components/molecules'
 import { Avatar, Typography, Box } from '@material-ui/core'
 import MenuBookOutlinedIcon from '@material-ui/icons/MenuBookOutlined'
 import { postRequest, getRequest, requestUri } from '@/api'
@@ -50,12 +51,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(2),
     padding: theme.spacing(2),
   },
-  title: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: theme.spacing(4),
-  },
   form: {
     width: '100%',
   },
@@ -67,9 +62,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderColor: theme.palette.error.main,
     cursor: 'pointer',
   },
-  submitBtn: {
-    color: '#fff',
-  },
+  // submitBtn: {
+  //   color: '#fff',
+  // },
   avatar: {
     margin: theme.spacing(1),
     background: 'linear-gradient(135deg,#fad961,#f76b1c)',
@@ -131,17 +126,7 @@ const MeetingRecordCreate = ({ meetingPlaceList }: Props) => {
   const req = async (submitData: MeetingRecordSubmit) =>
     await postRequest<MeetingRecord, MeetingRecordSubmit>(
       requestUri.meetingRecord.post,
-      submitData,
-      (err) => {
-        console.error(err)
-        if (err.status === 403) {
-          router.push('/403', '/forbidden')
-        }
-        if (err.status === 401) {
-          router.push('/login')
-        }
-        throw err
-      }
+      submitData
     )
 
   // Autocomlete members
@@ -167,13 +152,8 @@ const MeetingRecordCreate = ({ meetingPlaceList }: Props) => {
   return (
     <MypageLayout title="議事録追加" supplyUserId={setUserId}>
       <MypageTitle>議事録</MypageTitle>
-      <Box className={clsx([classes.wrap, classes.title])}>
-        <Avatar className={classes.avatar}>
-          <MenuBookOutlinedIcon />
-        </Avatar>
-        <Typography component="h3" variant="h5">
-          新規追加フォーム
-        </Typography>
+      <Box className={classes.wrap}>
+        <FormTitle title={'新規追加フォーム'} icon={<MenuBookOutlinedIcon />} />
       </Box>
       <MeetingRecordForm
         memberList={memberList}

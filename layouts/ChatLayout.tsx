@@ -198,19 +198,10 @@ const ChatLayout = React.memo(
 
     useEffect(() => {
       const fetchCurrentUser = async () => {
-        await getRequest<User>(requestUri.currentUserWithChat, (err) => {
-          throw err
+        await getRequest<User>(requestUri.currentUserWithChat).then((data) => {
+          setUser(data)
+          supplyUserId(data.id)
         })
-          .then((data) => {
-            setUser(data)
-            supplyUserId(data.id)
-          })
-          .catch((err) => {
-            console.error(err)
-            if (err.status === 401) {
-              router.push('/login')
-            }
-          })
       }
       fetchCurrentUser()
     }, [])
@@ -233,29 +224,33 @@ const ChatLayout = React.memo(
 
     useEffect(() => {
       if (chatRooms.length > 0) {
-        listenMessageSent((message: ChatMessage) => {
-          if (!!user && message.written_by.id !== user.id) {
-            const index = chatRooms.findIndex(
-              (chatRoom) => chatRoom.id === message.chat_room_id
-            )
-            if (index !== -1) {
-              setUser((prev) => {
-                if (!!prev) {
-                  const newRooms = chatRooms
-                  newRooms[index].unread_count++
-                  return {
-                    ...prev,
-                    chat_rooms: newRooms,
+        listenMessageSent(
+          ({ message, flag }: { message: ChatMessage; flag: string }) => {
+            if (flag === 'update') {
+              return true
+            }
+            if (!!user && message.written_by.id !== user.id) {
+              const index = chatRooms.findIndex(
+                (chatRoom) => chatRoom.id === message.chat_room_id
+              )
+              if (index !== -1) {
+                setUser((prev) => {
+                  if (!!prev) {
+                    const newRooms = chatRooms
+                    newRooms[index].unread_count++
+                    return {
+                      ...prev,
+                      chat_rooms: newRooms,
+                    }
                   }
-                }
-                return ''
-              })
+                  return ''
+                })
+              }
             }
           }
-        })
+        )
         listenMessageRead(({ readUser, chatRoomId }) => {
           if (!user || readUser.id !== user.id) {
-            console.log('userId is invalid.')
             return true
           }
           const index = chatRooms.findIndex(

@@ -10,18 +10,23 @@ import {
   Tooltip,
 } from '@material-ui/core'
 import { useForm, Controller, SubmitHandler } from 'react-hook-form'
-import { SearchMeetingRecordInputs } from '@/interfaces/form/inputs'
+import { SearchMeetingRecordInputs, SelectBox } from '@/interfaces/form/inputs'
 import { MeetingRecord } from '@/interfaces/models'
-import { Pager } from '@/interfaces'
+import { Pager } from '@/interfaces/common'
 import SearchIcon from '@material-ui/icons/Search'
 
 export type Props = {
-  // defaultValues: SearchMeetingRecordInputs
   classes: any
   req: (data: SearchMeetingRecordInputs) => Promise<Pager<MeetingRecord>>
   onSuccess: (res: Pager<MeetingRecord>) => void
+  yearMonth: SelectBox[] | null
 }
-const SearchMeetingRecordForm = ({ classes, req, onSuccess }: Props) => {
+const SearchMeetingRecordForm = ({
+  classes,
+  req,
+  onSuccess,
+  yearMonth,
+}: Props) => {
   const {
     register,
     handleSubmit,
@@ -69,10 +74,12 @@ const SearchMeetingRecordForm = ({ classes, req, onSuccess }: Props) => {
                   fullWidth
                 >
                   <MenuItem value={'null'}>指定なし</MenuItem>
-                  <MenuItem value={'2021/07'}>2021年7月</MenuItem>
-                  <MenuItem value={'2021/06'}>2021年6月</MenuItem>
-                  <MenuItem value={'2021/05'}>2021年5月</MenuItem>
-                  <MenuItem value={'2021/04'}>2021年4月</MenuItem>
+                  {yearMonth !== null &&
+                    yearMonth.map((item, index) => (
+                      <MenuItem value={item.value} key={`item_${index}`}>
+                        {item.label}
+                      </MenuItem>
+                    ))}
                 </Select>
               )}
             />

@@ -4,7 +4,7 @@ import { MypageLayout } from '@/layouts'
 import { MypageTitle } from '@/components/atoms'
 import { CommonTable } from '@/components/organisms'
 import { AddButton } from '@/components/molecules'
-import { Pager } from '@/interfaces'
+import { Pager } from '@/interfaces/common'
 import { HeadCell, QueryParam } from '@/interfaces/table'
 import { MeetingRecord } from '@/interfaces/models'
 import { toStrLabel } from '@/lib/util'
@@ -12,7 +12,6 @@ import { Tooltip } from '@material-ui/core'
 import Link from 'next/link'
 import router from 'next/router'
 import { MeetingTableRowData } from '@/interfaces/table/rowData'
-import { API_URL } from '@/lib/util'
 import { SearchMeetingRecordForm } from '@/components/organisms'
 import { SearchMeetingRecordInputs } from '@/interfaces/form/inputs'
 import { getRequest, deleteRequest, requestUri } from '@/api'
@@ -110,18 +109,7 @@ const Index = () => {
   const handleSearch = async (data: SearchMeetingRecordInputs) => {
     const path = requestUri.meetingRecord.list + getQueryParams(data)
     setLatestUri(path)
-    return await getRequest<Pager<MeetingRecord>>(path, (err) => {
-      if (err.status === 401) {
-        router.push('/login')
-      }
-      if (err.status === 403) {
-        router.push('/403', '/forbidden')
-      }
-      if (err.status === 404) {
-        router.push('/404', '/notfound')
-      }
-      throw err
-    })
+    return await getRequest<Pager<MeetingRecord>>(path)
   }
 
   const handleSuccess = (res: Pager<MeetingRecord>) => {
@@ -141,7 +129,7 @@ const Index = () => {
     args: QueryParam<MeetingTableRowData>
   ) => {
     if (args.hasOwnProperty('sort_key') && meetingRecords !== null) {
-      const uri = handlePageUri(latestUri, meetingRecords.path, args)
+      const uri = handlePageUri(latestUri, requestUri.meetingRecord.list, args)
       await getRequest<Pager<MeetingRecord>>(uri).then((res) => {
         setMeetingRecords(res)
         setLatestUri(uri)
@@ -154,26 +142,16 @@ const Index = () => {
     const queryParams = latestUri.match(/\?.+$/)
     await deleteRequest<Pager<MeetingRecord>>(
       `${requestUri.meetingRecord.delete}/${ids[0]}${queryParams || ''}`
-    )
-      .then((res) => {
-        setMeetingRecords(res)
-        setRows(createRows(res.data))
-        // setAlertStatus((prev) => ({
-        //   ...prev,
-        //   msg: '削除しました',
-        //   severity: 'error',
-        //   show: true,
-        // }))
-      })
-      .catch((err) => {
-        console.error(err.response)
-        if (err.response.status === 401) {
-          router.push('/login')
-        }
-        if (err.response.status === 403) {
-          router.push('/403', '/forbidden')
-        }
-      })
+    ).then((res) => {
+      setMeetingRecords(res)
+      setRows(createRows(res.data))
+      // setAlertStatus((prev) => ({
+      //   ...prev,
+      //   msg: '削除しました',
+      //   severity: 'error',
+      //   show: true,
+      // }))
+    })
   }
 
   const handleEditClick = (id: number) => {
@@ -230,6 +208,11 @@ const Index = () => {
             onSuccess={handleSuccess}
             req={handleSearch}
             classes={classes}
+            yearMonth={
+              meetingRecords !== null && meetingRecords.year_month !== undefined
+                ? meetingRecords.year_month
+                : null
+            }
           />
         </CommonTable>
         <AddButton onClick={handleAdd} title="議事録を追加する" />
