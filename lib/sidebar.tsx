@@ -1,19 +1,23 @@
 import React from 'react'
-import AttachFileOutlinedIcon from '@material-ui/icons/AttachFileOutlined'
-import BookOutlinedIcon from '@material-ui/icons/BookOutlined'
-import EventAvailableOutlinedIcon from '@material-ui/icons/EventAvailableOutlined'
-import FolderOpenOutlinedIcon from '@material-ui/icons/FolderOpenOutlined'
-import LibraryAddOutlinedIcon from '@material-ui/icons/LibraryAddOutlined'
-import MenuBookOutlinedIcon from '@material-ui/icons/MenuBookOutlined'
-import SendOutlinedIcon from '@material-ui/icons/SendOutlined'
-import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined'
-import TocOutlinedIcon from '@material-ui/icons/TocOutlined'
+import {
+  AddIcon,
+  BlogIcon,
+  ChatIcon,
+  DocumentIcon,
+  ListIcon,
+  MeetingRecordIcon,
+  ScheduleIcon,
+  SettingIcon,
+  TaskIcon,
+} from '@/components/atoms/icons'
+import HomeIcon from '@material-ui/icons/Home'
 
 export type Child = {
   id: string
-  to: string
   icon: any
   text: string
+  to: string
+  is_notify?: boolean
 }
 export type Menu = {
   id: string
@@ -31,56 +35,64 @@ export type Menus = {
 }
 
 export const sidebarMenus = {
+  home: [
+    {
+      id: 'home',
+      icon: <HomeIcon />,
+      to: '/',
+      text: 'Home',
+    },
+  ],
   top: [
     {
       id: 'meeting',
-      icon: <MenuBookOutlinedIcon />,
-      to: '/mypage/meeting_record',
+      icon: <MeetingRecordIcon />,
       text: '会議',
       open: false,
+      to: '/mypage/meeting_record',
       children: [
         {
           id: 'meeting_index',
           to: '/mypage/meeting_record',
-          icon: <TocOutlinedIcon />,
+          icon: <ListIcon />,
           text: '議事録一覧',
         },
         {
           id: 'meeting_create',
           to: '/mypage/meeting_record/create',
-          icon: <LibraryAddOutlinedIcon />,
+          icon: <AddIcon />,
           text: '議事録追加',
         },
       ],
     },
     {
       id: 'schedule',
-      icon: <EventAvailableOutlinedIcon />,
+      icon: <ScheduleIcon />,
       to: '/mypage/schedule',
       text: 'スケジュール',
     },
     {
       id: 'document',
-      icon: <FolderOpenOutlinedIcon />,
+      icon: <DocumentIcon />,
       to: '/mypage/document',
       text: 'ドキュメント',
       disabled: true,
     },
     {
       id: 'task',
-      icon: <AttachFileOutlinedIcon />,
+      icon: <TaskIcon />,
       to: '/mypage/task',
       text: 'タスク',
     },
     {
       id: 'chat',
-      icon: <SendOutlinedIcon />,
+      icon: <ChatIcon />,
       to: '/mypage/chat',
       text: 'チャット',
     },
     {
       id: 'blog',
-      icon: <BookOutlinedIcon />,
+      icon: <BlogIcon />,
       to: '/mypage/blog',
       text: 'ブログ',
       disabled: true,
@@ -90,7 +102,7 @@ export const sidebarMenus = {
     {
       id: 'settings',
       text: '設定',
-      icon: <SettingsOutlinedIcon />,
+      icon: <SettingIcon />,
       to: '/mypage/setting',
     },
   ],

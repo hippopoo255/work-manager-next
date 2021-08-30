@@ -16,7 +16,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import { ChatRoomForm } from '@/components/template'
 import { MemberExtInputs } from '@/interfaces/form/inputs'
 import { ChatRoomSubmit } from '@/interfaces/form/submit'
-import { SITE_TITLE, mine } from '@/lib/util'
+import { SITE_TITLE, chatMainWidth } from '@/lib/util'
 import { listenMessageSent, listenMessageRead } from '@/lib/pusher'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -76,7 +76,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(0),
     flexGrow: 1,
     [theme.breakpoints.up('md')]: {
-      maxWidth: 640,
+      maxWidth: chatMainWidth,
     },
   },
   none: {
@@ -116,8 +116,9 @@ export type Props = {
   title?: string
   mainNone: boolean
   sideNone: boolean
-  supplyUserId: (id: number) => void
+  supplyUserId?: (id: number) => void
   activeRoom: ChatRoom | null
+  onToggle?: ((isOpen: boolean) => void) | null
 }
 
 // eslint-disable-next-line react/display-name
@@ -129,6 +130,7 @@ const ChatLayout = React.memo(
     sideNone,
     supplyUserId,
     activeRoom = null,
+    onToggle = null,
   }: Props) => {
     const classes = useStyles()
     const router = useRouter()
@@ -152,11 +154,29 @@ const ChatLayout = React.memo(
     )
 
     const [mobileOpen, setMobileOpen] = useState(false)
-    const handleDrawerToggle = (specified: boolean | null = null) => {
+    const [tabletOpen, setTabletOpen] = useState(false)
+    const handleDrawerToggle = (flag: string) => {
+      if (flag === 'mobile') {
+        handleMobileDrawer()
+      } else {
+        handleFlexibleDrawer()
+      }
+    }
+    const handleMobileDrawer = (specified: boolean | null = null) => {
       if (specified === null) {
         setMobileOpen(!mobileOpen)
       } else {
         setMobileOpen(specified)
+      }
+    }
+    const handleFlexibleDrawer = (specified: boolean | null = null) => {
+      if (specified === null) {
+        setTabletOpen(!tabletOpen)
+        if (onToggle !== null) {
+          onToggle(!tabletOpen)
+        }
+      } else {
+        setTabletOpen(specified)
       }
     }
 
@@ -197,13 +217,21 @@ const ChatLayout = React.memo(
     }
 
     useEffect(() => {
+      let unmounted = false
       const fetchCurrentUser = async () => {
         await getRequest<User>(requestUri.currentUserWithChat).then((data) => {
-          setUser(data)
-          supplyUserId(data.id)
+          if (!unmounted) {
+            setUser(data)
+          }
+          if (!!supplyUserId) {
+            supplyUserId(data.id)
+          }
         })
       }
       fetchCurrentUser()
+      return () => {
+        unmounted = true
+      }
     }, [])
 
     useEffect(() => {
@@ -281,7 +309,12 @@ const ChatLayout = React.memo(
         <div className={classes.root}>
           <CssBaseline />
           <Header toggleMenu={handleDrawerToggle} user={user} />
-          <Sidebar open={mobileOpen} onClose={handleDrawerToggle} />
+          <Sidebar
+            open={mobileOpen}
+            onClose={handleMobileDrawer}
+            flexibleOpen={tabletOpen}
+            handleFlexibleOpen={handleFlexibleDrawer}
+          />
           <main className={classes.main}>
             {/* <div className={classes.appBarSpacer} /> */}
             <section style={{ height: '100%' }}>

@@ -23,7 +23,7 @@ import Paper from '@material-ui/core/Paper'
 import Checkbox from '@material-ui/core/Checkbox'
 import { Pager } from '@/interfaces/common'
 import { ConfirmDialog } from '@/components/organisms'
-import { QueryParam, Order, HeadCell, TableRowData } from '@/interfaces/table'
+import { SortParam, Order, HeadCell, TableRowData } from '@/interfaces/table'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -137,7 +137,7 @@ export type Props<T, U extends TableRowData> = {
       | React.MouseEvent<unknown>
       | React.MouseEvent<HTMLButtonElement, MouseEvent>
       | null,
-    obj: QueryParam<U>
+    obj: SortParam<U>
   ) => Promise<void>
   pagerData: Pager<T> | null
   rows: U[]

@@ -1,21 +1,19 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
 import { MypageLayout } from '@/layouts'
 import { MypageTitle } from '@/components/atoms'
 import { CommonTable } from '@/components/organisms'
 import { AddButton } from '@/components/molecules'
 import { Pager } from '@/interfaces/common'
-import { HeadCell, QueryParam } from '@/interfaces/table'
+import { SortParam } from '@/interfaces/table'
 import { MeetingRecord } from '@/interfaces/models'
-import { toStrLabel } from '@/lib/util'
-import { Tooltip } from '@material-ui/core'
-import Link from 'next/link'
-import router from 'next/router'
+import { useRouter } from 'next/router'
 import { MeetingTableRowData } from '@/interfaces/table/rowData'
 import { SearchMeetingRecordForm } from '@/components/organisms'
 import { SearchMeetingRecordInputs } from '@/interfaces/form/inputs'
 import { getRequest, deleteRequest, requestUri } from '@/api'
-import { getQueryParams, handlePageUri } from '@/lib/util'
+import { getSortParams, handlePageUri } from '@/lib/util'
+import { headCells, createRows } from '@/lib/table/meetingRecord'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -41,78 +39,30 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Index = () => {
   const classes = useStyles()
-
-  const headCells: HeadCell<MeetingTableRowData>[] = [
-    {
-      id: 'title',
-      numeric: false,
-      disablePadding: true,
-      label: '会議名',
-      align: 'left',
-      size: 180,
-    },
-    {
-      id: 'meeting_date',
-      numeric: false,
-      disablePadding: false,
-      label: '開催日時',
-      size: 150,
-      align: 'center',
-    },
-    {
-      id: 'place_id',
-      numeric: false,
-      disablePadding: false,
-      label: '開催場所',
-      size: 150,
-      align: 'center',
-    },
-    {
-      id: 'summary',
-      numeric: false,
-      disablePadding: false,
-      label: '概要',
-      align: 'left',
-      size: 180,
-      long: true,
-    },
-    {
-      id: 'created_at',
-      numeric: false,
-      disablePadding: false,
-      label: '記録日',
-      align: 'center',
-      size: 120,
-    },
-    {
-      id: 'recorded_by',
-      numeric: false,
-      disablePadding: false,
-      label: '記録者',
-      align: 'center',
-      size: 150,
-    },
-    {
-      id: 'id',
-      numeric: false,
-      disablePadding: false,
-      label: '操作',
-      align: 'center',
-    },
-  ]
+  const router = useRouter()
   const [meetingRecords, setMeetingRecords] =
     useState<Pager<MeetingRecord> | null>(null)
   const [rows, setRows] = useState<MeetingTableRowData[]>([])
   const [latestUri, setLatestUri] = useState<string>(
     requestUri.meetingRecord.list
   )
+  const slicedSortKeys = () => {
+    const isSorting = latestUri.match(/[?&]sort_key=.+&order_by=.+/g)
+    return !isSorting ? '' : isSorting[0].replace(/^[?]sort_key/, '&sort_key')
+  }
   const handleSearch = async (data: SearchMeetingRecordInputs) => {
-    const path = requestUri.meetingRecord.list + getQueryParams(data)
+    let path = requestUri.meetingRecord.list + getSortParams(data)
+    path += slicedSortKeys()
+    console.log(path)
     setLatestUri(path)
-    return await getRequest<Pager<MeetingRecord>>(path)
+    return await getRequest<Pager<MeetingRecord, SearchMeetingRecordInputs>>(
+      path
+    )
   }
 
-  const handleSuccess = (res: Pager<MeetingRecord>) => {
+  const handleSuccess = (
+    res: Pager<MeetingRecord, SearchMeetingRecordInputs>
+  ) => {
     setMeetingRecords(res)
     setRows(createRows(res.data))
   }
@@ -126,11 +76,14 @@ const Index = () => {
       | React.MouseEvent<unknown>
       | React.MouseEvent<HTMLButtonElement, MouseEvent>
       | null,
-    args: QueryParam<MeetingTableRowData>
+    args: SortParam<MeetingTableRowData>
   ) => {
     if (args.hasOwnProperty('sort_key') && meetingRecords !== null) {
-      const uri = handlePageUri(latestUri, requestUri.meetingRecord.list, args)
-      await getRequest<Pager<MeetingRecord>>(uri).then((res) => {
+      const uri = handlePageUri(latestUri, args)
+      console.log('uri:', uri)
+      await getRequest<Pager<MeetingRecord, SearchMeetingRecordInputs>>(
+        uri
+      ).then((res) => {
         setMeetingRecords(res)
         setLatestUri(uri)
         setRows(createRows(res.data))
@@ -140,17 +93,11 @@ const Index = () => {
 
   const handleDeleteClick = async (ids: number[]) => {
     const queryParams = latestUri.match(/\?.+$/)
-    await deleteRequest<Pager<MeetingRecord>>(
+    await deleteRequest<Pager<MeetingRecord, SearchMeetingRecordInputs>>(
       `${requestUri.meetingRecord.delete}/${ids[0]}${queryParams || ''}`
     ).then((res) => {
       setMeetingRecords(res)
       setRows(createRows(res.data))
-      // setAlertStatus((prev) => ({
-      //   ...prev,
-      //   msg: '削除しました',
-      //   severity: 'error',
-      //   show: true,
-      // }))
     })
   }
 
@@ -158,35 +105,25 @@ const Index = () => {
     router.push(`/mypage/meeting_record/update/${id}`)
   }
 
-  const createRows = (list: MeetingRecord[]): MeetingTableRowData[] =>
-    list.map((meetingRecord: MeetingRecord) => ({
-      title: (
-        <Link href={`/mypage/meeting_record/${meetingRecord.id}`} passHref>
-          <Tooltip title={'詳細画面へ'}>
-            <a className={classes.link}>{meetingRecord.title}</a>
-          </Tooltip>
-        </Link>
-      ),
-      meeting_date: toStrLabel(new Date(meetingRecord.meeting_date)),
-      place_id: meetingRecord.place.name,
-      summary: meetingRecord.summary,
-      created_at: toStrLabel(new Date(meetingRecord.created_at)),
-      recorded_by: meetingRecord.recorded_by.full_name,
-      id: meetingRecord.id,
-      is_editable: meetingRecord.is_editable,
-    }))
-
   useEffect(() => {
     const init = async () => {
+      let initialQuery = ''
+      if (!!Object.keys(router.query).length) {
+        initialQuery =
+          '?' +
+          Object.keys(router.query)
+            .map((key) => `${key}=${router.query[key]}`)
+            .join('&')
+      }
       await getRequest<Pager<MeetingRecord>>(
-        requestUri.meetingRecord.list
+        requestUri.meetingRecord.list + initialQuery
       ).then((res) => {
         setMeetingRecords(res)
         setRows(createRows(res.data))
       })
     }
     init()
-  }, [])
+  }, [router])
 
   return (
     <MypageLayout title="議事録">
@@ -208,6 +145,11 @@ const Index = () => {
             onSuccess={handleSuccess}
             req={handleSearch}
             classes={classes}
+            initialParams={
+              meetingRecords !== null && !!meetingRecords.query_params
+                ? meetingRecords.query_params
+                : {}
+            }
             yearMonth={
               meetingRecords !== null && meetingRecords.year_month !== undefined
                 ? meetingRecords.year_month

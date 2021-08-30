@@ -5,39 +5,24 @@ import {
   Theme,
   createStyles,
 } from '@material-ui/core/styles'
-import Link from 'next/link'
 import Divider from '@material-ui/core/Divider'
 import Drawer from '@material-ui/core/Drawer'
 import Hidden from '@material-ui/core/Hidden'
-import {
-  ListSubheader,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Collapse,
-} from '@material-ui/core'
-import ExpandLess from '@material-ui/icons/ExpandLess'
-import ExpandMore from '@material-ui/icons/ExpandMore'
-import HomeIcon from '@material-ui/icons/Home'
+import { List } from '@material-ui/core'
+
 import { Menu, Child, Menus, sidebarMenus } from '@/lib/sidebar'
 import { LinkBar } from '@/components/molecules'
+import { FlexibleDrawer } from '@/components/organisms'
 import { drawerWidth } from '@/lib/util'
 import { useRouter } from 'next/router'
 import { ChatMessage, User } from '@/interfaces/models'
 import { listenMessageSent, listenMessageRead } from '@/lib/pusher'
 
-interface Props {
-  window?: () => Window
-  open: boolean
-  onClose: any
-  user?: User | ''
-}
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     drawer: {
-      [theme.breakpoints.up('sm')]: {
+      zIndex: theme.zIndex.appBar - 1,
+      [theme.breakpoints.up('lg')]: {
         width: drawerWidth,
         flexShrink: 0,
       },
@@ -46,14 +31,27 @@ const useStyles = makeStyles((theme: Theme) =>
     drawerPaper: {
       width: drawerWidth,
     },
-    nested: {
-      paddingLeft: theme.spacing(2),
+    modalPaper: {
+      width: drawerWidth,
+      [theme.breakpoints.up('md')]: {
+        display: 'none',
+      },
     },
   })
 )
 
+interface Props {
+  window?: () => Window
+  open: boolean
+  onClose: any
+  flexibleOpen: boolean
+  handleFlexibleOpen: any
+  user?: User | ''
+}
+
 const Sidebar = (props: Props) => {
-  const { window, open, onClose, user } = props
+  const { window, open, onClose, flexibleOpen, handleFlexibleOpen, user } =
+    props
   const classes = useStyles()
   const container =
     window !== undefined ? () => window().document.body : undefined
@@ -61,29 +59,30 @@ const Sidebar = (props: Props) => {
   const router = useRouter()
   const [menus, setMenus] = useState<Menus>({ ...sidebarMenus })
 
-  const handleClick = (
-    target: Menu,
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
-    setMenus((prev) => {
-      if (target.open !== undefined) {
-        target.open = !target.open
-      }
-      const index = prev.top.findIndex((menu) => menu.id === target.id)
-      if (index !== -1) {
-        prev.top.splice(index, 1, target)
-      }
-      return {
-        ...prev,
-      }
-    })
+  const handleClick = (target: Menu) => {
+    if (target.children === undefined) {
+      onItem(target.to)
+    } else {
+      handleFlexibleOpen(true)
+      setMenus((prev) => {
+        if (target.open !== undefined) {
+          target.open = !target.open
+        }
+        const index = prev.top.findIndex((menu) => menu.id === target.id)
+        if (index !== -1) {
+          prev.top.splice(index, 1, target)
+        }
+        return {
+          ...prev,
+        }
+      })
+    }
   }
 
   const onItem = (to: string) => {
     router.push(to)
   }
 
-  const activeClass = (to: string): boolean => router.asPath == to
   const includesActive = (to: string): boolean => router.asPath.includes(to)
 
   useEffect(() => {
@@ -99,6 +98,7 @@ const Sidebar = (props: Props) => {
         top: [...newTop],
       }
     })
+    handleFlexibleOpen(includesActive('/mypage/meeting_record'))
   }, [])
 
   // useEffect(() => {
@@ -132,70 +132,30 @@ const Sidebar = (props: Props) => {
 
   const drawer = (
     <aside>
-      <List>
-        <Link href="/" passHref>
-          <ListItem button component="a">
-            <ListItemIcon>
-              <HomeIcon />
-            </ListItemIcon>
-            <ListItemText primary="Home" />
-          </ListItem>
-        </Link>
+      <List style={{ paddingBottom: 0 }}>
+        <LinkBar item={menus.home[0]} onItem={handleClick} />
       </List>
       <Divider />
       <List
         component="nav"
         aria-labelledby="nested-list-subheader"
-        subheader={
-          <ListSubheader component="div" id="nested-list-subheader">
-            メニュー
-          </ListSubheader>
-        }
+        disablePadding
       >
-        {menus.top.map((menu, i) =>
-          menu.children === undefined
-            ? menu.disabled === undefined && (
-                <LinkBar
-                  key={menu.id + `_${i}`}
-                  item={menu}
-                  activeClass={activeClass(menu.to!)}
-                  onItem={() => onItem(menu.to!)}
-                />
-              )
-            : menu.disabled === undefined && (
-                <div key={menu.id + `_${i}`}>
-                  <ListItem button onClick={handleClick.bind(null, menu)}>
-                    <ListItemIcon>{menu.icon}</ListItemIcon>
-                    <ListItemText primary={menu.text} />
-                    {menu.open! ? <ExpandLess /> : <ExpandMore />}
-                  </ListItem>
-                  <Collapse in={menu.open} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding>
-                      {menu.children !== undefined &&
-                        menu.children.map((child) => (
-                          <LinkBar
-                            key={child.id}
-                            item={child}
-                            activeClass={activeClass(child.to!)}
-                            onItem={() => onItem(child.to!)}
-                            isChild
-                          />
-                        ))}
-                    </List>
-                  </Collapse>
-                </div>
-              )
+        {menus.top.map(
+          (menu, i) =>
+            menu.disabled === undefined && (
+              <LinkBar
+                key={menu.id + `_${i}`}
+                item={menu}
+                onItem={handleClick}
+              />
+            )
         )}
       </List>
       <Divider />
-      <List>
+      <List disablePadding>
         {menus.bottom.map((menu: Menu) => (
-          <LinkBar
-            key={menu.id}
-            item={menu}
-            activeClass={activeClass(menu.to!)}
-            onItem={() => onItem(menu.to!)}
-          />
+          <LinkBar key={menu.id} item={menu} onItem={() => onItem(menu.to!)} />
         ))}
       </List>
     </aside>
@@ -203,7 +163,7 @@ const Sidebar = (props: Props) => {
 
   return (
     <nav className={classes.drawer} aria-label="mailbox folders">
-      <Hidden smUp implementation="css">
+      <Hidden mdUp implementation="css">
         <Drawer
           container={container}
           variant="temporary"
@@ -220,7 +180,14 @@ const Sidebar = (props: Props) => {
           {drawer}
         </Drawer>
       </Hidden>
-      <Hidden xsDown implementation="css">
+      <Hidden lgUp smDown implementation="css">
+        <FlexibleDrawer
+          drawer={drawer}
+          open={flexibleOpen}
+          onClose={() => handleFlexibleOpen(false)}
+        />
+      </Hidden>
+      <Hidden mdDown implementation="css">
         <Drawer
           classes={{
             paper: classes.drawerPaper,

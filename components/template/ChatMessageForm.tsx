@@ -303,6 +303,7 @@ const ChatRoomForm = ({
         onSubmit={handleSubmit(handleSave)}
         isCircular
         loading={loading}
+        submitText={'送信'}
       >
         <Grid container spacing={3}>
           <Grid item xs={12}>

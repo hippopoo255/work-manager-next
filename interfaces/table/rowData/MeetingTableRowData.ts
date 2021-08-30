@@ -1,4 +1,4 @@
-import { TableRowData } from '.'
+import { TableRowData } from '@/interfaces/table'
 
 export interface MeetingTableRowData extends TableRowData {
   title: JSX.Element

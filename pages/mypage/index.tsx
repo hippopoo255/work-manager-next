@@ -1,12 +1,16 @@
-import React from 'react'
+import React, { useState, useMemo } from 'react'
 import { MypageLayout } from '@/layouts'
 import { GetStaticProps, GetServerSideProps, GetStaticPropsContext } from 'next'
 import Grid from '@material-ui/core/Grid'
-import Paper from '@material-ui/core/Paper'
-import { LatestNews, ScheduleCalendar } from '@/components/organisms'
+import { BusyTaskCardList } from '@/components/template'
+import {
+  LatestMeetingRecord,
+  DailyScheduleCard,
+  RecentChatCard,
+} from '@/components/organisms'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import clsx from 'clsx'
-
+import { User } from '@/interfaces/models'
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
     padding: theme.spacing(2),
@@ -15,7 +19,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
   },
   fixedHeight: {
-    height: 240,
+    minHeight: 140,
+  },
+  relative: {
+    position: 'relative',
+    overflow: 'hidden',
   },
 }))
 interface Props {
@@ -24,29 +32,41 @@ interface Props {
 
 const Dashboard = (props: Props) => {
   const classes = useStyles()
+  const [user, setUser] = useState<User | ''>('')
+  const fixedHeightPaper = useMemo(
+    () => clsx(classes.paper, classes.fixedHeight, classes.relative),
+    []
+  )
 
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight)
+  const handleSupply = (suppliedUser: User) => {
+    if (!user) {
+      setUser(suppliedUser)
+    }
+  }
 
   return (
-    <MypageLayout title="ダッシュボード">
+    <MypageLayout title="ダッシュボード" supplyUser={handleSupply}>
       <>
         <section className="container">
           <Grid container spacing={3}>
-            {/* Something Summary */}
             <Grid item xs={12}>
-              <Paper className={classes.paper}>
-                <LatestNews />
-              </Paper>
+              <LatestMeetingRecord wrapClasses={fixedHeightPaper} />
             </Grid>{' '}
-            {/* Schedule Calendar */}
-            <Grid item xs={12} md={8} lg={9}>
-              <Paper className={fixedHeightPaper}>
-                <ScheduleCalendar />
-              </Paper>
+            <Grid item xs={12} sm={6} md={4}>
+              <Grid container spacing={3}>
+                {/* Daily Schedule */}
+                <Grid item xs={12}>
+                  <DailyScheduleCard wrapClasses={fixedHeightPaper} />
+                </Grid>
+                <Grid item xs={12}>
+                  {/* Recent Unread Chat  */}
+                  <RecentChatCard wrapClasses={fixedHeightPaper} />
+                </Grid>
+              </Grid>
             </Grid>
-            {/* Recent Task */}
-            <Grid item xs={12} md={4} lg={3}>
-              <Paper className={fixedHeightPaper}></Paper>
+            {/* Busy Task */}
+            <Grid item xs={12} sm={6} md={8}>
+              <BusyTaskCardList fixedHeightPaper={fixedHeightPaper} />
             </Grid>
           </Grid>
         </section>

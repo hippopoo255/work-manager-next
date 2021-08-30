@@ -46,7 +46,14 @@ import {
 } from '@/components/organisms'
 import { ChatMessageForm, ChatRoomForm } from '@/components/template'
 import { useForm, Controller } from 'react-hook-form'
-import { drawerWidth, chatRoomListWidth, mine, STORAGE_URL } from '@/lib/util'
+import {
+  drawerWidth,
+  drawerClosingWidth,
+  chatRoomListWidth,
+  chatMainWidth,
+  mine,
+  STORAGE_URL,
+} from '@/lib/util'
 import {
   listenMessageSent,
   listenMessageRead,
@@ -78,12 +85,27 @@ const useStyles = makeStyles((theme: Theme) =>
       left: 0,
       zIndex: 1,
       width: '100%',
-      [theme.breakpoints.up('sm')]: {
-        paddingLeft: drawerWidth,
+      transition: theme.transitions.create('width', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+      [theme.breakpoints.up('md')]: {
+        paddingLeft: drawerClosingWidth + chatRoomListWidth,
+        maxWidth: drawerClosingWidth + chatRoomListWidth + chatMainWidth,
       },
+      [theme.breakpoints.up('lg')]: {
+        paddingLeft: drawerWidth + chatRoomListWidth,
+        maxWidth: drawerWidth + chatRoomListWidth + chatMainWidth,
+      },
+    },
+    adjustSidebarSize: {
+      transition: theme.transitions.create('width', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
       [theme.breakpoints.up('md')]: {
         paddingLeft: drawerWidth + chatRoomListWidth,
-        maxWidth: drawerWidth + chatRoomListWidth + 640,
+        maxWidth: drawerWidth + chatRoomListWidth + chatMainWidth,
       },
     },
     top: {
@@ -176,12 +198,13 @@ const useStyles = makeStyles((theme: Theme) =>
       bottom: 48,
       width: '100%',
       cursor: 'pointer',
-      [theme.breakpoints.up('sm')]: {
-        paddingLeft: drawerWidth,
-      },
       [theme.breakpoints.up('md')]: {
+        paddingLeft: drawerClosingWidth + chatRoomListWidth,
+        maxWidth: drawerClosingWidth + chatRoomListWidth + chatMainWidth,
+      },
+      [theme.breakpoints.up('lg')]: {
         paddingLeft: drawerWidth + chatRoomListWidth,
-        maxWidth: drawerWidth + chatRoomListWidth + 640,
+        maxWidth: drawerWidth + chatRoomListWidth + chatMainWidth,
       },
     },
   })
@@ -194,12 +217,14 @@ const ChatDetail = () => {
   const [activeRoom, setActiveRoom] = useState<ChatRoom | null>(null)
   const [userId, setUserId] = useState<number>(0)
   const [responseError, setResponseError] = useState<any | null>(null)
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(false)
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false)
   const [formOpen, setFormOpen] = useState<boolean>(false)
   const [silentMessage, setSilentMessage] = useState<ChatMessage | null>(null)
   const [confirmLoading, setConfirmLoading] = useState<boolean>(false)
   const fixedMember: MemberExtInputs[] = []
   const scrollRef = useRef<HTMLElement>(null)
+
   const scrollToLatest = () => {
     if (!!scrollRef) {
       scrollRef!.current!.scrollTop = scrollRef!.current!.scrollHeight
@@ -252,7 +277,6 @@ const ChatDetail = () => {
     if (userId > 0) {
       listenMessageSent(
         ({ message, flag }: { message: ChatMessage; flag: string }) => {
-          console.log(message)
           if (
             message.chat_room_id === getChatRoomId() &&
             !mine(message.written_by.id, userId)
@@ -260,9 +284,9 @@ const ChatDetail = () => {
             if (flag === 'update') {
               addUpdateMessage(message)
             } else {
-              const isLast = cantScroll()
+              const isBottom = cantScroll()
               addNewMessage(message)
-              isLast ? handleSentMsg() : setSilentMessage(message)
+              isBottom ? handleSentMsg() : setSilentMessage(message)
             }
           }
         }
@@ -289,6 +313,7 @@ const ChatDetail = () => {
           return lastRead === null ? false : lastRead.member_id === readUser.id
         })
         if (i !== -1) {
+          // 既読したユーザが最後に読んだメッセージのメッセージID
           const lastMessageId = prev.last_reads[i].last_message_id
           const newMessages = prev.messages.map((message: ChatMessage) => {
             if (message.id <= lastMessageId) {
@@ -298,6 +323,8 @@ const ChatDetail = () => {
             }
             return message
           })
+          // 最後に読んだメッセージIDを更新して、同一ユーザの既読表記重複を避ける
+          prev.last_reads[i].last_message_id = prev.messages.slice(-1)[0].id
           return {
             ...prev,
             messages: newMessages,
@@ -584,7 +611,6 @@ const ChatDetail = () => {
       }
     )
   }
-
   return (
     <ChatLayout
       title={!!chatRoom ? chatRoom.name : ''}
@@ -592,6 +618,7 @@ const ChatDetail = () => {
       mainNone={false}
       supplyUserId={setUserId}
       activeRoom={activeRoom}
+      onToggle={setSidebarOpen}
     >
       {responseError !== null && responseError.status === 403 && (
         <Custom403Page />
@@ -602,7 +629,11 @@ const ChatDetail = () => {
 
       {responseError === null && (
         <div className={classes.root}>
-          <div className={classes.head}>
+          <div
+            className={clsx(classes.head, {
+              [classes.adjustSidebarSize]: sidebarOpen,
+            })}
+          >
             <ChatDetailTitle
               title={title}
               icon={<MeetingRoomIcon />}

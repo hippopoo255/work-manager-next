@@ -4,6 +4,7 @@ import Alert from '@material-ui/lab/Alert'
 import PropTypes from 'prop-types'
 import { Box } from '@material-ui/core'
 import { AlertStatus } from '@/interfaces/common'
+import { linerGradient } from '@/assets/color/gradient'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -23,13 +24,14 @@ const useStyles = makeStyles((theme: Theme) =>
       opacity: 0,
       pointerEvents: 'none',
     },
-    content: {
-      '&.MuiAlert-filledError': {
-        background: 'linear-gradient(135deg, #EB3941, #F15E64, #E2373f)',
-      },
-      '&.MuiAlert-filledSuccess': {
-        background: 'linear-gradient(164deg, #5dff26, #5cb363)',
-      },
+    success: {
+      background: linerGradient.success,
+    },
+    error: {
+      background: linerGradient.error,
+    },
+    msg: {
+      fontWeight: theme.typography.fontWeightBold,
     },
   })
 )
@@ -44,7 +46,15 @@ const CustomAlert = ({ severity, variant, msg, show }: AlertStatus) => {
       })}
       boxShadow={3}
     >
-      <Alert variant={variant} severity={severity} className={classes.content}>
+      <Alert
+        variant={variant}
+        severity={severity}
+        classes={{
+          filledSuccess: classes.success,
+          filledError: classes.error,
+          message: classes.msg,
+        }}
+      >
         {msg}
       </Alert>
     </Box>

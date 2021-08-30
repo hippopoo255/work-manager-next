@@ -1,6 +1,6 @@
 export interface HeadCell<T> {
-  disablePadding: boolean
   id: keyof T
+  disablePadding: boolean
   label: string
   numeric: boolean
   align: 'right' | 'left' | 'center'

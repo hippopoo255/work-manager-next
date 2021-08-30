@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   FormControl,
   Grid,
@@ -8,24 +8,35 @@ import {
   Select,
   TextField,
   Tooltip,
+  FormControlLabel,
+  Checkbox,
 } from '@material-ui/core'
-import { useForm, Controller, SubmitHandler } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import { SearchMeetingRecordInputs, SelectBox } from '@/interfaces/form/inputs'
 import { MeetingRecord } from '@/interfaces/models'
 import { Pager } from '@/interfaces/common'
 import SearchIcon from '@material-ui/icons/Search'
-
+import { SortParam } from '@/interfaces/table'
+import { MeetingTableRowData } from '@/interfaces/table/rowData'
 export type Props = {
   classes: any
-  req: (data: SearchMeetingRecordInputs) => Promise<Pager<MeetingRecord>>
-  onSuccess: (res: Pager<MeetingRecord>) => void
+  req: (
+    data: SearchMeetingRecordInputs
+  ) => Promise<Pager<MeetingRecord, SearchMeetingRecordInputs>>
+  onSuccess: (res: Pager<MeetingRecord, SearchMeetingRecordInputs>) => void
   yearMonth: SelectBox[] | null
+  initialParams: {
+    [k in
+      | keyof SearchMeetingRecordInputs
+      | keyof SortParam<MeetingTableRowData>]: string
+  }
 }
 const SearchMeetingRecordForm = ({
   classes,
   req,
   onSuccess,
   yearMonth,
+  initialParams,
 }: Props) => {
   const {
     register,
@@ -33,6 +44,7 @@ const SearchMeetingRecordForm = ({
     watch,
     control,
     setValue,
+    getValues,
     reset,
     formState: { errors },
   } = useForm<SearchMeetingRecordInputs>({
@@ -41,6 +53,7 @@ const SearchMeetingRecordForm = ({
       count: 'null',
       meeting_date: 'null',
       keyword: '',
+      only_me: '0',
     },
   })
 
@@ -54,11 +67,41 @@ const SearchMeetingRecordForm = ({
       })
   }
 
+  const checkMe = () => !(!getValues('only_me') || getValues('only_me') === '0')
+
+  useEffect(() => {
+    setValue(
+      'only_me',
+      !(initialParams.only_me === '0' || !initialParams.only_me)
+    )
+  }, [initialParams])
+
   return (
     <div>
       <form noValidate onSubmit={handleSubmit(handleSearch)}>
         <Grid container alignItems="center" spacing={3}>
-          <Grid item xs={6} md={3}>
+          <Grid item xs={12}>
+            <Controller
+              control={control}
+              name="only_me"
+              render={({ field }) => (
+                <FormControlLabel
+                  {...field}
+                  control={
+                    <Checkbox
+                      checked={checkMe()}
+                      name="only_me"
+                      color="primary"
+                      size={'small'}
+                    />
+                  }
+                  label="自分の参加した会議に限定"
+                  className={classes.subFlag}
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={6} md={4} lg={2}>
             <InputLabel shrink id="meeting-date-select-label">
               年月選択
             </InputLabel>
@@ -84,7 +127,7 @@ const SearchMeetingRecordForm = ({
               )}
             />
           </Grid>
-          <Grid item xs={6} md={3}>
+          <Grid item xs={6} md={4} lg={2}>
             <FormControl className={classes.formControl} fullWidth>
               <InputLabel shrink id="count-select-label">
                 人数選択
@@ -111,7 +154,7 @@ const SearchMeetingRecordForm = ({
               />
             </FormControl>{' '}
           </Grid>
-          <Grid item xs={10}>
+          <Grid item xs={10} md={10} lg={6}>
             <Controller
               render={({ field }) => (
                 <TextField

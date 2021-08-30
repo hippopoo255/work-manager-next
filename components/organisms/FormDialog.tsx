@@ -94,6 +94,7 @@ const FormDialog = ({
               loading={loading}
               onClick={handleSubmit}
               disabled={disabled}
+              submitText={submitText}
             />
           ) : (
             <Button

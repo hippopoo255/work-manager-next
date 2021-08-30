@@ -1,14 +1,26 @@
 import React from 'react'
 import Link from 'next/link'
-import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core'
 import clsx from 'clsx'
+import {
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Collapse,
+} from '@material-ui/core'
+import ExpandLess from '@material-ui/icons/ExpandLess'
+import ExpandMore from '@material-ui/icons/ExpandMore'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import InboxIcon from '@material-ui/icons/MoveToInbox'
 import { Menu } from '@/lib/sidebar'
 import Badge from '@material-ui/core/Badge'
+import { ChildLinkBar } from '@/components/molecules'
+import { useRouter } from 'next/router'
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     position: 'relative',
+    paddingLeft: 20,
+    paddingRight: 22,
     '&:hover': {
       textDecoration: 'none',
     },
@@ -17,77 +29,80 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: theme.palette.action.selected,
     pointerEvents: 'none',
   },
-  nested: {
-    paddingLeft: 40,
-    color: theme.palette.text.secondary,
-  },
-  nestedActive: {
-    color: theme.palette.text.primary,
-  },
-  subIcon: {
-    color: theme.palette.text.hint,
-  },
-  subIconActive: {
-    color: theme.palette.text.secondary,
-  },
   badge: {
     '& .MuiBadge-badge': {
       backgroundColor: '#f50057',
     },
   },
+  iconRoot: {
+    minWidth: 45,
+  },
 }))
 
 type OnItem = {
-  (param: string): void
+  (param: Menu): void
 }
 
 interface Props {
-  activeClass: boolean
   item: Menu
   onItem: OnItem
   isChild?: boolean
 }
 
-const LinkBar = ({ item, activeClass, onItem, isChild }: Props) => {
+const LinkBar = ({ item, onItem, isChild }: Props) => {
   const classes = useStyles()
-
-  const handleLink = (to: string | undefined, e: React.SyntheticEvent) => {
-    e.preventDefault()
-    if (to !== undefined) {
-      onItem(to)
-    }
+  const router = useRouter()
+  const activeClass = (to?: string): boolean => {
+    return !!to ? router.pathname == to : false
   }
 
-  return (
-    <Link href={item.to!} passHref>
-      <ListItem
-        button
-        component="a"
-        color="inherit"
-        className={clsx(classes.root, {
-          [classes.active]: activeClass,
-          [classes.nestedActive]: !!isChild && activeClass,
-          [classes.nested]: !!isChild,
-        })}
-        onClick={handleLink.bind(null, item.to)}
-      >
-        <ListItemIcon
-          className={clsx({
-            [classes.subIconActive]: !!isChild && activeClass,
-            [classes.subIcon]: !!isChild,
-          })}
-        >
-          {!!item.is_notify ? (
-            <Badge color="default" variant="dot" className={classes.badge}>
-              {item.icon || <InboxIcon />}
-            </Badge>
-          ) : (
-            item.icon || <InboxIcon />
-          )}
-        </ListItemIcon>
+  const handleLink = (target: Menu, e: React.SyntheticEvent) => {
+    e.preventDefault()
+    onItem(target)
+  }
 
-        <ListItemText primary={item.text} />
-      </ListItem>
+  const handleChildClick = (to: string) => {
+    router.push(to)
+  }
+  return (
+    <Link href={!!item.to ? item.to : '/mypage'} passHref>
+      <a>
+        <ListItem
+          button
+          component="li"
+          color="inherit"
+          className={clsx(classes.root, {
+            [classes.active]: activeClass(item.to),
+          })}
+          onClick={handleLink.bind(null, item)}
+        >
+          <ListItemIcon classes={{ root: classes.iconRoot }}>
+            {!!item.is_notify ? (
+              <Badge color="default" variant="dot" className={classes.badge}>
+                {item.icon || <InboxIcon />}
+              </Badge>
+            ) : (
+              item.icon || <InboxIcon />
+            )}
+          </ListItemIcon>
+          <ListItemText primary={item.text} />
+          {!!item.children && (!!item.open ? <ExpandLess /> : <ExpandMore />)}
+        </ListItem>
+        {item.children !== undefined && (
+          <Collapse in={item.open!} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              {item.children.map((child) => (
+                <ChildLinkBar
+                  key={`child_${child.id}`}
+                  child={child}
+                  activeClass={activeClass(child.to)}
+                  onItem={handleChildClick}
+                />
+              ))}
+            </List>
+          </Collapse>
+        )}
+      </a>
     </Link>
   )
 }

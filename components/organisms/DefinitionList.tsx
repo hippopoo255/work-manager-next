@@ -3,7 +3,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
 import { darken } from '@material-ui/core'
 import { grey } from '@material-ui/core/colors'
 import { Box } from '@material-ui/core'
-import { DefinitionListItem } from '@/interfaces/common'
+import { DefinitionListItem } from '@/interfaces/common/definitionList'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

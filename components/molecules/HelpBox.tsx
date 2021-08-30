@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { Typography, IconButton, Popover } from '@material-ui/core'
+import { Typography, IconButton, Popover, Tooltip } from '@material-ui/core'
 import HelpOutlineOutlinedIcon from '@material-ui/icons/HelpOutlineOutlined'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: 2,
   },
   popover: {
-    pointerEvents: 'none',
+    // pointerEvents: 'none',
   },
   helpPaper: {
     padding: theme.spacing(1),
@@ -27,9 +27,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 export type Props = {
   children?: React.ReactNode
   point?: React.ReactNode
+  tooltip?: string
 }
 
-const HelpBox = ({ children, point }: Props) => {
+const HelpBox = ({ children, point, tooltip = '' }: Props) => {
   const classes = useStyles()
   const [helpEl, setHelpEl] = useState<HTMLElement | null>(null)
   const handleHelpOpen = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
@@ -39,33 +40,39 @@ const HelpBox = ({ children, point }: Props) => {
   const handleHelpClose = () => {
     setHelpEl(null)
   }
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setHelpEl(event.currentTarget)
+  }
 
   const helpOpen = Boolean(helpEl)
 
   return (
     <div>
-      <Typography
-        aria-owns={helpOpen ? 'mouse-over-popover' : undefined}
-        aria-haspopup="true"
-        onMouseEnter={handleHelpOpen}
-        onMouseLeave={handleHelpClose}
-      >
-        {point !== undefined ? (
-          point
-        ) : (
-          <IconButton
-            color="inherit"
-            aria-label="upload picture"
-            component="span"
-            size="small"
-            className={classes.help}
-          >
-            <HelpOutlineOutlinedIcon />
-          </IconButton>
-        )}
-      </Typography>
+      <Tooltip title={tooltip}>
+        <Typography
+          aria-owns={helpOpen ? 'simple-popover' : undefined}
+          aria-haspopup="true"
+          onClick={handleClick}
+          // onMouseEnter={handleHelpOpen}
+          // onMouseLeave={handleHelpClose}
+        >
+          {point !== undefined ? (
+            point
+          ) : (
+            <IconButton
+              color="inherit"
+              aria-label="help"
+              component="span"
+              size="small"
+              className={classes.help}
+            >
+              <HelpOutlineOutlinedIcon />
+            </IconButton>
+          )}
+        </Typography>
+      </Tooltip>
       <Popover
-        id="mouse-over-popover"
+        id="simple-popover"
         className={classes.popover}
         classes={{
           paper: classes.helpPaper,

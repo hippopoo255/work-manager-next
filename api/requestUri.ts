@@ -15,6 +15,7 @@ const requestUri = {
     delete: '/chat_room/',
     id: '/chat_room/',
     read: '/chat_room/',
+    unreadRecently: '/author/chat_message/unread/recently',
   },
   chatMessage: {
     list: '/author/chat_room',
@@ -32,15 +33,17 @@ const requestUri = {
   task: {
     post: '/task',
     put: '/task',
-    mytask: '/author/task',
+    myTask: '/author/task',
+    myBusyTask: '/author/task/busy',
   },
   meetingRecord: {
-    list: '/author/meeting_record',
+    list: '/meeting_record',
     id: '/meeting_record',
     put: '/meeting_record',
     post: '/meeting_record',
     delete: '/meeting_record',
     ids: 'meeting_record/ids',
+    myRecently: '/author/meeting_record/recently',
   },
   user: {
     list: '/user',
@@ -50,6 +53,7 @@ const requestUri = {
     post: '/schedule',
     put: '/schedule/',
     delete: '/schedule/',
+    myDaily: '/author/schedule/daily',
   },
   notifyStatus: '/user/',
 }

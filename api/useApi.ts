@@ -1,27 +1,25 @@
 import { AxiosResponse } from 'axios'
-import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
-import { defaultErrorHandler, httpClient } from '@/lib/axios'
-
+import { defaultErrorHandler } from '@/lib/axios'
+import { DependencyList } from 'react'
 const useApi = <T>(
   axiosFunc: Promise<T>,
   initialState: T,
-  handleError: ((err: AxiosResponse) => void) | null = null
+  dependencies: DependencyList | undefined = [],
+  term: boolean = true
 ): T => {
   const [data, setData] = useState<T>(initialState)
 
   useEffect(() => {
-    const func = async () => {
-      const res = await axiosFunc
-        .then((res: T) => {
+    if (term) {
+      const func = async () => {
+        const res = await axiosFunc.then((res: T) => {
           setData(res)
         })
-        .catch((err): AxiosResponse => {
-          return err.response
-        })
+      }
+      func()
     }
-    func()
-  }, [])
+  }, dependencies)
   return data
 }
 

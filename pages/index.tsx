@@ -6,7 +6,6 @@ import { User } from '@/interfaces/models'
 
 export default function Home() {
   const user = useApi<User | ''>(getRequest(requestUri.currentUser), '')
-  console.log(user)
   return (
     <Layout>
       <Head>

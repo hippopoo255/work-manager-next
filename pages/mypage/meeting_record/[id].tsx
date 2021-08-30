@@ -3,13 +3,18 @@ import { useRouter } from 'next/router'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { getRequest, requestUri } from '@/api'
 import { MypageLayout } from '@/layouts'
-import { Box, Paper, Grid } from '@material-ui/core'
+import { Box, Paper, Grid, Button } from '@material-ui/core'
 import { MeetingRecord, MeetingDecision, User } from '@/interfaces/models'
-import { DefinitionListItem } from '@/interfaces/common'
+import {
+  DefinitionListItem,
+  MeetingRecordTermKey,
+} from '@/interfaces/common/definitionList'
+import { BreadcrumbItem } from '@/interfaces/common'
 import { MypageTitle } from '@/components/atoms'
+import { Breadcrumbs, CircularButton } from '@/components/molecules'
 import { DefinitionList } from '@/components/organisms'
 import { toStrFormalLabel } from '@/lib/util'
-
+import Link from 'next/link'
 const useStyles = makeStyles((theme: Theme) => ({
   body: {
     width: '100%',
@@ -37,6 +42,7 @@ const MeetingRecordDetail = () => {
   const classes = useStyles()
   const router = useRouter()
   const [meetingRecord, setMeetingRecord] = useState<MeetingRecord | null>(null)
+  const [loading, setLoading] = useState<boolean>(false)
   const paramId = router.query.id
   useEffect(() => {
     const fetch = async () => {
@@ -51,7 +57,12 @@ const MeetingRecordDetail = () => {
     fetch()
   }, [paramId])
 
-  const labels: { [k: string]: string } = {
+  const handleClick = async () => {
+    setLoading(true)
+    router.push(`/mypage/meeting_record/update/${paramId}`)
+  }
+
+  const labels: MeetingRecordTermKey = {
     recorded_by: '記録者',
     title: '会議名',
     meeting_date: '開催日時',
@@ -114,8 +125,20 @@ const MeetingRecordDetail = () => {
           }
         })
   }, [meetingRecord])
+
+  const links: BreadcrumbItem[] = [
+    {
+      to: '/mypage/meeting_record',
+      label: '議事録一覧',
+    },
+    {
+      label: meetingRecord !== null ? meetingRecord.title : '',
+    },
+  ]
+
   return (
     <MypageLayout>
+      <Breadcrumbs links={links} />
       <MypageTitle>
         {meetingRecord === null ? '' : meetingRecord.title}
       </MypageTitle>
@@ -125,6 +148,40 @@ const MeetingRecordDetail = () => {
             <Grid item xs={12}>
               <DefinitionList list={definitionList} />
             </Grid>
+            {meetingRecord !== null && (
+              <Grid item xs={12}>
+                <Grid
+                  container
+                  direction="row"
+                  justifyContent="center"
+                  alignItems="center"
+                  spacing={2}
+                >
+                  <Grid item>
+                    <Link href={'/mypage/meeting_record'} passHref>
+                      <Button variant={'outlined'} color={'default'}>
+                        Back
+                      </Button>
+                    </Link>
+                  </Grid>
+                  {meetingRecord.is_editable && (
+                    <Grid item>
+                      <Link href={`/mypage/meeting_record/update/${paramId}`}>
+                        <a>
+                          <CircularButton
+                            loading={loading}
+                            options={{ variant: 'outlined' }}
+                            color={'primary'}
+                            submitText={'編集画面へ'}
+                            onClick={handleClick}
+                          />
+                        </a>
+                      </Link>
+                    </Grid>
+                  )}
+                </Grid>
+              </Grid>
+            )}
           </Grid>
         </Paper>
       </section>{' '}
