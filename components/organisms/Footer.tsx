@@ -23,6 +23,12 @@ const Footer = () => {
     <footer className={styles.footer}>
       <div className="container">
         <Copyright />
+        <div>
+          Logo created by{' '}
+          <a href="https://www.designevo.com/" title="Free Online Logo Maker">
+            DesignEvo logo maker
+          </a>
+        </div>
       </div>
     </footer>
   )

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import {
   Button,
@@ -101,17 +101,17 @@ const SearchTaskForm = ({
     status: string,
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
-    setValue('status', getNewStatus(status))
+    setValue('status', getReformdStatus(status))
     await handleSearch(getValues())
   }
 
-  const statusArray = useMemo(() => {
-    if (getValues('status') === '') {
+  const statusArray = () => {
+    if (!initialParams.status) {
       return []
     } else {
-      return getValues('status').split(',')
+      return initialParams.status.split(',')
     }
-  }, [getValues('status')])
+  }
 
   const handleClear = async () => {
     reset()
@@ -119,12 +119,12 @@ const SearchTaskForm = ({
   }
 
   const hasStatus = (status: string) => {
-    const currentStatus = [...statusArray]
+    const currentStatus = statusArray()
     return currentStatus.indexOf(status) !== -1
   }
 
-  const getNewStatus = (status: string) => {
-    const currentStatus = [...statusArray]
+  const getReformdStatus = (status: string) => {
+    const currentStatus = statusArray()
     const index = currentStatus.findIndex((item) => item === status)
     if (index !== -1) {
       currentStatus.splice(index, 1)
@@ -142,10 +142,6 @@ const SearchTaskForm = ({
     : classes.linkWarning
 
   useEffect(() => {
-    if (!!initialParams.status) {
-      const status: string = initialParams.status!
-      setValue('status', status)
-    }
     ;(
       Object.keys(initialParams) as (
         | keyof SearchTaskInputs

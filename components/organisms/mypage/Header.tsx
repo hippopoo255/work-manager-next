@@ -1,13 +1,11 @@
-import Link from 'next/link'
-import { AppBar, Typography, Toolbar, IconButton } from '@material-ui/core'
+import { AppBar, Toolbar, IconButton } from '@material-ui/core'
 import MenuIcon from '@material-ui/icons/Menu'
 import clsx from 'clsx'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
-import { darken } from '@material-ui/core'
 import { User } from '@/interfaces/models'
 import { drawerWidth } from '@/lib/util'
 import { SiteLogo } from '@/components/atoms'
-import { AvatarMenu } from '@/components/molecules'
+import { AuthMenu } from '@/components/organisms'
 import { Hidden } from '@material-ui/core'
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -83,7 +81,7 @@ const MypageHeader = ({ user, toggleMenu }: Props) => {
           <div className={classes.title}>
             <SiteLogo />
           </div>
-          {!!user && <AvatarMenu user={user} />}
+          {!!user && <AuthMenu user={user} />}
         </Toolbar>
       </div>
     </AppBar>

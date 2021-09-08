@@ -18,6 +18,7 @@ import { Pager } from '@/interfaces/common'
 import SearchIcon from '@material-ui/icons/Search'
 import { SortParam } from '@/interfaces/table'
 import { MeetingTableRowData } from '@/interfaces/table/rowData'
+
 export type Props = {
   classes: any
   req: (
@@ -53,7 +54,7 @@ const SearchMeetingRecordForm = ({
       count: 'null',
       meeting_date: 'null',
       keyword: '',
-      only_me: '0',
+      only_me: false,
     },
   })
 
@@ -67,13 +68,35 @@ const SearchMeetingRecordForm = ({
       })
   }
 
-  const checkMe = () => !(!getValues('only_me') || getValues('only_me') === '0')
+  const handleChange = async (
+    key: string,
+    e: React.ChangeEvent<{
+      name?: string | undefined
+      value: string | boolean | unknown
+    }>
+  ) => {
+    if (key === 'only_me') {
+      setValue(key, getValues('only_me') === '1' ? '0' : '1')
+    } else {
+      setValue(key, String(e.target.value))
+    }
+    await handleSearch(getValues())
+  }
+
+  const isActive = () => getValues('only_me') === '1'
 
   useEffect(() => {
-    setValue(
-      'only_me',
-      !(initialParams.only_me === '0' || !initialParams.only_me)
-    )
+    ;(
+      Object.keys(initialParams) as (
+        | keyof SearchMeetingRecordInputs
+        | keyof SortParam<MeetingTableRowData>
+      )[]
+    ).forEach((key) => {
+      if (key in getValues()) {
+        setValue(String(key), initialParams[key])
+      }
+    })
+    setValue('only_me', initialParams.only_me)
   }, [initialParams])
 
   return (
@@ -89,10 +112,11 @@ const SearchMeetingRecordForm = ({
                   {...field}
                   control={
                     <Checkbox
-                      checked={checkMe()}
+                      checked={isActive()}
                       name="only_me"
                       color="primary"
                       size={'small'}
+                      onChange={handleChange.bind(null, 'only_me')}
                     />
                   }
                   label="自分の参加した会議に限定"
@@ -115,6 +139,7 @@ const SearchMeetingRecordForm = ({
                   id="meeting_date"
                   name="meeting_date"
                   fullWidth
+                  onChange={handleChange.bind(null, 'meeting_date')}
                 >
                   <MenuItem value={'null'}>指定なし</MenuItem>
                   {yearMonth !== null &&
@@ -138,10 +163,11 @@ const SearchMeetingRecordForm = ({
                 render={({ field }) => (
                   <Select
                     {...field}
-                    labelId="priority-id-select-label"
+                    labelId="count-select-label"
                     id="count"
                     name="count"
                     fullWidth
+                    onChange={handleChange.bind(null, 'count')}
                   >
                     <MenuItem value={'null'}>指定なし</MenuItem>
                     <MenuItem value={'2,5'}>2〜5人</MenuItem>
@@ -154,34 +180,38 @@ const SearchMeetingRecordForm = ({
               />
             </FormControl>{' '}
           </Grid>
-          <Grid item xs={10} md={10} lg={6}>
-            <Controller
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  fullWidth
-                  variant="outlined"
-                  margin="dense"
-                  required
-                  placeholder="キーワード"
-                  id="keyword"
+          <Grid item xs={12} md={4}>
+            <Grid container spacing={2} className={classes.keywordBar}>
+              <Grid item sm={10}>
+                <Controller
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      variant="outlined"
+                      margin="dense"
+                      required
+                      placeholder="キーワード"
+                      id="keyword"
+                    />
+                  )}
+                  name="keyword"
+                  control={control}
                 />
-              )}
-              name="keyword"
-              control={control}
-            />
-          </Grid>
-          <Grid>
-            <Tooltip title={'検索する'}>
-              <IconButton
-                onClick={handleSubmit(handleSearch)}
-                color={'inherit'}
-                className={classes.SearchIcon}
-                size={'small'}
-              >
-                <SearchIcon />
-              </IconButton>
-            </Tooltip>
+              </Grid>
+              <Grid item>
+                <Tooltip title={'検索する'}>
+                  <IconButton
+                    onClick={handleSubmit(handleSearch)}
+                    color={'inherit'}
+                    className={classes.SearchIcon}
+                    size={'small'}
+                  >
+                    <SearchIcon />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </form>

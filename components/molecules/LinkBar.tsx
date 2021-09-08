@@ -7,6 +7,7 @@ import {
   ListItemIcon,
   ListItemText,
   Collapse,
+  Tooltip,
 } from '@material-ui/core'
 import ExpandLess from '@material-ui/icons/ExpandLess'
 import ExpandMore from '@material-ui/icons/ExpandMore'
@@ -76,15 +77,17 @@ const LinkBar = ({ item, onItem, isChild }: Props) => {
           })}
           onClick={handleLink.bind(null, item)}
         >
-          <ListItemIcon classes={{ root: classes.iconRoot }}>
-            {!!item.is_notify ? (
-              <Badge color="default" variant="dot" className={classes.badge}>
-                {item.icon || <InboxIcon />}
-              </Badge>
-            ) : (
-              item.icon || <InboxIcon />
-            )}
-          </ListItemIcon>
+          <Tooltip title={item.text}>
+            <ListItemIcon classes={{ root: classes.iconRoot }}>
+              {!!item.is_notify ? (
+                <Badge color="default" variant="dot" className={classes.badge}>
+                  {item.icon || <InboxIcon />}
+                </Badge>
+              ) : (
+                item.icon || <InboxIcon />
+              )}
+            </ListItemIcon>
+          </Tooltip>
           <ListItemText primary={item.text} />
           {!!item.children && (!!item.open ? <ExpandLess /> : <ExpandMore />)}
         </ListItem>

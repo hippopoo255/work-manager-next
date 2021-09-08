@@ -122,8 +122,6 @@ export const getSortParams = (data: SearchMeetingRecordInputs) => {
   let queryParamStr = ''
   Object.keys(data).forEach((key) => {
     if (data[key] === 'null' || !data[key]) {
-    } else if (key === 'count') {
-      queryParamStr += getCountQueryStr(data.count)
     } else if (key === 'meeting_date') {
       queryParamStr += `&${key}=${data[key].replace(/\//g, '-')}`
     } else {
