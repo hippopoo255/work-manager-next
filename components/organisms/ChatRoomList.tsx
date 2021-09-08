@@ -36,11 +36,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     transform: 'translate3d(0, -50%, 0)',
   },
   badge: {
-    '& .MuiBadge-badge': {
-      backgroundColor: '#f50057',
-      color: theme.palette.common.white,
-      fontWeight: theme.typography.fontWeightBold,
-    },
+    backgroundColor: '#f50057',
+    color: theme.palette.common.white,
+    fontWeight: theme.typography.fontWeightBold,
   },
 }))
 
@@ -96,7 +94,9 @@ const ChatRoomList = ({ chatRooms }: Props) => {
                         badgeContent={chatRoom.unread_count}
                         max={99}
                         color={'default'}
-                        className={classes.badge}
+                        classes={{
+                          badge: classes.badge,
+                        }}
                       />
                     </strong>
                   )}

@@ -173,7 +173,7 @@ const Index = () => {
                                   }
                                 />
                               }
-                              label={sts.name}
+                              label={sts.label_name}
                             />
                           )}
                         />

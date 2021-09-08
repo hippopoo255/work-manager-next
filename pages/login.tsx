@@ -66,6 +66,7 @@ const Login = () => {
     show: false,
   })
   const [loading, setLoading] = useState<boolean>(false)
+  const [demoLoading, setDemoLoading] = useState<boolean>(false)
 
   const calc = alertStatus.show
 
@@ -113,6 +114,21 @@ const Login = () => {
       })
       .finally(() => {})
   }
+
+  const handleDemoUser = async () => {
+    setDemoLoading(true)
+    await testLogin()
+      .then((testUser) => {
+        console.log('testuser:', testUser)
+        router.push('/mypage')
+      })
+      .catch(() => {
+        setDemoLoading(false)
+      })
+  }
+
+  const testLogin = async () =>
+    await postRequest<User, {}>(requestUri.testLogin, {})
 
   return (
     <Layout title="ログイン">
@@ -209,7 +225,7 @@ const Login = () => {
                 options={{ fullWidth: true }}
               />
             </div>
-            <Grid container>
+            <Grid container spacing={3}>
               <Grid item xs>
                 <Link
                   href="/password/forgot_password"
@@ -225,10 +241,17 @@ const Login = () => {
                   </Typography>
                 </Link>
               </Grid>
-              <Grid item>
-                {/* <Link href="#" variant="body2">
-                  {'アカウントの作成はこちら'}
-                </Link> */}
+              <Grid item xs={12} sm={6}>
+                <CircularButton
+                  loading={demoLoading}
+                  submitText="デモユーザとして試す"
+                  onClick={handleDemoUser}
+                  options={{
+                    variant: 'outlined',
+                    color: 'secondary',
+                    fullWidth: true,
+                  }}
+                />
               </Grid>
             </Grid>
           </form>

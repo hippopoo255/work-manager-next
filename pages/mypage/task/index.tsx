@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
+import { AxiosResponse } from 'axios'
 import { MypageLayout } from '@/layouts'
 import { CustomAlert, MypageTitle } from '@/components/atoms'
 import { AddButton } from '@/components/molecules'
-import { CommonTable, SearchTaskForm } from '@/components/organisms'
+import { CommonTable, SearchTaskForm, SearchBox } from '@/components/organisms'
 import { TaskForm } from '@/components/template'
 import { requestUri, getRequest, deleteRequest } from '@/api'
 import { Pager, AlertStatus } from '@/interfaces/common'
@@ -12,7 +13,6 @@ import { TaskTableRowData } from '@/interfaces/table/rowData'
 import { Task, Priority, Progress } from '@/interfaces/models'
 import { TaskInputs, SearchTaskInputs } from '@/interfaces/form/inputs'
 import { handlePageUri } from '@/lib/util'
-import { AxiosResponse } from 'axios'
 import { createRows, headCells } from '@/lib/table/task'
 
 const Index = () => {
@@ -252,15 +252,19 @@ const Index = () => {
               title="タスク一覧"
               multiSelect
             >
-              <SearchTaskForm
-                onSearchSuccess={handleSearchSuccess}
-                req={handleSearch}
-                priorityList={priorityList}
-                progressList={progressList}
-                initialParams={
-                  tasks !== null && !!tasks.query_params
-                    ? tasks.query_params
-                    : {}
+              <SearchBox
+                formContent={
+                  <SearchTaskForm
+                    onSearchSuccess={handleSearchSuccess}
+                    req={handleSearch}
+                    priorityList={priorityList}
+                    progressList={progressList}
+                    initialParams={
+                      tasks !== null && !!tasks.query_params
+                        ? tasks.query_params
+                        : {}
+                    }
+                  />
                 }
               />
             </CommonTable>

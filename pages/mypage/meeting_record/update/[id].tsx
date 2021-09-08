@@ -214,15 +214,21 @@ const MeetingRecordUpdate = ({ meetingPlaceList }: Props) => {
   )
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const paths = await getRequest<number[]>(requestUri.meetingRecord.ids).then(
-    (ids: number[]) =>
-      ids.map((id: number) => ({
-        params: {
-          id: String(id),
-        },
-      }))
-  )
+export const getStaticPaths: GetStaticPaths = () => {
+  // const paths = await getRequest<number[]>(requestUri.meetingRecord.ids).then(
+  //   (ids: number[]) =>
+  //     ids.map((id: number) => ({
+  //       params: {
+  //         id: String(id),
+  //       },
+  //     }))
+  // )
+  const len: number = 10
+  const paths = new Array(len).fill(null).map((_, i) => ({
+    params: {
+      id: String(i + 1),
+    },
+  }))
 
   return {
     paths,

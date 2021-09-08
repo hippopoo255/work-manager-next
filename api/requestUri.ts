@@ -1,5 +1,6 @@
 const requestUri = {
   login: '/login',
+  testLogin: '/testlogin',
   logout: '/logout',
   currentUser: '/user/current',
   currentUserWithChat: '/user/current/chat_rooms',
@@ -56,6 +57,11 @@ const requestUri = {
     myDaily: '/author/schedule/daily',
   },
   notifyStatus: '/user/',
+  activity: {
+    myRecently: '/user/:id/activity',
+    read: '/user/:id/activity/read',
+    list: '/activity',
+  },
 }
 
 export default requestUri

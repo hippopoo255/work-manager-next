@@ -1,6 +1,6 @@
 export interface NotifyStatus {
   id: number
   key: string
-  name: string
+  label_name: string
   is_valid: boolean
 }
