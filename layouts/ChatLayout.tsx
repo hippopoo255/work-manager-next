@@ -37,29 +37,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: `calc(100vh - ${theme.spacing(8)}px)`,
     overflowY: 'hidden',
   },
-  chatHead: {
-    textAlign: 'center',
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
-    borderBottom: `1px solid ${theme.palette.divider}`,
-  },
-  keywordBox: {
-    flexGrow: 1,
-    width: '100%',
-    height: theme.spacing(5),
-    position: 'relative',
-  },
-  add: {
-    flexShrink: 0,
-  },
   chatSide: {
     width: '100%',
     height: '100%',
-    overflowY: 'scroll',
+    overflowY: 'hidden',
+    position: 'relative',
     backgroundColor: theme.palette.background.paper,
     flexGrow: 1,
+    paddingTop: theme.spacing(8),
 
     [theme.breakpoints.up('md')]: {
       maxWidth: chatRoomListWidth,
@@ -78,6 +63,33 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.up('md')]: {
       maxWidth: chatMainWidth,
     },
+  },
+  chatHead: {
+    textAlign: 'center',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    background: 'white',
+    zIndex: 1,
+  },
+  sideBody: {
+    height: '100%',
+    overflowY: 'scroll',
+  },
+  keywordBox: {
+    flexGrow: 1,
+    width: '100%',
+    height: theme.spacing(5),
+    position: 'relative',
+  },
+  add: {
+    flexShrink: 0,
   },
   none: {
     [theme.breakpoints.down('md')]: {
@@ -371,7 +383,11 @@ const ChatLayout = React.memo(
                       saveAction={'create'}
                     />
                   </Box>
-                  {chatRooms !== null && <ChatRoomList chatRooms={chatRooms} />}
+                  {chatRooms !== null && (
+                    <nav className={classes.sideBody}>
+                      <ChatRoomList chatRooms={chatRooms} />
+                    </nav>
+                  )}
                 </div>
                 <div
                   className={clsx(classes.chatMain, {

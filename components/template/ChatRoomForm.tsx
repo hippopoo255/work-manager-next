@@ -254,7 +254,7 @@ const ChatRoomForm = ({
                   key={member.id}
                   control={
                     <Checkbox
-                      checked={member.is_editable!}
+                      checked={!!member.is_editable!}
                       onChange={handleCheck.bind(null, member.id)}
                       name="member"
                       color="primary"

@@ -116,8 +116,8 @@ const ForgotPassword = () => {
         <CssBaseline />
         <div style={{ width: '100%' }}>
           <Typography
-            component={'h1'}
-            variant={'h1'}
+            component={'h2'}
+            variant={'h2'}
             align="center"
             gutterBottom
           >

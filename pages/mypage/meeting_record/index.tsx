@@ -51,6 +51,7 @@ const Index = () => {
   const [meetingRecords, setMeetingRecords] =
     useState<Pager<MeetingRecord> | null>(null)
   const [rows, setRows] = useState<MeetingTableRowData[]>([])
+  const [loading, setLoading] = useState<boolean>(false)
   const [latestUri, setLatestUri] = useState<string>(
     requestUri.meetingRecord.list
   )
@@ -59,13 +60,15 @@ const Index = () => {
     return !isSorting ? '' : isSorting[0].replace(/^[?]sort_key/, '&sort_key')
   }
   const handleSearch = async (data: SearchMeetingRecordInputs) => {
+    setLoading(true)
     let path = requestUri.meetingRecord.list + getSortParams(data)
     path += slicedSortKeys()
-    console.log(path)
     setLatestUri(path)
     return await getRequest<Pager<MeetingRecord, SearchMeetingRecordInputs>>(
       path
-    )
+    ).finally(() => {
+      setLoading(false)
+    })
   }
 
   const handleSuccess = (
@@ -87,15 +90,17 @@ const Index = () => {
     args: SortParam<MeetingTableRowData>
   ) => {
     if (args.hasOwnProperty('sort_key') && meetingRecords !== null) {
+      setLoading(true)
       const uri = handlePageUri(latestUri, args)
-      console.log('uri:', uri)
-      await getRequest<Pager<MeetingRecord, SearchMeetingRecordInputs>>(
-        uri
-      ).then((res) => {
-        setMeetingRecords(res)
-        setLatestUri(uri)
-        setRows(createRows(res.data))
-      })
+      await getRequest<Pager<MeetingRecord, SearchMeetingRecordInputs>>(uri)
+        .then((res) => {
+          setMeetingRecords(res)
+          setLatestUri(uri)
+          setRows(createRows(res.data))
+        })
+        .finally(() => {
+          setLoading(false)
+        })
     }
   }
 
@@ -115,6 +120,7 @@ const Index = () => {
 
   useEffect(() => {
     const init = async () => {
+      setLoading(true)
       let initialQuery = ''
       if (!!Object.keys(router.query).length) {
         initialQuery =
@@ -125,10 +131,14 @@ const Index = () => {
       }
       await getRequest<Pager<MeetingRecord>>(
         requestUri.meetingRecord.list + initialQuery
-      ).then((res) => {
-        setMeetingRecords(res)
-        setRows(createRows(res.data))
-      })
+      )
+        .then((res) => {
+          setMeetingRecords(res)
+          setRows(createRows(res.data))
+        })
+        .finally(() => {
+          setLoading(false)
+        })
     }
     init()
   }, [router])
@@ -147,9 +157,15 @@ const Index = () => {
           pagerData={meetingRecords}
           rows={rows}
           title="会議議事録一覧"
+          fetching={loading}
           // multiSelect
         >
           <SearchBox
+            position={{
+              position: 'absolute',
+              top: 12,
+              right: 16,
+            }}
             formContent={
               <SearchMeetingRecordForm
                 onSuccess={handleSuccess}

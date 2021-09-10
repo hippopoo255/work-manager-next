@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const SiteLogo = () => {
   const classes = useStyles()
   return (
-    <Typography variant="h1" className={classes.logo}>
+    <Typography variant="h2" component={'h1'} className={classes.logo}>
       <Link href="/" className={classes.link}>
         {SITE_TITLE}
       </Link>

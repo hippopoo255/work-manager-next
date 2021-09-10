@@ -2,6 +2,7 @@ import { ProcessFlag } from '@/interfaces/enums/ProcessFlag'
 import { SearchMeetingRecordInputs } from '@/interfaces/form/inputs'
 import { SortParam } from '@/interfaces/table'
 import { SearchInputs } from '@/interfaces/form/inputs'
+export const headerHeight: number = 65
 export const drawerWidth: number = 250
 export const drawerClosingWidth: number = 65
 export const chatRoomListWidth: number = 320

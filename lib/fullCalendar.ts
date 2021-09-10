@@ -2,14 +2,19 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import { DayCellContentArg } from '@fullcalendar/common'
+import { Info } from '@material-ui/icons'
+
 export const calendarConfig = {
   locale: 'ja',
+  plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
+  contentHeight: 'auto',
   headerToolbar: {
-    left: 'dayGridMonth,timeGridWeek,timeGridDay',
+    // left: 'dayGridMonth,timeGridWeek,timeGridDay',
+    left: '',
     center: 'title',
     right: 'prev,today,next',
   },
-  plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
+  // dayGridMonth or timeGridWeek or timeGridDay
   initialView: 'dayGridMonth',
   buttonText: {
     today: '今日',
@@ -18,18 +23,61 @@ export const calendarConfig = {
     day: '日',
     list: 'list',
   },
+  // イベント形式（ドット表示: 'list-item', ブロック表示: 'block', デフォルト: 'list-item'）
+  eventDisplay: 'block',
+  // 1日あたりのイベント行数
+  dayMaxEventRows: 3,
+  // イベントの時間表示: H:ii
+  // eventTimeFormat: {
+  //   hour: 'numeric',
+  //   minute: '2-digit',
+  //   omitZeroMinute: false,
+  //   meridiem: false,
+  // },
+
+  // 月表示の日付を'n日'→'n'に変更
   dayCellContent: function (e: DayCellContentArg) {
     e.dayNumberText = e.dayNumberText.replace('日', '')
   },
-  // themeSystem: 'bootstrap',
   selectable: true,
-  // editable: true,
   businessHours: {
     daysOfWeek: [1, 2, 3, 4, 5],
-    startTime: '0:00',
-    endTime: '24:00',
+    startTime: '10:00',
+    endTime: '19:00',
   },
-  // contentHeight: 'auto',
+  // views: {
+  //   timeGridWeek: {
+  //     allDaySlot: false,
+  //     slotDuration: '0:30',
+  //     weekends: true,
+  //     slotLabelFormat: {
+  //       hour: 'numeric',
+  //       minute: '2-digit',
+  //       omitZeroMinute: false,
+  //       meridiem: false,
+  //     },
+  //     // 週表示のタイトル
+  //     titleFormat: function (date: any) {
+  //       const year = date.start.year
+  //       const startMonth = date.start.month + 1
+  //       const endMonth = date.end.month + 1
+  //       if (startMonth === endMonth) {
+  //         return year + '年' + startMonth + '月'
+  //       } else {
+  //         return year + '年' + startMonth + '月～' + endMonth + '月'
+  //       }
+  //     },
+  //     // 週表示の日付
+  //     dayHeaderFormat: (date: any) => {
+  //       const day = date.date.day
+  //       const weekNum = date.date.marker.getDay()
+  //       const week = ['(日)', '(月)', '(火)', '(水)', '(木)', '(金)', '(土)'][
+  //         weekNum
+  //       ]
+  //       return day + ' ' + week
+  //     },
+  //   },
+  // },
 }
 
 export const defaultScheduleColor = '#3788d8'

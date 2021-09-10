@@ -14,6 +14,7 @@ import { Task, Priority, Progress } from '@/interfaces/models'
 import { TaskInputs, SearchTaskInputs } from '@/interfaces/form/inputs'
 import { handlePageUri } from '@/lib/util'
 import { createRows, headCells } from '@/lib/table/task'
+import { initialAlertStatus } from '@/lib/initialData'
 
 const Index = () => {
   const router = useRouter()
@@ -29,15 +30,13 @@ const Index = () => {
   const [latestUri, setLatestUri] = useState<string>(requestUri.task.myTask)
   const [priorityList, setPriorityList] = useState<Priority[]>([])
   const [progressList, setProgressList] = useState<Progress[]>([])
+  const [loading, setLoading] = useState<boolean>(false)
 
   const [open, setOpen] = useState<boolean>(false)
   const [updateFlag, setUpdateFlag] = useState<number | null>(null)
   // TODO: 状態管理すべき
   const [alertStatus, setAlertStatus] = useState<AlertStatus>({
-    severity: 'error',
-    variant: 'filled',
-    msg: '',
-    show: false,
+    ...initialAlertStatus,
   })
 
   const add = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -63,6 +62,13 @@ const Index = () => {
       })
       setOpen(true)
     }
+  }
+
+  const handleAlertClose = () => {
+    setAlertStatus((prev) => ({
+      ...prev,
+      show: false,
+    }))
   }
 
   const handleSuccess = (task: Task) => {
@@ -138,9 +144,12 @@ const Index = () => {
   }
 
   const handleSearch = async (data: SearchTaskInputs) => {
+    setLoading(true)
     let path = requestUri.task.myTask + getSortParams(data)
     setLatestUri(path)
-    return await getRequest<Pager<Task, SearchTaskInputs>>(path)
+    return await getRequest<Pager<Task, SearchTaskInputs>>(path).finally(() => {
+      setLoading(false)
+    })
   }
 
   const handleSearchSuccess = (res: Pager<Task, SearchTaskInputs>) => {
@@ -156,12 +165,17 @@ const Index = () => {
     args: SortParam<TaskTableRowData>
   ) => {
     if (args.hasOwnProperty('sort_key') && tasks !== null) {
+      setLoading(true)
       const uri = handlePageUri(latestUri, args)
-      await getRequest<Pager<Task, SearchTaskInputs>>(uri).then((res) => {
-        setTasks(res)
-        setLatestUri(uri)
-        setRows(createRows(res.data))
-      })
+      await getRequest<Pager<Task, SearchTaskInputs>>(uri)
+        .then((res) => {
+          setTasks(res)
+          setLatestUri(uri)
+          setRows(createRows(res.data))
+        })
+        .finally(() => {
+          setLoading(false)
+        })
     }
   }
 
@@ -184,6 +198,7 @@ const Index = () => {
 
   useEffect(() => {
     const init = async () => {
+      setLoading(true)
       let initialQuery = ''
       if (!!Object.keys(router.query).length) {
         initialQuery =
@@ -193,11 +208,15 @@ const Index = () => {
             .join('&')
       }
       const path = requestUri.task.myTask + initialQuery
-      await getRequest<Pager<Task, SearchTaskInputs>>(path).then((res) => {
-        setTasks(res)
-        setLatestUri(path)
-        setRows(createRows(res.data))
-      })
+      await getRequest<Pager<Task, SearchTaskInputs>>(path)
+        .then((res) => {
+          setTasks(res)
+          setLatestUri(path)
+          setRows(createRows(res.data))
+        })
+        .finally(() => {
+          setLoading(false)
+        })
     }
     init()
   }, [router])
@@ -229,50 +248,54 @@ const Index = () => {
     <MypageLayout title="タスク" supplyUserId={setUserId}>
       <div className="container">
         <MypageTitle>タスク</MypageTitle>
-        <section>
-          <TaskForm
-            defaultValues={defaultValues}
-            updateFlag={updateFlag}
-            onSaveSuccess={handleSuccess}
-            onSaveFail={handleFail}
-            ownerId={userId}
-            open={open}
-            setOpen={setOpen}
-            priorityList={priorityList}
-            progressList={progressList}
-          />
-          {tasks !== null && (
-            <CommonTable
-              headCells={headCells}
-              onDelete={handleDeleteClick}
-              onEdit={edit}
-              onPage={handlePage}
-              pagerData={tasks}
-              rows={rows}
-              title="タスク一覧"
-              multiSelect
-            >
-              <SearchBox
-                formContent={
-                  <SearchTaskForm
-                    onSearchSuccess={handleSearchSuccess}
-                    req={handleSearch}
-                    priorityList={priorityList}
-                    progressList={progressList}
-                    initialParams={
-                      tasks !== null && !!tasks.query_params
-                        ? tasks.query_params
-                        : {}
-                    }
-                  />
+      </div>
+      <section className="container">
+        <TaskForm
+          defaultValues={defaultValues}
+          updateFlag={updateFlag}
+          onSaveSuccess={handleSuccess}
+          onSaveFail={handleFail}
+          ownerId={userId}
+          open={open}
+          setOpen={setOpen}
+          priorityList={priorityList}
+          progressList={progressList}
+        />
+        <CommonTable
+          headCells={headCells}
+          onDelete={handleDeleteClick}
+          onEdit={edit}
+          onPage={handlePage}
+          pagerData={tasks}
+          rows={rows}
+          title="タスク一覧"
+          fetching={loading}
+          multiSelect
+        >
+          <SearchBox
+            position={{
+              position: 'absolute',
+              top: 12,
+              right: 16,
+            }}
+            formContent={
+              <SearchTaskForm
+                onSearchSuccess={handleSearchSuccess}
+                req={handleSearch}
+                priorityList={priorityList}
+                progressList={progressList}
+                initialParams={
+                  tasks !== null && !!tasks.query_params
+                    ? tasks.query_params
+                    : {}
                 }
               />
-            </CommonTable>
-          )}
-        </section>
-        <AddButton onClick={add} title="タスクを追加する" />
-        <CustomAlert {...alertStatus} />
-      </div>
+            }
+          />
+        </CommonTable>
+      </section>
+      <AddButton onClick={add} title="タスクを追加する" />
+      <CustomAlert alertStatus={alertStatus} onClose={handleAlertClose} />
     </MypageLayout>
   )
 }

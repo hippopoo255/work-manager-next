@@ -1,5 +1,5 @@
 import React from 'react'
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { makeStyles, Theme, lighten } from '@material-ui/core/styles'
 import FullCalendar, {
   EventChangeArg,
   EventClickArg,
@@ -21,25 +21,49 @@ export type Props = {
 
 const useStyles = makeStyles((theme: Theme) => ({
   customCalendar: {
+    color: theme.palette.text.secondary,
+    // タイトル
     '& .fc-toolbar-title': {
       fontSize: theme.typography.h6.fontSize,
       color: theme.palette.primary.main,
     },
-    [theme.breakpoints.between('xs', 'sm')]: {
-      '& .fc-header-toolbar': {
-        flexWrap: 'wrap',
-        '& .fc-toolbar-chunk:nth-of-type(1)': {
-          order: 2,
-        },
-        '& .fc-toolbar-chunk:nth-of-type(2)': {
-          width: '100%',
-          order: 1,
-          marginBottom: theme.spacing(1),
-        },
-        '& .fc-toolbar-chunk:nth-of-type(3)': {
-          order: 3,
-        },
+    // [theme.breakpoints.between('xs', 'sm')]: {
+    //   '& .fc-header-toolbar': {
+    //     flexWrap: 'wrap',
+    //     '& .fc-toolbar-chunk:nth-of-type(1)': {
+    //       order: 2,
+    //     },
+    //     '& .fc-toolbar-chunk:nth-of-type(2)': {
+    //       width: '100%',
+    //       order: 1,
+    //       marginBottom: theme.spacing(1),
+    //     },
+    //     '& .fc-toolbar-chunk:nth-of-type(3)': {
+    //       order: 3,
+    //     },
+    //   },
+    // },
+    // 先頭行の曜日ラベル
+    '& .fc .fc-col-header-cell-cushion': {
+      padding: '2px 8px',
+    },
+    // daygrid
+    '& .fc-daygrid-day': {
+      transition: theme.transitions.duration.standard,
+      '&:hover': {
+        background: theme.palette.action.hover,
+        cursor: 'pointer',
       },
+    },
+    // イベントのスタイル
+    '& .fc-event-main-frame': {
+      fontWeight: theme.typography.fontWeightBold,
+    },
+    '& .fc-event-time': {
+      flexShrink: 0,
+    },
+    '& .fc .fc-popover': {
+      zIndex: theme.zIndex.appBar + 1,
     },
   },
 }))

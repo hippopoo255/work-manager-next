@@ -15,6 +15,11 @@
   flex-direction: column;
 }
 
+.title {
+  text-align: center;
+  padding: 24px 0;
+}
+
 @include media() {
   .grid {
     display: flex;

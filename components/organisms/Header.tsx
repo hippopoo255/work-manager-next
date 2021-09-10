@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
 import clsx from 'clsx'
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
-import { darken } from '@material-ui/core'
+import { useRouter } from 'next/router'
 import AppBar from '@material-ui/core/AppBar'
 import Drawer from '@material-ui/core/Drawer'
 import Toolbar from '@material-ui/core/Toolbar'
-import Typography from '@material-ui/core/Typography'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
@@ -14,12 +13,9 @@ import IconButton from '@material-ui/core/IconButton'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import ExitToAppOutlinedIcon from '@material-ui/icons/ExitToAppOutlined'
 import MenuIcon from '@material-ui/icons/Menu'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
 import { postRequest, requestUri } from '@/api'
-import { AvatarMenu } from '../molecules'
+import { HeaderGrowContent, AvatarMenu } from '@/components/molecules'
 import { User } from '@/interfaces/models'
-import { SiteLogo } from '@/components/atoms'
 
 export type Menu = {
   text: string
@@ -31,6 +27,7 @@ export type Anchor = 'top' | 'left' | 'bottom' | 'right'
 
 export type Props = {
   user: User | ''
+  noShadow?: boolean
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -39,19 +36,19 @@ const useStyles = makeStyles((theme: Theme) =>
       // background: `linear-gradient(165deg, ${darken('#5dff26', 0.1)}, #5cb363)`,
       background: theme.palette.primary.main,
     },
+    noShadow: {
+      boxShadow: 'none',
+    },
     list: {
       width: 250,
     },
     fullList: {
       width: 'auto',
     },
-    title: {
-      flexGrow: 1,
-    },
   })
 )
 
-const Header = ({ user }: Props) => {
+const Header = ({ user, noShadow }: Props) => {
   const classes = useStyles()
   const router = useRouter()
   const isLogin: boolean = !!user
@@ -84,6 +81,9 @@ const Header = ({ user }: Props) => {
   ]
 
   const switchedMenus = () => (isLogin ? authMenus : menus)
+  const headerClass = clsx(classes.header, {
+    [classes.noShadow]: !!noShadow,
+  })
 
   const onItem = (to: string) => {
     if (to === '/logout') {
@@ -120,12 +120,11 @@ const Header = ({ user }: Props) => {
       </List>
     </div>
   )
+
   return (
-    <AppBar position="fixed" className={classes.header} color="inherit">
+    <AppBar position="fixed" className={headerClass} color="inherit">
       <Toolbar className="container">
-        <div className={classes.title}>
-          <SiteLogo />
-        </div>
+        <HeaderGrowContent />
         {!!user && <AvatarMenu user={user} />}
         <IconButton
           color="inherit"

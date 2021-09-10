@@ -29,7 +29,7 @@ const theme = createTheme({
       textTransform: 'none',
     },
     h1: {
-      fontSize: '1.5rem',
+      fontSize: '2.8rem',
       fontWeight: 'bold',
     },
     h2: {

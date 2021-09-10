@@ -26,6 +26,9 @@ import { NotifyStatus } from '@/interfaces/common'
 import { SettingSubmit } from '@/interfaces/form/submit'
 import { SettingInputs } from '@/interfaces/form/inputs'
 import { useAuth } from '@/hooks'
+import { AlertStatus } from '@/interfaces/common'
+import { initialAlertStatus } from '@/lib/initialData'
+import { CustomAlert } from '@/components/atoms'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -58,6 +61,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 const Index = () => {
   const classes = useStyles()
   const [loading, setLoading] = useState<boolean>(false)
+  const [alertStatus, setAlertStatus] = useState<AlertStatus>({
+    ...initialAlertStatus,
+  })
   const [notifyStatus, setNotifyStatus] = useState<NotifyStatus[]>([])
   const user = useAuth()
   const {
@@ -73,6 +79,13 @@ const Index = () => {
   } = useForm<SettingInputs>()
 
   const comparePassword = watch('password', '')
+
+  const handleAlertClose = () => {
+    setAlertStatus((prev) => ({
+      ...prev,
+      show: false,
+    }))
+  }
 
   const handleChangePassword = () => {
     setValue('change_password', !getValues('change_password'))
@@ -103,8 +116,21 @@ const Index = () => {
       }
 
       await putRequest<User, FormData>(`/user/${user.id}/setting`, submitData)
-        .then((updateUser: User) => {})
+        .then((updateUser: User) => {
+          setAlertStatus((prev) => ({
+            ...prev,
+            msg: '設定を更新しました',
+            severity: 'success',
+            show: true,
+          }))
+        })
         .catch((err) => {
+          setAlertStatus((prev) => ({
+            ...prev,
+            msg: '設定の更新に失敗しました',
+            severity: 'error',
+            show: true,
+          }))
           if (err.status === 422) {
             const errBody: { [k: string]: string[] } = err.data.errors
             Object.keys(errBody).forEach((key: string) => {
@@ -137,6 +163,7 @@ const Index = () => {
     }
     fetchNotifyStatus()
   }, [user])
+
   return (
     <MypageLayout title="設定">
       <MypageTitle>
@@ -343,6 +370,7 @@ const Index = () => {
           </div>
         </Card>
       </section>
+      <CustomAlert alertStatus={alertStatus} onClose={handleAlertClose} />
     </MypageLayout>
   )
 }

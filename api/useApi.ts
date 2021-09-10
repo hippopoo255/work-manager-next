@@ -11,13 +11,19 @@ const useApi = <T>(
   const [data, setData] = useState<T>(initialState)
 
   useEffect(() => {
+    let isMounted = true
     if (term) {
       const func = async () => {
         const res = await axiosFunc.then((res: T) => {
-          setData(res)
+          if (isMounted) {
+            setData(res)
+          }
         })
       }
       func()
+    }
+    return () => {
+      isMounted = false
     }
   }, dependencies)
   return data

@@ -44,8 +44,8 @@ const EnhancedTableHead = <T extends TableRowData>(
   return (
     <TableHead>
       <TableRow className={classes.head}>
-        <TableCell padding="checkbox">
-          {multiSelect && (
+        {multiSelect && (
+          <TableCell padding="checkbox">
             <Checkbox
               indeterminate={numSelected > 0 && numSelected < rowCount}
               checked={rowCount > 0 && numSelected === rowCount}
@@ -53,8 +53,8 @@ const EnhancedTableHead = <T extends TableRowData>(
               inputProps={{ 'aria-label': 'select all desserts' }}
               className={clsx([classes.checkBox, classes.headCheck])}
             />
-          )}
-        </TableCell>
+          </TableCell>
+        )}
         {headCells.map((headCell) => (
           <TableCell
             key={`col_${headCell.id}`}

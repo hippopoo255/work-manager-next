@@ -25,6 +25,9 @@ import { toStrData } from '@/lib/util'
 import { defaultScheduleColor } from '@/lib/fullCalendar'
 import { TextField, Grid } from '@material-ui/core'
 import Autocomplete from '@material-ui/lab/Autocomplete'
+import { CustomAlert } from '@/components/atoms'
+import { initialAlertStatus } from '@/lib/initialData'
+import { AlertStatus } from '@/interfaces/common'
 
 export type Props = {
   users: MemberInputs[]
@@ -90,6 +93,16 @@ const Index = () => {
   })
   const fixedMember: MemberExtInputs[] = []
   const mine = userId === ownerId
+  const [alertStatus, setAlertStatus] = useState<AlertStatus>({
+    ...initialAlertStatus,
+  })
+
+  const onAlertClose = () => {
+    setAlertStatus((prev) => ({
+      ...prev,
+      show: false,
+    }))
+  }
 
   const handleSupply = (id: number) => {
     setOwnerId(id)
@@ -189,6 +202,12 @@ const Index = () => {
   }
 
   const handleSuccess = (newSchedule: Schedule) => {
+    setAlertStatus((prev) => ({
+      ...prev,
+      msg: 'スケジュールを保存しました',
+      severity: 'success',
+      show: true,
+    }))
     setSchedules((prev: Schedule[]) => {
       const index = prev.findIndex((schedule) => schedule.id === newSchedule.id)
       if (index !== -1) {
@@ -357,6 +376,7 @@ const Index = () => {
           loading={deleteLoading}
         />
       </section>
+      <CustomAlert alertStatus={alertStatus} onClose={onAlertClose} />
     </MypageLayout>
   )
 }
