@@ -61,23 +61,27 @@ const NotificationIcon = React.memo(({ user }: Props) => {
   const [activities, setActivities] = useState<Activity[]>([])
   const anchorRef = useRef<HTMLButtonElement>(null)
   useEffect(() => {
+    let isMounted = true
     const init = async () => {
       await getRequest<Activity[]>(
         requestUri.activity.myRecently.replace(':id', String(user.id))
       ).then((res) => {
-        setActivities(res)
+        if (isMounted) {
+          setActivities(res)
+        }
       })
     }
     init()
+    return () => {
+      isMounted = false
+    }
   }, [])
 
   const read = async () => {
     await putRequest<any, {}>(
       requestUri.activity.read.replace(':id', String(user.id)),
       {}
-    ).then((res) => {
-      console.log(res)
-    })
+    ).then((res) => {})
   }
 
   const handleIcon = async () => {

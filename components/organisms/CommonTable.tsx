@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react'
+import React, { FC, useState } from 'react'
 import clsx from 'clsx'
 import {
   createStyles,
@@ -8,6 +8,7 @@ import {
 } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
 import { red } from '@material-ui/core/colors'
+import { CustomLoader } from '@/components/molecules'
 // テーブルトップツールバー、テーブルヘッド
 import { EnhancedTableToolbar, EnhancedTableHead } from '@/components/molecules'
 
@@ -45,6 +46,7 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       width: '100%',
       marginBottom: theme.spacing(2),
+      position: 'relative',
     },
     table: {
       minWidth: 750,
@@ -121,6 +123,12 @@ const useStyles = makeStyles((theme: Theme) =>
       overflow: 'hidden',
       width: '100%',
     },
+    loaderWrap: {
+      position: 'absolute',
+      top: 'calc(50% + 30px)',
+      left: '50%',
+      transform: 'translate3d(-50%, -50%, 0)',
+    },
   })
 )
 
@@ -144,6 +152,7 @@ export type Props<T, U extends TableRowData> = {
   title: string
   children: React.ReactNode
   multiSelect: boolean
+  fetching?: boolean
 }
 
 const CommonTable = <T, U extends TableRowData>({
@@ -156,6 +165,7 @@ const CommonTable = <T, U extends TableRowData>({
   title,
   children,
   multiSelect,
+  fetching,
 }: Props<T, U>) => {
   const classes = useStyles()
   const [order, setOrder] = useState<Order>('desc')
@@ -264,7 +274,7 @@ const CommonTable = <T, U extends TableRowData>({
         >
           {children}
         </EnhancedTableToolbar>
-        <TableContainer>
+        <TableContainer style={{ position: 'relative' }}>
           <Table
             className={classes.table}
             aria-labelledby="tableTitle"
@@ -283,7 +293,17 @@ const CommonTable = <T, U extends TableRowData>({
               multiSelect={multiSelect}
             />
             <TableBody>
-              {rows.length > 0 ? (
+              {fetching !== undefined && fetching ? (
+                <TableRow>
+                  <TableCell
+                    style={{ padding: 60 }}
+                    colSpan={headCells.length}
+                  ></TableCell>
+                  <div className={classes.loaderWrap}>
+                    <CustomLoader />
+                  </div>
+                </TableRow>
+              ) : rows.length > 0 ? (
                 rows.map((row, index) => {
                   const isItemSelected = isSelected(row.id)
                   const labelId = `enhanced-table-checkbox-${index}`
@@ -298,17 +318,18 @@ const CommonTable = <T, U extends TableRowData>({
                       selected={multiSelect && isItemSelected}
                       className={classes.row}
                     >
-                      <TableCell padding={multiSelect ? 'checkbox' : 'normal'}>
-                        {multiSelect && (
+                      {multiSelect && (
+                        <TableCell
+                          padding={multiSelect ? 'checkbox' : 'normal'}
+                        >
                           <Checkbox
                             onChange={(event) => handleRowClick(event, row.id)}
                             checked={isItemSelected}
                             inputProps={{ 'aria-labelledby': labelId }}
-                            // color="default"
                             className={classes.checkBox}
                           />
-                        )}
-                      </TableCell>
+                        </TableCell>
+                      )}
                       {headCells.length > 0 &&
                         headCells.map((headCell, nthOfCell) =>
                           headCell.id === 'id' ? (

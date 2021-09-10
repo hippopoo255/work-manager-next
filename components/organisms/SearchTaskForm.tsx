@@ -142,16 +142,20 @@ const SearchTaskForm = ({
     : classes.linkWarning
 
   useEffect(() => {
+    let isMounted = true
     ;(
       Object.keys(initialParams) as (
         | keyof SearchTaskInputs
         | keyof SortParam<TaskTableRowData>
       )[]
     ).forEach((k) => {
-      if (k in getValues()) {
+      if (k in getValues() && isMounted) {
         setValue(String(k), initialParams[k])
       }
     })
+    return () => {
+      isMounted = false
+    }
   }, [initialParams])
 
   return (

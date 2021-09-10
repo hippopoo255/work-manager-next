@@ -30,7 +30,7 @@ const BusyTaskCardList = React.memo(({ fixedHeightPaper }: Props) => {
 
   return (
     <Grid container spacing={3}>
-      {busyTasks !== null &&
+      {busyTasks !== null ? (
         (Object.keys(busyTasks) as (keyof BusyTaskList)[]).map((flag) => (
           <Grid item xs={12} md={6} key={`tasks_${flag}`}>
             <BusyTaskCard
@@ -40,7 +40,29 @@ const BusyTaskCardList = React.memo(({ fixedHeightPaper }: Props) => {
               collapse={busyTasks[flag].length > COLLAPSE_COUNT}
             />
           </Grid>
-        ))}
+        ))
+      ) : (
+        <>
+          <Grid item xs={12} md={6}>
+            <BusyTaskCard
+              wrapClasses={fixedHeightPaper}
+              tasks={[]}
+              flag={'over'}
+              collapse={false}
+              loading
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <BusyTaskCard
+              wrapClasses={fixedHeightPaper}
+              tasks={[]}
+              flag={'warning'}
+              collapse={false}
+              loading
+            />
+          </Grid>
+        </>
+      )}
     </Grid>
   )
 })

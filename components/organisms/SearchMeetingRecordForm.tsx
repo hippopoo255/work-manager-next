@@ -86,17 +86,20 @@ const SearchMeetingRecordForm = ({
   const isActive = () => getValues('only_me') === '1'
 
   useEffect(() => {
+    let isMounted = true
     ;(
       Object.keys(initialParams) as (
         | keyof SearchMeetingRecordInputs
         | keyof SortParam<MeetingTableRowData>
       )[]
     ).forEach((key) => {
-      if (key in getValues()) {
+      if (key in getValues() && isMounted) {
         setValue(String(key), initialParams[key])
       }
     })
-    setValue('only_me', initialParams.only_me)
+    return () => {
+      isMounted = false
+    }
   }, [initialParams])
 
   return (

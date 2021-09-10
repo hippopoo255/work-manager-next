@@ -18,6 +18,7 @@ import { strPatterns } from '@/lib/util'
 import { HelpBox } from '@/components/molecules'
 import { CustomAlert } from '@/components/atoms'
 import { AlertStatus } from '@/interfaces/common'
+import { initialAlertStatus } from '@/lib/initialData'
 
 type PasswordResetInputs = {
   token: string
@@ -49,10 +50,7 @@ const PasswordReset = () => {
   const router = useRouter()
   const [loading, setLoading] = useState<boolean>(false)
   const [alertStatus, setAlertStatus] = useState<AlertStatus>({
-    severity: 'error',
-    variant: 'filled',
-    msg: '',
-    show: false,
+    ...initialAlertStatus,
   })
 
   const {
@@ -119,7 +117,15 @@ const PasswordReset = () => {
         setLoading(false)
       })
   }
+
   const paramToken = router.query.token
+
+  const handleAlertClose = () => {
+    setAlertStatus((prev) => ({
+      ...prev,
+      show: false,
+    }))
+  }
 
   useEffect(() => {
     if (router.query !== undefined) {
@@ -148,8 +154,8 @@ const PasswordReset = () => {
         <CssBaseline />
         <div style={{ width: '100%' }}>
           <Typography
-            component={'h1'}
-            variant={'h1'}
+            component={'h2'}
+            variant={'h2'}
             align="center"
             gutterBottom
           >
@@ -258,7 +264,7 @@ const PasswordReset = () => {
           </form>
         </div>
       </Container>
-      <CustomAlert {...alertStatus} />
+      <CustomAlert alertStatus={alertStatus} onClose={handleAlertClose} />
     </Layout>
   )
 }

@@ -13,6 +13,7 @@ import {
 import { Header, FooterLink } from '@/interfaces/common/dashboard'
 import { ScheduleIcon } from '@/components/atoms/icons'
 import { linerGradient } from '@/assets/color/gradient'
+import { CustomLoader } from '@/components/molecules'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -40,6 +41,9 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: '8px 0',
     },
     linkColor: {},
+    loaderColor: {
+      color: theme.palette.primary.main,
+    },
   })
 )
 
@@ -50,6 +54,7 @@ type Props = {
   wrapClasses?: any
   classes?: any
   scroll?: boolean
+  loading?: boolean
 }
 
 const DashboardBaseCard = ({
@@ -59,6 +64,7 @@ const DashboardBaseCard = ({
   wrapClasses,
   classes,
   scroll,
+  loading,
 }: Props) => {
   const defaultClasses = { ...useStyles(), ...classes }
   return (
@@ -81,7 +87,11 @@ const DashboardBaseCard = ({
           [defaultClasses.scroll]: !!scroll,
         })}
       >
-        {children}
+        {loading !== undefined && !!loading ? (
+          <CustomLoader colorClasses={{ root: defaultClasses.loaderColor }} />
+        ) : (
+          children
+        )}
       </CardContent>
 
       <CardActions

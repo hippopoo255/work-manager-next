@@ -8,9 +8,10 @@ import { SITE_TITLE } from '@/lib/util'
 export type LayoutOrg = {
   children: React.ReactNode
   title?: string
+  noShadow?: boolean
 }
 
-const Layout = ({ children, title }: LayoutOrg) => {
+const Layout = ({ children, title, noShadow }: LayoutOrg) => {
   const user = useAuth(true)
 
   return (
@@ -20,7 +21,7 @@ const Layout = ({ children, title }: LayoutOrg) => {
       </Head>
       <div className={styles.container}>
         <div className={styles.head}>
-          <Header user={user} />
+          <Header user={user} noShadow={!!noShadow} />
         </div>
         <div className={styles.body}>
           <main className={styles.main}>{children}</main>

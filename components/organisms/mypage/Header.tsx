@@ -7,6 +7,7 @@ import { drawerWidth } from '@/lib/util'
 import { SiteLogo } from '@/components/atoms'
 import { AuthMenu } from '@/components/organisms'
 import { Hidden } from '@material-ui/core'
+import { HeaderGrowContent } from '@/components/molecules'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -32,9 +33,6 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingLeft: 0,
       paddingRight: 0,
     },
-    title: {
-      flexGrow: 1,
-    },
   })
 )
 
@@ -45,6 +43,7 @@ interface Props {
 
 const MypageHeader = ({ user, toggleMenu }: Props) => {
   const classes = useStyles()
+
   const handleDrawerToggle = () => {
     toggleMenu('mobile')
   }
@@ -78,9 +77,7 @@ const MypageHeader = ({ user, toggleMenu }: Props) => {
               <MenuIcon />
             </IconButton>
           </Hidden>
-          <div className={classes.title}>
-            <SiteLogo />
-          </div>
+          <HeaderGrowContent />
           {!!user && <AuthMenu user={user} />}
         </Toolbar>
       </div>

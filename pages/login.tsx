@@ -21,6 +21,7 @@ import { User } from '@/interfaces/models'
 import { CircularButton } from '@/components/molecules'
 import { AlertStatus } from '@/interfaces/common'
 import { LoginInputs } from '@/interfaces/form/inputs'
+import { initialAlertStatus } from '@/lib/initialData'
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -58,15 +59,17 @@ const useStyles = makeStyles((theme: Theme) => ({
 const Login = () => {
   const router = useRouter()
   const classes = useStyles()
-  // TODO: 状態管理すべき
   const [alertStatus, setAlertStatus] = useState<AlertStatus>({
-    severity: 'error',
-    variant: 'filled',
-    msg: '',
-    show: false,
+    ...initialAlertStatus,
   })
   const [loading, setLoading] = useState<boolean>(false)
   const [demoLoading, setDemoLoading] = useState<boolean>(false)
+  const onAlertClose = () => {
+    setAlertStatus((prev) => ({
+      ...prev,
+      show: false,
+    }))
+  }
 
   const calc = alertStatus.show
 
@@ -119,7 +122,6 @@ const Login = () => {
     setDemoLoading(true)
     await testLogin()
       .then((testUser) => {
-        console.log('testuser:', testUser)
         router.push('/mypage')
       })
       .catch(() => {
@@ -144,7 +146,7 @@ const Login = () => {
           <Avatar className={classes.avatar}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5">
+          <Typography component="h2" variant="h5">
             Log in
           </Typography>
           <form
@@ -225,7 +227,7 @@ const Login = () => {
                 options={{ fullWidth: true }}
               />
             </div>
-            <Grid container spacing={3}>
+            <Grid container spacing={3} style={{ margin: '16px 0' }}>
               <Grid item xs>
                 <Link
                   href="/password/forgot_password"
@@ -256,7 +258,7 @@ const Login = () => {
             </Grid>
           </form>
         </div>
-        <CustomAlert {...alertStatus} />
+        <CustomAlert alertStatus={alertStatus} onClose={onAlertClose} />
       </Container>
     </Layout>
   )

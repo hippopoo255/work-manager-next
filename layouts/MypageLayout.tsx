@@ -7,7 +7,6 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import { User } from '@/interfaces/models'
 import { SITE_TITLE } from '@/lib/util'
 import { useAuth } from '@/hooks'
-
 export type LayoutOrg = {
   children: React.ReactNode
   title?: string

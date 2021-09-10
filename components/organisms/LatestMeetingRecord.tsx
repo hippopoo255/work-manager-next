@@ -49,21 +49,25 @@ type Props = {
 const LatestMeetingRecord = React.memo(({ wrapClasses }: Props) => {
   const classes = useStyles()
   const [meetingRecords, setMeetingRecords] = useState<MeetingRecord[]>([])
+  const [loading, setLoading] = useState<boolean>(false)
 
   useEffect(() => {
-    let unmounted = false
+    let isMounted = true
     const init = async () => {
-      getRequest<MeetingRecord[]>(requestUri.meetingRecord.myRecently).then(
-        (data) => {
-          if (!unmounted) {
+      setLoading(true)
+      getRequest<MeetingRecord[]>(requestUri.meetingRecord.myRecently)
+        .then((data) => {
+          if (isMounted) {
             setMeetingRecords(data)
           }
-        }
-      )
+        })
+        .finally(() => {
+          setLoading(false)
+        })
     }
     init()
     return () => {
-      unmounted = true
+      isMounted = false
     }
   }, [])
 
@@ -73,6 +77,7 @@ const LatestMeetingRecord = React.memo(({ wrapClasses }: Props) => {
       footerLink={footerLink}
       wrapClasses={wrapClasses}
       scroll
+      loading={loading}
     >
       <Table size="small">
         <TableHead>

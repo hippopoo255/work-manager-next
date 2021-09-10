@@ -24,11 +24,6 @@ const useToolbarStyles = makeStyles((theme: Theme) =>
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(1),
     },
-    child: {
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2),
-      paddingBottom: theme.spacing(3),
-    },
     highlight:
       theme.palette.type === 'light'
         ? {
@@ -40,7 +35,7 @@ const useToolbarStyles = makeStyles((theme: Theme) =>
             backgroundColor: theme.palette.secondary.dark,
           },
     title: {
-      flex: '1 1 100%',
+      flexGrow: 0,
     },
     simpleColor: {
       background: '#404040',
@@ -85,7 +80,7 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
           </Tooltip>
         )}
       </Toolbar>
-      <div className={classes.child}>{children}</div>
+      <div>{children}</div>
     </>
   )
 }

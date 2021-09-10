@@ -11,7 +11,11 @@ import {
 } from '@/interfaces/common/definitionList'
 import { BreadcrumbItem } from '@/interfaces/common'
 import { MypageTitle } from '@/components/atoms'
-import { Breadcrumbs, CircularButton } from '@/components/molecules'
+import {
+  Breadcrumbs,
+  CircularButton,
+  CustomLoader,
+} from '@/components/molecules'
 import { DefinitionList } from '@/components/organisms'
 import { toStrFormalLabel } from '@/lib/util'
 import Link from 'next/link'
@@ -146,7 +150,11 @@ const MeetingRecordDetail = () => {
         <Paper className={classes.body}>
           <Grid container spacing={2} className={classes.minHeight}>
             <Grid item xs={12}>
-              <DefinitionList list={definitionList} />
+              {meetingRecord !== null ? (
+                <DefinitionList list={definitionList} />
+              ) : (
+                <CustomLoader />
+              )}
             </Grid>
             {meetingRecord !== null && (
               <Grid item xs={12}>

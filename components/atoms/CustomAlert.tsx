@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import { Box } from '@material-ui/core'
 import { AlertStatus } from '@/interfaces/common'
 import { linerGradient } from '@/assets/color/gradient'
+import CloseIcon from '@material-ui/icons/Close'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -32,30 +33,43 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     msg: {
       fontWeight: theme.typography.fontWeightBold,
+      display: 'flex',
+      alignItems: 'center',
     },
   })
 )
 
-const CustomAlert = ({ severity, variant, msg, show }: AlertStatus) => {
+type Props = {
+  alertStatus: AlertStatus
+  onClose: () => void
+}
+const CustomAlert = ({ alertStatus, onClose }: Props) => {
   const classes = useStyles()
 
+  const handleClose = () => {
+    onClose()
+  }
   return (
     <Box
       className={clsx(classes.top, {
-        [classes.hidden]: !show,
+        [classes.hidden]: !alertStatus.show,
       })}
       boxShadow={3}
     >
       <Alert
-        variant={variant}
-        severity={severity}
+        variant={alertStatus.variant}
+        severity={alertStatus.severity}
         classes={{
           filledSuccess: classes.success,
           filledError: classes.error,
           message: classes.msg,
         }}
       >
-        {msg}
+        {alertStatus.msg}
+        <CloseIcon
+          onClick={handleClose}
+          style={{ marginLeft: 8, cursor: 'pointer' }}
+        />
       </Alert>
     </Box>
   )

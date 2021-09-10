@@ -3,7 +3,7 @@ import clsx from 'clsx'
 import { useRouter } from 'next/router'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import { ProfileLayout } from '@/layouts'
-import { MypageTitle, FormErrorMessage } from '@/components/atoms'
+import { MypageTitle, FormErrorMessage, CustomAlert } from '@/components/atoms'
 import { CircularButton, FormTitle } from '@/components/molecules'
 import {
   Card,
@@ -25,6 +25,9 @@ import { useForm, Controller } from 'react-hook-form'
 import { ProfileInputs } from '@/interfaces/form/inputs'
 import { strPatterns, STORAGE_URL } from '@/lib/util'
 import { getRequest, putRequest, requestUri } from '@/api'
+import { defaultErrorHandler } from '@/lib/axios'
+import { AlertStatus } from '@/interfaces/common'
+import { initialAlertStatus } from '@/lib/initialData'
 
 const usePaperStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -145,6 +148,9 @@ const Profile = () => {
   const router = useRouter()
   const [user, setUser] = useState<User | ''>('')
   const [loading, setLoading] = useState<boolean>(false)
+  const [alertStatus, setAlertStatus] = useState<AlertStatus>({
+    ...initialAlertStatus,
+  })
   const [changePassword, setChangePassword] = useState<boolean>(false)
   const [preview, setPreview] = useState<any>(null)
   const [thumbnailData, setThumbnailData] = useState<any>(null)
@@ -189,7 +195,16 @@ const Profile = () => {
       await putRequest<User, FormData>(
         `/user/${user.id}/profile`,
         submitData,
-        null,
+        (err) => {
+          setAlertStatus((prev) => ({
+            ...prev,
+            msg: 'プロフィールの更新に失敗しました',
+            severity: 'error',
+            show: true,
+          }))
+
+          defaultErrorHandler(err)
+        },
         {
           headers: {
             'X-HTTP-Method-Override': 'PUT',
@@ -202,6 +217,12 @@ const Profile = () => {
             setPreview(null)
           }
           setThumbnailData(null)
+          setAlertStatus((prev) => ({
+            ...prev,
+            msg: 'プロフィールを更新しました',
+            severity: 'success',
+            show: true,
+          }))
           setUser(updateUser)
           setThumbnailData(null)
         })
@@ -209,6 +230,13 @@ const Profile = () => {
           setLoading(false)
         })
     }
+  }
+
+  const onAlertClose = () => {
+    setAlertStatus((prev) => ({
+      ...prev,
+      show: false,
+    }))
   }
 
   const handlePreview = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -476,6 +504,7 @@ const Profile = () => {
           </form>
         </Card>
       </section>
+      <CustomAlert alertStatus={alertStatus} onClose={onAlertClose} />
     </ProfileLayout>
   )
 }

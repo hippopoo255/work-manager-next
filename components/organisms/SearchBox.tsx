@@ -1,11 +1,30 @@
 import React, { useState } from 'react'
+import { Theme, createStyles, makeStyles } from '@material-ui/core/styles'
 import { Box, Hidden, Button, SwipeableDrawer } from '@material-ui/core'
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    top: {
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
+      paddingBottom: theme.spacing(3),
+    },
+  })
+)
 
 type Props = {
   formContent: React.ReactNode
+  position?: {
+    position: 'absolute'
+    top?: string | number
+    left?: string | number
+    right?: string | number
+    bottom?: string | number
+  }
 }
 
-const SearchBox = ({ formContent }: Props) => {
+const SearchBox = ({ formContent, position }: Props) => {
+  const classes = useStyles()
   const [open, setOpen] = useState<boolean>(false)
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -21,29 +40,31 @@ const SearchBox = ({ formContent }: Props) => {
     }
 
   return (
-    <>
+    <div>
       <Hidden xsDown implementation="css">
-        {formContent}
+        <div className={classes.top}>{formContent}</div>
       </Hidden>
       <Hidden smUp implementation="css">
-        <Button
-          onClick={toggleDrawer(true)}
-          color={'default'}
-          variant={'outlined'}
-          size={'small'}
-        >
-          {'絞り込み'}
-        </Button>
-        <SwipeableDrawer
-          anchor={'bottom'}
-          open={open}
-          onClose={toggleDrawer(false)}
-          onOpen={toggleDrawer(true)}
-        >
-          <Box style={{ padding: 24 }}>{formContent}</Box>
-        </SwipeableDrawer>
+        <div style={!!position ? { ...position } : {}}>
+          <Button
+            onClick={toggleDrawer(true)}
+            color={'default'}
+            variant={'outlined'}
+            size={'small'}
+          >
+            {'絞り込み'}
+          </Button>
+          <SwipeableDrawer
+            anchor={'bottom'}
+            open={open}
+            onClose={toggleDrawer(false)}
+            onOpen={toggleDrawer(true)}
+          >
+            <div style={{ padding: '16px 24px' }}>{formContent}</div>
+          </SwipeableDrawer>
+        </div>
       </Hidden>
-    </>
+    </div>
   )
 }
 

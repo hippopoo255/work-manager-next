@@ -16,6 +16,9 @@ const useStyles = makeStyles((theme: Theme) =>
       background: linerGradient.secondary,
       color: theme.palette.common.white,
     },
+    loaderColor: {
+      color: theme.palette.secondary.main,
+    },
   })
 )
 
@@ -39,19 +42,25 @@ type Props = {
 const DailyScheduleCard = React.memo(({ wrapClasses }: Props) => {
   const classes = useStyles()
   const [schedules, setSchedules] = useState<Schedule[]>([])
+  const [loading, setLoading] = useState<boolean>(false)
 
   useEffect(() => {
-    let unmounted = false
+    let isMounted = true
     const init = async () => {
-      getRequest<Schedule[]>(requestUri.schedule.myDaily).then((data) => {
-        if (!unmounted) {
-          setSchedules(data)
-        }
-      })
+      setLoading(true)
+      getRequest<Schedule[]>(requestUri.schedule.myDaily)
+        .then((data) => {
+          if (isMounted) {
+            setSchedules(data)
+          }
+        })
+        .finally(() => {
+          setLoading(false)
+        })
     }
     init()
     return () => {
-      unmounted = true
+      isMounted = false
     }
   }, [])
 
@@ -62,7 +71,9 @@ const DailyScheduleCard = React.memo(({ wrapClasses }: Props) => {
       wrapClasses={wrapClasses}
       classes={{
         headerColor: classes.headerColor,
+        loaderColor: classes.loaderColor,
       }}
+      loading={loading}
     >
       <List disablePadding>
         {!!schedules.length ? (

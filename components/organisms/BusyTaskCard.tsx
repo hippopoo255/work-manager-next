@@ -55,6 +55,9 @@ const useStyles = makeStyles((theme: Theme) =>
     linkDanger: {
       color: '#f50057',
     },
+    loaderDanger: {
+      color: '#f50057',
+    },
     headerWarning: {
       background: linerGradient.orange,
       // background: theme.palette.warning.main,
@@ -62,6 +65,12 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     linkWarning: {
       color: theme.palette.warning.main,
+    },
+    loaderWarning: {
+      color: theme.palette.warning.main,
+    },
+    loaderBasis: {
+      color: theme.palette.secondary.main,
     },
   })
 )
@@ -71,6 +80,7 @@ type Props = {
   tasks: Task[]
   flag: TaskStatusFlag
   collapse?: boolean
+  loading?: boolean
 }
 
 const BusyTaskCard = ({
@@ -78,6 +88,7 @@ const BusyTaskCard = ({
   tasks,
   collapse,
   flag = 'safe',
+  loading,
 }: Props) => {
   const classes = useStyles()
 
@@ -85,15 +96,18 @@ const BusyTaskCard = ({
     [k in TaskStatusFlag]: {
       linkColor: any
       headerColor: any
+      loaderColor?: any
       adjective: string
       helpText?: React.ReactNode
       tooltip?: string
+      footerLink?: string
     }
   } = useMemo(() => {
     return {
       over: {
         linkColor: classes.linkDanger,
         headerColor: classes.headerDanger,
+        loaderColor: classes.loaderDanger,
         adjective: '期限を過ぎた',
         helpText: (
           <Typography component={'div'} className={classes.description}>
@@ -105,10 +119,12 @@ const BusyTaskCard = ({
           </Typography>
         ),
         tooltip: '期限を過ぎたタスクとは？',
+        footerLink: '期限切れのタスクをすべて見る',
       },
       warning: {
         linkColor: classes.linkWarning,
         headerColor: classes.headerWarning,
+        loaderColor: classes.loaderWarning,
         adjective: '期限が近い',
         helpText: (
           <Typography className={classes.description}>
@@ -120,6 +136,7 @@ const BusyTaskCard = ({
           </Typography>
         ),
         tooltip: '期限が近いタスクとは？',
+        footerLink: '期限が近いタスクをすべて見る',
       },
       safe: {
         linkColor: classes.linkWarning,
@@ -143,9 +160,10 @@ const BusyTaskCard = ({
   const footerLink: FooterLink = {
     to: `/mypage/task?status=${flag}&sort_key=time_limit&order_by=asc`,
     color: 'inherit',
-    text: 'タスク一覧画面へ',
+    text: classOfStatus[flag].footerLink || 'タスク一覧を見る',
   }
   const headerColor = classOfStatus[flag].headerColor
+  const loaderColor = classOfStatus[flag].loaderColor || classes.loaderBasis
   const linkColor = classOfStatus[flag].linkColor
 
   return (
@@ -153,8 +171,10 @@ const BusyTaskCard = ({
       wrapClasses={wrapClasses}
       header={header}
       footerLink={footerLink}
+      loading={!!loading}
       classes={{
         headerColor: headerColor,
+        loaderColor: loaderColor,
         linkColor: linkColor,
       }}
     >
