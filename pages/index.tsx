@@ -1,11 +1,12 @@
 import Head from 'next/head'
 import styles from '@/assets/stylesheets/pages/Home.module.scss'
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
-import { Typography } from '@material-ui/core'
+import { Typography, Box } from '@material-ui/core'
 import { useRef, useEffect } from 'react'
 import { Layout } from '@/layouts'
 import { headerHeight, SITE_TITLE } from '@/lib/util'
 import { ProductIntroductionCardList } from '@/components/template'
+import Shakehand from '@/assets/images/shakehand.svg'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -18,6 +19,29 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     fill: {
       background: theme.palette.primary.main,
+    },
+    flex: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: theme.spacing(3),
+      flexWrap: 'wrap',
+    },
+    face: {
+      width: theme.spacing(25),
+      height: theme.spacing(25),
+      overflow: 'hidden',
+      borderRadius: 9999,
+      border: `5px solid ${theme.palette.common.white}`,
+      position: 'relative',
+      dlexShrink: 0,
+    },
+    src: {
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      width: '100%',
+      transform: 'translate3d(-50%, -50%, 0)',
     },
   })
 )
@@ -44,16 +68,20 @@ const Home = () => {
       <div>
         <section ref={fillRef} className={classes.fill}>
           <div className={classes.head}>
-            <div>
-              <Typography
-                className={styles.title}
-                variant={'h1'}
-                component={'h2'}
-              >
-                <a>{SITE_TITLE}とは？</a>
-              </Typography>
-            </div>
-            <div></div>
+            <Box className={classes.flex}>
+              <div className={classes.face}>
+                <Shakehand className={classes.src} />
+              </div>
+              <div>
+                <Typography
+                  className={styles.title}
+                  variant={'h1'}
+                  component={'h2'}
+                >
+                  <a>{SITE_TITLE}とは？</a>
+                </Typography>
+              </div>
+            </Box>
           </div>
           <div>
             <ProductIntroductionCardList />

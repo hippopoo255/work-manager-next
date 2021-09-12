@@ -173,6 +173,7 @@ const NotificationIcon = React.memo(({ user }: Props) => {
                   autoFocusItem={open}
                   id="menu-list-grow"
                   onKeyDown={handleListKeyDown}
+                  disablePadding
                 >
                   {activities.length > 0 ? (
                     activities.map((activity, index) => (

@@ -131,7 +131,7 @@ const Sidebar = (props: Props) => {
 
   const drawer = (
     <aside>
-      <List style={{ paddingBottom: 0 }}>
+      <List>
         <LinkBar item={menus.home[0]} onItem={handleClick} />
       </List>
       <Divider />

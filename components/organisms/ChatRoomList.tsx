@@ -17,6 +17,7 @@ import { ChatRoom } from '@/interfaces/models'
 import router, { useRouter } from 'next/router'
 import clsx from 'clsx'
 import { lighten } from '@material-ui/core'
+import { postTiming } from '@/lib/util'
 
 const useStyles = makeStyles((theme: Theme) => ({
   item: {
@@ -38,6 +39,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   badge: {
     backgroundColor: '#f50057',
     color: theme.palette.common.white,
+    fontWeight: theme.typography.fontWeightBold,
+  },
+  sub: {
+    fontSize: theme.typography.caption.fontSize,
     fontWeight: theme.typography.fontWeightBold,
   },
 }))
@@ -86,7 +91,12 @@ const ChatRoomList = ({ chatRooms }: Props) => {
                   </ListItemAvatar>
                   <ListItemText
                     primary={chatRoom.name + `(${chatRoom.members.length})`}
-                    secondary="Jan 9, 2014"
+                    secondary={`最終更新: ${postTiming(
+                      new Date(chatRoom.latest_message_date)
+                    )}`}
+                    classes={{
+                      secondary: classes.sub,
+                    }}
                   />
                   {chatRoom.unread_count > 0 && (
                     <strong className={classes.unread}>
