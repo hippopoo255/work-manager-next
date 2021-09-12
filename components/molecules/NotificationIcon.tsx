@@ -173,6 +173,7 @@ const NotificationIcon = React.memo(({ user }: Props) => {
                   autoFocusItem={open}
                   id="menu-list-grow"
                   onKeyDown={handleListKeyDown}
+                  disablePadding
                 >
                   {activities.length > 0 ? (
                     activities.map((activity, index) => (
@@ -189,13 +190,13 @@ const NotificationIcon = React.memo(({ user }: Props) => {
                           className={classes.row}
                         >
                           <MenuItem
+                            divider
                             className={clsx(classes.item, {
                               [classes.unread]: !activity.is_read,
                             })}
                           >
                             {activity.content}
                           </MenuItem>
-                          {index + 1 < activities.length && <Divider />}
                         </a>
                       </Link>
                     ))

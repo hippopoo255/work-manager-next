@@ -9,13 +9,6 @@ import { UserAvatar } from '@/components/atoms'
 import styles from '@/assets/stylesheets/pages/ChatDetail.module.scss'
 import { postTiming, STORAGE_URL } from '@/lib/util'
 
-export type Props = {
-  message: ChatMessage
-  mine: boolean
-  onEdit: (id: number) => void
-  onDelete: (id: number) => void
-}
-
 const useStyles = makeStyles((theme: Theme) => ({
   msgItem: {
     width: '100%',
@@ -135,7 +128,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-const ChatMessageRow = ({ message, mine, onEdit, onDelete }: Props) => {
+export type Props = {
+  message: ChatMessage
+  mine: boolean
+  onEdit: (id: number, index?: number) => void
+  onDelete: (id: number) => void
+  index: number
+}
+
+const ChatMessageRow = ({ message, mine, onEdit, onDelete, index }: Props) => {
   const classes = useStyles()
 
   const readText: string = !!message.chat_message_reads.length
@@ -145,7 +146,9 @@ const ChatMessageRow = ({ message, mine, onEdit, onDelete }: Props) => {
     () => [
       {
         text: '編集',
-        onClick: (id: number) => onEdit(id),
+        onClick: (id: number, index?: number) => {
+          onEdit(id, index)
+        },
       },
       {
         text: '削除',
@@ -227,7 +230,8 @@ const ChatMessageRow = ({ message, mine, onEdit, onDelete }: Props) => {
               options={msgMenuOptions}
               small
               horizon
-              id={message.id!}
+              id={message.id}
+              index={index}
             />
           </span>
           {/* 既読 */}

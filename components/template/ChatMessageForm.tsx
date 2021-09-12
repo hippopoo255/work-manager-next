@@ -251,7 +251,7 @@ const ChatRoomForm = ({
   ) => {
     clearErrors(`previews.${index}`)
     const imageIds = getValues('image_ids')
-    if (imageIds !== undefined) {
+    if (imageIds !== undefined && !!imageIds[index]) {
       setValue(
         'delete_flags',
         mergeWithoutDuplicate<number | null>(getValues('delete_flags'), [

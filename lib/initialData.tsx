@@ -7,7 +7,7 @@ import {
   TaskIcon,
   ScheduleIcon,
 } from '@/components/atoms/icons'
-import { AlertStatus } from '@/interfaces/common'
+import { AlertStatus, Product } from '@/interfaces/common'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -27,26 +27,20 @@ export const deletedMessage = (originalMessage: ChatMessage) => ({
   isDelete: true,
 })
 
-export type Product = {
-  id: string
-  title: string
-  description: string
-  icon: React.ReactNode
-}
-
 export const ProductList = (): Product[] => {
   const classes = useStyles()
   return [
     {
       id: 'meeting_record',
       title: '議事録作成機能',
-      description: '会議の概要や決議事項を記録して、あとから見返せます。',
+      description:
+        '会議ごとに「アジェンダ」「参加者」「決定事項」などを記録し、あとから検索して読み返すことができます。',
       icon: <MeetingRecordIcon className={classes.topIcon} />,
     },
     {
       id: 'schedule',
       title: 'スケジュール機能',
-      description: 'スケジュールの登録ほか、他のユーザとの共有も可能です。',
+      description: '登録した予定は、他のユーザとの共有も可能です。',
       icon: <ScheduleIcon className={classes.topIcon} />,
     },
     {
@@ -60,7 +54,7 @@ export const ProductList = (): Product[] => {
       id: 'chat',
       title: 'チャット機能',
       description:
-        'ブラウザがメッセージの投稿をリアルタイムに検知し、メッセージの新着をお知らせします。',
+        'ページの再読込をしなくても、新着メッセージや未読件数を最新の状態で表示します。',
       icon: <ChatIcon className={classes.topIcon} />,
     },
   ]

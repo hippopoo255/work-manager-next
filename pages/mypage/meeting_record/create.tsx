@@ -14,6 +14,8 @@ import { MeetingRecord, MeetingPlace } from '@/interfaces/models'
 import { MeetingRecordInputs, MemberInputs } from '@/interfaces/form/inputs'
 import { MeetingRecordSubmit } from '@/interfaces/form/submit'
 import { useRouter } from 'next/router'
+import { Breadcrumbs } from '@/components/molecules'
+import { BreadcrumbItem } from '@/interfaces/common'
 
 export type Props = {
   meetingPlaceList: MeetingPlace[]
@@ -149,22 +151,40 @@ const MeetingRecordCreate = ({ meetingPlaceList }: Props) => {
     console.log('')
   }
 
+  const breadcrumbs: BreadcrumbItem[] = [
+    {
+      to: '/mypage/meeting_record',
+      label: '議事録一覧',
+    },
+    {
+      label: '議事録追加',
+    },
+  ]
+
   return (
     <MypageLayout title="議事録追加" supplyUserId={setUserId}>
-      <MypageTitle>議事録</MypageTitle>
-      <Box className={classes.wrap}>
-        <FormTitle title={'新規追加フォーム'} icon={<MenuBookOutlinedIcon />} />
-      </Box>
-      <MeetingRecordForm
-        memberList={memberList}
-        fixedMember={fixedMember}
-        defaultValues={defaultValues}
-        req={req}
-        classes={classes}
-        meetingPlaceList={meetingPlaceList}
-        handleSuccess={handleStore}
-        saveAction="create"
-      />
+      <div className="container">
+        <Breadcrumbs links={breadcrumbs} />
+        <MypageTitle>議事録</MypageTitle>
+      </div>
+      <section className="container">
+        <Box className={classes.wrap}>
+          <FormTitle
+            title={'新規追加フォーム'}
+            icon={<MenuBookOutlinedIcon />}
+          />
+        </Box>
+        <MeetingRecordForm
+          memberList={memberList}
+          fixedMember={fixedMember}
+          defaultValues={defaultValues}
+          req={req}
+          classes={classes}
+          meetingPlaceList={meetingPlaceList}
+          handleSuccess={handleStore}
+          saveAction="create"
+        />
+      </section>
     </MypageLayout>
   )
 }

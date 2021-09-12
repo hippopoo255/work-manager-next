@@ -6,6 +6,7 @@ import { Layout } from '@/layouts'
 import { useRouter } from 'next/router'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import {
+  Box,
   darken,
   Avatar,
   Container,
@@ -18,7 +19,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import { useForm, Controller, SubmitHandler } from 'react-hook-form'
 import { CustomAlert, FormErrorMessage } from '@/components/atoms'
 import { User } from '@/interfaces/models'
-import { CircularButton } from '@/components/molecules'
+import { CircularButton, TestLoginButton } from '@/components/molecules'
 import { AlertStatus } from '@/interfaces/common'
 import { LoginInputs } from '@/interfaces/form/inputs'
 import { initialAlertStatus } from '@/lib/initialData'
@@ -53,6 +54,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
   },
 }))
 
@@ -63,7 +66,6 @@ const Login = () => {
     ...initialAlertStatus,
   })
   const [loading, setLoading] = useState<boolean>(false)
-  const [demoLoading, setDemoLoading] = useState<boolean>(false)
   const onAlertClose = () => {
     setAlertStatus((prev) => ({
       ...prev,
@@ -82,9 +84,7 @@ const Login = () => {
     }, 5000)
   }, [calc])
   const {
-    register,
     handleSubmit,
-    watch,
     control,
     setError,
     formState: { errors },
@@ -117,20 +117,6 @@ const Login = () => {
       })
       .finally(() => {})
   }
-
-  const handleDemoUser = async () => {
-    setDemoLoading(true)
-    await testLogin()
-      .then((testUser) => {
-        router.push('/mypage')
-      })
-      .catch(() => {
-        setDemoLoading(false)
-      })
-  }
-
-  const testLogin = async () =>
-    await postRequest<User, {}>(requestUri.testLogin, {})
 
   return (
     <Layout title="ログイン">
@@ -166,6 +152,7 @@ const Login = () => {
                   autoFocus
                   id="login_id"
                   error={!!errors.login_id}
+                  style={{ marginBottom: 0 }}
                 />
               )}
               name="login_id"
@@ -178,11 +165,11 @@ const Login = () => {
                 },
               }}
             />
-            <p style={{ minHeight: 20 }}>
+            <Box style={{ minHeight: 20 }}>
               {!!errors.login_id && (
                 <FormErrorMessage msg={errors.login_id.message} />
               )}
-            </p>
+            </Box>
 
             <Controller
               render={({ field }) => (
@@ -196,6 +183,7 @@ const Login = () => {
                   label="パスワード"
                   type="password"
                   id="password"
+                  style={{ marginBottom: 0 }}
                 />
               )}
               name="password"
@@ -207,11 +195,11 @@ const Login = () => {
                 },
               }}
             />
-            <p style={{ minHeight: 20 }}>
+            <Box style={{ minHeight: 20 }}>
               {!!errors.password && (
                 <FormErrorMessage msg={errors.password.message} />
               )}
-            </p>
+            </Box>
             {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="パスワードを記憶する"
@@ -219,15 +207,15 @@ const Login = () => {
                 label: classes.label, // class name, e.g. `classes-nesting-label-x`
               }}
             /> */}
-            <div style={{ margin: '16px 0' }}>
+            <Box my={2}>
               <CircularButton
                 loading={loading}
                 submitText="ログイン"
                 onClick={handleSubmit(onSubmit)}
                 options={{ fullWidth: true }}
               />
-            </div>
-            <Grid container spacing={3} style={{ margin: '16px 0' }}>
+            </Box>
+            <Grid container spacing={3}>
               <Grid item xs>
                 <Link
                   href="/password/forgot_password"
@@ -244,16 +232,7 @@ const Login = () => {
                 </Link>
               </Grid>
               <Grid item xs={12} sm={6}>
-                <CircularButton
-                  loading={demoLoading}
-                  submitText="デモユーザとして試す"
-                  onClick={handleDemoUser}
-                  options={{
-                    variant: 'outlined',
-                    color: 'secondary',
-                    fullWidth: true,
-                  }}
-                />
+                <TestLoginButton />
               </Grid>
             </Grid>
           </form>

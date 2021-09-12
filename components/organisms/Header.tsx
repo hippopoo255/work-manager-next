@@ -39,11 +39,15 @@ const useStyles = makeStyles((theme: Theme) =>
     noShadow: {
       boxShadow: 'none',
     },
-    list: {
+    nav: {
       width: 250,
     },
     fullList: {
       width: 'auto',
+    },
+    list: {
+      flexGrow: 1,
+      padding: `0 ${theme.spacing(1)}px`,
     },
   })
 )
@@ -101,7 +105,7 @@ const Header = ({ user, noShadow }: Props) => {
 
   const list = (menus: Menu[], anchor: Anchor) => (
     <div
-      className={clsx(classes.list, {
+      className={clsx(classes.nav, {
         [classes.fullList]: anchor === 'top' || anchor === 'bottom',
       })}
       role="presentation"
@@ -124,7 +128,9 @@ const Header = ({ user, noShadow }: Props) => {
   return (
     <AppBar position="fixed" className={headerClass} color="inherit">
       <Toolbar className="container">
-        <HeaderGrowContent />
+        <nav className={classes.list}>
+          <HeaderGrowContent />
+        </nav>
         {!!user && <AvatarMenu user={user} />}
         <IconButton
           color="inherit"

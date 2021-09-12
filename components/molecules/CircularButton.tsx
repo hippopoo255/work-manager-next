@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   danger: {
     backgroundColor: theme.palette.error.main,
+    color: theme.palette.common.white,
     '&:hover': {
       backgroundColor: theme.palette.error.light,
     },

@@ -3,7 +3,7 @@ import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Card, CardHeader } from '@material-ui/core'
 import CardContent from '@material-ui/core/CardContent'
 import Typography from '@material-ui/core/Typography'
-import { Product } from '@/lib/initialData'
+import { Product } from '@/interfaces/common'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -16,7 +16,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   headerRoot: {
-    padding: `${theme.spacing(4)}px ${theme.spacing(2)}px`,
+    padding: `${theme.spacing(3)}px ${theme.spacing(2)}px ${theme.spacing(
+      2
+    )}px`,
   },
   headerContent: {
     height: 40,

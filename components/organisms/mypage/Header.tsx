@@ -4,7 +4,6 @@ import clsx from 'clsx'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import { User } from '@/interfaces/models'
 import { drawerWidth } from '@/lib/util'
-import { SiteLogo } from '@/components/atoms'
 import { AuthMenu } from '@/components/organisms'
 import { Hidden } from '@material-ui/core'
 import { HeaderGrowContent } from '@/components/molecules'
@@ -32,6 +31,10 @@ const useStyles = makeStyles((theme: Theme) =>
     toolBar: {
       paddingLeft: 0,
       paddingRight: 0,
+    },
+    list: {
+      flexGrow: 1,
+      padding: `0 ${theme.spacing(1)}px`,
     },
   })
 )
@@ -77,7 +80,9 @@ const MypageHeader = ({ user, toggleMenu }: Props) => {
               <MenuIcon />
             </IconButton>
           </Hidden>
-          <HeaderGrowContent />
+          <nav className={classes.list}>
+            <HeaderGrowContent />
+          </nav>
           {!!user && <AuthMenu user={user} />}
         </Toolbar>
       </div>
