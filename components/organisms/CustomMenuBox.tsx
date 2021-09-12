@@ -29,16 +29,17 @@ const useStyles = makeStyles((theme: Theme) => ({
 type Props = {
   options: {
     text: string
-    onClick: (id: number) => void
+    onClick: (id: number, index?: number) => void
     disabled?: boolean
     danger?: boolean
   }[]
   id: number
   small: boolean
   horizon: boolean
+  index?: number
 }
 
-const CustomMenuBox = ({ options, small, horizon, id }: Props) => {
+const CustomMenuBox = ({ options, small, horizon, id, index }: Props) => {
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
@@ -51,9 +52,13 @@ const CustomMenuBox = ({ options, small, horizon, id }: Props) => {
     setAnchorEl(null)
   }
 
-  const handleMenuClick = (index: number) => {
+  const handleMenuClick = (idx: number) => {
     setAnchorEl(null)
-    options[index].onClick(id)
+    if (index !== undefined) {
+      options[idx].onClick(id, index)
+    } else {
+      options[idx].onClick(id)
+    }
   }
 
   return (
@@ -80,10 +85,10 @@ const CustomMenuBox = ({ options, small, horizon, id }: Props) => {
           },
         }}
       >
-        {options.map((option, index) => (
+        {options.map((option, idx) => (
           <MenuItem
-            key={`menu_${index}`}
-            onClick={() => handleMenuClick(index)}
+            key={`menu_${idx}`}
+            onClick={() => handleMenuClick(idx)}
             className={clsx({
               [classes.small]: small,
               [classes.danger]:

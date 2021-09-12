@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react'
+import clsx from 'clsx'
 import { useRouter } from 'next/router'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { getRequest, requestUri } from '@/api'
@@ -141,12 +142,14 @@ const MeetingRecordDetail = () => {
   ]
 
   return (
-    <MypageLayout>
-      <Breadcrumbs links={links} />
-      <MypageTitle>
-        {meetingRecord === null ? '' : meetingRecord.title}
-      </MypageTitle>
-      <section>
+    <MypageLayout title={!!meetingRecord ? meetingRecord.title : ''}>
+      <div className="container">
+        <Breadcrumbs links={links} />
+        <MypageTitle>
+          {meetingRecord === null ? '' : meetingRecord.title}
+        </MypageTitle>
+      </div>
+      <section className="container">
         <Paper className={classes.body}>
           <Grid container spacing={2} className={classes.minHeight}>
             <Grid item xs={12}>

@@ -5,7 +5,6 @@ import { MypageHeader as Header, Sidebar } from '@/components/organisms'
 import Head from 'next/head'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { User, ChatRoom, ChatMessage } from '@/interfaces/models'
 import { getRequest, postRequest, requestUri } from '@/api'
 import { ChatRoomList } from '@/components/organisms'
 import { Box, TextField, Tooltip, IconButton } from '@material-ui/core'
@@ -14,6 +13,7 @@ import { chatRoomListWidth } from '@/lib/util'
 // 検索バー
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { ChatRoomForm } from '@/components/template'
+import { User, ChatRoom, ChatMessage } from '@/interfaces/models'
 import { MemberExtInputs } from '@/interfaces/form/inputs'
 import { ChatRoomSubmit } from '@/interfaces/form/submit'
 import { SITE_TITLE, chatMainWidth } from '@/lib/util'
@@ -231,14 +231,26 @@ const ChatLayout = React.memo(
     useEffect(() => {
       let unmounted = false
       const fetchCurrentUser = async () => {
-        await getRequest<User>(requestUri.currentUserWithChat).then((data) => {
-          if (!unmounted) {
-            setUser(data)
+        await getRequest<User | ''>(requestUri.currentUserWithChat).then(
+          (newUser) => {
+            if (newUser === '') {
+              return false
+            }
+            if (!unmounted) {
+              setUser(() => {
+                newUser.chat_rooms.sort(
+                  (p: ChatRoom, n: ChatRoom) =>
+                    new Date(n.latest_message_date).getTime() -
+                    new Date(p.latest_message_date).getTime()
+                )
+                return newUser
+              })
+            }
+            if (!!supplyUserId) {
+              supplyUserId(newUser.id)
+            }
           }
-          if (!!supplyUserId) {
-            supplyUserId(data.id)
-          }
-        })
+        )
       }
       fetchCurrentUser()
       return () => {

@@ -39,6 +39,7 @@ export const listenMessageRead = (callback: Callback<ReadData>) => {
     cluster: process.env.NEXT_PUBLIC_MIX_PUSHER_APP_CLUSTER,
     forceTLS: true,
   })
+  window.Echo.leave('chat')
   window.Echo.channel('chat').listen('MessageRead', (data: ReadData) => {
     callback(data)
   })

@@ -1,3 +1,6 @@
+export { default as AboutFormat } from './AboutFormat'
+export { default as AboutNotification } from './AboutNotification'
+export { default as AboutRealTime } from './AboutRealTime'
 export { default as AuthMenu } from './AuthMenu'
 export { default as BusyTaskCard } from './BusyTaskCard'
 export { default as ChatRoomList } from './ChatRoomList'

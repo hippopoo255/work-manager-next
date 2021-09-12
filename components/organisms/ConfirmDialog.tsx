@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     exec: {
       color: theme.palette.error.main,
+      backgroundColor: theme.palette.common.white,
       fontWeight: 700,
     },
   })

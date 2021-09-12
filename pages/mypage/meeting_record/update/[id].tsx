@@ -196,20 +196,24 @@ const MeetingRecordUpdate = ({ meetingPlaceList }: Props) => {
 
   return (
     <MypageLayout title="議事録更新">
-      <Breadcrumbs links={breadcrumbs} />
-      <MypageTitle>{defaultValues.title}</MypageTitle>
-      <Box className={classes.wrap}>
-        <FormTitle title={'更新フォーム'} icon={<MenuBookOutlinedIcon />} />
-      </Box>
-      <MeetingRecordForm
-        memberList={memberList}
-        fixedMember={fixedMember}
-        defaultValues={defaultValues}
-        req={req}
-        classes={classes}
-        meetingPlaceList={meetingPlaceList}
-        handleSuccess={handleUpdate}
-      />
+      <div className="container">
+        <Breadcrumbs links={breadcrumbs} />
+        <MypageTitle>{defaultValues.title}</MypageTitle>
+      </div>
+      <section className="container">
+        <Box className={classes.wrap}>
+          <FormTitle title={'更新フォーム'} icon={<MenuBookOutlinedIcon />} />
+        </Box>
+        <MeetingRecordForm
+          memberList={memberList}
+          fixedMember={fixedMember}
+          defaultValues={defaultValues}
+          req={req}
+          classes={classes}
+          meetingPlaceList={meetingPlaceList}
+          handleSuccess={handleUpdate}
+        />
+      </section>
     </MypageLayout>
   )
 }

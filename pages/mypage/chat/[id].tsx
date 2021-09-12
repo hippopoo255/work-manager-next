@@ -291,7 +291,6 @@ const ChatDetail = () => {
           }
         }
       )
-
       listenMessageDelete((message: ChatMessage) => {
         if (
           message.chat_room_id === getChatRoomId() &&
@@ -301,7 +300,7 @@ const ChatDetail = () => {
         }
       })
     }
-  }, [userId, getChatRoomId])
+  }, [userId, router])
 
   useEffect(() => {
     listenMessageRead(({ readUser, chatRoomId }) => {
@@ -360,11 +359,6 @@ const ChatDetail = () => {
 
   const title = useMemo(
     () => (chatRoom !== null ? chatRoom.name : ''),
-    [chatRoom]
-  )
-
-  const chatMessages = useMemo(
-    () => (chatRoom === null ? [] : chatRoom.messages),
     [chatRoom]
   )
 
@@ -507,33 +501,35 @@ const ChatDetail = () => {
 
   const [msgFormOpen, setMsgFormOpen] = useState<boolean>(false)
 
-  const handleMsgUpdateForm = useCallback(
-    (id: number) => {
-      const updateMsg = chatMessages.find((m) => m!.id! === id)
-      if (updateMsg !== null) {
-        setUpdateMsgInput({
-          id: updateMsg!.id!,
-          body: updateMsg!.body!,
-          written_by: updateMsg!.written_by.id,
-          previews:
-            updateMsg !== undefined
-              ? updateMsg.images.map((image: ChatImage | null) =>
-                  image === null ? null : `${STORAGE_URL}/` + image.file_path
-                )
-              : [],
-          delete_flags: [],
-          image_ids:
-            updateMsg !== undefined
-              ? updateMsg.images.map((image: ChatImage | null) =>
-                  image === null ? null : image.id
-                )
-              : [],
-        })
-        setMsgFormOpen(true)
-      }
-    },
-    [userId, setUpdateMsgInput, setMsgFormOpen, chatMessages]
+  const chatMessages = useMemo(
+    () => (chatRoom === null ? [] : chatRoom.messages),
+    [chatRoom]
   )
+
+  const handleMsgUpdateForm = (id: number, index?: number) => {
+    const updateMsg = index !== undefined ? chatMessages[index] : null
+    if (updateMsg !== null) {
+      setUpdateMsgInput({
+        id: updateMsg!.id!,
+        body: updateMsg!.body!,
+        written_by: updateMsg!.written_by.id,
+        previews:
+          updateMsg !== undefined
+            ? updateMsg.images.map((image: ChatImage | null) =>
+                image === null ? null : `${STORAGE_URL}/` + image.file_path
+              )
+            : [],
+        delete_flags: [],
+        image_ids:
+          updateMsg !== undefined
+            ? updateMsg.images.map((image: ChatImage | null) =>
+                image === null ? null : image.id
+              )
+            : [],
+      })
+      setMsgFormOpen(true)
+    }
+  }
 
   const handleImageForm = () => {
     setUpdateMsgInput({
@@ -682,6 +678,7 @@ const ChatDetail = () => {
                         mine={mine(message!.written_by.id, userId)}
                         onEdit={handleMsgUpdateForm}
                         onDelete={deleteMessage}
+                        index={index}
                       />
                     )}
                   </ListItem>

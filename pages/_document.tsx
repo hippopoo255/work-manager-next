@@ -23,7 +23,19 @@ export default class MyDocument extends Document {
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
           />
-          <link rel="icon" href="/favicon.ico" />
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:site" content="@kaba_farm" />
+          <meta property="og:url" content="https://www.job-support.site" />
+          <meta property="og:title" content="ポートフォリオ『ジョブサポ』" />
+          <meta
+            property="og:description"
+            content="React+Next.js+typeScript+Material-UIの学習"
+          />
+          <meta
+            property="og:image"
+            content="https://asset.job-support.site/assets/main-visual04.jpg"
+          />
+          <link rel="icon" href="/favicon.png" type="image/svg+xml"></link>
         </Head>
         <body>
           <Main />

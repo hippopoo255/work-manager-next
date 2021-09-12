@@ -3,6 +3,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import { Grid } from '@material-ui/core'
 import { ProductIntroductionCard } from '@/components/organisms'
 import { ProductList } from '@/lib/initialData'
+import { Product } from '@/interfaces/common'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -20,9 +21,13 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
-const ProductIntroductionCardList = () => {
+type Props = {
+  productList?: Product[]
+}
+const ProductIntroductionCardList = ({
+  productList = ProductList(),
+}: Props) => {
   const classes = useStyles()
-  const productList = ProductList()
   return (
     <nav className={classes.list}>
       <Grid container spacing={3} justifyContent={'center'}>

@@ -1,7 +1,6 @@
 import React from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { grey } from '@material-ui/core/colors'
-import Link from 'next/link'
 import {
   Avatar,
   Box,
@@ -11,12 +10,14 @@ import {
   ListItemAvatar,
   ListItemText,
   Badge,
+  Link,
 } from '@material-ui/core'
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom'
 import { ChatRoom } from '@/interfaces/models'
 import router, { useRouter } from 'next/router'
 import clsx from 'clsx'
 import { lighten } from '@material-ui/core'
+import { postTiming } from '@/lib/util'
 
 const useStyles = makeStyles((theme: Theme) => ({
   item: {
@@ -40,6 +41,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.palette.common.white,
     fontWeight: theme.typography.fontWeightBold,
   },
+  sub: {
+    fontSize: theme.typography.caption.fontSize,
+    fontWeight: theme.typography.fontWeightBold,
+    color: theme.palette.text.hint,
+  },
 }))
 
 type Props = {
@@ -62,11 +68,9 @@ const ChatRoomList = ({ chatRooms }: Props) => {
           <li key={chatRoom.id}>
             <Box component={'h6'} className={classes.item}>
               <Link
-                as={`/mypage/chat/${chatRoom.id}`}
-                href={{
-                  pathname: `/mypage/chat/[id]`,
-                }}
-                passHref
+                href={`/mypage/chat/${chatRoom.id}`}
+                color={'inherit'}
+                underline={'none'}
               >
                 <ListItem
                   button
@@ -77,7 +81,6 @@ const ChatRoomList = ({ chatRooms }: Props) => {
                       `/mypage/chat/${chatRoom.id}`
                     ),
                   })}
-                  onClick={handleLink.bind(null, chatRoom.id)}
                 >
                   <ListItemAvatar>
                     <Avatar>
@@ -86,7 +89,12 @@ const ChatRoomList = ({ chatRooms }: Props) => {
                   </ListItemAvatar>
                   <ListItemText
                     primary={chatRoom.name + `(${chatRoom.members.length})`}
-                    secondary="Jan 9, 2014"
+                    secondary={`最終更新: ${postTiming(
+                      new Date(chatRoom.latest_message_date)
+                    )}`}
+                    classes={{
+                      secondary: classes.sub,
+                    }}
                   />
                   {chatRoom.unread_count > 0 && (
                     <strong className={classes.unread}>
