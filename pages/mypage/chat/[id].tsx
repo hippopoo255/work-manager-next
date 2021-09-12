@@ -231,6 +231,7 @@ const ChatDetail = () => {
       setSilentMessage(null)
     }
   }
+
   const cantScroll = useCallback(() => {
     if (scrollRef === null || scrollRef === undefined) {
       return false
@@ -244,10 +245,44 @@ const ChatDetail = () => {
     }
   }, [scrollRef])
 
-  const getChatRoomId = useCallback(
-    () => (router.query.id !== undefined ? Number(router.query.id) : undefined),
-    [router]
-  )
+  const getChatRoomId = useCallback(() => {
+    return router.query.id !== undefined ? Number(router.query.id) : undefined
+  }, [router])
+
+  const messageListen = () => {
+    listenMessageSent(
+      ({ message, flag }: { message: ChatMessage; flag: string }) => {
+        if (
+          message.chat_room_id === getChatRoomId() &&
+          !mine(message.written_by.id, userId)
+        ) {
+          if (flag === 'update') {
+            addUpdateMessage(message)
+          } else {
+            const isBottom = cantScroll()
+            addNewMessage(message)
+            isBottom ? handleSentMsg() : setSilentMessage(message)
+          }
+        }
+      }
+    )
+  }
+
+  useEffect(() => {
+    let isStart = true
+    if (userId > 0 && isStart) {
+      messageListen()
+      listenMessageDelete((message: ChatMessage) => {
+        if (
+          message.chat_room_id === getChatRoomId() &&
+          !mine(message.written_by.id, userId)
+        ) {
+          replaceDeleteMessage(message.id)
+        }
+      })
+    }
+    return () => (isStart = false)
+  }, [userId, router])
 
   useEffect(() => {
     const fetchChatRoom = async () => {
@@ -274,36 +309,6 @@ const ChatDetail = () => {
   }, [router])
 
   useEffect(() => {
-    if (userId > 0) {
-      listenMessageSent(
-        ({ message, flag }: { message: ChatMessage; flag: string }) => {
-          if (
-            message.chat_room_id === getChatRoomId() &&
-            !mine(message.written_by.id, userId)
-          ) {
-            if (flag === 'update') {
-              addUpdateMessage(message)
-            } else {
-              const isBottom = cantScroll()
-              addNewMessage(message)
-              isBottom ? handleSentMsg() : setSilentMessage(message)
-            }
-          }
-        }
-      )
-
-      listenMessageDelete((message: ChatMessage) => {
-        if (
-          message.chat_room_id === getChatRoomId() &&
-          !mine(message.written_by.id, userId)
-        ) {
-          replaceDeleteMessage(message.id)
-        }
-      })
-    }
-  }, [userId, getChatRoomId])
-
-  useEffect(() => {
     listenMessageRead(({ readUser, chatRoomId }) => {
       setChatRoom((prev: any) => {
         if (prev === null) {
@@ -315,6 +320,7 @@ const ChatDetail = () => {
         if (i !== -1) {
           // 既読したユーザが最後に読んだメッセージのメッセージID
           const lastMessageId = prev.last_reads[i].last_message_id
+          // lastMessageIdより新しく、既読ユーザ以外の投稿メッセージにreadUserをpushする
           const newMessages = prev.messages.map((message: ChatMessage) => {
             if (message.id <= lastMessageId) {
             } else if (!mine(readUser.id, message!.written_by.id)) {
@@ -611,6 +617,7 @@ const ChatDetail = () => {
       }
     )
   }
+
   return (
     <ChatLayout
       title={!!chatRoom ? chatRoom.name : ''}
