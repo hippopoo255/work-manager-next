@@ -232,7 +232,7 @@ const MeetingRecordForm = ({
     meeting_date: '開催日時',
     place_id: '開催場所',
     role_id: '権限設定',
-    summary: '概要',
+    summary: '議題',
     members: '参加者',
     meeting_decisions: '決定事項',
   }

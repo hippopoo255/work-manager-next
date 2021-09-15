@@ -34,7 +34,7 @@ export const ProductList = (): Product[] => {
       id: 'meeting_record',
       title: '議事録作成機能',
       description:
-        '会議ごとに「アジェンダ」「参加者」「決定事項」などを記録し、あとから検索して読み返すことができます。',
+        '会議ごとに「議題」「参加者」「決定事項」などを記録し、あとから検索して読み返すことができます。',
       icon: <MeetingRecordIcon className={classes.topIcon} />,
     },
     {
