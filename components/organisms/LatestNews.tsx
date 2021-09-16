@@ -6,7 +6,7 @@ import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
-import { Title } from '@/components/atoms'
+import { PaperTitle } from '@/components/atoms'
 
 // Generate Order Data
 const createData = (
@@ -75,7 +75,7 @@ const LatestNews = () => {
   const classes = useStyles()
   return (
     <React.Fragment>
-      <Title>Recent Orders</Title>
+      <PaperTitle>Recent Orders</PaperTitle>
       <Table size="small">
         <TableHead>
           <TableRow>

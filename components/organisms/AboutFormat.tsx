@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme: Theme) =>
     top: {
       padding: '64px 32px',
       [theme.breakpoints.down('sm')]: {
-        padding: '64px 16px',
+        padding: '64px 0',
       },
     },
   })
@@ -27,7 +27,6 @@ const AboutFormat = ({
   title = { main: 'メール通知機能', sub: '', icon: undefined },
 }: Props) => {
   const classes = useStyles()
-  console.log(title)
   return (
     <div className={classes.top}>
       <AboutTitle main={title.main} sub={title.sub} Icon={title.icon} />

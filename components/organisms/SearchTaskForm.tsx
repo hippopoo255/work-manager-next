@@ -14,17 +14,18 @@ import { Task, Priority, Progress } from '@/interfaces/models'
 import { Pager } from '@/interfaces/common'
 import { TaskTableRowData } from '@/interfaces/table/rowData'
 import { SortParam } from '@/interfaces/table'
+import { customColor } from '@/assets/color/basic'
 
 const useStyles = makeStyles((theme: Theme) => ({
   linkDanger: {
-    color: '#f50057',
+    color: customColor.red,
   },
   linkDangerActive: {
-    backgroundColor: '#f50057',
+    backgroundColor: customColor.red,
     color: theme.palette.common.white,
-    borderColor: '#f50057',
+    borderColor: customColor.red,
     '&:hover': {
-      color: '#f50057',
+      color: customColor.red,
     },
   },
   linkWarning: {
@@ -175,7 +176,7 @@ const SearchTaskForm = ({
                     color={'inherit'}
                     size={'small'}
                   >
-                    期限切れ
+                    期限経過
                   </Button>
                 </Tooltip>
               </Grid>

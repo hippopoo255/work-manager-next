@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import clsx from 'clsx'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import { Box, Container, Grid } from '@material-ui/core'
 import { AboutFormat } from '@/components/organisms'
 import { PaperLabel } from '@/components/molecules'
-import { FullPhotoPaper } from '@/components/atoms'
+import { FullPhotoPaper, AnimationBoxByScroll } from '@/components/atoms'
 import {
   MeetingRecordIcon,
   ScheduleIcon,
@@ -15,42 +15,62 @@ import EmailOutlinedIcon from '@material-ui/icons/EmailOutlined'
 import { TestLoginButton } from '@/components/molecules'
 
 const useStyles = makeStyles((theme: Theme) => ({
-  lg: {
+  list: {
+    width: '100%',
     maxWidth: 1024,
+    margin: '0 auto',
+    padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
   },
   item: {
-    width: 320,
+    marginTop: '16px',
+    width: '100%',
+    maxWidth: 320,
     [theme.breakpoints.down('xs')]: {
-      width: 480,
       maxWidth: '100%',
     },
   },
   inner: {
-    width: 300,
-    height: 280,
-    padding: theme.spacing(3),
-    maxWidth: '100%',
-    margin: '0 auto',
     position: 'relative',
-
+    paddingBottom: '90%',
+    width: '100%',
+    maxWidth: 450,
+    height: 0,
+    margin: '0 auto',
     [theme.breakpoints.down('xs')]: {
-      width: '100%',
-      padding: `${theme.spacing(3)}px 0`,
+      paddingBottom: '56.75%',
     },
+  },
+  bgImage: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
   },
   paperLabel: {
     position: 'absolute',
-    bottom: '-24px',
-    right: '-24px',
+    bottom: '-16px',
+    right: '-16px',
     width: 240,
     [theme.breakpoints.down('xs')]: {
       right: '-16px',
     },
   },
+  operator: {
+    margin: `${theme.spacing(8)}px auto auto`,
+    maxWidth: 320,
+    [theme.breakpoints.down('xs')]: {
+      maxWidth: 480,
+    },
+  },
+  card: {
+    opacity: 0,
+  },
 }))
 
 const AboutNotification = () => {
   const classes = useStyles()
+
   const notificationList: Product[] = [
     {
       id: 'meeting_record',
@@ -83,24 +103,34 @@ const AboutNotification = () => {
         icon: EmailOutlinedIcon,
       }}
     >
-      <Container component={'div'} className={classes.lg}>
+      <div className={classes.list}>
         <Grid container spacing={3} justifyContent={'center'}>
           {notificationList.length > 0 &&
             notificationList.map((itm: Product) => (
               <Grid item key={itm.id} className={classes.item} md={4}>
-                <Box className={classes.inner}>
-                  <FullPhotoPaper src={itm.bgImage} />
-                  <Box className={classes.paperLabel}>
-                    <PaperLabel item={itm} />
+                <AnimationBoxByScroll
+                  classes={{
+                    root: classes.card,
+                  }}
+                >
+                  <Box className={classes.inner}>
+                    <Box className={classes.bgImage}>
+                      <FullPhotoPaper src={itm.bgImage} />
+                    </Box>
+                    <Box className={classes.paperLabel}>
+                      <PaperLabel item={itm} />
+                    </Box>
                   </Box>
-                </Box>
+                </AnimationBoxByScroll>
               </Grid>
             ))}
         </Grid>
-        <Box mt={10} px={3}>
-          <TestLoginButton />
-        </Box>
-      </Container>
+        <Grid container spacing={3}>
+          <Grid item xs={12} className={classes.operator}>
+            <TestLoginButton />
+          </Grid>
+        </Grid>
+      </div>
     </AboutFormat>
   )
 }

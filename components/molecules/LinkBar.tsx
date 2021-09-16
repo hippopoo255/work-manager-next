@@ -17,6 +17,8 @@ import { Menu } from '@/lib/sidebar'
 import Badge from '@material-ui/core/Badge'
 import { ChildLinkBar } from '@/components/molecules'
 import { useRouter } from 'next/router'
+import { customColor } from '@/assets/color/basic'
+
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     position: 'relative',
@@ -32,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   badge: {
     '& .MuiBadge-badge': {
-      backgroundColor: '#f50057',
+      backgroundColor: customColor.red,
     },
   },
   iconRoot: {
