@@ -16,7 +16,7 @@ import TablePagination from '@material-ui/core/TablePagination'
 import TableRow from '@material-ui/core/TableRow'
 import TableSortLabel from '@material-ui/core/TableSortLabel'
 import Toolbar from '@material-ui/core/Toolbar'
-import { Title } from '@/components/atoms'
+import { PaperTitle } from '@/components/atoms'
 import Avatar from '@material-ui/core/Avatar'
 import Typography from '@material-ui/core/Typography'
 import Paper from '@material-ui/core/Paper'
@@ -262,7 +262,7 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
         </Typography>
       ) : (
         <div className={classes.title}>
-          <Title>タスク一覧</Title>
+          <PaperTitle>タスク一覧</PaperTitle>
         </div>
       )}
       {numSelected > 0 ? (

@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: '0 auto',
     boxShadow: theme.shadows[10],
     [theme.breakpoints.down('xs')]: {
-      maxWidth: 480,
+      maxWidth: 450,
     },
   },
   headerRoot: {

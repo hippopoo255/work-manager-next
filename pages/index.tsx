@@ -34,6 +34,9 @@ const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.down('sm')]: {
         flexWrap: 'wrap',
       },
+      [theme.breakpoints.down('xs')]: {
+        gap: theme.spacing(2),
+      },
     },
     introduction: {
       maxWidth: 400,
@@ -41,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) =>
     title: {
       padding: `${theme.spacing(3)}px 0`,
       [theme.breakpoints.down('xs')]: {
-        fontSize: '90%',
+        fontSize: '2rem',
       },
     },
     description: {
@@ -52,14 +55,6 @@ const useStyles = makeStyles((theme: Theme) =>
       '&:nth-of-type(odd)': {
         background: theme.palette.grey[100],
       },
-    },
-    make: {
-      display: 'inline-block',
-      padding: 16,
-      // borderRadius: 9999,
-      textAlign: 'center',
-      backgroundColor: theme.palette.primary.main,
-      color: theme.palette.common.white,
     },
   })
 )

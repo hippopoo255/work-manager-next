@@ -153,7 +153,6 @@ const TaskForm = React.memo(
                 <DateTimeInput
                   {...field}
                   required
-                  disablePast
                   label="期限日時"
                   error={!!errors.time_limit}
                 />
