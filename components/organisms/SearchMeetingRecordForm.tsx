@@ -10,6 +10,7 @@ import {
   Tooltip,
   FormControlLabel,
   Checkbox,
+  Button,
 } from '@material-ui/core'
 import { useForm, Controller } from 'react-hook-form'
 import { SearchMeetingRecordInputs, SelectBox } from '@/interfaces/form/inputs'
@@ -54,9 +55,12 @@ const SearchMeetingRecordForm = ({
       count: 'null',
       meeting_date: 'null',
       keyword: '',
+      only_bookmark: false,
       only_me: false,
     },
   })
+
+  const checkboxFields = ['only_me', 'only_bookmark']
 
   const handleSearch = async (data: SearchMeetingRecordInputs) => {
     await req(data)
@@ -75,15 +79,21 @@ const SearchMeetingRecordForm = ({
       value: string | boolean | unknown
     }>
   ) => {
-    if (key === 'only_me') {
-      setValue(key, getValues('only_me') === '1' ? '0' : '1')
+    if (checkboxFields.includes(key)) {
+      setValue(key, getValues(key) === '1' ? '0' : '1')
     } else {
       setValue(key, String(e.target.value))
     }
     await handleSearch(getValues())
   }
 
-  const isActive = () => getValues('only_me') === '1'
+  const handleClear = async () => {
+    reset()
+    await handleSearch(getValues())
+  }
+
+  const isActive = (key: string) =>
+    checkboxFields.includes(key) && getValues(key) === '1'
 
   useEffect(() => {
     let isMounted = true
@@ -107,28 +117,54 @@ const SearchMeetingRecordForm = ({
       <form noValidate onSubmit={handleSubmit(handleSearch)}>
         <Grid container alignItems="center" spacing={3}>
           <Grid item xs={12}>
-            <Controller
-              control={control}
-              name="only_me"
-              render={({ field }) => (
-                <FormControlLabel
-                  {...field}
-                  control={
-                    <Checkbox
-                      checked={isActive()}
-                      name="only_me"
-                      color="primary"
-                      size={'small'}
-                      onChange={handleChange.bind(null, 'only_me')}
+            <Grid container spacing={1} alignItems={'center'}>
+              <Grid item>
+                <Controller
+                  control={control}
+                  name="only_me"
+                  render={({ field }) => (
+                    <FormControlLabel
+                      {...field}
+                      control={
+                        <Checkbox
+                          checked={isActive('only_me')}
+                          name="only_me"
+                          color="primary"
+                          size={'small'}
+                          onChange={handleChange.bind(null, 'only_me')}
+                        />
+                      }
+                      label="自分が参加した会議のみ表示"
+                      className={classes.subFlag}
                     />
-                  }
-                  label="自分の参加した会議に限定"
-                  className={classes.subFlag}
+                  )}
                 />
-              )}
-            />
+              </Grid>
+              <Grid item>
+                <Controller
+                  control={control}
+                  name="only_bookmark"
+                  render={({ field }) => (
+                    <FormControlLabel
+                      {...field}
+                      control={
+                        <Checkbox
+                          checked={isActive('only_bookmark')}
+                          name="only_bookmark"
+                          color="primary"
+                          size={'small'}
+                          onChange={handleChange.bind(null, 'only_bookmark')}
+                        />
+                      }
+                      label="ブックマークのみ表示"
+                      className={classes.subFlag}
+                    />
+                  )}
+                />
+              </Grid>
+            </Grid>
           </Grid>
-          <Grid item xs={6} md={4} lg={2}>
+          <Grid item xs={6} md={3} lg={2}>
             <InputLabel shrink id="meeting-date-select-label">
               年月選択
             </InputLabel>
@@ -155,7 +191,7 @@ const SearchMeetingRecordForm = ({
               )}
             />
           </Grid>
-          <Grid item xs={6} md={4} lg={2}>
+          <Grid item xs={6} md={3} lg={2}>
             <FormControl className={classes.formControl} fullWidth>
               <InputLabel shrink id="count-select-label">
                 人数選択
@@ -183,7 +219,7 @@ const SearchMeetingRecordForm = ({
               />
             </FormControl>{' '}
           </Grid>
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={6}>
             <Grid container spacing={2} className={classes.keywordBar}>
               <Grid item sm={10}>
                 <Controller
@@ -194,7 +230,7 @@ const SearchMeetingRecordForm = ({
                       variant="outlined"
                       margin="dense"
                       required
-                      placeholder="キーワード"
+                      placeholder="会議名、会議室名etc"
                       id="keyword"
                     />
                   )}
@@ -213,6 +249,16 @@ const SearchMeetingRecordForm = ({
                     <SearchIcon />
                   </IconButton>
                 </Tooltip>
+              </Grid>
+              <Grid item classes={{ item: classes.fieldGridItem }}>
+                <Button
+                  variant={'outlined'}
+                  color={'primary'}
+                  size={'small'}
+                  onClick={handleClear}
+                >
+                  検索クリア
+                </Button>
               </Grid>
             </Grid>
           </Grid>

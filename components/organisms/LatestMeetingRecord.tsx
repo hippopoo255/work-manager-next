@@ -71,6 +71,18 @@ const LatestMeetingRecord = React.memo(({ wrapClasses }: Props) => {
     }
   }, [])
 
+  const afterBookmark = (bookmarkedRecord: MeetingRecord) => {
+    setMeetingRecords((prev: MeetingRecord[]) => {
+      const index = prev.findIndex(
+        (meetingRecord) => meetingRecord.id === bookmarkedRecord.id
+      )
+      if (index !== -1) {
+        prev[index].is_pin = bookmarkedRecord.is_pin
+      }
+      return [...prev]
+    })
+  }
+
   return (
     <DashboardBaseCard
       header={header}
@@ -99,7 +111,7 @@ const LatestMeetingRecord = React.memo(({ wrapClasses }: Props) => {
         </TableHead>
         <TableBody>
           {!!meetingRecords.length &&
-            createRows(meetingRecords).map((row) => (
+            createRows(meetingRecords, afterBookmark).map((row) => (
               <TableRow key={row.id}>
                 {!!headCells.length &&
                   headCells.map(

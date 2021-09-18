@@ -17,6 +17,7 @@ import { SearchMeetingRecordInputs } from '@/interfaces/form/inputs'
 import { getRequest, deleteRequest, requestUri } from '@/api'
 import { getSortParams, handlePageUri } from '@/lib/util'
 import { headCells, createRows } from '@/lib/table/meetingRecord'
+import { BookmarkButton } from '@/components/atoms'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -41,6 +42,15 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
       flexWrap: 'nowrap',
+    },
+    subFlag: {
+      color: theme.palette.text.secondary,
+      '& .MuiTypography-body1': {
+        fontSize: theme.typography.body2.fontSize,
+      },
+    },
+    fieldGridItem: {
+      flexShrink: 0,
     },
   })
 )
@@ -75,7 +85,7 @@ const Index = () => {
     res: Pager<MeetingRecord, SearchMeetingRecordInputs>
   ) => {
     setMeetingRecords(res)
-    setRows(createRows(res.data))
+    setRows(createRows(res.data, afterBookmark))
   }
 
   const handleAdd = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -96,12 +106,48 @@ const Index = () => {
         .then((res) => {
           setMeetingRecords(res)
           setLatestUri(uri)
-          setRows(createRows(res.data))
+          setRows(createRows(res.data, afterBookmark))
         })
         .finally(() => {
           setLoading(false)
         })
     }
+  }
+
+  const afterBookmark = (bookmarkedRecord: MeetingRecord) => {
+    setMeetingRecords((prev) => {
+      if (prev !== null) {
+        const newData = [...prev.data]
+        const index = prev.data.findIndex(
+          (meetingRecord) => meetingRecord.id === bookmarkedRecord.id
+        )
+        if (index !== -1) {
+          newData[index].is_pin = bookmarkedRecord.is_pin
+        }
+        return {
+          ...prev,
+          data: [...newData],
+        }
+      }
+      return prev
+    })
+    setRows((prev) => {
+      if (prev !== null) {
+        const newRows = [...prev]
+        const index = newRows.findIndex((row) => row.id === bookmarkedRecord.id)
+        if (index !== -1) {
+          newRows[index].is_pin = (
+            <BookmarkButton
+              is_pin={!!bookmarkedRecord.is_pin}
+              id={bookmarkedRecord.id}
+              onSuccess={afterBookmark}
+            />
+          )
+        }
+        return [...newRows]
+      }
+      return prev
+    })
   }
 
   const handleDeleteClick = async (ids: number[]) => {
@@ -110,7 +156,7 @@ const Index = () => {
       `${requestUri.meetingRecord.delete}/${ids[0]}${queryParams || ''}`
     ).then((res) => {
       setMeetingRecords(res)
-      setRows(createRows(res.data))
+      setRows(createRows(res.data, afterBookmark))
     })
   }
 
@@ -134,7 +180,7 @@ const Index = () => {
       )
         .then((res) => {
           setMeetingRecords(res)
-          setRows(createRows(res.data))
+          setRows(createRows(res.data, afterBookmark))
         })
         .finally(() => {
           setLoading(false)
