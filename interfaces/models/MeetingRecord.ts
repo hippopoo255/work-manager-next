@@ -10,5 +10,7 @@ export interface MeetingRecord {
   decisions: MeetingDecision[]
   members: User[]
   created_at: string
+  is_editable: boolean
+  is_pin: boolean
   [k: string]: any
 }

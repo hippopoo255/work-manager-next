@@ -36,7 +36,6 @@ const AnimationBoxByScroll = ({ children, classes }: Props) => {
   useEffect(() => {
     let isMounted = true
     if (isMounted) {
-      console.log(ref.current)
       window.addEventListener('scroll', handleShow)
     }
     return () => {
