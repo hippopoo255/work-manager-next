@@ -280,6 +280,7 @@ const Index = () => {
             }}
             formContent={
               <SearchTaskForm
+                currentTotalCount={tasks !== null ? tasks.total : 0}
                 onSearchSuccess={handleSearchSuccess}
                 req={handleSearch}
                 priorityList={priorityList}
