@@ -44,6 +44,8 @@ const requestUri = {
     post: '/meeting_record',
     delete: '/meeting_record',
     ids: 'meeting_record/ids',
+    bookmark: '/meeting_record/:id/bookmark',
+    unbookmark: '/meeting_record/:id/bookmark',
     myRecently: '/author/meeting_record/recently',
   },
   user: {

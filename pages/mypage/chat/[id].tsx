@@ -303,45 +303,53 @@ const ChatDetail = () => {
   }, [userId, router])
 
   useEffect(() => {
+    let isMounted = true
     listenMessageRead(({ readUser, chatRoomId }) => {
-      setChatRoom((prev: any) => {
-        if (prev === null) {
-          return null
-        }
-        const i = prev.last_reads.findIndex((lastRead: LastRead | null) => {
-          return lastRead === null ? false : lastRead.member_id === readUser.id
+      if (isMounted) {
+        setChatRoom((prev: any) => {
+          if (prev === null) {
+            return null
+          }
+          const i = prev.last_reads.findIndex((lastRead: LastRead | null) => {
+            return lastRead === null
+              ? false
+              : lastRead.member_id === readUser.id
+          })
+          if (i !== -1) {
+            // 既読したユーザが最後に読んだメッセージのメッセージID
+            const lastMessageId = prev.last_reads[i].last_message_id
+            const newMessages = prev.messages.map((message: ChatMessage) => {
+              if (message.id <= lastMessageId) {
+              } else if (!mine(readUser.id, message!.written_by.id)) {
+                message!.chat_message_reads.push(readUser)
+              } else {
+              }
+              return message
+            })
+            // 最後に読んだメッセージIDを更新して、同一ユーザの既読表記重複を避ける
+            prev.last_reads[i].last_message_id = prev.messages.slice(-1)[0].id
+            return {
+              ...prev,
+              messages: newMessages,
+            }
+          } else {
+            const newMessages = prev.messages.map((message: ChatMessage) => {
+              if (!mine(readUser.id, message.written_by.id)) {
+                message.chat_message_reads.push(readUser)
+              }
+              return message
+            })
+            return {
+              ...prev,
+              messages: newMessages,
+            }
+          }
         })
-        if (i !== -1) {
-          // 既読したユーザが最後に読んだメッセージのメッセージID
-          const lastMessageId = prev.last_reads[i].last_message_id
-          const newMessages = prev.messages.map((message: ChatMessage) => {
-            if (message.id <= lastMessageId) {
-            } else if (!mine(readUser.id, message!.written_by.id)) {
-              message!.chat_message_reads.push(readUser)
-            } else {
-            }
-            return message
-          })
-          // 最後に読んだメッセージIDを更新して、同一ユーザの既読表記重複を避ける
-          prev.last_reads[i].last_message_id = prev.messages.slice(-1)[0].id
-          return {
-            ...prev,
-            messages: newMessages,
-          }
-        } else {
-          const newMessages = prev.messages.map((message: ChatMessage) => {
-            if (!mine(readUser.id, message.written_by.id)) {
-              message.chat_message_reads.push(readUser)
-            }
-            return message
-          })
-          return {
-            ...prev,
-            messages: newMessages,
-          }
-        }
-      })
+      }
     })
+    return () => {
+      isMounted = false
+    }
   }, [])
 
   const handleSentMsg = async () => {

@@ -34,6 +34,9 @@ const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.down('sm')]: {
         flexWrap: 'wrap',
       },
+      [theme.breakpoints.down('xs')]: {
+        gap: theme.spacing(2),
+      },
     },
     introduction: {
       maxWidth: 400,
@@ -41,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) =>
     title: {
       padding: `${theme.spacing(3)}px 0`,
       [theme.breakpoints.down('xs')]: {
-        fontSize: '90%',
+        fontSize: '2rem',
       },
     },
     description: {
@@ -53,19 +56,11 @@ const useStyles = makeStyles((theme: Theme) =>
         background: theme.palette.grey[100],
       },
     },
-    make: {
-      display: 'inline-block',
-      padding: 16,
-      // borderRadius: 9999,
-      textAlign: 'center',
-      backgroundColor: theme.palette.primary.main,
-      color: theme.palette.common.white,
-    },
   })
 )
 
-const description = `${SITE_TITLE}は、ビジネスシーンで生じる「スケジュール管理」や「タスク管理」等の業務効率化を目的としたサービスです。\n「会議の議事録作成」や「スケジュール管理」「タスク管理」など、ビジネスシーンで生じる作業を当サービス内で完結できるほか、\n近年普及が進んでいるテレワークなど、メンバー間で物理的な距離のある働き方にも貢献する「チャット機能」を備えております。`
-const descriptionOmit = `${SITE_TITLE}は、業務効率化を目的としたサービスです。\n「議事録の作成」「スケジュール管理」「タスク管理」「チャット」といった機能をお試しいただけます。`
+const description = `${SITE_TITLE}は、「便利で使いやすい業務支援システム」を目指したサービスです。当サービスのご利用によって、「会議の議事録作成」「スケジュール管理」「タスク管理」等の業務を完結することができます。\n近年はテレワークの推進等により、社内メンバー間の物理的距離が生じる中で業務をする機会が増えました。\n当サービスでは、そうした環境下でのコミュニケーションに貢献する「チャット機能」も備えております。`
+const descriptionOmit = `${SITE_TITLE}は、「議事録の作成」「スケジュール管理」「タスク管理」「チャット」といった機能を提供する業務支援サービスです。`
 
 const Home = () => {
   const classes = useStyles()

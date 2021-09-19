@@ -13,6 +13,7 @@ import { Header, FooterLink } from '@/interfaces/common/dashboard'
 import { Task } from '@/interfaces/models'
 import { TaskStatusFlag } from '@/interfaces/enums/TaskStatusFlag'
 import { linerGradient } from '@/assets/color/gradient'
+import { customColor } from '@/assets/color/basic'
 
 type ListProps = {
   classes: any
@@ -49,14 +50,13 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     headerDanger: {
       background: linerGradient.red,
-      // backgroundColor: '#f50057',
       color: theme.palette.common.white,
     },
     linkDanger: {
-      color: '#f50057',
+      color: customColor.red,
     },
     loaderDanger: {
-      color: '#f50057',
+      color: customColor.red,
     },
     headerWarning: {
       background: linerGradient.orange,
@@ -119,7 +119,7 @@ const BusyTaskCard = ({
           </Typography>
         ),
         tooltip: '期限を過ぎたタスクとは？',
-        footerLink: '期限切れのタスクをすべて見る',
+        footerLink: '期限経過のタスクをすべて見る',
       },
       warning: {
         linkColor: classes.linkWarning,

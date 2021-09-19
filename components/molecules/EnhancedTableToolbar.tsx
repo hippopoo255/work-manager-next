@@ -7,7 +7,7 @@ import {
   Theme,
 } from '@material-ui/core/styles'
 import { IconButton, Toolbar, Tooltip, Typography } from '@material-ui/core'
-import { Title } from '@/components/atoms'
+import { PaperTitle } from '@/components/atoms'
 import DeleteIcon from '@material-ui/icons/Delete'
 
 interface EnhancedTableToolbarProps {
@@ -69,7 +69,7 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
           </Typography>
         ) : (
           <div className={classes.title}>
-            <Title>{title}</Title>
+            <PaperTitle>{title}</PaperTitle>
           </div>
         )}
         {isHighlight && (

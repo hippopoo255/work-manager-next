@@ -6,11 +6,16 @@ import SettingsInputAntennaIcon from '@material-ui/icons/SettingsInputAntenna'
 import { AboutFormat } from '@/components/organisms'
 import { FullPhotoPaper } from '@/components/atoms'
 import { TestLoginButton } from '@/components/molecules'
+import { AnimationBoxByScroll } from '@/components/atoms'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     lg: {
+      width: '100%',
       maxWidth: 1024,
+      margin: '16px auto 0',
+      padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
+      opacity: 0,
     },
     inner: {
       width: 450,
@@ -46,8 +51,8 @@ const AboutRealTime = () => {
         icon: SettingsInputAntennaIcon,
       }}
     >
-      <div className={clsx(['container'])} style={{ marginTop: 24 }}>
-        <Container component={'div'} className={classes.lg}>
+      <div className={clsx(['container'])}>
+        <AnimationBoxByScroll classes={{ root: classes.lg }}>
           <Grid container spacing={3}>
             <Grid item sm={6} className={classes.inner}>
               <FullPhotoPaper src={'image_broadcast.jpg'} />
@@ -61,7 +66,7 @@ const AboutRealTime = () => {
               </Box>
             </Grid>
           </Grid>
-        </Container>
+        </AnimationBoxByScroll>
       </div>
     </AboutFormat>
   )

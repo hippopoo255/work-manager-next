@@ -8,6 +8,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     top: {
       textAlign: 'center',
+      maxWidth: '100%',
     },
     title: {
       display: 'inline-block',

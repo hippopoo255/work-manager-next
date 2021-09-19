@@ -1,6 +1,8 @@
 import { TableRowData } from '@/interfaces/table'
+import React from 'react'
 
 export interface MeetingTableRowData extends TableRowData {
+  is_pin?: React.ReactNode
   title: JSX.Element
   meeting_date: string
   place_id: string

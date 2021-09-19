@@ -1,6 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
+  Box,
+  Button,
+  Checkbox,
   FormControl,
+  FormControlLabel,
   Grid,
   IconButton,
   InputLabel,
@@ -8,19 +12,84 @@ import {
   Select,
   TextField,
   Tooltip,
-  FormControlLabel,
-  Checkbox,
+  Typography,
 } from '@material-ui/core'
 import { useForm, Controller } from 'react-hook-form'
 import { SearchMeetingRecordInputs, SelectBox } from '@/interfaces/form/inputs'
+import { CustomLoader } from '@/components/molecules'
 import { MeetingRecord } from '@/interfaces/models'
 import { Pager } from '@/interfaces/common'
 import SearchIcon from '@material-ui/icons/Search'
 import { SortParam } from '@/interfaces/table'
 import { MeetingTableRowData } from '@/interfaces/table/rowData'
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      padding: `0 0 ${theme.spacing(2)}px`,
+      [theme.breakpoints.down('xs')]: {
+        padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
+        height: 350,
+        position: 'relative',
+        overflowY: 'hidden',
+        overflowX: 'hidden',
+      },
+    },
+    form: {
+      height: '100%',
+    },
+    fields: {
+      paddingBottom: theme.spacing(5),
+      [theme.breakpoints.down('xs')]: {
+        height: '100%',
+        overflowY: 'scroll',
+      },
+    },
+    footer: {
+      paddingTop: theme.spacing(2),
+      borderTop: `1px solid ${theme.palette.grey[400]}`,
+      [theme.breakpoints.down('xs')]: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        width: '100%',
+        padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
+        background: theme.palette.common.white,
+      },
+    },
+    loaderPaper: {
+      position: 'absolute',
+      top: 0,
+      left: -16,
+      right: -16,
+      height: '100%',
+      background: 'rgba(255,255,255,0.5)',
+      [theme.breakpoints.up('sm')]: {
+        display: 'none',
+        pointerEvents: 'none',
+      },
+    },
+    searchIcon: {
+      background: theme.palette.primary.main,
+      color: theme.palette.common.white,
+      '&:hover': {
+        color: theme.palette.primary.main,
+      },
+    },
+    subFlag: {
+      color: theme.palette.text.secondary,
+      '& .MuiTypography-body1': {
+        fontSize: theme.typography.body2.fontSize,
+      },
+    },
+    fieldClear: {
+      flexShrink: 0,
+    },
+  })
+)
 export type Props = {
-  classes: any
+  classes?: any
   req: (
     data: SearchMeetingRecordInputs
   ) => Promise<Pager<MeetingRecord, SearchMeetingRecordInputs>>
@@ -31,6 +100,7 @@ export type Props = {
       | keyof SearchMeetingRecordInputs
       | keyof SortParam<MeetingTableRowData>]: string
   }
+  currentTotalCount: number
 }
 const SearchMeetingRecordForm = ({
   classes,
@@ -38,6 +108,7 @@ const SearchMeetingRecordForm = ({
   onSuccess,
   yearMonth,
   initialParams,
+  currentTotalCount = 0,
 }: Props) => {
   const {
     register,
@@ -54,17 +125,26 @@ const SearchMeetingRecordForm = ({
       count: 'null',
       meeting_date: 'null',
       keyword: '',
+      only_bookmark: false,
       only_me: false,
     },
   })
 
+  const defaultClasses = { ...useStyles(), ...classes }
+  const checkboxFields = ['only_me', 'only_bookmark']
+  const [loading, setLoading] = useState<boolean>(false)
+
   const handleSearch = async (data: SearchMeetingRecordInputs) => {
+    setLoading(true)
     await req(data)
       .then((res) => {
         onSuccess(res)
       })
       .catch((err) => {
         console.error(err)
+      })
+      .finally(() => {
+        setLoading(false)
       })
   }
 
@@ -75,15 +155,21 @@ const SearchMeetingRecordForm = ({
       value: string | boolean | unknown
     }>
   ) => {
-    if (key === 'only_me') {
-      setValue(key, getValues('only_me') === '1' ? '0' : '1')
+    if (checkboxFields.includes(key)) {
+      setValue(key, getValues(key) === '1' ? '0' : '1')
     } else {
       setValue(key, String(e.target.value))
     }
     await handleSearch(getValues())
   }
 
-  const isActive = () => getValues('only_me') === '1'
+  const handleClear = async () => {
+    reset()
+    await handleSearch(getValues())
+  }
+
+  const isActive = (key: string) =>
+    checkboxFields.includes(key) && getValues(key) === '1'
 
   useEffect(() => {
     let isMounted = true
@@ -103,32 +189,67 @@ const SearchMeetingRecordForm = ({
   }, [initialParams])
 
   return (
-    <div>
-      <form noValidate onSubmit={handleSubmit(handleSearch)}>
-        <Grid container alignItems="center" spacing={3}>
+    <div className={defaultClasses.root}>
+      <form
+        noValidate
+        onSubmit={handleSubmit(handleSearch)}
+        className={defaultClasses.form}
+      >
+        <Grid
+          container
+          alignItems="center"
+          spacing={3}
+          className={defaultClasses.fields}
+        >
           <Grid item xs={12}>
-            <Controller
-              control={control}
-              name="only_me"
-              render={({ field }) => (
-                <FormControlLabel
-                  {...field}
-                  control={
-                    <Checkbox
-                      checked={isActive()}
-                      name="only_me"
-                      color="primary"
-                      size={'small'}
-                      onChange={handleChange.bind(null, 'only_me')}
+            <Grid container spacing={1} alignItems={'center'}>
+              <Grid item>
+                <Controller
+                  control={control}
+                  name="only_me"
+                  render={({ field }) => (
+                    <FormControlLabel
+                      {...field}
+                      control={
+                        <Checkbox
+                          checked={isActive('only_me')}
+                          name="only_me"
+                          color="primary"
+                          size={'small'}
+                          onChange={handleChange.bind(null, 'only_me')}
+                        />
+                      }
+                      label="自分が参加した会議のみ表示"
+                      className={defaultClasses.subFlag}
                     />
-                  }
-                  label="自分の参加した会議に限定"
-                  className={classes.subFlag}
+                  )}
                 />
-              )}
-            />
+              </Grid>
+              <Grid item>
+                <Controller
+                  control={control}
+                  name="only_bookmark"
+                  render={({ field }) => (
+                    <FormControlLabel
+                      {...field}
+                      control={
+                        <Checkbox
+                          checked={isActive('only_bookmark')}
+                          name="only_bookmark"
+                          color="primary"
+                          size={'small'}
+                          onChange={handleChange.bind(null, 'only_bookmark')}
+                        />
+                      }
+                      label="ブックマークのみ表示"
+                      className={defaultClasses.subFlag}
+                    />
+                  )}
+                />
+              </Grid>
+            </Grid>
           </Grid>
-          <Grid item xs={6} md={4} lg={2}>
+          <Grid item xs={6} sm={3} lg={2}>
             <InputLabel shrink id="meeting-date-select-label">
               年月選択
             </InputLabel>
@@ -155,8 +276,8 @@ const SearchMeetingRecordForm = ({
               )}
             />
           </Grid>
-          <Grid item xs={6} md={4} lg={2}>
-            <FormControl className={classes.formControl} fullWidth>
+          <Grid item xs={6} sm={3} lg={2}>
+            <FormControl className={defaultClasses.formControl} fullWidth>
               <InputLabel shrink id="count-select-label">
                 人数選択
               </InputLabel>
@@ -183,9 +304,9 @@ const SearchMeetingRecordForm = ({
               />
             </FormControl>{' '}
           </Grid>
-          <Grid item xs={12} md={4}>
-            <Grid container spacing={2} className={classes.keywordBar}>
-              <Grid item sm={10}>
+          <Grid item xs={12} sm={6} lg={8}>
+            <Grid container spacing={2} alignItems={'center'}>
+              <Grid item style={{ flexGrow: 1 }}>
                 <Controller
                   render={({ field }) => (
                     <TextField
@@ -194,7 +315,7 @@ const SearchMeetingRecordForm = ({
                       variant="outlined"
                       margin="dense"
                       required
-                      placeholder="キーワード"
+                      placeholder="会議名、会議室名etc"
                       id="keyword"
                     />
                   )}
@@ -207,7 +328,7 @@ const SearchMeetingRecordForm = ({
                   <IconButton
                     onClick={handleSubmit(handleSearch)}
                     color={'inherit'}
-                    className={classes.SearchIcon}
+                    className={defaultClasses.searchIcon}
                     size={'small'}
                   >
                     <SearchIcon />
@@ -217,7 +338,36 @@ const SearchMeetingRecordForm = ({
             </Grid>
           </Grid>
         </Grid>
+        <Box className={defaultClasses.footer}>
+          <Grid
+            container
+            spacing={2}
+            alignItems={'center'}
+            justifyContent={'space-between'}
+          >
+            <Grid item classes={{ item: defaultClasses.fieldClear }}>
+              <Button
+                variant={'outlined'}
+                color={'primary'}
+                size={'small'}
+                onClick={handleClear}
+              >
+                検索クリア
+              </Button>
+            </Grid>
+            <Grid>
+              <Typography color={'textSecondary'} variant={'body2'}>
+                <strong>{currentTotalCount}</strong>件を表示しています。
+              </Typography>
+            </Grid>
+          </Grid>
+        </Box>
       </form>
+      {loading && (
+        <Box className={defaultClasses.loaderPaper}>
+          <CustomLoader />
+        </Box>
+      )}
     </div>
   )
 }

@@ -6,6 +6,8 @@ import { makeStyles, Theme } from '@material-ui/core/styles'
 import InboxIcon from '@material-ui/icons/MoveToInbox'
 import { Child } from '@/lib/sidebar'
 import Badge from '@material-ui/core/Badge'
+import { customColor } from '@/assets/color/basic'
+
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     position: 'relative',
@@ -32,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   badge: {
     '& .MuiBadge-badge': {
-      backgroundColor: '#f50057',
+      backgroundColor: customColor.red,
     },
   },
 }))

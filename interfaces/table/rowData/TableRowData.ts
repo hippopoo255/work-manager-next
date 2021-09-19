@@ -3,6 +3,7 @@ type DataValue =
   | number
   | boolean
   | JSX.Element
+  | React.ReactNode
   | (string | number | boolean)[]
 
 export interface TableRowData {

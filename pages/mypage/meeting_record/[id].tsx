@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { getRequest, requestUri } from '@/api'
 import { MypageLayout } from '@/layouts'
-import { Box, Paper, Grid, Button } from '@material-ui/core'
+import { Box, Paper, Grid, Link, Button } from '@material-ui/core'
 import { MeetingRecord, MeetingDecision, User } from '@/interfaces/models'
 import {
   DefinitionListItem,
@@ -19,7 +19,7 @@ import {
 } from '@/components/molecules'
 import { DefinitionList } from '@/components/organisms'
 import { toStrFormalLabel } from '@/lib/util'
-import Link from 'next/link'
+// import Link from 'next/link'
 const useStyles = makeStyles((theme: Theme) => ({
   body: {
     width: '100%',
@@ -141,6 +141,11 @@ const MeetingRecordDetail = () => {
     },
   ]
 
+  const handleBackLink = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault()
+    router.back()
+  }
+
   return (
     <MypageLayout title={!!meetingRecord ? meetingRecord.title : ''}>
       <div className="container">
@@ -169,7 +174,7 @@ const MeetingRecordDetail = () => {
                   spacing={2}
                 >
                   <Grid item>
-                    <Link href={'/mypage/meeting_record'} passHref>
+                    <Link onClick={handleBackLink.bind(null)} underline="none">
                       <Button variant={'outlined'} color={'default'}>
                         Back
                       </Button>

@@ -6,7 +6,7 @@ export type Prop = {
   children: React.ReactNode
 }
 
-const Title = ({ children }: Prop) => {
+const PaperTitle = ({ children }: Prop) => {
   return (
     <Typography component="h2" variant="h6" color="primary" gutterBottom>
       {children}
@@ -14,8 +14,8 @@ const Title = ({ children }: Prop) => {
   )
 }
 
-Title.propTypes = {
+PaperTitle.propTypes = {
   children: PropTypes.node,
 }
 
-export default Title
+export default PaperTitle

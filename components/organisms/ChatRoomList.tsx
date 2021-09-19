@@ -18,6 +18,7 @@ import router, { useRouter } from 'next/router'
 import clsx from 'clsx'
 import { lighten } from '@material-ui/core'
 import { postTiming } from '@/lib/util'
+import { customColor } from '@/assets/color/basic'
 
 const useStyles = makeStyles((theme: Theme) => ({
   item: {
@@ -37,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     transform: 'translate3d(0, -50%, 0)',
   },
   badge: {
-    backgroundColor: '#f50057',
+    backgroundColor: customColor.red,
     color: theme.palette.common.white,
     fontWeight: theme.typography.fontWeightBold,
   },

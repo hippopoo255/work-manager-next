@@ -1,12 +1,14 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import {
+  Box,
   Button,
   Grid,
   Tooltip,
   InputLabel,
   MenuItem,
   Select,
+  Typography,
 } from '@material-ui/core'
 import { useForm, Controller } from 'react-hook-form'
 import { SearchTaskInputs } from '@/interfaces/form/inputs'
@@ -14,17 +16,64 @@ import { Task, Priority, Progress } from '@/interfaces/models'
 import { Pager } from '@/interfaces/common'
 import { TaskTableRowData } from '@/interfaces/table/rowData'
 import { SortParam } from '@/interfaces/table'
+import { customColor } from '@/assets/color/basic'
+import { CustomLoader } from '@/components/molecules'
 
 const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    padding: `0 0 ${theme.spacing(2)}px`,
+    [theme.breakpoints.down('xs')]: {
+      padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
+      height: 200,
+      position: 'relative',
+      overflowY: 'hidden',
+      overflowX: 'hidden',
+    },
+  },
+  form: {
+    height: '100%',
+  },
+  fields: {
+    paddingBottom: theme.spacing(2),
+    [theme.breakpoints.down('xs')]: {
+      height: '100%',
+      overflowY: 'scroll',
+      paddingBottom: theme.spacing(5),
+    },
+  },
+  footer: {
+    paddingTop: theme.spacing(2),
+    borderTop: `1px solid ${theme.palette.grey[400]}`,
+    [theme.breakpoints.down('xs')]: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      width: '100%',
+      padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
+      background: theme.palette.common.white,
+    },
+  },
+  loaderPaper: {
+    position: 'absolute',
+    top: 0,
+    left: -16,
+    right: -16,
+    height: '100%',
+    background: 'rgba(255,255,255,0.5)',
+    [theme.breakpoints.up('sm')]: {
+      display: 'none',
+      pointerEvents: 'none',
+    },
+  },
   linkDanger: {
-    color: '#f50057',
+    color: customColor.red,
   },
   linkDangerActive: {
-    backgroundColor: '#f50057',
+    backgroundColor: customColor.red,
     color: theme.palette.common.white,
-    borderColor: '#f50057',
+    borderColor: customColor.red,
     '&:hover': {
-      color: '#f50057',
+      color: customColor.red,
     },
   },
   linkWarning: {
@@ -38,6 +87,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: theme.palette.warning.main,
     },
   },
+  fieldClear: {
+    flexShrink: 0,
+  },
 }))
 
 export type Props = {
@@ -48,6 +100,7 @@ export type Props = {
   }
   priorityList: Priority[]
   progressList: Progress[]
+  currentTotalCount: number
 }
 
 const SearchTaskForm = ({
@@ -56,6 +109,7 @@ const SearchTaskForm = ({
   initialParams,
   priorityList,
   progressList,
+  currentTotalCount = 0,
 }: Props) => {
   const classes = useStyles()
   const {
@@ -75,14 +129,19 @@ const SearchTaskForm = ({
       status: '',
     },
   })
+  const [loading, setLoading] = useState<boolean>(false)
 
   const handleSearch = async (data: SearchTaskInputs) => {
+    setLoading(true)
     await req(data)
       .then((res) => {
         onSearchSuccess(res)
       })
       .catch((err) => {
         console.error(err)
+      })
+      .finally(() => {
+        setLoading(false)
       })
   }
 
@@ -159,9 +218,18 @@ const SearchTaskForm = ({
   }, [initialParams])
 
   return (
-    <div>
-      <form noValidate onSubmit={handleSubmit(handleSearch)}>
-        <Grid container alignItems="flex-end" spacing={2}>
+    <div className={classes.root}>
+      <form
+        noValidate
+        onSubmit={handleSubmit(handleSearch)}
+        className={classes.form}
+      >
+        <Grid
+          container
+          alignItems="flex-start"
+          spacing={2}
+          className={classes.fields}
+        >
           <Grid item xs={12}>
             <Grid container spacing={2}>
               <Grid item>
@@ -175,7 +243,7 @@ const SearchTaskForm = ({
                     color={'inherit'}
                     size={'small'}
                   >
-                    期限切れ
+                    期限経過
                   </Button>
                 </Tooltip>
               </Grid>
@@ -250,18 +318,37 @@ const SearchTaskForm = ({
               )}
             />
           </Grid>
-          <Grid item>
-            <Button
-              variant={'outlined'}
-              color={'primary'}
-              size={'small'}
-              onClick={handleClear}
-            >
-              検索クリア
-            </Button>
-          </Grid>
         </Grid>
+        <Box className={classes.footer}>
+          <Grid
+            container
+            spacing={2}
+            alignItems={'center'}
+            justifyContent={'space-between'}
+          >
+            <Grid item classes={{ item: classes.fieldClear }}>
+              <Button
+                variant={'outlined'}
+                color={'primary'}
+                size={'small'}
+                onClick={handleClear}
+              >
+                検索クリア
+              </Button>
+            </Grid>
+            <Grid>
+              <Typography color={'textSecondary'} variant={'body2'}>
+                <strong>{currentTotalCount}</strong>件を表示しています。
+              </Typography>
+            </Grid>
+          </Grid>
+        </Box>
       </form>
+      {loading && (
+        <Box className={classes.loaderPaper}>
+          <CustomLoader />
+        </Box>
+      )}
     </div>
   )
 }
