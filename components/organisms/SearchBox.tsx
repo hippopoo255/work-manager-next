@@ -7,7 +7,6 @@ const useStyles = makeStyles((theme: Theme) =>
     top: {
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2),
-      paddingBottom: theme.spacing(3),
     },
   })
 )
@@ -60,7 +59,7 @@ const SearchBox = ({ formContent, position }: Props) => {
             onClose={toggleDrawer(false)}
             onOpen={toggleDrawer(true)}
           >
-            <div style={{ padding: '16px 24px' }}>{formContent}</div>
+            <Box>{formContent}</Box>
           </SwipeableDrawer>
         </div>
       </Hidden>

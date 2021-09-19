@@ -40,6 +40,7 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(3),
       flexShrink: 1,
       flexGrow: 1,
+      whiteSpace: 'pre-wrap',
     },
   })
 )
