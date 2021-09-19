@@ -19,44 +19,7 @@ import { getSortParams, handlePageUri } from '@/lib/util'
 import { headCells, createRows } from '@/lib/table/meetingRecord'
 import { BookmarkButton } from '@/components/atoms'
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    formControl: {
-      margin: 0,
-      minWidth: 120,
-    },
-    selectEmpty: {
-      marginTop: theme.spacing(2),
-    },
-    link: {
-      color: theme.palette.primary.main,
-    },
-    SearchIcon: {
-      background: theme.palette.primary.main,
-      color: theme.palette.common.white,
-      '&:hover': {
-        color: theme.palette.primary.main,
-      },
-    },
-    keywordBar: {
-      display: 'flex',
-      alignItems: 'center',
-      flexWrap: 'nowrap',
-    },
-    subFlag: {
-      color: theme.palette.text.secondary,
-      '& .MuiTypography-body1': {
-        fontSize: theme.typography.body2.fontSize,
-      },
-    },
-    fieldGridItem: {
-      flexShrink: 0,
-    },
-  })
-)
-
 const Index = () => {
-  const classes = useStyles()
   const router = useRouter()
   const [meetingRecords, setMeetingRecords] =
     useState<Pager<MeetingRecord> | null>(null)
@@ -214,9 +177,11 @@ const Index = () => {
             }}
             formContent={
               <SearchMeetingRecordForm
+                currentTotalCount={
+                  meetingRecords !== null ? meetingRecords.total : 0
+                }
                 onSuccess={handleSuccess}
                 req={handleSearch}
-                classes={classes}
                 initialParams={
                   meetingRecords !== null && !!meetingRecords.query_params
                     ? meetingRecords.query_params
