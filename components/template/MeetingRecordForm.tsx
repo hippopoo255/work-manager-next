@@ -603,9 +603,9 @@ const MeetingRecordForm = ({
                                 message: '決定内容は必須です',
                               },
                               maxLength: {
-                                value: 80,
+                                value: 140,
                                 message:
-                                  '決定内容は80文字以内で入力してください',
+                                  '決定内容は140文字以内で入力してください',
                               },
                             }}
                             render={({ field }) => (
