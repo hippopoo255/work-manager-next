@@ -10,7 +10,7 @@ import {
 } from '@/components/organisms'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import clsx from 'clsx'
-import { User } from '@/interfaces/models'
+
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
     padding: theme.spacing(2),
@@ -32,20 +32,14 @@ interface Props {
 
 const Dashboard = (props: Props) => {
   const classes = useStyles()
-  const [user, setUser] = useState<User | ''>('')
+
   const fixedHeightPaper = useMemo(
     () => clsx(classes.paper, classes.fixedHeight, classes.relative),
     []
   )
 
-  const handleSupply = (suppliedUser: User) => {
-    if (!user) {
-      setUser(suppliedUser)
-    }
-  }
-
   return (
-    <MypageLayout title="ダッシュボード" supplyUser={handleSupply}>
+    <MypageLayout title="ダッシュボード">
       <>
         <section className="container">
           <Grid container spacing={3}>

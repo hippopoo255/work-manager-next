@@ -1,7 +1,8 @@
 import { GetStaticProps } from 'next'
-import React, { useState, useMemo, useEffect } from 'react'
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import React, { useContext, useState, useMemo, useEffect } from 'react'
+import { AuthContext } from '@/provider/AuthProvider'
 import clsx from 'clsx'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import { MypageLayout } from '@/layouts'
 import { MypageTitle } from '@/components/atoms'
 import { FormTitle } from '@/components/molecules'
@@ -13,7 +14,6 @@ import { MeetingRecordForm } from '@/components/template'
 import { MeetingRecord, MeetingPlace } from '@/interfaces/models'
 import { MeetingRecordInputs, MemberInputs } from '@/interfaces/form/inputs'
 import { MeetingRecordSubmit } from '@/interfaces/form/submit'
-import { useRouter } from 'next/router'
 import { Breadcrumbs } from '@/components/molecules'
 import { BreadcrumbItem } from '@/interfaces/common'
 
@@ -103,12 +103,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 const MeetingRecordCreate = ({ meetingPlaceList }: Props) => {
-  const router = useRouter()
   const classes = useStyles()
-  const [userId, setUserId] = useState<number>(0)
+  const { auth } = useContext(AuthContext)
+
   // react hook form
   const defaultValues = {
-    recorded_by: userId,
+    recorded_by: auth.user.id,
     title: '',
     summary: '',
     place_id: 1,
@@ -119,7 +119,7 @@ const MeetingRecordCreate = ({ meetingPlaceList }: Props) => {
       {
         subject: '',
         body: '',
-        written_by: 1,
+        written_by: auth.user.id,
         decided_by: null,
       },
     ],
@@ -162,7 +162,7 @@ const MeetingRecordCreate = ({ meetingPlaceList }: Props) => {
   ]
 
   return (
-    <MypageLayout title="議事録追加" supplyUserId={setUserId}>
+    <MypageLayout title="議事録追加">
       <div className="container">
         <Breadcrumbs links={breadcrumbs} />
         <MypageTitle>議事録</MypageTitle>

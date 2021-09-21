@@ -1,8 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { CircularButton } from '@/components/molecules'
 import { useRouter } from 'next/router'
 import { User } from '@/interfaces/models'
 import { postRequest, requestUri } from '@/api'
+import { loginAction } from '@/globalState/user/action'
+import { AuthContext } from '@/provider/AuthProvider'
 
 type Props = {
   options?: {
@@ -19,11 +21,12 @@ const TestLoginButton = ({
 }: Props) => {
   const router = useRouter()
   const [loading, setLoading] = useState<boolean>(false)
-
+  const { dispatch } = useContext(AuthContext)
   const handleDemoUser = async () => {
     setLoading(true)
     await testLogin()
       .then((testUser) => {
+        dispatch(loginAction(testUser))
         router.push('/mypage')
       })
       .catch(() => {

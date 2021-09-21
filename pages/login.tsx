@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
+import { AuthContext } from '@/provider/AuthProvider'
+import { loginAction } from '@/globalState/user/action'
 import { postRequest, requestUri } from '@/api'
 import { Layout } from '@/layouts'
 import { useRouter } from 'next/router'
@@ -66,6 +68,7 @@ const Login = () => {
     ...initialAlertStatus,
   })
   const [loading, setLoading] = useState<boolean>(false)
+  const { dispatch } = useContext(AuthContext)
   const onAlertClose = () => {
     setAlertStatus((prev) => ({
       ...prev,
@@ -101,6 +104,7 @@ const Login = () => {
     loginData.append('password', data.password)
     await postRequest<User, FormData>(requestUri.login, loginData)
       .then((res: User) => {
+        dispatch(loginAction(res))
         router.push('/mypage')
       })
       .catch((err) => {

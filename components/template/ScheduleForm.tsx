@@ -84,13 +84,13 @@ const ScheduleForm = ({
   useEffect(() => {
     const fetchMember = async () => {
       await getRequest<User[]>(requestUri.user.list).then((users: User[]) => {
-        const dataList: MemberExtInputs[] = users.map((u) => ({
+        const memberList: MemberExtInputs[] = users.map((u) => ({
           id: u.id,
           full_name: u.full_name,
           is_editable: true,
           shared_by: sharedBy,
         }))
-        setMemberList(dataList)
+        setMemberList(memberList)
       })
     }
     fetchMember()
@@ -246,7 +246,7 @@ const ScheduleForm = ({
               </Typography>
             </Grid>
           )}
-          {!!getValues('id') && (
+          {!!getValues('id') && !getValues('disabled') && (
             <Grid
               container
               justifyContent={'flex-end'}

@@ -2,7 +2,6 @@ import { AppBar, Toolbar, IconButton } from '@material-ui/core'
 import MenuIcon from '@material-ui/icons/Menu'
 import clsx from 'clsx'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
-import { User } from '@/interfaces/models'
 import { drawerWidth } from '@/lib/util'
 import { AuthMenu } from '@/components/organisms'
 import { Hidden } from '@material-ui/core'
@@ -40,13 +39,11 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 interface Props {
-  user: User | ''
   toggleMenu: (flag: string) => void
 }
 
-const MypageHeader = ({ user, toggleMenu }: Props) => {
+const MypageHeader = ({ toggleMenu }: Props) => {
   const classes = useStyles()
-
   const handleDrawerToggle = () => {
     toggleMenu('mobile')
   }
@@ -83,7 +80,7 @@ const MypageHeader = ({ user, toggleMenu }: Props) => {
           <nav className={classes.list}>
             <HeaderGrowContent />
           </nav>
-          {!!user && <AuthMenu user={user} />}
+          <AuthMenu />
         </Toolbar>
       </div>
     </AppBar>

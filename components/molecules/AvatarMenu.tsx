@@ -1,4 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useContext, useState, useRef, useEffect } from 'react'
+import { AuthContext } from '@/provider/AuthProvider'
+import { logoutAction } from '@/globalState/user/action'
+
 import {
   ClickAwayListener,
   Grow,
@@ -11,7 +14,6 @@ import {
 import { IconButton } from '@material-ui/core'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import { useRouter } from 'next/router'
-import { User } from '@/interfaces/models'
 import { STORAGE_URL } from '@/lib/util'
 import { UserAvatar } from '@/components/atoms'
 import { postRequest, requestUri } from '@/api'
@@ -32,13 +34,10 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export type Letter = () => string
 
-interface Props {
-  user: User | ''
-}
-
-const AvatarMenu = ({ user }: Props) => {
+const AvatarMenu = () => {
   const classes = useStyles()
   const router = useRouter()
+  const { auth, dispatch } = useContext(AuthContext)
   const menus = [
     {
       id: 'mypage',
@@ -70,6 +69,7 @@ const AvatarMenu = ({ user }: Props) => {
 
   const logout = async () => {
     await postRequest<null, {}>(requestUri.logout, {}).then(() => {
+      dispatch(logoutAction())
       router.push('/login')
     })
   }
@@ -96,7 +96,9 @@ const AvatarMenu = ({ user }: Props) => {
   }
   const prevOpen = useRef(open)
   const avatarSrc =
-    !!user && !!user.file_path ? `${STORAGE_URL}/${user.file_path}` : ''
+    auth.isLogin && !!auth.user.file_path
+      ? `${STORAGE_URL}/${auth.user.file_path}`
+      : ''
 
   useEffect(() => {
     if (prevOpen.current === true && open === false) {
@@ -107,7 +109,7 @@ const AvatarMenu = ({ user }: Props) => {
 
   return (
     <div>
-      {!!user && (
+      {auth.isLogin && (
         <IconButton
           ref={anchorRef}
           aria-controls={open ? 'menu-list-grow' : undefined}
@@ -115,7 +117,7 @@ const AvatarMenu = ({ user }: Props) => {
           onClick={handleToggle}
           component="span"
         >
-          <UserAvatar user={user} />
+          <UserAvatar user={auth.user} />
         </IconButton>
       )}
       <Popper
@@ -138,7 +140,7 @@ const AvatarMenu = ({ user }: Props) => {
                 <nav>
                   <MenuList>
                     <MenuItem className={classes.menuLabel}>
-                      {!!user && user.full_name}
+                      {auth.isLogin && auth.user.full_name}
                     </MenuItem>
                   </MenuList>
                   <Divider />
