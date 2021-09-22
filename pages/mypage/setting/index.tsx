@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
+import { AuthContext } from '@/provider/AuthProvider'
 import clsx from 'clsx'
-import { useRouter } from 'next/router'
 import { MypageLayout } from '@/layouts'
 import { MypageTitle, FormErrorMessage } from '@/components/atoms'
 import { FormTitle, HelpBox, CircularButton } from '@/components/molecules'
@@ -23,9 +23,7 @@ import { strPatterns } from '@/lib/util'
 import { getRequest, putRequest, requestUri } from '@/api'
 import { User } from '@/interfaces/models'
 import { NotifyStatus } from '@/interfaces/common'
-import { SettingSubmit } from '@/interfaces/form/submit'
 import { SettingInputs } from '@/interfaces/form/inputs'
-import { useAuth } from '@/hooks'
 import { AlertStatus } from '@/interfaces/common'
 import { initialAlertStatus } from '@/lib/initialData'
 import { CustomAlert } from '@/components/atoms'
@@ -65,7 +63,7 @@ const Index = () => {
     ...initialAlertStatus,
   })
   const [notifyStatus, setNotifyStatus] = useState<NotifyStatus[]>([])
-  const user = useAuth()
+  const { auth } = useContext(AuthContext)
   const {
     handleSubmit,
     control,
@@ -98,7 +96,7 @@ const Index = () => {
   }
 
   const handleUpdate = async (data: SettingInputs) => {
-    if (!!user) {
+    if (auth.isLogin) {
       setLoading(true)
       const submitData = new FormData()
       Object.keys(data.notify_validation).forEach((key) => {
@@ -115,7 +113,10 @@ const Index = () => {
         submitData.append('password_confirmation', data.password_confirmation!)
       }
 
-      await putRequest<User, FormData>(`/user/${user.id}/setting`, submitData)
+      await putRequest<User, FormData>(
+        `/user/${auth.user.id}/setting`,
+        submitData
+      )
         .then((updateUser: User) => {
           setAlertStatus((prev) => ({
             ...prev,
@@ -150,9 +151,9 @@ const Index = () => {
 
   useEffect(() => {
     const fetchNotifyStatus = async () => {
-      if (!!user) {
+      if (auth.isLogin) {
         await getRequest<NotifyStatus[]>(
-          requestUri.notifyStatus + `${user.id}/notify_validation`,
+          requestUri.notifyStatus + `${auth.user.id}/notify_validation`,
           (err) => {
             console.error(err)
           }
@@ -162,7 +163,7 @@ const Index = () => {
       }
     }
     fetchNotifyStatus()
-  }, [user])
+  }, [auth])
 
   return (
     <MypageLayout title="設定">

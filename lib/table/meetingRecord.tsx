@@ -4,10 +4,7 @@ import { MeetingRecord } from '@/interfaces/models'
 import { Tooltip } from '@material-ui/core'
 import Link from 'next/link'
 import { toStrLabel } from '@/lib/util'
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
 import { BookmarkButton } from '@/components/atoms'
-import { requestUri, postRequest } from '@/api'
-import { Task } from '@/interfaces/models'
 
 export const headCells: HeadCell<MeetingTableRowData>[] = [
   {

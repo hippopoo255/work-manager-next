@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
+import { AuthContext } from '@/provider/AuthProvider'
 import {
   Grid,
   TextField,
@@ -15,14 +16,13 @@ import { useForm, Controller, SubmitHandler } from 'react-hook-form'
 import { TaskInputs } from '@/interfaces/form/inputs'
 import { Priority, Progress, Task } from '@/interfaces/models'
 import { AxiosResponse } from 'axios'
-import { getRequest, putRequest, postRequest, requestUri } from '@/api'
+import { putRequest, postRequest, requestUri } from '@/api'
 
 type Props = {
   defaultValues: TaskInputs
   updateFlag: number | null
   onSaveSuccess: (task: Task) => void
   onSaveFail: (err: AxiosResponse) => void
-  ownerId: number
   open: boolean
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
   progressList: Progress[]
@@ -35,7 +35,6 @@ const TaskForm = React.memo(
     updateFlag,
     onSaveSuccess,
     onSaveFail,
-    ownerId,
     open,
     setOpen,
     progressList,
@@ -43,6 +42,7 @@ const TaskForm = React.memo(
   }: Props) => {
     // react hook form
     const [loading, setLoading] = useState<boolean>(false)
+    const { auth } = useContext(AuthContext)
 
     const {
       handleSubmit,
@@ -63,7 +63,7 @@ const TaskForm = React.memo(
       const submitData: FormData = new FormData()
       submitData.append('body', data.body)
       submitData.append('time_limit', toStrData(data.time_limit))
-      submitData.append('owner_id', String(ownerId))
+      submitData.append('owner_id', String(auth.user.id))
       submitData.append('priority_id', String(data.priority_id))
       submitData.append('progress_id', String(data.progress_id))
 

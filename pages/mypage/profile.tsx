@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
+import { AuthContext } from '@/provider/AuthProvider'
+import { loginAction } from '@/globalState/user/action'
 import clsx from 'clsx'
 import { useRouter } from 'next/router'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
-import { ProfileLayout } from '@/layouts'
+import { MypageLayout } from '@/layouts'
 import { MypageTitle, FormErrorMessage, CustomAlert } from '@/components/atoms'
 import { CircularButton, FormTitle } from '@/components/molecules'
 import {
@@ -24,7 +26,7 @@ import { User } from '@/interfaces/models'
 import { useForm, Controller } from 'react-hook-form'
 import { ProfileInputs } from '@/interfaces/form/inputs'
 import { strPatterns, STORAGE_URL } from '@/lib/util'
-import { getRequest, putRequest, requestUri } from '@/api'
+import { putRequest } from '@/api'
 import { defaultErrorHandler } from '@/lib/axios'
 import { AlertStatus } from '@/interfaces/common'
 import { initialAlertStatus } from '@/lib/initialData'
@@ -146,12 +148,11 @@ const useStyles = makeStyles((theme: Theme) =>
 const Profile = () => {
   const classes = useStyles()
   const router = useRouter()
-  const [user, setUser] = useState<User | ''>('')
+  const { auth, dispatch } = useContext(AuthContext)
   const [loading, setLoading] = useState<boolean>(false)
   const [alertStatus, setAlertStatus] = useState<AlertStatus>({
     ...initialAlertStatus,
   })
-  const [changePassword, setChangePassword] = useState<boolean>(false)
   const [preview, setPreview] = useState<any>(null)
   const [thumbnailData, setThumbnailData] = useState<any>(null)
   const [defaultValues, setDefaultValues] = useState<ProfileInputs>({
@@ -175,13 +176,12 @@ const Profile = () => {
   } = useForm<ProfileInputs>({
     defaultValues,
   })
-
   const handleDeleteFlag = () => {
     setValue('delete_flag', !getValues('delete_flag'))
   }
 
   const handleUpdate = async (data: ProfileInputs) => {
-    if (!!user) {
+    if (auth.isLogin) {
       setLoading(true)
       const submitData = new FormData()
       submitData.append('family_name', data.family_name)
@@ -193,7 +193,7 @@ const Profile = () => {
         submitData.append('file', thumbnailData)
       }
       await putRequest<User, FormData>(
-        `/user/${user.id}/profile`,
+        `/user/${auth.user.id}/profile`,
         submitData,
         (err) => {
           setAlertStatus((prev) => ({
@@ -202,7 +202,6 @@ const Profile = () => {
             severity: 'error',
             show: true,
           }))
-
           defaultErrorHandler(err)
         },
         {
@@ -212,7 +211,7 @@ const Profile = () => {
           },
         }
       )
-        .then((updateUser: User) => {
+        .then((response: User) => {
           if (data.delete_flag) {
             setPreview(null)
           }
@@ -223,7 +222,7 @@ const Profile = () => {
             severity: 'success',
             show: true,
           }))
-          setUser(updateUser)
+          dispatch(loginAction(response))
           setThumbnailData(null)
         })
         .finally(() => {
@@ -255,30 +254,21 @@ const Profile = () => {
   }
 
   useEffect(() => {
-    const fetchUser = async () => {
-      await getRequest<User>(requestUri.currentUser).then((data: User) => {
-        setUser(data)
-      })
-    }
-    fetchUser()
-  }, [])
-
-  useEffect(() => {
-    if (!!user) {
-      setValue('family_name', user.family_name)
-      setValue('given_name', user.given_name)
-      setValue('family_name_kana', user.family_name_kana)
-      setValue('given_name_kana', user.given_name_kana)
+    if (auth.isLogin) {
+      setValue('family_name', auth.user.family_name)
+      setValue('given_name', auth.user.given_name)
+      setValue('family_name_kana', auth.user.family_name_kana)
+      setValue('given_name_kana', auth.user.given_name_kana)
       setValue('file', null)
       setValue('delete_flag', false)
-      if (!!user.file_path) {
-        setPreview(`${STORAGE_URL}/${user.file_path}`)
+      if (!!auth.user.file_path) {
+        setPreview(`${STORAGE_URL}/${auth.user.file_path}`)
       }
     }
-  }, [user, setValue, setPreview])
+  }, [auth, setValue, setPreview])
 
   return (
-    <ProfileLayout title={'プロフィール'} user={user}>
+    <MypageLayout title={'プロフィール'}>
       <MypageTitle>
         <div className="container">プロフィール</div>
       </MypageTitle>
@@ -505,7 +495,7 @@ const Profile = () => {
         </Card>
       </section>
       <CustomAlert alertStatus={alertStatus} onClose={onAlertClose} />
-    </ProfileLayout>
+    </MypageLayout>
   )
 }
 

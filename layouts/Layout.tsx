@@ -12,8 +12,7 @@ export type LayoutOrg = {
 }
 
 const Layout = ({ children, title, noShadow }: LayoutOrg) => {
-  const user = useAuth(true)
-
+  const { auth } = useAuth(true)
   return (
     <>
       <Head>
@@ -21,7 +20,7 @@ const Layout = ({ children, title, noShadow }: LayoutOrg) => {
       </Head>
       <div className={styles.container}>
         <div className={styles.head}>
-          <Header user={user} noShadow={!!noShadow} />
+          <Header noShadow={!!noShadow} />
         </div>
         <div className={styles.body}>
           <main className={styles.main}>{children}</main>

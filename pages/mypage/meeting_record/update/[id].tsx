@@ -1,5 +1,6 @@
 import { GetStaticProps, GetStaticPaths } from 'next'
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useContext, useState, useMemo, useEffect } from 'react'
+import { AuthContext } from '@/provider/AuthProvider'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { MypageLayout } from '@/layouts'
 import { MypageTitle } from '@/components/atoms'
@@ -114,9 +115,9 @@ const MeetingRecordUpdate = ({ meetingPlaceList }: Props) => {
 
   // Autocomlete members
   const [memberList, setMemberList] = useState<MemberInputs[]>([])
-  const [userId, setUserId] = useState<number>(0)
+  const { auth } = useContext(AuthContext)
   const [defaultValues, setDefaultValues] = useState<MeetingRecordInputs>({
-    recorded_by: userId,
+    recorded_by: auth.user.id,
     title: '',
     summary: '',
     place_id: 1,
@@ -127,7 +128,7 @@ const MeetingRecordUpdate = ({ meetingPlaceList }: Props) => {
       {
         subject: '',
         body: '',
-        written_by: 1,
+        written_by: auth.user.id,
         decided_by: null,
       },
     ],
@@ -146,7 +147,6 @@ const MeetingRecordUpdate = ({ meetingPlaceList }: Props) => {
     }
     fetch()
   }, [])
-
   useEffect(() => {
     const fetchUpdateRecord = async () => {
       if (paramId !== undefined) {
