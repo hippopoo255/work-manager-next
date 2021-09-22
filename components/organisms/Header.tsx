@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import clsx from 'clsx'
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
 import { useRouter } from 'next/router'
+
 import AppBar from '@material-ui/core/AppBar'
 import Drawer from '@material-ui/core/Drawer'
 import Toolbar from '@material-ui/core/Toolbar'
@@ -15,7 +16,8 @@ import ExitToAppOutlinedIcon from '@material-ui/icons/ExitToAppOutlined'
 import MenuIcon from '@material-ui/icons/Menu'
 import { postRequest, requestUri } from '@/api'
 import { HeaderGrowContent, AvatarMenu } from '@/components/molecules'
-import { User } from '@/interfaces/models'
+import { logoutAction } from '@/globalState/user/action'
+import { AuthContext } from '@/provider/AuthProvider'
 
 export type Menu = {
   text: string
@@ -26,7 +28,6 @@ export type Menu = {
 export type Anchor = 'top' | 'left' | 'bottom' | 'right'
 
 export type Props = {
-  user: User | ''
   noShadow?: boolean
 }
 
@@ -52,10 +53,10 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
-const Header = ({ user, noShadow }: Props) => {
+const Header = ({ noShadow }: Props) => {
   const classes = useStyles()
   const router = useRouter()
-  const isLogin: boolean = !!user
+  const { auth, dispatch } = useContext(AuthContext)
   const [state, setState] = useState(false)
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -75,7 +76,6 @@ const Header = ({ user, noShadow }: Props) => {
       to: '/login',
     },
   ]
-
   const authMenus: Menu[] = [
     {
       text: 'ログアウト',
@@ -84,7 +84,7 @@ const Header = ({ user, noShadow }: Props) => {
     },
   ]
 
-  const switchedMenus = () => (isLogin ? authMenus : menus)
+  const switchedMenus = () => (!!auth.isLogin ? authMenus : menus)
   const headerClass = clsx(classes.header, {
     [classes.noShadow]: !!noShadow,
   })
@@ -99,6 +99,7 @@ const Header = ({ user, noShadow }: Props) => {
 
   const logout = async () => {
     await postRequest<null, {}>(requestUri.logout, {}).then(() => {
+      dispatch(logoutAction())
       router.push('/login')
     })
   }
@@ -131,7 +132,7 @@ const Header = ({ user, noShadow }: Props) => {
         <nav className={classes.list}>
           <HeaderGrowContent />
         </nav>
-        {!!user && <AvatarMenu user={user} />}
+        {!!auth.isLogin && <AvatarMenu />}
         <IconButton
           color="inherit"
           aria-label="open drawer"

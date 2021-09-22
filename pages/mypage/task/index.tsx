@@ -26,12 +26,10 @@ const Index = () => {
   })
   const [tasks, setTasks] = useState<Pager<Task, SearchTaskInputs> | null>(null)
   const [rows, setRows] = useState<TaskTableRowData[]>([])
-  const [userId, setUserId] = useState<number>(0)
   const [latestUri, setLatestUri] = useState<string>(requestUri.task.myTask)
   const [priorityList, setPriorityList] = useState<Priority[]>([])
   const [progressList, setProgressList] = useState<Progress[]>([])
   const [loading, setLoading] = useState<boolean>(false)
-
   const [open, setOpen] = useState<boolean>(false)
   const [updateFlag, setUpdateFlag] = useState<number | null>(null)
   // TODO: 状態管理すべき
@@ -245,7 +243,7 @@ const Index = () => {
   }, [])
 
   return (
-    <MypageLayout title="タスク" supplyUserId={setUserId}>
+    <MypageLayout title="タスク">
       <div className="container">
         <MypageTitle>タスク</MypageTitle>
       </div>
@@ -255,7 +253,6 @@ const Index = () => {
           updateFlag={updateFlag}
           onSaveSuccess={handleSuccess}
           onSaveFail={handleFail}
-          ownerId={userId}
           open={open}
           setOpen={setOpen}
           priorityList={priorityList}

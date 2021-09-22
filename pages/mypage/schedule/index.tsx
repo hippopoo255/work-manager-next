@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react'
+import React, { useContext, useState, useEffect, useCallback } from 'react'
+import { AuthContext } from '@/provider/AuthProvider'
 import { useRouter } from 'next/router'
 import { DateClickArg } from '@fullcalendar/interaction'
 import { EventInput } from '@fullcalendar/common'
@@ -77,11 +78,12 @@ const Index = () => {
   const [open, setOpen] = useState<boolean>(false)
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false)
   const [deleteLoading, setDeleteLoading] = useState<boolean>(false)
-  const [userId, setUserId] = useState<number>(0)
-  const [ownerId, setOwnerId] = useState<number>(0)
+  const [targetUserId, setTargetUserId] = useState<number>(0)
   const [delScheduleId, setDelScheduleId] = useState<number>(0)
+  const { auth } = useContext(AuthContext)
+  const userId = auth.user.id
   const [defaultValues, setDefaultValues] = useState<ScheduleInputs>({
-    scheduled_by: 0,
+    scheduled_by: userId,
     title: '',
     memo: '',
     start: new Date(),
@@ -92,7 +94,7 @@ const Index = () => {
     sharedMembers: [],
   })
   const fixedMember: MemberExtInputs[] = []
-  const mine = userId === ownerId
+  const mine = targetUserId === userId
   const [alertStatus, setAlertStatus] = useState<AlertStatus>({
     ...initialAlertStatus,
   })
@@ -104,18 +106,14 @@ const Index = () => {
     }))
   }
 
-  const handleSupply = (id: number) => {
-    setOwnerId(id)
-  }
-
   const handleTarget = (
     event: React.ChangeEvent<{}>,
     newValue: MemberInputs | null
   ) => {
     if (newValue !== null) {
-      setUserId(newValue.id)
+      setTargetUserId(newValue.id)
     } else {
-      setUserId(ownerId)
+      setTargetUserId(userId)
     }
   }
 
@@ -151,12 +149,12 @@ const Index = () => {
         delete prev.id
       }
       return {
-        scheduled_by: ownerId,
+        scheduled_by: userId,
         title: '',
         memo: '',
         color: defaultScheduleColor,
         is_public: true,
-        disabled: userId > 0 && !mine,
+        disabled: targetUserId > 0 && !mine,
         sharedMembers: [],
         start: e.date,
         end: e.date,
@@ -287,7 +285,7 @@ const Index = () => {
 
   useEffect(() => {
     const fetchSchedules = async () => {
-      const id = userId === 0 ? ownerId : userId
+      const id = targetUserId === 0 ? userId : targetUserId
       if (id > 0) {
         await getRequest<Schedule[]>(`/user/${id}/schedule`).then(
           (schedules: Schedule[]) => {
@@ -307,7 +305,7 @@ const Index = () => {
       }
     }
     fetchSchedules()
-  }, [userId, ownerId])
+  }, [targetUserId, userId])
 
   useEffect(() => {
     const fetchMember = async () => {
@@ -339,7 +337,7 @@ const Index = () => {
     [defaultValues]
   )
   return (
-    <MypageLayout title="スケジュール" supplyUserId={handleSupply}>
+    <MypageLayout title="スケジュール">
       <div className="container">
         <MypageTitle>スケジュール</MypageTitle>
       </div>
@@ -350,7 +348,7 @@ const Index = () => {
           open={open}
           setOpen={setOpen}
           fixedMember={fixedMember}
-          sharedBy={ownerId}
+          sharedBy={userId}
           req={saveReq}
           onSuccess={handleSuccess}
           onDelete={handleDelete}

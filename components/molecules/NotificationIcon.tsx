@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useRef, useMemo } from 'react'
+import React, { useContext, useEffect, useState, useRef, useMemo } from 'react'
+import { AuthContext } from '@/provider/AuthProvider'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import clsx from 'clsx'
@@ -14,7 +15,7 @@ import {
   Popper,
 } from '@material-ui/core'
 import NotificationsIcon from '@material-ui/icons/Notifications'
-import { User, Activity } from '@/interfaces/models'
+import { Activity } from '@/interfaces/models'
 import { requestUri, getRequest, putRequest } from '@/api'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -49,22 +50,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-type Props = {
-  user: User
-}
-
 // eslint-disable-next-line react/display-name
-const NotificationIcon = React.memo(({ user }: Props) => {
+const NotificationIcon = React.memo(() => {
   const classes = useStyles()
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const [activities, setActivities] = useState<Activity[]>([])
+  const { auth } = useContext(AuthContext)
   const anchorRef = useRef<HTMLButtonElement>(null)
   useEffect(() => {
     let isMounted = true
     const init = async () => {
       await getRequest<Activity[]>(
-        requestUri.activity.myRecently.replace(':id', String(user.id))
+        requestUri.activity.myRecently.replace(':id', String(auth.user.id))
       ).then((res) => {
         if (isMounted) {
           setActivities(res)
@@ -79,7 +77,7 @@ const NotificationIcon = React.memo(({ user }: Props) => {
 
   const read = async () => {
     await putRequest<any, {}>(
-      requestUri.activity.read.replace(':id', String(user.id)),
+      requestUri.activity.read.replace(':id', String(auth.user.id)),
       {}
     ).then((res) => {})
   }

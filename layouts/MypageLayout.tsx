@@ -4,14 +4,12 @@ import styles from '@/assets/stylesheets/components/MypageLayout.module.scss'
 import Head from 'next/head'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
-import { User } from '@/interfaces/models'
 import { SITE_TITLE } from '@/lib/util'
 import { useAuth } from '@/hooks'
+
 export type LayoutOrg = {
   children: React.ReactNode
   title?: string
-  supplyUserId?: (userId: number) => void
-  supplyUser?: (user: User) => void
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -36,14 +34,9 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
-const MypageLayout = ({
-  children,
-  title,
-  supplyUserId,
-  supplyUser,
-}: LayoutOrg) => {
+const MypageLayout = ({ children, title }: LayoutOrg) => {
   const classes = useStyles()
-  const user = useAuth()
+  const { auth } = useAuth()
   const suffix = SITE_TITLE
   const [mobileOpen, setMobileOpen] = useState(false)
   const [tabletOpen, setTabletOpen] = useState(false)
@@ -68,16 +61,6 @@ const MypageLayout = ({
       setTabletOpen(specified)
     }
   }
-
-  useEffect(() => {
-    if (!!user && supplyUserId !== undefined) {
-      supplyUserId(user.id)
-    }
-    if (!!user && supplyUser !== undefined) {
-      supplyUser(user)
-    }
-  }, [user, supplyUserId, supplyUser])
-
   return (
     <>
       <Head>
@@ -85,13 +68,12 @@ const MypageLayout = ({
       </Head>
       <div className={classes.root}>
         <CssBaseline />
-        <Header toggleMenu={handleDrawerToggle} user={user} />
+        <Header toggleMenu={handleDrawerToggle} />
         <Sidebar
           open={mobileOpen}
           onClose={handleMobileDrawer}
           flexibleOpen={tabletOpen}
           handleFlexibleOpen={handleFlexibleDrawer}
-          user={user}
         />
         <div className={classes.content}>
           <main className={classes.main}>

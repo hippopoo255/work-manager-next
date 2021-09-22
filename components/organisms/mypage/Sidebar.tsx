@@ -14,7 +14,7 @@ import { LinkBar } from '@/components/molecules'
 import { FlexibleDrawer } from '@/components/organisms'
 import { drawerWidth } from '@/lib/util'
 import { useRouter } from 'next/router'
-import { ChatMessage, User } from '@/interfaces/models'
+import { ChatMessage } from '@/interfaces/models'
 import { listenMessageSent, listenMessageRead } from '@/lib/pusher'
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -45,12 +45,10 @@ interface Props {
   onClose: any
   flexibleOpen: boolean
   handleFlexibleOpen: any
-  user?: User | ''
 }
 
 const Sidebar = (props: Props) => {
-  const { window, open, onClose, flexibleOpen, handleFlexibleOpen, user } =
-    props
+  const { window, open, onClose, flexibleOpen, handleFlexibleOpen } = props
   const classes = useStyles()
   const container =
     window !== undefined ? () => window().document.body : undefined

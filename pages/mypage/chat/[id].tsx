@@ -1,6 +1,13 @@
 import { GetStaticProps, GetStaticPaths } from 'next'
 import clsx from 'clsx'
-import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react'
+import React, {
+  useState,
+  useMemo,
+  useCallback,
+  useEffect,
+  useRef,
+  useContext,
+} from 'react'
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
 import {
   Divider,
@@ -22,13 +29,7 @@ import {
   deleteRequest,
   requestUri,
 } from '@/api'
-import {
-  ChatRoom,
-  ChatMessage,
-  User,
-  LastRead,
-  ChatImage,
-} from '@/interfaces/models'
+import { ChatRoom, ChatMessage, LastRead, ChatImage } from '@/interfaces/models'
 import {
   MemberExtInputs,
   ChatRoomInputs,
@@ -39,11 +40,7 @@ import { ChatLayout } from '@/layouts'
 import Custom403Page from '@/pages/403'
 import Custom404Page from '@/pages/404'
 import { ChatDetailTitle, SilentBar } from '@/components/molecules'
-import {
-  ChatMessageRow,
-  ConfirmDialog,
-  CustomMenuBox,
-} from '@/components/organisms'
+import { ChatMessageRow, ConfirmDialog } from '@/components/organisms'
 import { ChatMessageForm, ChatRoomForm } from '@/components/template'
 import { useForm, Controller } from 'react-hook-form'
 import {
@@ -60,6 +57,7 @@ import {
   listenMessageDelete,
 } from '@/lib/pusher'
 import { deletedMessage } from '@/lib/initialData'
+import { AuthContext } from '@/provider/AuthProvider'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -213,9 +211,10 @@ const useStyles = makeStyles((theme: Theme) =>
 const ChatDetail = () => {
   const classes = useStyles()
   const router = useRouter()
+  const { auth } = useContext(AuthContext)
+  const userId = auth.user.id
   const [chatRoom, setChatRoom] = useState<ChatRoom | null>(null)
   const [activeRoom, setActiveRoom] = useState<ChatRoom | null>(null)
-  const [userId, setUserId] = useState<number>(0)
   const [responseError, setResponseError] = useState<any | null>(null)
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false)
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false)
@@ -620,7 +619,6 @@ const ChatDetail = () => {
       title={!!chatRoom ? chatRoom.name : ''}
       sideNone
       mainNone={false}
-      supplyUserId={setUserId}
       activeRoom={activeRoom}
       onToggle={setSidebarOpen}
     >
