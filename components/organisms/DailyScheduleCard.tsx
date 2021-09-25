@@ -7,7 +7,7 @@ import { toStrLabel, scheduleLabel } from '@/lib/util'
 import { DashboardBaseCard } from '@/components/organisms'
 import { Header, FooterLink } from '@/interfaces/common/dashboard'
 import { requestUri, getRequest } from '@/api'
-import { CardItemBar } from '@/components//molecules'
+import { CardItemBar } from '@/components/molecules'
 import { linerGradient } from '@/assets/color/gradient'
 
 const useStyles = makeStyles((theme: Theme) =>

@@ -6,6 +6,7 @@ import { MypageTitle, FormErrorMessage } from '@/components/atoms'
 import { FormTitle, HelpBox, CircularButton } from '@/components/molecules'
 import { makeStyles, Theme } from '@material-ui/core'
 import {
+  Box,
   Card,
   CardActions,
   CardContent,
@@ -13,6 +14,9 @@ import {
   Divider,
   FormControlLabel,
   Grid,
+  List,
+  ListItem,
+  ListItemText,
   Switch,
   TextField,
   Typography,
@@ -54,6 +58,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     minHeight: 20,
     textAlign: 'left',
   },
+  swicthText: {
+    fontSize: theme.typography.body2.fontSize,
+    color: theme.palette.text.secondary,
+    fontWeight: theme.typography.fontWeightBold,
+  },
+  subtitle: {
+    fontWeight: theme.typography.fontWeightBold,
+    marginTop: theme.spacing(2),
+  },
 }))
 
 const Index = () => {
@@ -62,7 +75,10 @@ const Index = () => {
   const [alertStatus, setAlertStatus] = useState<AlertStatus>({
     ...initialAlertStatus,
   })
-  const [notifyStatus, setNotifyStatus] = useState<NotifyStatus[]>([])
+  const [notifyValidation, setNotifyValidation] = useState<NotifyStatus[]>([])
+  const [dailyNotifyValidation, setDailyNotifyValidation] = useState<
+    NotifyStatus[]
+  >([])
   const { auth } = useContext(AuthContext)
   const {
     handleSubmit,
@@ -158,7 +174,16 @@ const Index = () => {
             console.error(err)
           }
         ).then((fetchedStatus) => {
-          setNotifyStatus((prev) => [...fetchedStatus])
+          setNotifyValidation((prev) =>
+            fetchedStatus.filter(
+              (notifyValidation) => !notifyValidation.key.match(/^daily_.+$/g)
+            )
+          )
+          setDailyNotifyValidation((prev) =>
+            fetchedStatus.filter((notifyValidation) =>
+              notifyValidation.key.match(/^daily_.+$/g)
+            )
+          )
         })
       }
     }
@@ -179,55 +204,124 @@ const Index = () => {
             <form onSubmit={handleSubmit(handleUpdate)}>
               <CardContent className={classes.wrap}>
                 <Grid container spacing={2} className={classes.wrap}>
-                  {!!notifyStatus.length && (
+                  {!!notifyValidation.length && (
                     <Grid item xs={12}>
                       <Typography component={'h4'} variant={'h4'} gutterBottom>
-                        メール通知設定
+                        メール配信設定
                       </Typography>
-                      {notifyStatus.map((sts: NotifyStatus, index) => (
+                      <Divider style={{ marginTop: 12 }} />
+                      <List>
+                        {notifyValidation.map((sts: NotifyStatus, index) => (
+                          <ListItem key={sts.key} dense>
+                            <Controller
+                              name={`notify_validation.${sts.id}`}
+                              defaultValue={!!sts.is_valid}
+                              control={control}
+                              render={({ field }) => (
+                                <FormControlLabel
+                                  {...field}
+                                  control={
+                                    <Switch
+                                      color={'primary'}
+                                      // size={'small'}
+                                      checked={
+                                        !!getValues(
+                                          `notify_validation.${sts.id}`
+                                        )
+                                      }
+                                    />
+                                  }
+                                  label={sts.label_name}
+                                  classes={{
+                                    label: classes.swicthText,
+                                  }}
+                                />
+                              )}
+                            />
+                          </ListItem>
+                        ))}
+                        <ListItem dense>
+                          <ListItemText
+                            primaryTypographyProps={{
+                              color: 'primary',
+                              variant: 'subtitle1',
+                              component: 'h5',
+                              classes: {
+                                subtitle1: classes.subtitle,
+                              },
+                            }}
+                          >
+                            デイリー配信
+                          </ListItemText>
+                        </ListItem>
+                        {dailyNotifyValidation.map(
+                          (sts: NotifyStatus, index) => (
+                            <ListItem key={sts.key} dense>
+                              <Controller
+                                name={`notify_validation.${sts.id}`}
+                                defaultValue={!!sts.is_valid}
+                                control={control}
+                                render={({ field }) => (
+                                  <FormControlLabel
+                                    {...field}
+                                    control={
+                                      <Switch
+                                        color={'primary'}
+                                        // size={'small'}
+                                        checked={
+                                          !!getValues(
+                                            `notify_validation.${sts.id}`
+                                          )
+                                        }
+                                      />
+                                    }
+                                    label={sts.label_name}
+                                    classes={{
+                                      label: classes.swicthText,
+                                    }}
+                                  />
+                                )}
+                              />
+                            </ListItem>
+                          )
+                        )}
+                      </List>
+                    </Grid>
+                  )}
+                  <Grid item xs={12} style={{ marginTop: 12 }}>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12}>
+                        <Typography
+                          component={'h4'}
+                          variant={'h4'}
+                          gutterBottom
+                        >
+                          その他
+                        </Typography>
+                        <Divider style={{ marginTop: 12 }} />
+                      </Grid>
+                      <Grid item xs={12} className={classes.checkRow}>
                         <Controller
-                          key={sts.key}
-                          name={`notify_validation.${sts.id}`}
-                          defaultValue={!!sts.is_valid}
                           control={control}
+                          name="change_password"
                           render={({ field }) => (
                             <FormControlLabel
                               {...field}
                               control={
-                                <Switch
-                                  color={'primary'}
-                                  checked={
-                                    !!getValues(`notify_validation.${sts.id}`)
-                                  }
+                                <Checkbox
+                                  checked={getValues('change_password')}
+                                  onChange={handleChangePassword}
+                                  name="change_password"
+                                  color="primary"
                                 />
                               }
-                              label={sts.label_name}
+                              label="パスワードを変更する"
                             />
                           )}
                         />
-                      ))}
+                        <HelpBox />
+                      </Grid>
                     </Grid>
-                  )}
-                  <Grid item xs={12} className={classes.checkRow}>
-                    <Controller
-                      control={control}
-                      name="change_password"
-                      render={({ field }) => (
-                        <FormControlLabel
-                          {...field}
-                          control={
-                            <Checkbox
-                              checked={getValues('change_password')}
-                              onChange={handleChangePassword}
-                              name="change_password"
-                              color="primary"
-                            />
-                          }
-                          label="パスワードを変更する"
-                        />
-                      )}
-                    />
-                    <HelpBox />
                   </Grid>
                   {getValues('change_password') && (
                     <>

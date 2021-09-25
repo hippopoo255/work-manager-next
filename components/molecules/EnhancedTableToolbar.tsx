@@ -39,7 +39,7 @@ const useToolbarStyles = makeStyles((theme: Theme) =>
     },
     simpleColor: {
       background: '#404040',
-      color: '#ffffff',
+      color: theme.palette.common.white,
       '&:hover': {
         background: lighten('#404040', 0.2),
       },

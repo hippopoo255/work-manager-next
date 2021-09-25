@@ -16,7 +16,7 @@ import {
   Grid,
   Typography,
 } from '@material-ui/core'
-import { Checkbox, FormControlLabel, TextField } from '@material-ui/core'
+import { TextField } from '@material-ui/core'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import { useForm, Controller, SubmitHandler } from 'react-hook-form'
 import { CustomAlert, FormErrorMessage } from '@/components/atoms'
@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
     background: `linear-gradient(165deg, ${darken('#5dff26', 0.1)}, #5cb363)`,
-    color: '#ffffff',
+    color: theme.palette.common.white,
   },
   label: {
     fontSize: '90%',
