@@ -12,7 +12,6 @@ export const headCells: HeadCell<TaskTableRowData>[] = [
     numeric: false,
     align: 'left',
     size: 180,
-    long: true,
   },
   {
     id: 'priority_id',

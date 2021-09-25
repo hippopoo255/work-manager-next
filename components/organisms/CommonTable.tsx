@@ -116,6 +116,9 @@ const useStyles = makeStyles((theme: Theme) =>
     icon: {
       fontSize: '1.4rem',
     },
+    cell: {
+      padding: theme.spacing(1),
+    },
     td: {
       whiteSpace: 'nowrap',
       textOverflow: 'ellipsis',
@@ -336,6 +339,9 @@ const CommonTable = <T, U extends TableRowData>({
                             <TableCell
                               align="center"
                               key={`row_${index}_${headCell.id}`}
+                              classes={{
+                                root: classes.cell,
+                              }}
                             >
                               <CustomMenuBox
                                 options={menuList(row)}
@@ -352,6 +358,9 @@ const CommonTable = <T, U extends TableRowData>({
                               padding={
                                 headCell.disablePadding ? 'none' : 'normal'
                               }
+                              classes={{
+                                root: classes.cell,
+                              }}
                               style={{
                                 minWidth: headCell.size || 100,
                                 maxWidth: headCell.long

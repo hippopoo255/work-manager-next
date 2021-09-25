@@ -5,7 +5,11 @@ import { BreadcrumbItem } from '@/interfaces/common'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    top: {},
+    top: {
+      paddingBottom: theme.spacing(2),
+      marginBottom: theme.spacing(2),
+      borderBottom: `1px solid ${theme.palette.divider}`,
+    },
     item: {
       fontSize: theme.typography.subtitle2.fontSize,
       color: theme.palette.primary.main,
@@ -29,7 +33,7 @@ const CustomBreadcrumbs = ({ links }: Props) => {
   }
 
   return (
-    <Breadcrumbs aria-label="breadcrumb" style={{ marginBottom: 16 }}>
+    <Breadcrumbs aria-label="breadcrumb" className={classes.top}>
       <Link color="inherit" href="/mypage" className={classes.item}>
         マイページトップ
       </Link>
