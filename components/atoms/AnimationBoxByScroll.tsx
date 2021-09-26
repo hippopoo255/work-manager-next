@@ -7,11 +7,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     opacity: 0,
   },
   show: {
-    animation: '$spin forwards 1s',
+    animation: '$fadeIn forwards 1s',
   },
-  '@keyframes spin': {
+  '@keyframes fadeIn': {
     '0%': { opacity: 0 },
-    '75%': { opacity: 0 },
+    '67%': { opacity: 0 },
     '100%': { opacity: 1 },
   },
 }))

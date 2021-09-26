@@ -617,7 +617,7 @@ const MeetingRecordForm = ({
                                 multiline
                                 minRows={1}
                                 required
-                                placeholder="ex)現状把握のため従業員にアンケート調査をする（80文字以内）"
+                                placeholder="ex)現状把握のため従業員にアンケート調査をする（140文字以内）"
                                 fullWidth
                                 error={
                                   !!errors.meeting_decisions &&

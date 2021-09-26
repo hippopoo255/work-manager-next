@@ -1,4 +1,4 @@
-import { GetStaticProps, GetStaticPaths } from 'next'
+// import { GetStaticProps, GetStaticPaths } from 'next'
 import React, { useContext, useState, useMemo, useEffect } from 'react'
 import { AuthContext } from '@/provider/AuthProvider'
 import { makeStyles, Theme } from '@material-ui/core/styles'
@@ -17,10 +17,6 @@ import { useRouter } from 'next/router'
 import { PROCESS_FLAG } from '@/lib/util'
 import { Breadcrumbs } from '@/components/molecules'
 import { BreadcrumbItem } from '@/interfaces/common'
-
-export type Props = {
-  meetingPlaceList: MeetingPlace[]
-}
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrap: {
@@ -101,9 +97,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-const MeetingRecordUpdate = ({ meetingPlaceList }: Props) => {
+const MeetingRecordUpdate = () => {
   const classes = useStyles()
   const router = useRouter()
+  const { auth } = useContext(AuthContext)
+  const [meetingPlaceList, setMeetingPlaceList] = useState<MeetingPlace[]>([])
   const paramId = router.query.id
   const meetingRecordId = useMemo(() => paramId, [paramId])
   // react hook form
@@ -115,7 +113,6 @@ const MeetingRecordUpdate = ({ meetingPlaceList }: Props) => {
 
   // Autocomlete members
   const [memberList, setMemberList] = useState<MemberInputs[]>([])
-  const { auth } = useContext(AuthContext)
   const [defaultValues, setDefaultValues] = useState<MeetingRecordInputs>({
     recorded_by: auth.user.id,
     title: '',
@@ -144,9 +141,15 @@ const MeetingRecordUpdate = ({ meetingPlaceList }: Props) => {
         }))
         setMemberList(dataList)
       })
+      await getRequest<MeetingPlace[]>(requestUri.meetingPlace.list).then(
+        (meetingPlaceList: MeetingPlace[]) => {
+          setMeetingPlaceList(meetingPlaceList)
+        }
+      )
     }
     fetch()
   }, [])
+
   useEffect(() => {
     const fetchUpdateRecord = async () => {
       if (paramId !== undefined) {
@@ -204,52 +207,20 @@ const MeetingRecordUpdate = ({ meetingPlaceList }: Props) => {
         <Box className={classes.wrap}>
           <FormTitle title={'更新フォーム'} icon={<MenuBookOutlinedIcon />} />
         </Box>
-        <MeetingRecordForm
-          memberList={memberList}
-          fixedMember={fixedMember}
-          defaultValues={defaultValues}
-          req={req}
-          classes={classes}
-          meetingPlaceList={meetingPlaceList}
-          handleSuccess={handleUpdate}
-        />
+        {!!meetingPlaceList.length && (
+          <MeetingRecordForm
+            memberList={memberList}
+            fixedMember={fixedMember}
+            defaultValues={defaultValues}
+            req={req}
+            classes={classes}
+            meetingPlaceList={meetingPlaceList}
+            handleSuccess={handleUpdate}
+          />
+        )}
       </section>
     </MypageLayout>
   )
-}
-
-export const getStaticPaths: GetStaticPaths = async () => {
-  const paths = await getRequest<number[]>(requestUri.meetingRecord.ids).then(
-    (ids: number[]) =>
-      ids.map((id: number) => ({
-        params: {
-          id: String(id),
-        },
-      }))
-  )
-
-  return {
-    paths,
-    fallback: false,
-  }
-}
-
-// export const getStaticPaths = async () => {
-//   return {
-//     paths: [],
-//     fallback: true,
-//   }
-// }
-//
-export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const meetingPlaceList = await getRequest<MeetingPlace[]>(
-    requestUri.meetingPlace.list
-  ).then((meetingPlaceList: MeetingPlace[]) => meetingPlaceList)
-  return {
-    props: {
-      meetingPlaceList,
-    },
-  }
 }
 
 export default MeetingRecordUpdate
