@@ -165,7 +165,6 @@ const ChatRoomForm = ({
   } = useForm<ChatMessageInputs>({
     defaultValues,
   })
-  const router = useRouter()
 
   const handleSave = async (data: ChatMessageInputs) => {
     setLoading(true)

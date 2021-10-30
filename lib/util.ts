@@ -12,6 +12,7 @@ export const SITE_TITLE: string =
   process.env.NEXT_PUBLIC_SITE_NAME || 'Next App'
 export const API_URL: string =
   process.env.NEXT_PUBLIC_API_URL + '/api' || 'http://localhost/api'
+export const API_STAGE_URL: string = process.env.NEXT_PUBLIC_API_STAGE_URL || ''
 export const PUSHER_URL: string =
   process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
 export const STORAGE_URL: string =

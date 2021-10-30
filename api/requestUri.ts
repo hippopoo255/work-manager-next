@@ -1,4 +1,5 @@
 const requestUri = {
+  // auth
   login: '/login',
   testLogin: '/testlogin',
   logout: '/logout',
@@ -6,8 +7,18 @@ const requestUri = {
   currentUserWithChat: '/user/current/chat_rooms',
   forgotPassword: '/password/email',
   resetPassword: '/password/reset',
+  // master
   priority: {
     list: '/priority',
+  },
+  progress: {
+    list: '/progress',
+  },
+  meetingPlace: {
+    list: '/meeting_place',
+  },
+  user: {
+    list: '/user',
   },
   chatRoom: {
     list: '/author/chat_room',
@@ -20,16 +31,9 @@ const requestUri = {
   },
   chatMessage: {
     list: '/author/chat_room',
-    post: '/chat_room',
-    put: '/chat_room/',
-    delete: '/chat_room/',
-    id: '/chat_room/',
-  },
-  progress: {
-    list: '/progress',
-  },
-  meetingPlace: {
-    list: '/meeting_place',
+    post: '/chat_room/{chat_room_id}/message',
+    put: '/chat_room/{chat_room_id}/message/{id}',
+    delete: '/chat_room/{chat_room_id}/message/{id}',
   },
   task: {
     post: '/task',
@@ -47,9 +51,6 @@ const requestUri = {
     bookmark: '/meeting_record/:id/bookmark',
     unbookmark: '/meeting_record/:id/bookmark',
     myRecently: '/author/meeting_record/recently',
-  },
-  user: {
-    list: '/user',
   },
   schedule: {
     list: '/user/{id}/schedule',

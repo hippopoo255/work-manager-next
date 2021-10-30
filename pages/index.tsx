@@ -6,9 +6,10 @@ import { TestLoginButton } from '@/components/molecules'
 import { ProductIntroductionCardList } from '@/components/template'
 import { AboutNotification, AboutRealTime } from '@/components/organisms'
 import { Layout } from '@/layouts'
-import { headerHeight, SITE_TITLE } from '@/lib/util'
+import { headerHeight, SITE_TITLE, API_STAGE_URL } from '@/lib/util'
 import Shakehand from '@/assets/images/shakehand.svg'
 import { RoundedIcon } from '@/components/atoms'
+import axios from 'axios'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -73,6 +74,20 @@ const Home = () => {
         fillRef!.current!.style.minHeight = `${fullHeight}px`
       }
     }
+    const connect = async () => {
+      const httpClient = axios.create({
+        baseURL: API_STAGE_URL,
+      })
+      await httpClient
+        .get('/meeting_place')
+        .then((res) => {
+          console.log(res)
+        })
+        .catch((err) => {
+          console.error(err)
+        })
+    }
+    connect()
     resize()
   }, [])
 
