@@ -48,17 +48,19 @@ const Index = () => {
     setOpen(true)
   }
 
-  const edit = (id: number) => {
+  const edit = (id?: number | string) => {
     if (tasks !== null) {
       const i: number = tasks.data.findIndex((task: Task) => task.id === id)
-      setUpdateFlag(tasks.data[i].id)
-      setDefaultValues({
-        body: tasks.data[i].body,
-        time_limit: new Date(tasks.data[i].time_limit),
-        priority_id: tasks.data[i].priority_id,
-        progress_id: tasks.data[i].progress_id,
-      })
-      setOpen(true)
+      if (i >= 0) {
+        setUpdateFlag(tasks.data[i].id)
+        setDefaultValues({
+          body: tasks.data[i].body,
+          time_limit: new Date(tasks.data[i].time_limit),
+          priority_id: tasks.data[i].priority_id,
+          progress_id: tasks.data[i].progress_id,
+        })
+        setOpen(true)
+      }
     }
   }
 
@@ -177,8 +179,8 @@ const Index = () => {
     }
   }
 
-  const handleDeleteClick = async (ids: number[]) => {
-    const data: { ids: number[] } = { ids }
+  const handleDeleteClick = async (ids: (number | string)[]) => {
+    const data: { ids: (number | string)[] } = { ids }
     // const queryParams = latestUri.match(/\?.+$/)
     await deleteRequest<Pager<Task, SearchTaskInputs>>(latestUri, {
       data,

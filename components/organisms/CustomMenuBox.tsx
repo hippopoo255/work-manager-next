@@ -29,11 +29,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 type Props = {
   options: {
     text: string
-    onClick: (id: number, index?: number) => void
+    onClick: (id?: number | string, index?: number) => void
     disabled?: boolean
     danger?: boolean
   }[]
-  id: number
+  id?: number | string
   small: boolean
   horizon: boolean
   index?: number

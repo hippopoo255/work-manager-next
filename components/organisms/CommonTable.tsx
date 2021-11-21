@@ -141,8 +141,8 @@ const useStyles = makeStyles((theme: Theme) =>
  */
 export type Props<T, U extends TableRowData> = {
   headCells: HeadCell<U>[]
-  onDelete: (ids: number[]) => Promise<void>
-  onEdit: (id: number) => void
+  onDelete: (ids: (number | string)[]) => Promise<void>
+  onEdit: (id?: number | string) => void
   onPage: (
     e:
       | React.MouseEvent<unknown>
@@ -173,7 +173,7 @@ const CommonTable = <T, U extends TableRowData>({
   const classes = useStyles()
   const [order, setOrder] = useState<Order>('desc')
   const [orderBy, setOrderBy] = useState<keyof U>('created_at')
-  const [selected, setSelected] = useState<number[]>([])
+  const [selected, setSelected] = useState<(number | string)[]>([])
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false)
 
   const handleRequestSort = async (
@@ -200,8 +200,8 @@ const CommonTable = <T, U extends TableRowData>({
     setSelected([])
   }
 
-  const handleTrash = (id: number = 0) => {
-    if (id > 0) {
+  const handleTrash = (id: number | string = 0) => {
+    if (!!id) {
       setSelected([id])
     }
     setConfirmOpen(true)
@@ -227,10 +227,10 @@ const CommonTable = <T, U extends TableRowData>({
 
   const handleRowClick = (
     e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<unknown>,
-    id: number
+    id: number | string
   ) => {
     const selectedIndex = selected.indexOf(id)
-    let newSelected: number[] = []
+    let newSelected: (number | string)[] = []
 
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, id)
@@ -250,12 +250,12 @@ const CommonTable = <T, U extends TableRowData>({
   const menuList = (data: any) => [
     {
       text: '編集',
-      onClick: (id: number) => onEdit(id),
+      onClick: (id?: number | string) => onEdit(id),
       disabled: !data.is_editable,
     },
     {
       text: '削除',
-      onClick: (id: number) => handleTrash(id),
+      onClick: (id?: number | string) => handleTrash(id),
       disabled: !data.is_editable,
     },
   ]

@@ -33,12 +33,12 @@ const ChatDetailTitle = ({
   const menuList = [
     {
       text: 'チャットルームを編集',
-      onClick: (id: number) => onEdit(id),
+      onClick: (id?: number | string) => onEdit(id),
       disabled: !editable,
     },
     {
       text: 'チャットルームを削除',
-      onClick: (id: number) => onTrash(id),
+      onClick: (id?: number | string) => onTrash(id),
       disabled: !editable,
       danger: true,
     },

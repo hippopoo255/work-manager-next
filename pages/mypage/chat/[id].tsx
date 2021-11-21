@@ -400,7 +400,7 @@ const ChatDetail = () => {
     })
   }
 
-  const replaceDeleteMessage = (id: number) => {
+  const replaceDeleteMessage = (id?: number | string) => {
     setChatRoom((prev) => {
       if (prev !== null) {
         const newMessages = [...prev.messages]
@@ -513,7 +513,7 @@ const ChatDetail = () => {
     [chatRoom]
   )
 
-  const handleMsgUpdateForm = (id: number, index?: number) => {
+  const handleMsgUpdateForm = (id?: number | string, index?: number) => {
     const updateMsg = index !== undefined ? chatMessages[index] : null
     if (updateMsg !== null) {
       setUpdateMsgInput({
@@ -607,7 +607,7 @@ const ChatDetail = () => {
     [updateMsgInput]
   )
 
-  const deleteMessage = async (id: number) => {
+  const deleteMessage = async (id?: number | string) => {
     await deleteRequest(`/chat_room/${getChatRoomId()}/message/${id}`).then(
       () => {
         replaceDeleteMessage(id)

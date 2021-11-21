@@ -1,0 +1,14 @@
+overwrite: true
+generates:
+  # 出力先
+  ./interfaces/graphql/generated/graphql.ts:
+    # schema.graphqlに定義を書いていく
+    schema: ./schema.graphql
+    config:
+      userIndexSignature: true
+      # リゾルバーのためのContextの型をsrc/types/context.d.tsから読み込む
+      # contextType: ../context#Context
+      # enumsAsTypes: true
+    plugins:
+      - typescript
+      # - typescript-resolvers

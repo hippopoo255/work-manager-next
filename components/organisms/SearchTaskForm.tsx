@@ -28,6 +28,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover': {
       color: customColor.red,
     },
+    '@media (hover: none)': {
+      '&:hover': {
+        color: theme.palette.common.white,
+        backgroundColor: customColor.red,
+      },
+    },
   },
   linkWarning: {
     color: theme.palette.warning.main,
@@ -38,6 +44,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderColor: theme.palette.warning.main,
     '&:hover': {
       color: theme.palette.warning.main,
+    },
+    '@media (hover: none)': {
+      '&:hover': {
+        color: theme.palette.common.white,
+        backgroundColor: theme.palette.warning.main,
+      },
     },
   },
 }))

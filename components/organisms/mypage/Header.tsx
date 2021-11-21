@@ -77,9 +77,7 @@ const MypageHeader = ({ toggleMenu }: Props) => {
               <MenuIcon />
             </IconButton>
           </Hidden>
-          <nav className={classes.list}>
-            <HeaderGrowContent />
-          </nav>
+          <nav className={classes.list}></nav>
           <AuthMenu />
         </Toolbar>
       </div>
