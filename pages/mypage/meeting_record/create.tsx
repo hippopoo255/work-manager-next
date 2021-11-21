@@ -7,7 +7,7 @@ import { MypageLayout } from '@/layouts'
 import { MypageTitle } from '@/components/atoms'
 import { FormTitle } from '@/components/molecules'
 import { Avatar, Typography, Box } from '@material-ui/core'
-import MenuBookOutlinedIcon from '@material-ui/icons/MenuBookOutlined'
+import { MeetingRecordIcon } from '@/components/atoms/icons'
 import { postRequest, getRequest, requestUri } from '@/api'
 import { User } from '@/interfaces/models'
 import { MeetingRecordForm } from '@/components/template'
@@ -169,10 +169,7 @@ const MeetingRecordCreate = ({ meetingPlaceList }: Props) => {
       </div>
       <section className="container">
         <Box className={classes.wrap}>
-          <FormTitle
-            title={'新規追加フォーム'}
-            icon={<MenuBookOutlinedIcon />}
-          />
+          <FormTitle title={'新規追加フォーム'} icon={<MeetingRecordIcon />} />
         </Box>
         <MeetingRecordForm
           memberList={memberList}

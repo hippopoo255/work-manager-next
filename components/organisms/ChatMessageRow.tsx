@@ -131,8 +131,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 export type Props = {
   message: ChatMessage
   mine: boolean
-  onEdit: (id: number, index?: number) => void
-  onDelete: (id: number) => void
+  onEdit: (id?: number | string, index?: number) => void
+  onDelete: (id?: number | string) => void
   index: number
 }
 
@@ -146,13 +146,13 @@ const ChatMessageRow = ({ message, mine, onEdit, onDelete, index }: Props) => {
     () => [
       {
         text: '編集',
-        onClick: (id: number, index?: number) => {
+        onClick: (id?: number | string, index?: number) => {
           onEdit(id, index)
         },
       },
       {
         text: '削除',
-        onClick: (id: number) => onDelete(id),
+        onClick: (id?: number | string) => onDelete(id),
         danger: true,
       },
     ],

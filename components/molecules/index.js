@@ -1,5 +1,6 @@
 export { default as AddButton } from './AddButton'
 export { default as AvatarMenu } from './AvatarMenu'
+export { default as BlogCard } from './BlogCard'
 export { default as Breadcrumbs } from './CustomBreadcrumbs'
 export { default as CardHeaderTitle } from './CardHeaderTitle'
 export { default as CardItemBar } from './CardItemBar'

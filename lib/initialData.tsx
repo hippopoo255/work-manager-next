@@ -8,6 +8,11 @@ import {
   ScheduleIcon,
 } from '@/components/atoms/icons'
 import { AlertStatus, Product } from '@/interfaces/common'
+import {
+  BlogStatus,
+  CreateBlogInput,
+  UpdateBlogInput,
+} from '@/interfaces/graphql/generated/graphql'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -65,4 +70,14 @@ export const initialAlertStatus: AlertStatus = {
   variant: 'filled',
   msg: '',
   show: false,
+}
+
+export const createBlogInput: CreateBlogInput = {
+  title: '',
+  body: '',
+  status: BlogStatus.Pending,
+  writtenBy: {
+    id: '',
+    name: '',
+  },
 }

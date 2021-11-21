@@ -48,7 +48,7 @@ export type Props = {
   onSuccess: (response: Schedule) => void
   saveAction: 'create' | 'update'
   dialogTitle: string
-  onDelete: (id: number) => void
+  onDelete: (id?: number | string) => void
 }
 const ScheduleForm = ({
   defaultValues,
@@ -119,7 +119,7 @@ const ScheduleForm = ({
         text: '削除',
         danger: true,
         disabled: defaultValues.disabled,
-        onClick: (id: number) => onDelete(id),
+        onClick: (id?: number | string) => onDelete(id),
       },
     ],
     [defaultValues]

@@ -112,7 +112,7 @@ const Index = () => {
     })
   }
 
-  const handleDeleteClick = async (ids: number[]) => {
+  const handleDeleteClick = async (ids: (number | string)[]) => {
     const queryParams = latestUri.match(/\?.+$/)
     await deleteRequest<Pager<MeetingRecord, SearchMeetingRecordInputs>>(
       `${requestUri.meetingRecord.delete}/${ids[0]}${queryParams || ''}`
@@ -122,7 +122,7 @@ const Index = () => {
     })
   }
 
-  const handleEditClick = (id: number) => {
+  const handleEditClick = (id?: number | string) => {
     router.push(`/mypage/meeting_record/update/${id}`)
   }
 

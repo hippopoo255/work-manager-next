@@ -33,7 +33,7 @@ export default class MyDocument extends Document {
           />
           <meta
             property="og:image"
-            content="https://asset.job-support.site/assets/main-visual04.jpg"
+            content="https://asset.job-support.site/assets/no-image.jpg"
           />
           <link rel="icon" href="/favicon.png" type="image/svg+xml"></link>
         </Head>

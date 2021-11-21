@@ -245,9 +245,11 @@ const Index = () => {
     })
   }
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id?: number | string) => {
     setOpen(false)
-    setDelScheduleId(id)
+    if (typeof id === 'number') {
+      setDelScheduleId(id)
+    }
     setDeleteOpen(true)
   }
 

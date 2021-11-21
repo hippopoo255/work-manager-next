@@ -2,6 +2,8 @@ import { ProcessFlag } from '@/interfaces/enums/ProcessFlag'
 import { SearchMeetingRecordInputs } from '@/interfaces/form/inputs'
 import { SortParam } from '@/interfaces/table'
 import { SearchInputs } from '@/interfaces/form/inputs'
+import { Buffer } from 'buffer'
+
 export const headerHeight: number = 65
 export const drawerWidth: number = 250
 export const drawerClosingWidth: number = 65
@@ -10,13 +12,19 @@ export const chatMainWidth: number = 640
 export const COLLAPSE_COUNT: number = 3
 export const SITE_TITLE: string =
   process.env.NEXT_PUBLIC_SITE_NAME || 'Next App'
+
 export const API_URL: string =
   process.env.NEXT_PUBLIC_API_URL + '/api' || 'http://localhost/api'
 export const API_STAGE_URL: string = process.env.NEXT_PUBLIC_API_STAGE_URL || ''
+export const APP_SYNC_URL: string =
+  process.env.NEXT_PUBLIC_APP_SYNC_URL || 'http://localhost:8000'
+export const APP_SYNC_KEY: string =
+  process.env.NEXT_PUBLIC_APP_SYNC_KEY || 'secret'
 export const PUSHER_URL: string =
   process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
 export const STORAGE_URL: string =
   process.env.NEXT_PUBLIC_STORAGE_URL || 'http://localhost:8080/storage'
+
 export const PROCESS_FLAG: { [k: string]: ProcessFlag } = {
   updateFlag: 1,
   deleteFlag: 2,
@@ -156,7 +164,7 @@ export const handlePageUri = (currentUri: string, args: SortParam<any>) => {
   return uri.replace(`${baseUri}&`, `${baseUri}?`)
 }
 
-export const mine = (by: number, me: number) => by === me
+export const mine = <T = number>(by: T, me: T) => by === me
 
 export const mergeWithoutDuplicate = <T>(arr1: T[], arr2: T[]): T[] => {
   let arr = arr1.concat(arr2)
@@ -169,3 +177,6 @@ export const mergeWithoutDuplicate = <T>(arr1: T[], arr2: T[]): T[] => {
   }
   return uniqueArr
 }
+
+export const encode64 = (str: string) => Buffer.from(str).toString('base64')
+export const decode64 = (str: string) => Buffer.from(str, 'base64').toString()
