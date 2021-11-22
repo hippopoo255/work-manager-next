@@ -1,7 +1,7 @@
 import { useState, useEffect, DependencyList } from 'react'
 import { AxiosResponse } from 'axios'
 import { graphqlRequest } from '@/api'
-import { GraphQlData } from '@/api/graphqlRequest'
+import { GraphQlData, GraphQlError } from '@/api/graphqlRequest'
 
 export const useQuery = <T = any>(
   query: string,
@@ -25,7 +25,7 @@ export const useQuery = <T = any>(
                 setData({ ...res.data.data })
               }
             })
-            .catch((err) => {
+            .catch((err: GraphQlError[]) => {
               console.error(`error!:`, err)
             })
         }
