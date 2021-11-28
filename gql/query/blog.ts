@@ -5,6 +5,7 @@ const getAll = () => `
       title
       body
       created_at
+      updated_at
       status
       writtenBy {
         id
@@ -21,6 +22,7 @@ const findById = (id: string) => `
       title
       body
       created_at
+      updated_at
       status
       writtenBy {
         id

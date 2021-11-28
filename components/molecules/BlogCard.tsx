@@ -4,6 +4,7 @@ import { toStrData } from '@/lib/util'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import Link from 'next/link'
 import { encode64 } from '@/lib/util'
+import { Typography } from '@material-ui/core'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -14,9 +15,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxWidth: 450,
     margin: `0 auto`,
     cursor: 'pointer',
+    background: theme.palette.common.white,
     '&:hover': {
       opacity: 0.8,
     },
+  },
+  title: {
+    fontWeight: theme.typography.fontWeightBold,
+    height: theme.spacing(6),
+    display: '-webkit-box',
+    '-webkit-box-orient': 'vertical',
+    '-webkit-line-clamp': 2,
+    overflow: 'hidden',
   },
   subText: {
     color: theme.palette.text.secondary,
@@ -40,7 +50,9 @@ const BlogCard = ({ blog }: Props) => {
     >
       <a>
         <article className={classes.root}>
-          <p>{blog.title}</p>
+          <Typography variant="body1" className={classes.title}>
+            {blog.title}
+          </Typography>
           <span className={classes.subText}>
             {toStrData(new Date(blog.created_at))}
           </span>

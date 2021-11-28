@@ -1,6 +1,7 @@
 import '@/assets/stylesheets/globals.scss'
 import { ThemeProvider } from '@material-ui/core/styles'
 import { StylesProvider } from '@material-ui/styles'
+
 import type { AppProps } from 'next/app'
 import theme from '@/theme'
 import React from 'react'

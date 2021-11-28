@@ -82,7 +82,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
-    color: '#fff',
+    color: theme.palette.common.white,
   },
   tailWrap: {
     position: 'relative',

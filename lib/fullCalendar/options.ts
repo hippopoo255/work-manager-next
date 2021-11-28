@@ -4,7 +4,7 @@ import interactionPlugin from '@fullcalendar/interaction'
 import { DayCellContentArg } from '@fullcalendar/common'
 import { Info } from '@material-ui/icons'
 
-export const calendarConfig = {
+const options = {
   locale: 'ja',
   plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
   contentHeight: 'auto',
@@ -80,31 +80,4 @@ export const calendarConfig = {
   // },
 }
 
-export const defaultScheduleColor = '#3788d8'
-
-export const scheduleColors = [
-  {
-    value: defaultScheduleColor,
-    label: 'Default',
-  },
-  {
-    value: '#d50101',
-    label: 'Red',
-  },
-  {
-    value: '#f6bf25',
-    label: 'Yellow',
-  },
-  {
-    value: '#098043',
-    label: 'Green',
-  },
-  {
-    value: '#7986cb',
-    label: 'Purple',
-  },
-  {
-    value: '#616161',
-    label: 'Grey',
-  },
-]
+export default options

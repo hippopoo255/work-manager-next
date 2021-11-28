@@ -71,7 +71,6 @@ const UserField = ({ users, onChange }: Props) => {
 }
 
 const Index = () => {
-  const router = useRouter()
   const [memberList, setMemberList] = useState<MemberInputs[]>([])
   const [scheduleEvents, setScheduleEvents] = useState<EventInput[]>([])
   const [schedules, setSchedules] = useState<Schedule[]>([])

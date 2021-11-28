@@ -93,7 +93,7 @@ const useStyles = makeStyles((theme: Theme) =>
       width: 1,
     },
     editIcon: {
-      color: '#fff',
+      color: theme.palette.common.white,
       backgroundColor: theme.palette.primary.main,
       width: 24,
       height: 24,
@@ -104,7 +104,7 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     trashIcon: {
-      color: '#fff',
+      color: theme.palette.common.white,
       backgroundColor: theme.palette.error.main,
       width: 24,
       height: 24,
