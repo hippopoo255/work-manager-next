@@ -9,7 +9,7 @@ const createBlog = ({ input }: MutationCreateBlogArgs) => `
     createBlog(input: {
       title: "${input.title}",
       body: "${input.body}",
-      status: "${input.status}",
+      status: ${input.status},
       writtenBy: {
         id: "${input.writtenBy.id}",
         name: "${input.writtenBy.name}",

@@ -10,7 +10,7 @@ import { EventSourceInput } from '@fullcalendar/common'
 import '@fullcalendar/common/main.css'
 import '@fullcalendar/daygrid/main.css'
 import PropTypes from 'prop-types'
-import { calendarConfig } from '@/lib/fullCalendar'
+import { fullCalendarOptions } from '@/lib/fullCalendar'
 
 export type Props = {
   initialEvents: EventSourceInput
@@ -91,7 +91,7 @@ const CustomCalendar = ({
         eventClick={handleEventClick}
         dateClick={handleDateClick}
         eventChange={handleEventChange}
-        {...calendarConfig}
+        {...fullCalendarOptions}
       />
     </div>
   )

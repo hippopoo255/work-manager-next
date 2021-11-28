@@ -344,7 +344,7 @@ const useStyles = makeStyles((theme: Theme) =>
       width: 1,
     },
     editIcon: {
-      color: '#fff',
+      color: theme.palette.common.white,
       backgroundColor: theme.palette.success.main,
       width: 32,
       height: 32,

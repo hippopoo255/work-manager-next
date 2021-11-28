@@ -44,11 +44,16 @@ const useBlog = () => {
   )
 
   const createBlog = async (input: CreateBlogInput) => {
+    input.body = input.body.replace(/\r?\n/g, '\\n')
+    input.body = input.body.replace(/"/g, '\\"')
     const args = { input }
     return await execMutation<Blog>(blogMutation.createBlog(args))
   }
 
   const updateBlog = async (input: UpdateBlogInput) => {
+    input.body = input.body.replace(/\r?\n/g, '\\n')
+    input.body = input.body.replace(/"/g, '\\"')
+    console.log()
     const args = { id: String(decodedId), input }
     return await execMutation<Blog>(blogMutation.updateBlog(args))
   }

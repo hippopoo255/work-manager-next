@@ -19,7 +19,11 @@ import {
   Divider,
 } from '@material-ui/core'
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { CircularButton, FormTitle } from '@/components/molecules'
+import {
+  CircularButton,
+  FormTitle,
+  MarkdownEditor,
+} from '@/components/molecules'
 import { FormErrorMessage } from '@/components/atoms'
 import { BlogIcon } from '@/components/atoms/icons'
 import { Blog } from '@/interfaces/models'
@@ -36,7 +40,7 @@ type SubmitButtonText = '投稿する' | '下書き保存する'
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrap: {
-    maxWidth: 800,
+    // maxWidth: 800,
   },
   body: {
     width: '100%',
@@ -79,6 +83,10 @@ const BlogForm = (
     const val = (e.target as HTMLInputElement).value as BlogStatus
     setValue('status', val)
     setSubmitText(val === BlogStatus.Done ? '投稿する' : '下書き保存する')
+  }
+
+  const handleBodyChange = (value: string) => {
+    setValue('body', value)
   }
 
   const handleSave = async (input: CreateBlogInput | UpdateBlogInput) => {
@@ -157,30 +165,9 @@ const BlogForm = (
                 </p>
               </Grid>
               <Grid item xs={12}>
-                <Controller
-                  control={control}
-                  name="body"
-                  rules={{
-                    required: {
-                      value: true,
-                      message: '内容は必須です',
-                    },
-                  }}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      id="body"
-                      label="内容"
-                      type="text"
-                      required
-                      fullWidth
-                      variant="outlined"
-                      multiline
-                      minRows={10}
-                      placeholder={'内容'}
-                      error={!!errors.body}
-                    />
-                  )}
+                <MarkdownEditor
+                  value={getValues('body')}
+                  onChange={handleBodyChange}
                 />
                 <p style={{ minHeight: 20 }}>
                   {errors.body && (
