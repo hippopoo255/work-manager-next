@@ -2,7 +2,7 @@ import React from 'react'
 import clsx from 'clsx'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Box, Button, Grid, Typography } from '@material-ui/core'
-import { CustomLoader } from '@/components/molecules'
+import { CustomLoader, RecordCountBar } from '@/components/molecules'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -30,18 +30,18 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingBottom: theme.spacing(5),
     },
   },
-  footer: {
-    paddingTop: theme.spacing(2),
-    borderTop: `1px solid ${theme.palette.divider}`,
-    [theme.breakpoints.down('xs')]: {
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      width: '100%',
-      padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
-      background: theme.palette.common.white,
-    },
-  },
+  // footer: {
+  //   paddingTop: theme.spacing(2),
+  //   borderTop: `1px solid ${theme.palette.divider}`,
+  //   [theme.breakpoints.down('xs')]: {
+  //     position: 'absolute',
+  //     bottom: 0,
+  //     left: 0,
+  //     width: '100%',
+  //     padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
+  //     background: theme.palette.common.white,
+  //   },
+  // },
   loaderPaper: {
     position: 'absolute',
     top: 0,
@@ -93,30 +93,10 @@ const SearchBaseForm = ({
         >
           {children}
         </Grid>
-        <Box className={defaultClass.footer}>
-          <Grid
-            container
-            spacing={2}
-            alignItems={'center'}
-            justifyContent={'space-between'}
-          >
-            <Grid item classes={{ item: defaultClass.fieldClear }}>
-              <Button
-                variant={'outlined'}
-                color={'primary'}
-                size={'small'}
-                onClick={handleClear}
-              >
-                検索クリア
-              </Button>
-            </Grid>
-            <Grid item>
-              <Typography color={'textSecondary'} variant={'body2'}>
-                検索結果：<strong>{currentTotalCount}</strong>件
-              </Typography>
-            </Grid>
-          </Grid>
-        </Box>
+        <RecordCountBar
+          currentTotalCount={currentTotalCount}
+          onSearchClear={handleClear}
+        />
       </form>
       {loading && (
         <Box className={defaultClass.loaderPaper}>

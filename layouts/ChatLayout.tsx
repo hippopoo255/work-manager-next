@@ -328,7 +328,6 @@ const ChatLayout = React.memo(
                     [classes.none]: sideNone,
                   })}
                 >
-                  {/* TODO: 検索ボックス */}
                   <Box className={classes.chatHead}>
                     <div className={classes.keywordBox}>
                       <Autocomplete

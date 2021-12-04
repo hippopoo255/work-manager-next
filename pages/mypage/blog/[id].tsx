@@ -8,9 +8,10 @@ import {
   ConfirmDialog,
   CustomMenuBox,
 } from '@/components/organisms'
-import { BlogMeta, Breadcrumbs } from '@/components/molecules'
+import { BlogMeta, Breadcrumbs, TagsRow } from '@/components/molecules'
 import { MypageTitle } from '@/components/atoms'
 import { MypageLayout } from '@/layouts'
+import { Box } from '@material-ui/core'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday'
 import UpdateIcon from '@material-ui/icons/Update'
@@ -29,7 +30,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '100%',
       borderTop: `1px solid ${theme.palette.divider}`,
       background: theme.palette.common.white,
-      // textAlign: 'right',
     },
   },
   flexible: {
@@ -41,7 +41,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     gap: theme.spacing(2),
     flexWrap: 'wrap',
-    padding: `${theme.spacing(5)}px 0`,
+  },
+  tags: {
+    height: 24,
+    margin: `${theme.spacing(1)}px 0 ${theme.spacing(2)}px`,
   },
 }))
 
@@ -118,23 +121,30 @@ const BlogDetail = () => {
               </div>
               <div className={classes.flexible}>
                 <MypageTitle center>{blog.title}</MypageTitle>
-                <div className={classes.meta}>
-                  <BlogMeta
-                    label={'投稿者'}
-                    value={blog.writtenBy?.name || ''}
-                    Icon={AccountCircleIcon}
-                  />
-                  <BlogMeta
-                    label={'公開日'}
-                    value={postTiming(new Date(blog.created_at!)) || ''}
-                    Icon={CalendarTodayIcon}
-                  />
-                  <BlogMeta
-                    label={'更新日'}
-                    value={postTiming(new Date(blog.updated_at!)) || ''}
-                    Icon={UpdateIcon}
-                  />
-                </div>
+                <Box mt={5}>
+                  <Box mt={2} mb={5}>
+                    <div className={classes.meta}>
+                      <BlogMeta
+                        label={'投稿者'}
+                        value={blog.writtenBy?.name || ''}
+                        Icon={AccountCircleIcon}
+                      />
+                      <BlogMeta
+                        label={'公開日'}
+                        value={postTiming(new Date(blog.created_at!)) || ''}
+                        Icon={CalendarTodayIcon}
+                      />
+                      <BlogMeta
+                        label={'更新日'}
+                        value={postTiming(new Date(blog.updated_at!)) || ''}
+                        Icon={UpdateIcon}
+                      />
+                    </div>
+                  </Box>
+                  <Box component="div" className={classes.tags}>
+                    {blog.tags && <TagsRow tags={blog.tags} disabled />}
+                  </Box>
+                </Box>
                 <BlogDetailCard blog={blog} />
               </div>
             </div>

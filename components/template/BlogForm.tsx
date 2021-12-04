@@ -26,7 +26,7 @@ import {
 } from '@/components/molecules'
 import { FormErrorMessage } from '@/components/atoms'
 import { BlogIcon } from '@/components/atoms/icons'
-import { Blog } from '@/interfaces/models'
+import { Blog } from '@/interfaces/graphql/generated/graphql'
 import { useRouter } from 'next/router'
 
 type Props = {

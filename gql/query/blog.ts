@@ -1,12 +1,18 @@
-const getAll = () => `
+const getAll = (tagId?: string) => `
   query {
-    blogs {
+    blogs(query: {
+      tag: "${tagId || 0}"
+    }) {
       id
       title
       body
       created_at
       updated_at
       status
+      tags {
+        id
+        name
+      }
       writtenBy {
         id
         name
@@ -24,6 +30,10 @@ const findById = (id: string) => `
       created_at
       updated_at
       status
+      tags {
+        id
+        name
+      }
       writtenBy {
         id
         name

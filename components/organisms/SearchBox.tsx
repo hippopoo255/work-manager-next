@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles'
 import { Box, Hidden, Button, SwipeableDrawer } from '@material-ui/core'
+import clsx from 'clsx'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -8,21 +9,31 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2),
     },
+    disablePadding: {
+      paddingLeft: 0,
+      paddingRight: 0,
+    },
   })
 )
 
 type Props = {
   formContent: React.ReactNode
   position?: {
-    position: 'absolute'
+    position?: 'absolute'
     top?: string | number
     left?: string | number
     right?: string | number
     bottom?: string | number
+    paddingBottom?: string | number
   }
+  disablePadding?: boolean
 }
 
-const SearchBox = ({ formContent, position }: Props) => {
+const SearchBox = ({
+  formContent,
+  position,
+  disablePadding = false,
+}: Props) => {
   const classes = useStyles()
   const [open, setOpen] = useState<boolean>(false)
   const toggleDrawer =
@@ -41,7 +52,13 @@ const SearchBox = ({ formContent, position }: Props) => {
   return (
     <div>
       <Hidden xsDown implementation="css">
-        <div className={classes.top}>{formContent}</div>
+        <div
+          className={clsx(classes.top, {
+            [classes.disablePadding]: disablePadding,
+          })}
+        >
+          {formContent}
+        </div>
       </Hidden>
       <Hidden smUp implementation="css">
         <div style={!!position ? { ...position } : {}}>
