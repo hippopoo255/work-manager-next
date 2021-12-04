@@ -38,6 +38,7 @@ export enum BlogStatus {
 export type CreateBlogInput = {
   body: Scalars['String'];
   status: BlogStatus;
+  tags: Array<Maybe<TagInput>>;
   title: Scalars['String'];
   writtenBy: WrittenBy;
 };
@@ -91,7 +92,11 @@ export type QueryBlogArgs = {
 
 
 export type QueryBlogsArgs = {
-  query?: Maybe<Scalars['String']>;
+  query?: Maybe<QueryInput>;
+};
+
+export type QueryInput = {
+  tag: Scalars['String'];
 };
 
 export type SignInInput = {
@@ -114,9 +119,15 @@ export type Tag = {
   updated_at?: Maybe<Scalars['Date']>;
 };
 
+export type TagInput = {
+  id?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+};
+
 export type UpdateBlogInput = {
   body: Scalars['String'];
   status: BlogStatus;
+  tags: Array<Maybe<TagInput>>;
   title: Scalars['String'];
   writtenBy: WrittenBy;
 };

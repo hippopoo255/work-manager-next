@@ -1,5 +1,4 @@
 export type { Activity } from './Activity'
-export type { Blog } from './Blog'
 export type { ChatImage } from './ChatImage'
 export type { ChatMessage } from './ChatMessage'
 export type { ChatMessageRead } from './ChatMessageRead'

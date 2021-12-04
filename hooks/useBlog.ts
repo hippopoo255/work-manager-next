@@ -9,7 +9,7 @@ import {
 } from '@/interfaces/graphql/generated/graphql'
 import { blogMutation } from '@/gql/mutation'
 import { execMutation } from '@/gql'
-import { Blog } from '@/interfaces/models'
+import { Blog } from '@/interfaces/graphql/generated/graphql'
 import { useRouter } from 'next/router'
 import { blogQuery } from '@/gql/query'
 import { decode64 } from '@/lib/util'
@@ -39,6 +39,7 @@ const useBlog = () => {
         id: auth.user.user_code,
         name: auth.user.full_name,
       },
+      tags: data.blog?.tags || [],
     }),
     [auth, data]
   )

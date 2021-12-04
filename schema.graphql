@@ -28,7 +28,7 @@ type Mutation {
 }
 
 type Query {
-  blogs(query: String): [Blog!]
+  blogs(query: QueryInput): [Blog!]
   blog(id: String!): Blog
   users: [User!]!
 }
@@ -53,11 +53,16 @@ enum BlogStatus {
   pending
 }
 
+input QueryInput {
+  tag: String!
+}
+
 input CreateBlogInput {
   title: String!
   body: String!
   status: BlogStatus!
   writtenBy: WrittenBy!
+  tags: [TagInput]!
 }
 
 input SignInInput {
@@ -77,6 +82,12 @@ input UpdateBlogInput {
   body: String!
   status: BlogStatus!
   writtenBy: WrittenBy!
+  tags: [TagInput]!
+}
+
+input TagInput {
+  id: String
+  name: String!
 }
 
 input WrittenBy {

@@ -27,7 +27,7 @@ const BlogMeta = ({ Icon, label, value }: Props) => {
   const classes = useStyles()
   return (
     <Box
-      component="p"
+      component="div"
       display="flex"
       alignItems={'center'}
       className={classes.meta}

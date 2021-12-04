@@ -80,4 +80,5 @@ export const createBlogInput: CreateBlogInput = {
     id: '',
     name: '',
   },
+  tags: [],
 }

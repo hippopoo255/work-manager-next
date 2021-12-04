@@ -10,34 +10,32 @@ export const useQuery = <T = any>(
   execJudge: boolean = true
 ) => {
   const [data, setData] = useState<T>(initialVal)
+  const fetch = async (q: string) => {
+    await graphqlRequest<T>(q)
+      .then((res: AxiosResponse<GraphQlData<T>>) => {
+        if (res.data.errors !== undefined) {
+          throw res.data.errors
+        }
+        if (res.data.data !== null) {
+          setData({ ...res.data.data })
+        }
+      })
+      .catch((err: GraphQlError[]) => {
+        console.error(`error!:`, err)
+      })
+  }
 
   useEffect(() => {
     let unmounted = false
-    if (!unmounted) {
-      const init = async () => {
-        if (execJudge) {
-          await graphqlRequest<T>(query)
-            .then((res: AxiosResponse<GraphQlData<T>>) => {
-              if (res.data.errors !== undefined) {
-                throw res.data.errors
-              }
-              if (res.data.data !== null) {
-                setData({ ...res.data.data })
-              }
-            })
-            .catch((err: GraphQlError[]) => {
-              console.error(`error!:`, err)
-            })
-        }
-      }
-      init()
+    if (!unmounted && execJudge) {
+      fetch(query)
     }
     return () => {
       unmounted = true
     }
   }, dependencies)
 
-  return { data, setData }
+  return { data, setData, fetch }
 }
 
 export const execMutation = async <T>(query: string) => {
