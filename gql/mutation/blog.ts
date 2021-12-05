@@ -14,6 +14,7 @@ const createBlog = ({ input }: MutationCreateBlogArgs) => `
         id: "${input.writtenBy.id}",
         name: "${input.writtenBy.name}",
       }
+      tags: []
     }) {
       id
       title
@@ -38,6 +39,7 @@ const updateBlog = ({ id, input }: MutationUpdateBlogArgs) => `
         id: "${input.writtenBy.id}",
         name: "${input.writtenBy.name}",
       }
+      tags: []
     }) {
       id
       title

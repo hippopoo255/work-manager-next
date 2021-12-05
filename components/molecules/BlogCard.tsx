@@ -4,8 +4,7 @@ import { postTiming, STORAGE_URL } from '@/lib/util'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import Link from 'next/link'
 import { encode64 } from '@/lib/util'
-import { Tooltip, Typography } from '@material-ui/core'
-import { TagBlock } from '@/components/atoms'
+import { Typography } from '@material-ui/core'
 import { TagsRow } from '@/components/molecules'
 import { Tag } from '@/interfaces/graphql/generated/graphql'
 import { blogQuery } from '@/gql/query'
@@ -61,8 +60,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontWeight: 'bold',
   },
   tags: {
-    minHeight: 24,
+    height: theme.spacing(7),
     margin: `${theme.spacing(2)}px 0 ${theme.spacing(1)}px`,
+    overflow: 'hidden',
+    display: '-webkit-box',
+    '-webkit-box-orient': 'vertical',
+    '-webkit-line-clamp': 2,
   },
   meta: {
     display: 'flex',
