@@ -9,6 +9,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     gap: 4,
+    flexWrap: 'wrap',
   },
 }))
 type Props = {
