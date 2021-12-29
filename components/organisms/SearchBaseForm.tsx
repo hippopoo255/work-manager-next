@@ -57,6 +57,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   fieldClear: {
     flexShrink: 0,
   },
+  footer: {
+    paddingTop: theme.spacing(2),
+    borderTop: `1px solid ${theme.palette.divider}`,
+    [theme.breakpoints.down('xs')]: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      width: '100%',
+      padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
+      background: theme.palette.common.white,
+    },
+  },
 }))
 
 export type Props = {
@@ -93,10 +105,12 @@ const SearchBaseForm = ({
         >
           {children}
         </Grid>
-        <RecordCountBar
-          currentTotalCount={currentTotalCount}
-          onSearchClear={handleClear}
-        />
+        <Box className={defaultClass.footer}>
+          <RecordCountBar
+            currentTotalCount={currentTotalCount}
+            onSearchClear={handleClear}
+          />
+        </Box>
       </form>
       {loading && (
         <Box className={defaultClass.loaderPaper}>

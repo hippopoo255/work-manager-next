@@ -1,8 +1,10 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect } from 'react'
 import clsx from 'clsx'
 import {
+  Blog,
   BlogStatus,
   CreateBlogInput,
+  TagInput,
   UpdateBlogInput,
 } from '@/interfaces/graphql/generated/graphql'
 import { useForm, Controller } from 'react-hook-form'
@@ -11,6 +13,7 @@ import {
   Card,
   CardContent,
   CardActions,
+  Chip,
   Grid,
   TextField,
   FormControlLabel,
@@ -18,6 +21,9 @@ import {
   RadioGroup,
   Divider,
 } from '@material-ui/core'
+import Autocomplete from '@material-ui/lab/Autocomplete'
+import { useTags } from '@/hooks'
+
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import {
   CircularButton,
@@ -26,7 +32,6 @@ import {
 } from '@/components/molecules'
 import { FormErrorMessage } from '@/components/atoms'
 import { BlogIcon } from '@/components/atoms/icons'
-import { Blog } from '@/interfaces/graphql/generated/graphql'
 import { useRouter } from 'next/router'
 
 type Props = {
@@ -68,16 +73,35 @@ const BlogForm = (
   const [loading, setLoading] = useState<boolean>(false)
   const [submitText, setSubmitText] = useState<SubmitButtonText>('投稿する')
   const router = useRouter()
-
+  const { tagList } = useTags()
   const {
     handleSubmit,
+    clearErrors,
     control,
     setValue,
     getValues,
+    watch,
     formState: { errors },
   } = useForm<CreateBlogInput | UpdateBlogInput>({
     defaultValues,
   })
+
+  // Autocomlete members
+  const selectedTags = watch('tags', [])
+  const handleTags = (
+    event: React.ChangeEvent<{}>,
+    newValue: CreateBlogInput['tags']
+  ) => {
+    if (newValue.length > 5) {
+      newValue.splice(5)
+    }
+    setValue('tags', [...newValue])
+    if (newValue.length > 0 && newValue.length <= 5) {
+      clearErrors('tags')
+    }
+  }
+  console.log(tagList)
+  console.log(selectedTags)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = (e.target as HTMLInputElement).value as BlogStatus
@@ -161,6 +185,71 @@ const BlogForm = (
                 <p style={{ minHeight: 20 }}>
                   {!!errors.title && (
                     <FormErrorMessage msg={errors.title.message} />
+                  )}
+                </p>
+              </Grid>
+              <Grid item xs={12}>
+                <Controller
+                  control={control}
+                  name="tags"
+                  rules={{
+                    required: {
+                      value: true,
+                      message: 'タグの入力は必須です',
+                    },
+                    minLength: {
+                      value: 1,
+                      message: 'タグの入力は必須です',
+                    },
+                    maxLength: {
+                      value: 5,
+                      message: '登録できるタグは5個までです',
+                    },
+                  }}
+                  render={({ field }) => (
+                    <Autocomplete
+                      {...field}
+                      multiple
+                      id="blog_tags_field"
+                      value={selectedTags}
+                      onChange={handleTags}
+                      options={tagList}
+                      getOptionSelected={(option, value) =>
+                        option !== null &&
+                        value !== null &&
+                        option.id === value.id
+                      }
+                      getOptionLabel={(option) => (!!option ? option.name : '')}
+                      renderTags={(tagValue, getTagProps) =>
+                        tagValue.map((option, index) => (
+                          <Chip
+                            key={`tag_${index}`}
+                            label={!!option ? option.name : ''}
+                            {...getTagProps({ index })}
+                          />
+                        ))
+                      }
+                      style={{
+                        width: '100%',
+                      }}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="タグ"
+                          variant="outlined"
+                          placeholder="タグは5個まで登録できます"
+                          required
+                          error={!!errors.tags}
+                        />
+                      )}
+                    />
+                  )}
+                />
+                <p style={{ minHeight: 20 }}>
+                  {errors.tags && (
+                    <FormErrorMessage
+                      msg={'タグを1〜5個まで入力してください'}
+                    />
                   )}
                 </p>
               </Grid>

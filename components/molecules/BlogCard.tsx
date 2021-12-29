@@ -7,7 +7,6 @@ import { encode64 } from '@/lib/util'
 import { Typography } from '@material-ui/core'
 import { TagsRow } from '@/components/molecules'
 import { Tag } from '@/interfaces/graphql/generated/graphql'
-import { blogQuery } from '@/gql/query'
 import clsx from 'clsx'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -81,7 +80,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 type Props = {
   blog: Blog
   fetch?: (q: string) => Promise<void>
-  onTagClick: (t: string) => void
+  onTagClick: (t: Tag) => void
 }
 
 // eslint-disable-next-line react/display-name
@@ -89,19 +88,14 @@ const BlogCard = React.memo(({ blog, fetch, onTagClick }: Props) => {
   const classes = useStyles()
   const encodedId = encode64(blog.id)
 
-  const handleTagClick = useCallback(
-    async (id: Tag['id']) => {
-      if (fetch !== undefined) {
-        const targetTag = !!blog.tags && blog.tags.find((tag) => tag.id === id)
-        if (!!targetTag) {
-          onTagClick(targetTag.name)
-        }
-        const query = blogQuery.getAll(id)
-        await fetch(query)
+  const handleTagClick = useCallback(async (id: Tag['id']) => {
+    if (fetch !== undefined) {
+      const targetTag = !!blog.tags && blog.tags.find((tag) => tag.id === id)
+      if (!!targetTag) {
+        onTagClick(targetTag)
       }
-    },
-    [fetch]
-  )
+    }
+  }, [])
 
   const bgImage = useMemo(() => {
     return `url(${STORAGE_URL}/assets/no-image.png)`

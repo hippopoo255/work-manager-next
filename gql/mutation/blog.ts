@@ -3,7 +3,7 @@ import {
   MutationDeleteBlogArgs,
   MutationUpdateBlogArgs,
 } from '@/interfaces/graphql/generated/graphql'
-
+import { arrToGqlStr } from '@/lib/util'
 const createBlog = ({ input }: MutationCreateBlogArgs) => `
   mutation {
     createBlog(input: {
@@ -14,7 +14,7 @@ const createBlog = ({ input }: MutationCreateBlogArgs) => `
         id: "${input.writtenBy.id}",
         name: "${input.writtenBy.name}",
       }
-      tags: []
+      tags: ${arrToGqlStr(input.tags)}
     }) {
       id
       title
@@ -39,7 +39,7 @@ const updateBlog = ({ id, input }: MutationUpdateBlogArgs) => `
         id: "${input.writtenBy.id}",
         name: "${input.writtenBy.name}",
       }
-      tags: []
+      tags: ${arrToGqlStr(input.tags)}
     }) {
       id
       title

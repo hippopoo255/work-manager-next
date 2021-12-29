@@ -178,5 +178,14 @@ export const mergeWithoutDuplicate = <T>(arr1: T[], arr2: T[]): T[] => {
   return uniqueArr
 }
 
+export const arrToGqlStr = (arg: any[]) => {
+  let tempStr = JSON.stringify(arg)
+  tempStr = tempStr.replace(/{"/g, '{')
+  tempStr = tempStr.replace(/":/g, ':')
+  tempStr = tempStr.replace(/,"/g, ',')
+  const gqlText = tempStr
+  return gqlText
+}
+
 export const encode64 = (str: string) => Buffer.from(str).toString('base64')
 export const decode64 = (str: string) => Buffer.from(str, 'base64').toString()

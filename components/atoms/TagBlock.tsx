@@ -40,7 +40,6 @@ const TagBlock = ({ onClick, tag }: Props) => {
   }
 
   const linkable = useMemo(() => !!onClick, [onClick])
-  console.log(linkable)
   return (
     <>
       <Button

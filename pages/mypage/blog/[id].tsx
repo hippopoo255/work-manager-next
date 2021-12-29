@@ -142,7 +142,7 @@ const BlogDetail = () => {
                     </div>
                   </Box>
                   <Box component="div" className={classes.tags}>
-                    {blog.tags && <TagsRow tags={blog.tags} disabled />}
+                    {blog.tags.length && <TagsRow tags={blog.tags} disabled />}
                   </Box>
                 </Box>
                 <BlogDetailCard blog={blog} />

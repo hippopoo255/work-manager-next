@@ -8,10 +8,11 @@ export type Props = {
   loading: boolean
   submitText: string
   color: 'default' | 'inherit' | 'primary' | 'secondary'
+  variant?: 'contained' | 'outlined' | 'text' | undefined
   disabled: boolean
   onClick?: () => Promise<void>
   options?: {
-    [k: string]: boolean | string
+    [k: string]: boolean | string | any
   }
 }
 
@@ -46,12 +47,13 @@ const CircularButton = ({
   submitText = '保存',
   disabled,
   options,
+  variant,
 }: Props) => {
   const classes = useStyles()
   return (
     <div className={classes.wrap}>
       <Button
-        variant="contained"
+        variant={variant}
         color={color}
         className={clsx(classes.submitBtn, {
           [classes.danger]: color === 'inherit',
@@ -78,6 +80,7 @@ CircularButton.propTypes = {
 CircularButton.defaultProps = {
   submitText: '保存',
   color: 'primary',
+  variant: 'contained',
   disabled: false,
 }
 

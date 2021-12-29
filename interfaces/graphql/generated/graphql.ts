@@ -43,6 +43,12 @@ export type CreateBlogInput = {
   writtenBy: WrittenBy;
 };
 
+export type ListWithPager = {
+  __typename?: 'ListWithPager';
+  items?: Maybe<Array<Maybe<Blog>>>;
+  nextToken?: Maybe<Scalars['String']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createBlog: Blog;
@@ -81,7 +87,8 @@ export type MutationUpdateBlogArgs = {
 export type Query = {
   __typename?: 'Query';
   blog?: Maybe<Blog>;
-  blogs?: Maybe<Array<Blog>>;
+  blogs?: Maybe<ListWithPager>;
+  tags?: Maybe<Array<Tag>>;
   users: Array<User>;
 };
 
@@ -92,11 +99,12 @@ export type QueryBlogArgs = {
 
 
 export type QueryBlogsArgs = {
+  nextToken?: Maybe<Scalars['String']>;
   query?: Maybe<QueryInput>;
 };
 
 export type QueryInput = {
-  tag: Scalars['String'];
+  tag?: Maybe<Scalars['String']>;
 };
 
 export type SignInInput = {
