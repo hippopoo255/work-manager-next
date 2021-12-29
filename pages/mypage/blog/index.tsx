@@ -1,41 +1,75 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { MypageLayout } from '@/layouts'
 import { useQuery } from '@/gql'
 import { blogQuery } from '@/gql/query'
-import { Blog } from '@/interfaces/graphql/generated/graphql'
+import { Blog, QueryInput, Tag } from '@/interfaces/graphql/generated/graphql'
 import { BlogCard } from '@/components/molecules'
 import { MypageTitle } from '@/components/atoms'
 import { Box, Grid } from '@material-ui/core'
-import { AddButton } from '@/components/molecules'
+import { AddButton, MoreLoadButton } from '@/components/molecules'
 import { SearchBox, SearchBlogResultBox } from '@/components/organisms'
 
 type BlogData = {
-  blogs: Blog[]
+  blogs: {
+    items: Blog[]
+    nextToken: string | null
+  }
 }
 
 const Index = () => {
-  const { data, fetch } = useQuery<BlogData>(blogQuery.getAll(), {
-    blogs: [],
+  const { data, fetch } = useQuery<BlogData>(blogQuery.getPager(), {
+    blogs: {
+      items: [],
+      nextToken: null,
+    },
   })
-  const blogs = data.blogs
-
+  const nextToken = data.blogs.nextToken
   const router = useRouter()
+  const [blogs, setBlogs] = useState<Blog[]>([])
+  const [tagId, setTagId] = useState<string | undefined>(undefined)
   const [keyword, setKeyword] = useState<string>('')
 
-  const handleSearchClear = async () =>
-    !!keyword
-      ? await fetch(blogQuery.getAll()).then(() => {
-          setKeyword('')
-        })
-      : await undefined
+  useEffect(() => {
+    setBlogs((prev: Blog[]) => [...prev, ...data.blogs.items])
+  }, [data])
+
+  const reloadBlogs = async (
+    queryArgs: QueryInput = {
+      tag: tagId,
+    },
+    token: string | null = nextToken
+  ) => {
+    const query = blogQuery.getPager(queryArgs, token)
+    return await fetch(query)
+  }
+  const handleMore = async () => await reloadBlogs()
+
+  const handleSearchClear = async () => {
+    if (!!keyword) {
+      setBlogs([])
+      return await fetch(blogQuery.getPager()).then(() => {
+        setTagId(undefined)
+        setKeyword('')
+      })
+    } else {
+      return await undefined
+    }
+  }
 
   const handleAdd = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     router.push('/mypage/blog/create')
   }
 
-  const handleTagClick = useCallback((target: string) => {
-    setKeyword(target)
+  const handleTagClick = useCallback(async (targetTag: Tag) => {
+    setBlogs([])
+    const queryArgs = {
+      tag: targetTag.id,
+    }
+    await reloadBlogs(queryArgs, null).then(() => {
+      setTagId(targetTag.id)
+      setKeyword(targetTag.name)
+    })
   }, [])
 
   return (
@@ -70,6 +104,16 @@ const Index = () => {
                 </Grid>
               ))}
           </Grid>
+          {nextToken && (
+            <Box
+              className="container"
+              mt={2}
+              display={'flex'}
+              justifyContent={'center'}
+            >
+              <MoreLoadButton fetch={handleMore} />
+            </Box>
+          )}
         </Box>
         <AddButton onClick={handleAdd} title="ブログを投稿する" />
       </section>

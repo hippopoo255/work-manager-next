@@ -2,7 +2,7 @@ import React from 'react'
 import { Box, Tooltip } from '@material-ui/core'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { TagBlock } from '@/components/atoms'
-import { Tag } from '@/interfaces/graphql/generated/graphql'
+import { Blog, Tag } from '@/interfaces/graphql/generated/graphql'
 
 const useStyles = makeStyles((theme: Theme) => ({
   tagList: {
@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 type Props = {
-  tags: Tag[]
+  tags: Blog['tags']
   onTagClick?: (id: Tag['id']) => void
   disabled?: boolean
 }

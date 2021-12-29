@@ -1,4 +1,4 @@
-import { useMemo, useEffect } from 'react'
+import { useMemo, useEffect, useCallback } from 'react'
 import { useAuth } from '.'
 import { useQuery } from '@/gql'
 import {
@@ -22,7 +22,6 @@ const useBlog = () => {
   const router = useRouter()
   const paramId = router.query.id
   const decodedId = decode64(String(paramId))
-
   const { data, setData } = useQuery<BlogData>(
     blogQuery.findById(decodedId),
     { blog: null },
@@ -45,6 +44,7 @@ const useBlog = () => {
   )
 
   const createBlog = async (input: CreateBlogInput) => {
+    console.log()
     input.body = input.body.replace(/\r?\n/g, '\\n')
     input.body = input.body.replace(/"/g, '\\"')
     const args = { input }
@@ -54,7 +54,6 @@ const useBlog = () => {
   const updateBlog = async (input: UpdateBlogInput) => {
     input.body = input.body.replace(/\r?\n/g, '\\n')
     input.body = input.body.replace(/"/g, '\\"')
-    console.log()
     const args = { id: String(decodedId), input }
     return await execMutation<Blog>(blogMutation.updateBlog(args))
   }

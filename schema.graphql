@@ -28,9 +28,15 @@ type Mutation {
 }
 
 type Query {
-  blogs(query: QueryInput): [Blog!]
+  blogs(query: QueryInput, nextToken: String): ListWithPager
   blog(id: String!): Blog
   users: [User!]!
+  tags: [Tag!]
+}
+
+type ListWithPager {
+  items: [Blog]
+  nextToken: String
 }
 
 type Tag {
@@ -54,7 +60,7 @@ enum BlogStatus {
 }
 
 input QueryInput {
-  tag: String!
+  tag: String
 }
 
 input CreateBlogInput {

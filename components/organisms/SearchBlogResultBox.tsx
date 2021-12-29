@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Card, CardContent, Grid, Typography } from '@material-ui/core'
+import { Grid, Typography } from '@material-ui/core'
 import { SearchBaseForm } from '@/components/organisms'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 
@@ -24,9 +24,11 @@ const useStyles = makeStyles((theme: Theme) =>
       fontWeight: theme.typography.fontWeightBold,
     },
     disableKeyword: {
-      color: theme.palette.text.hint,
+      color: theme.palette.common.white,
       fontWeight: theme.typography.fontWeightBold,
-      fontStyle: 'italic',
+      background: theme.palette.grey[800],
+      borderRadius: theme.shape.borderRadius,
+      padding: theme.spacing(2),
       [theme.breakpoints.down('xs')]: {
         fontSize: theme.typography.body2.fontSize,
       },
@@ -74,7 +76,7 @@ const SearchBlogResultBox = ({
             </Typography>
           ) : (
             <Typography className={classes.disableKeyword}>
-              タグをクリックすると絞り込み検索ができます
+              カード内のタグをクリックすると絞り込み検索ができます
             </Typography>
           )}
         </Grid>
