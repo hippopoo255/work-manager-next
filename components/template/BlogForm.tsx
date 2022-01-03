@@ -33,6 +33,7 @@ import {
 import { FormErrorMessage } from '@/components/atoms'
 import { BlogIcon } from '@/components/atoms/icons'
 import { useRouter } from 'next/router'
+import { uploadFile } from '@/lib/file'
 
 type Props = {
   defaultValues: CreateBlogInput | UpdateBlogInput
@@ -100,8 +101,6 @@ const BlogForm = (
       clearErrors('tags')
     }
   }
-  console.log(tagList)
-  console.log(selectedTags)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = (e.target as HTMLInputElement).value as BlogStatus
@@ -140,6 +139,12 @@ const BlogForm = (
       }
     })
   }, [defaultValues])
+
+  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    await uploadFile(e.target.files![0]).then((d) => {
+      console.log(d)
+    })
+  }
 
   return (
     <>
@@ -264,6 +269,14 @@ const BlogForm = (
                   )}
                 </p>
               </Grid>
+              {/* <Grid item xs={12}>
+                <input
+                  type="file"
+                  name="thumbnail"
+                  id="thumbnail"
+                  onChange={handleFile}
+                />
+              </Grid> */}
               <Grid item xs={12}>
                 <RadioGroup
                   name="status"

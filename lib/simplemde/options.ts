@@ -3,8 +3,16 @@ import { MDE_BODY_HEIGHT, MDE_SHOW_TOOLBAR, MDE_SHOW_STATUSBAR } from './util'
 
 const defaultOptions = {
   placeholder: 'ここに記事を入力してください。',
-  uploadImage: false,
+  uploadImage: true,
+  // imageUploadFunction,
+  imageMaxSize: 1024 * 1024 * 0.1,
+  imageAccept: 'image/png,image/jpeg,image/gif,image/svg+xml',
+  // imageTexts: {
+  //   sbInit: '',
+  //   sbOnDragEnter: '',
+  // },
   showIcons: ['code', 'table'],
+  spellChecker: false,
   toolbar: MDE_SHOW_TOOLBAR && [
     'bold',
     'italic',
@@ -36,6 +44,7 @@ const defaultOptions = {
   tabSize: 2,
   indentWithTabs: true,
   maxHeight: `${MDE_BODY_HEIGHT}px`,
+  status: MDE_SHOW_STATUSBAR,
 } as SimpleMDE.Options
 
 const options: SimpleMDE.Options = {

@@ -1,6 +1,17 @@
-import axios, { AxiosResponse } from 'axios'
+import axios, {
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+  Method,
+} from 'axios'
 import router from 'next/router'
-import { API_URL } from '@/lib/util'
+import { API_URL, API_STAGE_URL } from '@/lib/util'
+
+export type Config = {
+  headers: {
+    'Content-Type'?: 'multipart/form-data'
+  }
+}
 
 export const defaultErrorHandler = (err: AxiosResponse) => {
   console.error(err)
@@ -23,3 +34,22 @@ export const httpClient = axios.create({
   baseURL: API_URL,
   withCredentials: true,
 })
+
+export const postRequestToApiGateway = async <T = any>(
+  resource: string,
+  data?: any,
+  config?: AxiosRequestConfig,
+  baseURL: string = API_STAGE_URL
+) => {
+  const httpClient: AxiosInstance = axios.create({
+    baseURL,
+    withCredentials: true,
+  })
+  const d = await httpClient
+    .post<T>(resource, data, { ...config })
+    .then((res: AxiosResponse<T>) => {
+      return res.data
+    })
+    .catch()
+  return d
+}
