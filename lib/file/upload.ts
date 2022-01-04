@@ -1,14 +1,15 @@
-import { postRequestToApiGateway, Config } from '@/lib/axios'
+import { AxiosRequestConfig } from 'axios'
+import { postRequestToApiGateway } from '@/lib/axios'
 
 type UploadedFileSrcType = {
-  src: string
+  src: string[]
 }
 type UploadedFileHeadersType = {
   'Access-Control-Allow-Credentials': boolean
-  'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
-  'Access-Control-Allow-Methods': 'OPTIONS,POST'
-  'Access-Control-Allow-Origin': 'http://localhost:3000'
-  'content-type': 'application/json'
+  'Access-Control-Allow-Headers': string
+  'Access-Control-Allow-Methods': string
+  'Access-Control-Allow-Origin'?: string
+  'content-type': string
 }
 export type UploadedFileResponseType = {
   body: UploadedFileSrcType
@@ -16,16 +17,16 @@ export type UploadedFileResponseType = {
   statusCode: number
 }
 
-const uploadFile = async (file: File) => {
+const uploadFile = async (file: File, path: string = '/blog_asset') => {
   const submitData = new FormData()
   submitData.append('thumbnail', file)
-  const config: Config = {
+  const config: AxiosRequestConfig = {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
   }
   const d = await postRequestToApiGateway<UploadedFileResponseType>(
-    '/blog_asset',
+    path,
     submitData,
     config
   )

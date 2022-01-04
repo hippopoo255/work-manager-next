@@ -3,11 +3,11 @@ import dynamic from 'next/dynamic'
 import 'easymde/dist/easymde.min.css'
 import { MarkdownPreview } from '@/components/atoms'
 import { options as ops, useEditorStyles } from '@/lib/simplemde'
-import { imageUploadFunction } from '@/lib/simplemde/util'
 import SimpleMDE from 'easymde'
 import { Button, Typography } from '@material-ui/core'
 import clsx from 'clsx'
 import type { Editor, EditorChangeLinkedList, KeyMap } from 'codemirror'
+import { useImageMarkedLine } from '@/hooks'
 
 const SimpleMde = dynamic(() => import('react-simplemde-editor'), {
   ssr: false,
@@ -23,19 +23,17 @@ interface Props {
 const MarkdownEditor = React.memo(({ value, onChange, options }: Props) => {
   const classes = useEditorStyles()
   const [editorValue, setEditorValue] = useState(value || '')
-  const [currentLine, setCurrentLine] = useState<number>(0)
-  const [newImageLine, setNewImageLine] = useState<string>('')
   const [previewHidden, setPreviewHidden] = useState<boolean>(true)
+  const [currentLine, setCurrentLine] = useState<number>(0)
+  const { imageMarkedLine, setImageMarkedLine, imageUploadFunction } =
+    useImageMarkedLine()
   // 記事の入力時
-  const handleChange = useCallback(
-    (value: string) => {
-      setEditorValue(value)
-      if (!!onChange) {
-        onChange(value)
-      }
-    },
-    [currentLine]
-  )
+  const handleChange = useCallback((value: string) => {
+    setEditorValue(value)
+    if (!!onChange) {
+      onChange(value)
+    }
+  }, [])
 
   useEffect(() => {
     if (value !== undefined) {
@@ -43,9 +41,30 @@ const MarkdownEditor = React.memo(({ value, onChange, options }: Props) => {
     }
   }, [value])
 
+  const mergedOption = useMemo(
+    () =>
+      !!options
+        ? {
+            ...ops,
+            ...options,
+            imageUploadFunction,
+          }
+        : {
+            ...ops,
+            imageUploadFunction,
+          },
+    []
+  )
+
+  const handleToggleClick = () => {
+    setPreviewHidden(!previewHidden)
+  }
+
+  const toggleText = previewHidden ? 'プレビュー' : '閉じる'
+
   const insertImageText = () => {
     const contentArr = editorValue.split('\n')
-    contentArr.splice(currentLine, 0, newImageLine)
+    contentArr.splice(currentLine, 0, imageMarkedLine)
     const newValue = contentArr.join('\n')
     setEditorValue(newValue)
     if (!!onChange) {
@@ -55,39 +74,11 @@ const MarkdownEditor = React.memo(({ value, onChange, options }: Props) => {
 
   // 画像挿入後のマークダウンをカーソル位置に挿入
   useEffect(() => {
-    if (newImageLine !== '') {
+    if (imageMarkedLine !== '') {
       insertImageText()
-      setNewImageLine('')
+      setImageMarkedLine('')
     }
-  }, [newImageLine])
-
-  // 画像のドラッグ＆ドロップ
-  const uploadAndMarkdownImage = useCallback(async (file: File) => {
-    await imageUploadFunction(file).then((imageMarkdownValue: string) => {
-      if (!!imageMarkdownValue) {
-        setNewImageLine(imageMarkdownValue)
-      }
-    })
-  }, [])
-
-  const mergedOption = useMemo(
-    () =>
-      !!options
-        ? {
-            ...ops,
-            ...options,
-            imageUploadFunction: uploadAndMarkdownImage,
-          }
-        : {
-            ...ops,
-            imageUploadFunction: uploadAndMarkdownImage,
-          },
-    []
-  )
-
-  const handleToggleClick = () => {
-    setPreviewHidden(!previewHidden)
-  }
+  }, [imageMarkedLine])
 
   const extraKeys = useMemo<KeyMap>(() => {
     return {
@@ -130,8 +121,6 @@ const MarkdownEditor = React.memo(({ value, onChange, options }: Props) => {
     }),
     []
   )
-
-  const toggleText = previewHidden ? 'プレビュー' : '閉じる'
 
   return (
     <div>

@@ -15,13 +15,3 @@ export const MDE_MAX_HEIGHT =
   MDE_BODY_BORDER_SIZE +
   (MDE_SHOW_TOOLBAR ? MDE_TOOLBAR_MULTIPLE_HEIGHT : 0) +
   (MDE_SHOW_STATUSBAR ? MDE_STATUSBAR_HEIGHT : 0)
-
-export const imageUploadFunction = async (file: File) => {
-  const d = await uploadFile(file)
-  if ('body' in d) {
-    const fileName = d.body.src.split('/blog_asset/')[1]
-    const markdownImageValue = `![${fileName}](${d.body.src})`
-    return markdownImageValue
-  }
-  return ''
-}

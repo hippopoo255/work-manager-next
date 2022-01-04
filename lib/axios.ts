@@ -1,17 +1,6 @@
-import axios, {
-  AxiosInstance,
-  AxiosRequestConfig,
-  AxiosResponse,
-  Method,
-} from 'axios'
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import router from 'next/router'
 import { API_URL, API_STAGE_URL } from '@/lib/util'
-
-export type Config = {
-  headers: {
-    'Content-Type'?: 'multipart/form-data'
-  }
-}
 
 export const defaultErrorHandler = (err: AxiosResponse) => {
   console.error(err)
