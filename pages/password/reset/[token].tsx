@@ -19,6 +19,7 @@ import { HelpBox } from '@/components/molecules'
 import { CustomAlert } from '@/components/atoms'
 import { AlertStatus } from '@/interfaces/common'
 import { initialAlertStatus } from '@/lib/initialData'
+import { useLocale } from '@/hooks'
 
 type PasswordResetInputs = {
   token: string
@@ -48,6 +49,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const PasswordReset = () => {
   const classes = useStyles()
   const router = useRouter()
+  const { t } = useLocale()
   const [loading, setLoading] = useState<boolean>(false)
   const [alertStatus, setAlertStatus] = useState<AlertStatus>({
     ...initialAlertStatus,
@@ -255,7 +257,7 @@ const PasswordReset = () => {
               <Grid item style={{ textAlign: 'center' }}>
                 <CircularButton
                   loading={loading}
-                  submitText={'送信'}
+                  submitText={t.common.send}
                   onClick={handleSubmit(onSubmit)}
                   disabled={!!alertStatus.msg}
                 />

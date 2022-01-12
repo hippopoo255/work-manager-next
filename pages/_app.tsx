@@ -16,6 +16,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       jssStyles.parentElement?.removeChild(jssStyles)
     }
   }, [])
+
   const redirectUri = process.env.NEXT_PUBLIC_BASE_URL || ''
   const domainObj = {
     domain: process.env.NEXT_PUBLIC_AUTH0_DOMAIN || '',

@@ -3,10 +3,11 @@ import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Button, CircularProgress } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import clsx from 'clsx'
+import { useLocale } from '@/hooks'
 
 export type Props = {
   loading: boolean
-  submitText: string
+  submitText?: string
   color: 'default' | 'inherit' | 'primary' | 'secondary'
   variant?: 'contained' | 'outlined' | 'text' | undefined
   disabled: boolean
@@ -44,12 +45,13 @@ const CircularButton = ({
   loading,
   onClick,
   color,
-  submitText = '保存',
+  submitText,
   disabled,
   options,
   variant,
 }: Props) => {
   const classes = useStyles()
+  const { t } = useLocale()
   return (
     <div className={classes.wrap}>
       <Button
@@ -62,7 +64,7 @@ const CircularButton = ({
         onClick={() => !!onClick && onClick()}
         {...options}
       >
-        {submitText}
+        {submitText || t.common.save}
       </Button>
       {loading && (
         <CircularProgress size={24} className={classes.buttonProgress} />
@@ -78,7 +80,6 @@ CircularButton.propTypes = {
 }
 
 CircularButton.defaultProps = {
-  submitText: '保存',
   color: 'primary',
   variant: 'contained',
   disabled: false,

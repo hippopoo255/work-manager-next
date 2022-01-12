@@ -5,6 +5,7 @@ import { User } from '@/interfaces/models'
 import { postRequest, requestUri } from '@/api'
 import { loginAction } from '@/globalState/user/action'
 import { AuthContext } from '@/provider/AuthProvider'
+import { useLocale } from '@/hooks'
 
 type Props = {
   options?: {
@@ -22,6 +23,7 @@ const TestLoginButton = ({
   const router = useRouter()
   const [loading, setLoading] = useState<boolean>(false)
   const { dispatch } = useContext(AuthContext)
+  const { t } = useLocale()
   const handleDemoUser = async () => {
     setLoading(true)
     await testLogin()
@@ -40,7 +42,7 @@ const TestLoginButton = ({
   return (
     <CircularButton
       loading={loading}
-      submitText="デモユーザとして試す"
+      submitText={t.common.testLogin}
       onClick={handleDemoUser}
       options={{ ...options }}
     />

@@ -25,6 +25,7 @@ import { CircularButton, TestLoginButton } from '@/components/molecules'
 import { AlertStatus } from '@/interfaces/common'
 import { LoginInputs } from '@/interfaces/form/inputs'
 import { initialAlertStatus } from '@/lib/initialData'
+import { useLocale } from '@/hooks'
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -67,6 +68,7 @@ const Login = () => {
   const [alertStatus, setAlertStatus] = useState<AlertStatus>({
     ...initialAlertStatus,
   })
+  const { t } = useLocale()
   const [loading, setLoading] = useState<boolean>(false)
   const { dispatch } = useContext(AuthContext)
   const onAlertClose = () => {
@@ -123,7 +125,7 @@ const Login = () => {
   }
 
   return (
-    <Layout title="ログイン">
+    <Layout title={t.head.title.login}>
       <Head>
         <meta
           name="viewport"
@@ -137,7 +139,7 @@ const Login = () => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h2" variant="h5">
-            Log in
+            {t.head.title.login}
           </Typography>
           <form
             className={classes.form}
@@ -214,7 +216,7 @@ const Login = () => {
             <Box my={2}>
               <CircularButton
                 loading={loading}
-                submitText="ログイン"
+                submitText={t.common.login}
                 onClick={handleSubmit(onSubmit)}
                 options={{ fullWidth: true }}
               />
@@ -231,7 +233,7 @@ const Login = () => {
                     component={'a'}
                     color={'primary'}
                   >
-                    パスワードをお忘れの方
+                    {t.common.passwordForget}
                   </Typography>
                 </Link>
               </Grid>

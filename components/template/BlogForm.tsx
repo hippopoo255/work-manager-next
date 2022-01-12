@@ -34,6 +34,7 @@ import { FormErrorMessage } from '@/components/atoms'
 import { BlogIcon } from '@/components/atoms/icons'
 import { useRouter } from 'next/router'
 import { uploadFile } from '@/lib/file'
+import { useLocale } from '@/hooks'
 
 type Props = {
   defaultValues: CreateBlogInput | UpdateBlogInput
@@ -41,8 +42,6 @@ type Props = {
   formTitle?: string
   id?: string
 }
-
-type SubmitButtonText = '投稿する' | '下書き保存する'
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrap: {
@@ -72,7 +71,8 @@ const BlogForm = (
 ) => {
   const classes = useStyles()
   const [loading, setLoading] = useState<boolean>(false)
-  const [submitText, setSubmitText] = useState<SubmitButtonText>('投稿する')
+  const { t, locale } = useLocale()
+  const [submitText, setSubmitText] = useState<string>(t.common.post)
   const router = useRouter()
   const { tagList } = useTags()
   const {
@@ -105,7 +105,7 @@ const BlogForm = (
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = (e.target as HTMLInputElement).value as BlogStatus
     setValue('status', val)
-    setSubmitText(val === BlogStatus.Done ? '投稿する' : '下書き保存する')
+    setSubmitText(val === BlogStatus.Done ? t.common.post : t.common.preSave)
   }
 
   const handleBodyChange = (value: string) => {
@@ -287,12 +287,12 @@ const BlogForm = (
                   <FormControlLabel
                     value={BlogStatus.Done}
                     control={<Radio color="primary" />}
-                    label="本投稿"
+                    label={t.blog.status.done}
                   />
                   <FormControlLabel
                     value={BlogStatus.Pending}
                     control={<Radio color="primary" />}
-                    label="下書き保存"
+                    label={t.blog.status.pending}
                   />
                 </RadioGroup>
               </Grid>

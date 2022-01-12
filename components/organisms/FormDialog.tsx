@@ -10,6 +10,7 @@ import { makeStyles, Theme } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
 import theme from '@/theme'
 import { CircularButton } from '../molecules'
+import { useLocale } from '@/hooks'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -35,7 +36,7 @@ export type Props = {
   onSubmit: () => Promise<any>
   dialogTitle: string
   cancelText: string
-  submitText: string
+  submitText?: string
   children: React.ReactNode
   open: boolean
   setOpen: (isOpen: boolean) => void
@@ -57,7 +58,7 @@ const FormDialog = ({
   disabled,
 }: Props) => {
   const classes = useStyles()
-  // const [open, setOpen] = React.useState(false)
+  const { t } = useLocale()
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -94,7 +95,7 @@ const FormDialog = ({
               loading={loading}
               onClick={handleSubmit}
               disabled={disabled}
-              submitText={submitText}
+              submitText={submitText || t.common.save}
             />
           ) : (
             <Button
@@ -103,7 +104,7 @@ const FormDialog = ({
               color="primary"
               disabled={disabled}
             >
-              {submitText}
+              {submitText || t.common.save}
             </Button>
           )}
         </DialogActions>
@@ -123,7 +124,6 @@ FormDialog.propTypes = {
 
 FormDialog.defaultProps = {
   cancelText: 'キャンセル',
-  submitText: '保存',
   dialogTitle: 'フォーム画面',
   isCircular: false,
   loading: false,

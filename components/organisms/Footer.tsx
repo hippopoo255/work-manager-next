@@ -2,8 +2,9 @@ import React from 'react'
 import styles from '@/assets/stylesheets/components/Footer.module.scss'
 import { Box, Typography } from '@material-ui/core'
 import Link from '@material-ui/core/Link'
-import { SITE_TITLE } from '@/lib/util'
+import { BIRTH_DAY, SITE_TITLE, APP_URL } from '@/lib/util'
 import { makeStyles } from '@material-ui/core/styles'
+import { useLocale } from '@/hooks'
 
 const useStyles = makeStyles(() => ({
   logoby: {
@@ -15,13 +16,16 @@ const useStyles = makeStyles(() => ({
 
 const Footer = () => {
   const classes = useStyles()
+  const { t } = useLocale()
   const Copyright = () => {
     return (
       <Typography variant="body2" align="center">
         {'Copyright © '}
-        <Link color="inherit" href="https://material-ui.com/">
-          {SITE_TITLE}
+        <Link color="inherit" href={APP_URL}>
+          {t.title}
         </Link>{' '}
+        {new Date(BIRTH_DAY).getFullYear()}
+        {' - '}
         {new Date().getFullYear()}
         {'.'}
       </Typography>

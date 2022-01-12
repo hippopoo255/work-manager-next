@@ -9,7 +9,8 @@ import Divider from '@material-ui/core/Divider'
 import Drawer from '@material-ui/core/Drawer'
 import { Hidden } from '@material-ui/core'
 import { List } from '@material-ui/core'
-import { Menu, Menus, sidebarMenus } from '@/lib/sidebar'
+import { Menu, Menus } from '@/lib/sidebar'
+import SidebarMenus from '@/lib/sidebar'
 import { LinkBar } from '@/components/molecules'
 import { FlexibleDrawer } from '@/components/organisms'
 import { drawerWidth } from '@/lib/util'
@@ -54,8 +55,8 @@ const Sidebar = (props: Props) => {
     window !== undefined ? () => window().document.body : undefined
   const theme = useTheme()
   const router = useRouter()
-  const [menus, setMenus] = useState<Menus>({ ...sidebarMenus })
-
+  const [menus, setMenus] = useState<Menus>({ ...SidebarMenus() })
+  console.log('render')
   const handleClick = (target: Menu) => {
     if (target.children === undefined) {
       onItem(target.to)
