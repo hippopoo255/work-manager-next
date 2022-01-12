@@ -12,6 +12,7 @@ import { useRouter } from 'next/router'
 import PropTypes from 'prop-types'
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
 import { mergeWithoutDuplicate } from '@/lib/util'
+import { useLocale } from '@/hooks'
 
 const usePaperStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -139,6 +140,7 @@ const ChatRoomForm = ({
   imageIds,
 }: Props) => {
   const classes = useStyles()
+  const { t } = useLocale()
   const [loading, setLoading] = useState<boolean>(false)
   const [preview, setPreview] = useState<{ val: any }[]>([
     { val: null },
@@ -302,7 +304,7 @@ const ChatRoomForm = ({
         onSubmit={handleSubmit(handleSave)}
         isCircular
         loading={loading}
-        submitText={'送信'}
+        submitText={t.common.send}
       >
         <Grid container spacing={3}>
           <Grid item xs={12}>

@@ -24,11 +24,13 @@ export const PUSHER_URL: string =
   process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
 export const STORAGE_URL: string =
   process.env.NEXT_PUBLIC_STORAGE_URL || 'http://localhost:8080/storage'
-
+export const APP_URL =
+  process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
 export const PROCESS_FLAG: { [k: string]: ProcessFlag } = {
   updateFlag: 1,
   deleteFlag: 2,
 }
+export const BIRTH_DAY = '2021-11-30'
 
 export function toStrData(date: Date): string {
   const year = date.getFullYear()

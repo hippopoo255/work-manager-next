@@ -15,6 +15,7 @@ import { Layout } from '@/layouts'
 import { FormErrorMessage } from '@/components/atoms'
 import { CircularButton } from '@/components/molecules'
 import { strPatterns } from '@/lib/util'
+import { useLocale } from '@/hooks'
 
 type ForgotPasswordInputs = {
   email: string
@@ -45,7 +46,7 @@ const ForgotPassword = () => {
   const router = useRouter()
   const [loading, setLoading] = useState<boolean>(false)
   const [msg, setMsg] = useState<string>('')
-
+  const { t } = useLocale()
   const {
     handleSubmit,
     control,
@@ -176,7 +177,7 @@ const ForgotPassword = () => {
               <Grid item xs={12} md={2} style={{ textAlign: 'center' }}>
                 <CircularButton
                   loading={loading}
-                  submitText={'送信'}
+                  submitText={t.common.send}
                   onClick={handleSubmit(onSubmit)}
                   disabled={!!msg}
                 />

@@ -6,9 +6,10 @@ import { TestLoginButton } from '@/components/molecules'
 import { ProductIntroductionCardList } from '@/components/template'
 import { AboutNotification, AboutRealTime } from '@/components/organisms'
 import { Layout } from '@/layouts'
-import { headerHeight, SITE_TITLE, API_STAGE_URL } from '@/lib/util'
+import { headerHeight, API_STAGE_URL } from '@/lib/util'
 import Shakehand from '@/assets/images/shakehand.svg'
 import { RoundedIcon } from '@/components/atoms'
+import { useLocale } from '@/hooks'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -59,11 +60,10 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
-const description = `${SITE_TITLE}は、「便利で使いやすい業務支援システム」を目指したサービスです。当サービスのご利用によって、「会議の議事録作成」「スケジュール管理」「タスク管理」等の業務を完結することができます。\n近年はテレワークの推進等により、社内メンバー間の物理的距離が生じる中で業務をする機会が増えました。\n当サービスでは、そうした環境下でのコミュニケーションに貢献する「チャット機能」も備えております。`
-const descriptionOmit = `${SITE_TITLE}は、「議事録の作成」「スケジュール管理」「タスク管理」「チャット」といった機能を提供する業務支援サービスです。`
-
 const Home = () => {
   const classes = useStyles()
+  const { locale, t } = useLocale()
+  const description = t.main.description.replace(':site_title', t.title)
   let fillRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const resize = () => {
@@ -91,14 +91,14 @@ const Home = () => {
                   variant={'h1'}
                   component={'h2'}
                 >
-                  {SITE_TITLE}とは？
+                  {t.main.title.replace(':site_title', t.title)}
                 </Typography>
                 <Typography
                   className={classes.description}
                   variant={'subtitle2'}
                   component={'p'}
                 >
-                  {descriptionOmit}
+                  {t.main.descriptionOmit.replace(':site_title', t.title)}
                 </Typography>
                 <Box textAlign={'center'} mt={3}>
                   <TestLoginButton

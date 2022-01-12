@@ -17,6 +17,7 @@ import { useRouter } from 'next/router'
 import { STORAGE_URL } from '@/lib/util'
 import { UserAvatar } from '@/components/atoms'
 import { postRequest, requestUri } from '@/api'
+import { useLocale } from '@/hooks'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -38,21 +39,22 @@ const AvatarMenu = () => {
   const classes = useStyles()
   const router = useRouter()
   const { auth, dispatch } = useContext(AuthContext)
+  const { t, locale } = useLocale()
   const menus = [
     {
       id: 'mypage',
       to: '/mypage',
-      text: 'マイページ',
+      text: t.authMenu.mypage,
     },
     {
       id: 'profile',
       to: '/mypage/profile',
-      text: 'プロフィール',
+      text: t.authMenu.profile,
     },
     {
       id: 'logout',
       to: '/logout',
-      text: 'ログアウト',
+      text: t.authMenu.logout,
     },
   ]
   const [open, setOpen] = useState(false)
