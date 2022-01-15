@@ -14,6 +14,7 @@ import { Header, FooterLink } from '@/interfaces/common/dashboard'
 import { MeetingRecordIcon } from '@/components/atoms/icons'
 import { requestUri, getRequest } from '@/api'
 import { headCells, createRows } from '@/lib/table/meetingRecord'
+import { useLocale } from '@/hooks'
 
 const useStyles = makeStyles((theme: Theme) => ({
   seeMore: {
@@ -29,18 +30,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-const header: Header = {
-  avatar: <MeetingRecordIcon />,
-  title: '最近の議事録',
-  subTitle: '',
-}
-
-const footerLink: FooterLink = {
-  to: '/mypage/meeting_record?only_me=1',
-  color: 'primary',
-  text: 'More',
-}
-
 type Props = {
   wrapClasses: any
 }
@@ -50,7 +39,17 @@ const LatestMeetingRecord = React.memo(({ wrapClasses }: Props) => {
   const classes = useStyles()
   const [meetingRecords, setMeetingRecords] = useState<MeetingRecord[]>([])
   const [loading, setLoading] = useState<boolean>(false)
-
+  const { t } = useLocale()
+  const header: Header = {
+    avatar: <MeetingRecordIcon />,
+    title: t.mypage.recentMeetingRecord,
+    subTitle: '',
+  }
+  const footerLink: FooterLink = {
+    to: '/mypage/meeting_record?only_me=1',
+    color: 'primary',
+    text: t.common.more,
+  }
   useEffect(() => {
     let isMounted = true
     const init = async () => {

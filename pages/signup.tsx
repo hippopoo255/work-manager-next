@@ -18,8 +18,9 @@ import { useForm, Controller, SubmitHandler } from 'react-hook-form'
 import { CustomAlert, FormErrorMessage } from '@/components/atoms'
 import { CircularButton, TestLoginButton } from '@/components/molecules'
 import { AlertStatus } from '@/interfaces/common'
-import { LoginInputs } from '@/interfaces/form/inputs'
+import { SignupInputs } from '@/interfaces/form/inputs'
 import { initialAlertStatus } from '@/lib/initialData'
+import { linerGradient } from '@/assets/color/gradient'
 import { useLocale, useAuth } from '@/hooks'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -40,8 +41,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
-    background: `linear-gradient(165deg, ${darken('#5dff26', 0.1)}, #5cb363)`,
+    background: linerGradient.red,
     color: theme.palette.common.white,
+    fontWeight: theme.typography.fontWeightBold,
+    '&:hover': {
+      opacity: theme.palette.action.focusOpacity * 5,
+    },
   },
   label: {
     fontSize: '90%',
@@ -57,14 +62,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-const Login = () => {
+const Signup = () => {
   const classes = useStyles()
   const [loading, setLoading] = useState<boolean>(false)
   const [alertStatus, setAlertStatus] = useState<AlertStatus>({
     ...initialAlertStatus,
   })
   const { t } = useLocale()
-  const { login } = useAuth(true)
+  const { signup } = useAuth(true)
+  const options = {
+    fullWidth: true,
+    className: classes.submit,
+  }
 
   const onAlertClose = () => {
     setAlertStatus((prev) => ({
@@ -83,17 +92,23 @@ const Login = () => {
       }))
     }, 5000)
   }, [calc])
+
   const {
     handleSubmit,
     control,
     setError,
     formState: { errors },
-  } = useForm<LoginInputs>()
+  } = useForm<SignupInputs>()
 
-  const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
+  const onSubmit: SubmitHandler<SignupInputs> = async (data) => {
     setLoading(true)
-    await login(data).catch((err) => {
+    await signup(data).catch((err) => {
+      console.error('error catch:', err)
       setLoading(false)
+      setError('email', {
+        type: 'invalid',
+        message: err.email[0],
+      })
       setError('login_id', {
         type: 'invalid',
         message: err.login_id[0],
@@ -106,7 +121,7 @@ const Login = () => {
   }
 
   return (
-    <Layout title={t.head.title.login}>
+    <Layout title={t.head.title.signup}>
       <Head>
         <meta
           name="viewport"
@@ -120,13 +135,44 @@ const Login = () => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h2" variant="h5">
-            {t.head.title.login}
+            {t.head.title.signup}
           </Typography>
           <form
             className={classes.form}
             noValidate
             onSubmit={handleSubmit(onSubmit)}
           >
+            <Controller
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  fullWidth
+                  variant="outlined"
+                  required
+                  margin="normal"
+                  label="メールアドレス"
+                  autoFocus
+                  id="email"
+                  error={!!errors.email}
+                  style={{ marginBottom: 0 }}
+                />
+              )}
+              name="email"
+              control={control}
+              defaultValue=""
+              rules={{
+                required: {
+                  value: true,
+                  message: 'メールアドレスは必須です',
+                },
+              }}
+            />
+            <Box style={{ minHeight: 20 }}>
+              {!!errors.email && (
+                <FormErrorMessage msg={errors.email.message} />
+              )}
+            </Box>
+
             <Controller
               render={({ field }) => (
                 <TextField
@@ -155,6 +201,31 @@ const Login = () => {
             <Box style={{ minHeight: 20 }}>
               {!!errors.login_id && (
                 <FormErrorMessage msg={errors.login_id.message} />
+              )}
+            </Box>
+
+            <Controller
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  fullWidth
+                  variant="outlined"
+                  required
+                  margin="normal"
+                  label="住所"
+                  autoFocus
+                  id="address"
+                  error={!!errors.address}
+                  style={{ marginBottom: 0 }}
+                />
+              )}
+              name="address"
+              control={control}
+              defaultValue=""
+            />
+            <Box style={{ minHeight: 20 }}>
+              {!!errors.address && (
+                <FormErrorMessage msg={errors.address.message} />
               )}
             </Box>
 
@@ -197,24 +268,20 @@ const Login = () => {
             <Box my={2}>
               <CircularButton
                 loading={loading}
-                submitText={t.common.login}
+                submitText={t.common.signup}
                 onClick={handleSubmit(onSubmit)}
-                options={{ fullWidth: true }}
+                options={options}
               />
             </Box>
             <Grid container spacing={3}>
               <Grid item xs>
-                <Link
-                  href="/password/forgot_password"
-                  as="/forgot_password"
-                  passHref
-                >
+                <Link href="/login" as="/login" passHref>
                   <Typography
                     variant={'button'}
                     component={'a'}
                     color={'primary'}
                   >
-                    {t.common.passwordForget}
+                    {t.common.moveToLogin}
                   </Typography>
                 </Link>
               </Grid>
@@ -229,4 +296,4 @@ const Login = () => {
     </Layout>
   )
 }
-export default Login
+export default Signup

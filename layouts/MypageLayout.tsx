@@ -4,8 +4,7 @@ import styles from '@/assets/stylesheets/components/MypageLayout.module.scss'
 import Head from 'next/head'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
-import { SITE_TITLE } from '@/lib/util'
-import { useAuth } from '@/hooks'
+import { useAuth, useLocale } from '@/hooks'
 
 export type LayoutOrg = {
   children: React.ReactNode
@@ -37,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const MypageLayout = ({ children, title }: LayoutOrg) => {
   const classes = useStyles()
   const { auth } = useAuth()
-  const suffix = SITE_TITLE
+  const { t } = useLocale()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [tabletOpen, setTabletOpen] = useState(false)
   const handleDrawerToggle = (flag: string) => {
@@ -64,7 +63,7 @@ const MypageLayout = ({ children, title }: LayoutOrg) => {
   return (
     <>
       <Head>
-        <title>{!!title ? `${title} | ${suffix}` : suffix}</title>
+        <title>{!!title ? `${title} | ${t.siteTitle}` : t.siteTitle}</title>
       </Head>
       <div className={classes.root}>
         <CssBaseline />

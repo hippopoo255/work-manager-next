@@ -15,7 +15,7 @@ const Layout = ({ children, title, noShadow }: LayoutOrg) => {
   return (
     <>
       <Head>
-        <title>{!!title ? `${title} | ${t.title}` : t.title}</title>
+        <title>{!!title ? `${title} | ${t.siteTitle}` : t.siteTitle}</title>
       </Head>
       <div className={styles.container}>
         <div className={styles.head}>

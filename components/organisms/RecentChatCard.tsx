@@ -10,6 +10,7 @@ import { toStrLabel, postTiming, COLLAPSE_COUNT } from '@/lib/util'
 import { linerGradient } from '@/assets/color/gradient'
 import { getRequest, requestUri } from '@/api'
 import { UserBar, MoreExpander } from '@/components/molecules'
+import { useLocale } from '@/hooks'
 
 type ListProps = {
   classes: any
@@ -51,18 +52,6 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
-const header: Header = {
-  avatar: <ChatIcon />,
-  title: '未読のチャット',
-  subTitle: '直近10件(最大)',
-}
-
-const footerLink: FooterLink = {
-  to: '/mypage/chat',
-  color: 'secondary',
-  text: 'ルーム一覧画面へ',
-}
-
 type Props = {
   wrapClasses: any
 }
@@ -72,6 +61,20 @@ const RecentChatCard = React.memo(({ wrapClasses }: Props) => {
   const classes = useStyles()
   const [unreadMessages, setUnreadMessages] = useState<ChatMessage[]>([])
   const [loading, setLoading] = useState<boolean>(false)
+  const { t } = useLocale()
+
+  const header: Header = {
+    avatar: <ChatIcon />,
+    title: t.mypage.unreadChat,
+    subTitle: `${t.status.recent}10${t.unit.item}(${t.status.max})`,
+  }
+
+  const footerLink: FooterLink = {
+    to: '/mypage/chat',
+    color: 'secondary',
+    text: t.common.showChatRooms,
+  }
+
   useEffect(() => {
     let isMounted = true
     const init = async () => {

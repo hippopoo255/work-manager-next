@@ -37,7 +37,7 @@ const UserBar = ({ user, text, variant = 'body2', bold = false }: Props) => {
           [classes.bold]: !!bold,
         })}
       >
-        {text || `${user.full_name}さん`}
+        {text || user.full_name}
       </Typography>
     </Box>
   )

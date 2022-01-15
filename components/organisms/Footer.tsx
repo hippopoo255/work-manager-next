@@ -22,7 +22,7 @@ const Footer = () => {
       <Typography variant="body2" align="center">
         {'Copyright © '}
         <Link color="inherit" href={APP_URL}>
-          {t.title}
+          {t.siteTitle}
         </Link>{' '}
         {new Date(BIRTH_DAY).getFullYear()}
         {' - '}

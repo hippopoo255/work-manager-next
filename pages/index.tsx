@@ -62,8 +62,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Home = () => {
   const classes = useStyles()
-  const { locale, t } = useLocale()
-  const description = t.main.description.replace(':site_title', t.title)
+  const { t } = useLocale()
+  const description = t.main.description.replace(':site_title', t.siteTitle)
   let fillRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const resize = () => {
@@ -91,14 +91,14 @@ const Home = () => {
                   variant={'h1'}
                   component={'h2'}
                 >
-                  {t.main.title.replace(':site_title', t.title)}
+                  {t.main.title.replace(':site_title', t.siteTitle)}
                 </Typography>
                 <Typography
                   className={classes.description}
                   variant={'subtitle2'}
                   component={'p'}
                 >
-                  {t.main.descriptionOmit.replace(':site_title', t.title)}
+                  {t.main.descriptionOmit.replace(':site_title', t.siteTitle)}
                 </Typography>
                 <Box textAlign={'center'} mt={3}>
                   <TestLoginButton
