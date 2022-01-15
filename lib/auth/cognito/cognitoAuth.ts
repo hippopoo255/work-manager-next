@@ -1,126 +1,81 @@
 import userPool from './userPool'
-import { cognitoTestUser } from './config'
+import { handleError } from './util'
+import { cognitoTestUser, amplifyConfigure } from './config'
+import { Auth } from 'aws-amplify'
+amplifyConfigure()
 
 import {
   CognitoUser,
-  CognitoUserAttribute,
-  AuthenticationDetails,
+  ISignUpResult,
+  CognitoUserSession,
 } from 'amazon-cognito-identity-js'
+
+import router from 'next/router'
+import { encode64 } from '@/lib/util'
 
 import {
   LoginInputs,
   SignupInputs,
   AccountVerificationInputs,
 } from '@/interfaces/form/inputs'
+import { User } from '@/interfaces/models'
 
-export type CognitoErrorMessageType =
-  // username が Cognito ユーザープールに存在しない
-  | 'UserNotFoundException'
-  // 認証に失敗した
-  // 既にステータスが CONFIRMED
-  // パスワードを間違え続けた場合
-  | 'NotAuthorizedException'
-  // ユーザのステータスがUNCONFIRMED
-  | 'UserNotConfirmedException'
-  // ユーザープール内に既に同じ username が存在する
-  | 'UsernameExistsException'
-  // 無効なコードが入力された
-  | 'CodeMismatchException'
-  // 必要な属性が足りない場合 or
-  // 入力された各項目が Cognito 側で正しくパースできない場合（バリデーションエラー） or
-  // passwordが6文字未満の場合
-  | 'InvalidParameterException'
-  // ユーザープールのポリシーで設定したパスワードの強度を満たさない
-  | 'InvalidPasswordException'
-  // パスワード試行回数を超えた
-  | 'LimitExceededException'
-  // 検証が完了しているアカウントについてサイド検証リクエストがあった
-  | 'ExpiredCodeException'
-  | 'default'
-
-const currentUser = () => {
-  const cognitoUser: CognitoUser | null = userPool.getCurrentUser()
-  console.log('cognitoUser:', cognitoUser)
-  if (cognitoUser) {
-    cognitoUser.getSession((err, session) => {
-      if (err) {
-        console.log('sessionError:', err)
-      } else {
-        console.log('session:', session)
-        cognitoUser.getUserAttributes((err, result) => {
-          if (err) {
-            console.log('err:', err)
-            return
-          }
-          console.log('getUserAttributes:', result)
-        })
-      }
-    })
+const currentUser = async () => {
+  const userInfo: '' | CognitoUserSession = await Auth.currentSession().catch(
+    (err) => {
+      console.log('current user err:', err)
+      return ''
+    }
+  )
+  if (!!userInfo) {
+    console.log('current user:', userInfo)
+    const user = userInfo.getIdToken().payload
+    user.family_name = user['cognito:username']
+    return user
   }
+  return userInfo
 }
 
-const signin = ({ login_id, password }: LoginInputs) => {
-  const authenticationDetails = new AuthenticationDetails({
-    Username: login_id,
-    Password: password,
+const signin = async ({ login_id, password }: LoginInputs) => {
+  const cognitoUser = await Auth.signIn(login_id, password).catch((error) => {
+    handleError<LoginInputs>(error)
   })
-
-  const cognitoUser = new CognitoUser({
-    Username: login_id,
-    Pool: userPool,
-  })
-
-  cognitoUser.authenticateUser(authenticationDetails, {
-    onSuccess: (result) => {
-      console.log('result:', result)
-      const accessToken = result.getAccessToken().getJwtToken()
-      console.log('AccessToken: ' + accessToken)
-      // setlogin_id('')
-      // setPassword('')
-    },
-    onFailure: (err) => {
-      console.error(err)
-    },
-  })
+  console.log('signin succeeded:', cognitoUser)
+  const user = cognitoUser.attributes
+  user.family_name = cognitoUser.username
+  return user as User
 }
 
-const signout = () => {
-  const cognitoUser: CognitoUser | null = userPool.getCurrentUser()
-  console.log(cognitoUser)
-  if (cognitoUser) {
-    cognitoUser.signOut()
-    console.log('signed out')
-  } else {
-    console.log('no user signing in')
-  }
-  localStorage.clear()
+const signout = async () => {
+  const res = await Auth.signOut().catch((error) => {
+    handleError(error, 'logout failed')
+  })
+  console.log('logout success:', res)
+  return null
 }
 
-const signup = ({ email, login_id, password, address }: SignupInputs) => {
-  const attributeList = [
-    new CognitoUserAttribute({
-      Name: 'name',
-      Value: login_id,
-    }),
-    new CognitoUserAttribute({
-      Name: 'email',
-      Value: email,
-    }),
-    new CognitoUserAttribute({
-      Name: 'custom:login_id',
-      Value: address,
-    }),
-  ]
+const signup = async ({ email, login_id, password, address }: SignupInputs) => {
   try {
-    userPool.signUp(login_id, password, attributeList, [], (err, result) => {
-      if (err) {
-        throw err
-      }
-      console.log(result)
+    const { user }: ISignUpResult = await Auth.signUp({
+      username: login_id,
+      password,
+      attributes: {
+        email, // optional
+        address, // optional - E.164 number convention
+        'custom:login_id': login_id,
+        // other custom attributes
+      },
     })
-  } catch (err) {
-    console.log('テスト')
-    throw err
+    console.log('signup succeeded:', user)
+    router.push({
+      pathname: '/account_verification',
+      query: {
+        n: encode64(login_id),
+      },
+    })
+    return user
+  } catch (error) {
+    handleError<SignupInputs>(error, 'sign up failed')
   }
 }
 
@@ -129,32 +84,25 @@ const testSignin = async () => {
     login_id: cognitoTestUser.name,
     password: cognitoTestUser.password,
   }
-  await signin(data)
+  return await signin(data)
 }
 
-const verifyUser = (
-  { login_id, verification_code }: AccountVerificationInputs,
-  onSuccess: (result: any) => void,
-  onError: (errCode: CognitoErrorMessageType) => void
-) => {
-  const cognitoUser = new CognitoUser({
-    Username: login_id,
-    Pool: userPool,
-  })
-  cognitoUser.confirmRegistration(
-    verification_code,
-    true,
-    (err: any, result: any) => {
-      if (err) {
-        console.error('error!:', err)
-        onError(err.code as CognitoErrorMessageType)
-        return
-      }
-      console.log('verification result:', result)
-      console.log('verification succeeded')
-      onSuccess(result)
+const verifyUser = async ({
+  login_id,
+  verification_code,
+}: AccountVerificationInputs) => {
+  const result = await Auth.confirmSignUp(login_id, verification_code).catch(
+    (error) => {
+      handleError<AccountVerificationInputs>(error, 'confirmation error')
     }
   )
+  if (result === 'SUCCESS') {
+    console.log('confirmation success:', result)
+    alert(
+      '検証に成功しました。数秒後ログイン画面に移動しますので、ログインをお試しください'
+    )
+    router.push('/login')
+  }
 }
 
 const cognitoAuth = {

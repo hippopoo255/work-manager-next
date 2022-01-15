@@ -6,10 +6,12 @@ import {
 } from '@/interfaces/form/inputs'
 import { laravelAuth, cognitoAuth, Auth0 } from '@/lib/auth'
 import { UserAction } from '@/interfaces/action/UserAction'
-import { CognitoErrorMessageType } from '@/lib/auth/cognito/cognitoAuth'
+import { User } from '@/interfaces/models'
 
 export const currentUser = async (dispatch: React.Dispatch<UserAction>) => {
-  cognitoAuth.currentUser()
+  const user = (await cognitoAuth.currentUser()) as User | ''
+  dispatch(currentUserAction(user))
+  return user
   // =====================
   // const res = await laravelAuth.currentUser()
   // dispatch(currentUserAction(res))
@@ -22,10 +24,9 @@ export const login = async (
   dispatch: React.Dispatch<UserAction>
 ) => {
   // cognitoAuth.signout()
-  cognitoAuth.signin({ login_id, password })
-  // await cognitoAuth.signout()
-  // cognitoAuth.verifyUser({ login_id, verificationCode: '553300' })
-  // ここでUserTypeのオブジェクトを作る
+  const user = (await cognitoAuth.signin({ login_id, password })) as User
+  dispatch(loginAction(user))
+  return user
   // TODO: cognitoで詰まったら↓のLaravel認証に戻す
   // =====================
   // const user = await laravelAuth.login({ login_id, password }).catch((err) => {
@@ -38,8 +39,9 @@ export const login = async (
 }
 
 export const logout = async (dispatch: React.Dispatch<UserAction>) => {
-  cognitoAuth.signout()
+  const responseNull = await cognitoAuth.signout()
   dispatch(logoutAction())
+  return responseNull
   // =====================
   // await laravelAuth.logout().then(() => {
   //   dispatch(logoutAction())
@@ -48,10 +50,14 @@ export const logout = async (dispatch: React.Dispatch<UserAction>) => {
 }
 
 export const signup = async (data: SignupInputs) => {
-  await cognitoAuth.signup(data)
+  const user = await cognitoAuth.signup(data)
+  return user
 }
 
 export const testLogin = async (dispatch: React.Dispatch<UserAction>) => {
+  const user = await cognitoAuth.testSignin()
+  dispatch(loginAction(user))
+  return user
   // =================
   // const user = await laravelAuth.testLogin().catch((err) => {
   //   const errBody: { [k: string]: string[] } = err.data.errors
@@ -62,12 +68,8 @@ export const testLogin = async (dispatch: React.Dispatch<UserAction>) => {
   // =================
 }
 
-export const verifyUser = async (
-  data: AccountVerificationInputs,
-  onSuccess: (result: any) => void,
-  onError: (errCode: CognitoErrorMessageType) => void
-) => {
-  return await cognitoAuth.verifyUser(data, onSuccess, onError)
+export const verifyUser = async (data: AccountVerificationInputs) => {
+  return await cognitoAuth.verifyUser(data)
 }
 
 export const authOperation = {

@@ -69,7 +69,6 @@ const Signup = () => {
     ...initialAlertStatus,
   })
   const { t } = useLocale()
-  const { signup } = useAuth(true)
   const options = {
     fullWidth: true,
     className: classes.submit,
@@ -99,23 +98,15 @@ const Signup = () => {
     setError,
     formState: { errors },
   } = useForm<SignupInputs>()
+  const { signup } = useAuth(true)
 
   const onSubmit: SubmitHandler<SignupInputs> = async (data) => {
     setLoading(true)
-    await signup(data).catch((err) => {
-      console.error('error catch:', err)
+    await signup(data).catch(({ key, message }) => {
       setLoading(false)
-      setError('email', {
+      setError(key, {
         type: 'invalid',
-        message: err.email[0],
-      })
-      setError('login_id', {
-        type: 'invalid',
-        message: err.login_id[0],
-      })
-      setError('password', {
-        type: 'invalid',
-        message: err.login_id[0],
+        message,
       })
     })
   }

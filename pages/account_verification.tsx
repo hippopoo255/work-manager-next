@@ -71,15 +71,17 @@ const AccountVerification = () => {
     setValue,
     formState: { errors },
   } = useForm<AccountVerificationInputs>()
-  const { verifyUser, router } = useAuth<AccountVerificationInputs>(
-    true,
-    setError
-  )
+  const { verifyUser, router } = useAuth(true)
 
   const onSubmit: SubmitHandler<AccountVerificationInputs> = async (data) => {
     setLoading(true)
-    await verifyUser(data)
-    setLoading(false)
+    await verifyUser(data).catch(({ key, message }) => {
+      setLoading(false)
+      setError(key, {
+        type: 'invalid',
+        message,
+      })
+    })
   }
   const paramId = router.query.n
   useEffect(() => {

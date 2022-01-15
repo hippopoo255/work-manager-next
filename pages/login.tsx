@@ -92,15 +92,11 @@ const Login = () => {
 
   const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
     setLoading(true)
-    await login(data).catch((err) => {
+    await login(data).catch(({ key, message }) => {
       setLoading(false)
-      setError('login_id', {
+      setError(key, {
         type: 'invalid',
-        message: err.login_id[0],
-      })
-      setError('password', {
-        type: 'invalid',
-        message: err.login_id[0],
+        message,
       })
     })
   }
