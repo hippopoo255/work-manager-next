@@ -1,11 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
-import { AuthContext } from '@/provider/AuthProvider'
-import { loginAction } from '@/globalState/user/action'
-import { postRequest, requestUri } from '@/api'
 import { Layout } from '@/layouts'
-import { useRouter } from 'next/router'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import {
   Box,
@@ -20,12 +16,11 @@ import { TextField } from '@material-ui/core'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import { useForm, Controller, SubmitHandler } from 'react-hook-form'
 import { CustomAlert, FormErrorMessage } from '@/components/atoms'
-import { User } from '@/interfaces/models'
 import { CircularButton, TestLoginButton } from '@/components/molecules'
 import { AlertStatus } from '@/interfaces/common'
 import { LoginInputs } from '@/interfaces/form/inputs'
 import { initialAlertStatus } from '@/lib/initialData'
-import { useLocale } from '@/hooks'
+import { useLocale, useAuth } from '@/hooks'
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -63,14 +58,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 const Login = () => {
-  const router = useRouter()
   const classes = useStyles()
+  const [loading, setLoading] = useState<boolean>(false)
   const [alertStatus, setAlertStatus] = useState<AlertStatus>({
     ...initialAlertStatus,
   })
   const { t } = useLocale()
-  const [loading, setLoading] = useState<boolean>(false)
-  const { dispatch } = useContext(AuthContext)
+  const { login } = useAuth()
+
   const onAlertClose = () => {
     setAlertStatus((prev) => ({
       ...prev,
@@ -96,32 +91,14 @@ const Login = () => {
   } = useForm<LoginInputs>()
 
   const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
-    await login(data)
-  }
-
-  const login = async (data: LoginInputs) => {
     setLoading(true)
-    const loginData: FormData = new FormData()
-    loginData.append('login_id', data.login_id)
-    loginData.append('password', data.password)
-    await postRequest<User, FormData>(requestUri.login, loginData)
-      .then((res: User) => {
-        dispatch(loginAction(res))
-        router.push('/mypage')
+    await login(data).catch(({ key, message }) => {
+      setLoading(false)
+      setError(key, {
+        type: 'invalid',
+        message,
       })
-      .catch((err) => {
-        setLoading(false)
-        const errBody: { [k: string]: string[] } = err.data.errors
-        setError('login_id', {
-          type: 'invalid',
-          message: errBody.login_id[0],
-        })
-        setError('password', {
-          type: 'invalid',
-          message: errBody.login_id[0],
-        })
-      })
-      .finally(() => {})
+    })
   }
 
   return (

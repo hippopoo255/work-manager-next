@@ -21,6 +21,8 @@
     "@material-ui/lab": "^4.0.0-alpha.60",
     "@material-ui/pickers": "^3.3.10",
     "@svgr/webpack": "^5.5.0",
+    "amazon-cognito-identity-js": "^5.2.4",
+    "aws-amplify": "^4.3.12",
     "axios": "^0.21.1",
     "babel-plugin-transform-require-ignore": "^0.1.1",
     "date-fns": "^2.23.0",

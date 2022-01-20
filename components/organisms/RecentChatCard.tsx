@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles'
 import { List, ListItem } from '@material-ui/core'
 import { ChatIcon } from '@/components/atoms/icons'
@@ -6,10 +6,11 @@ import { DashboardBaseCard } from '@/components/organisms'
 import { CardItemBar } from '@/components/molecules'
 import { Header, FooterLink } from '@/interfaces/common/dashboard'
 import { ChatMessage } from '@/interfaces/models'
-import { toStrLabel, postTiming, COLLAPSE_COUNT } from '@/lib/util'
+import { postTiming, COLLAPSE_COUNT } from '@/lib/util'
 import { linerGradient } from '@/assets/color/gradient'
-import { getRequest, requestUri } from '@/api'
+import { requestUri } from '@/api'
 import { UserBar, MoreExpander } from '@/components/molecules'
+import { useLocale, useInitialConnector } from '@/hooks'
 
 type ListProps = {
   classes: any
@@ -51,18 +52,6 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
-const header: Header = {
-  avatar: <ChatIcon />,
-  title: '未読のチャット',
-  subTitle: '直近10件(最大)',
-}
-
-const footerLink: FooterLink = {
-  to: '/mypage/chat',
-  color: 'secondary',
-  text: 'ルーム一覧画面へ',
-}
-
 type Props = {
   wrapClasses: any
 }
@@ -71,26 +60,23 @@ type Props = {
 const RecentChatCard = React.memo(({ wrapClasses }: Props) => {
   const classes = useStyles()
   const [unreadMessages, setUnreadMessages] = useState<ChatMessage[]>([])
-  const [loading, setLoading] = useState<boolean>(false)
-  useEffect(() => {
-    let isMounted = true
-    const init = async () => {
-      setLoading(true)
-      await getRequest<ChatMessage[]>(requestUri.chatRoom.unreadRecently)
-        .then((data) => {
-          if (isMounted) {
-            setUnreadMessages(data)
-          }
-        })
-        .finally(() => {
-          setLoading(false)
-        })
-    }
-    init()
-    return () => {
-      isMounted = false
-    }
-  }, [])
+  const { t } = useLocale()
+  const { loading } = useInitialConnector<ChatMessage[]>({
+    path: requestUri.chatRoom.unreadRecently,
+    onSuccess: (data) => setUnreadMessages(data),
+  })
+
+  const header: Header = {
+    avatar: <ChatIcon />,
+    title: t.mypage.unreadChat,
+    subTitle: `${t.status.recent}10${t.unit.item}(${t.status.max})`,
+  }
+
+  const footerLink: FooterLink = {
+    to: '/mypage/chat',
+    color: 'secondary',
+    text: t.common.showChatRooms,
+  }
 
   const collapse = unreadMessages.length > COLLAPSE_COUNT
 

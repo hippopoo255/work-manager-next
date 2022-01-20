@@ -13,10 +13,11 @@ import { SortParam } from '@/interfaces/table'
 import { MeetingRecord } from '@/interfaces/models'
 import { MeetingTableRowData } from '@/interfaces/table/rowData'
 import { SearchMeetingRecordInputs } from '@/interfaces/form/inputs'
-import { getRequest, deleteRequest, requestUri } from '@/api'
+import { requestUri } from '@/api'
 import { getSortParams, handlePageUri } from '@/lib/util'
 import { headCells, createRows } from '@/lib/table/meetingRecord'
 import { BookmarkButton } from '@/components/atoms'
+import { useAuth, useRestApi } from '@/hooks'
 
 const Index = () => {
   const router = useRouter()
@@ -27,6 +28,8 @@ const Index = () => {
   const [latestUri, setLatestUri] = useState<string>(
     requestUri.meetingRecord.list
   )
+  const { getMethod, deleteMethod } = useRestApi()
+  const { auth, config } = useAuth()
   const slicedSortKeys = () => {
     const isSorting = latestUri.match(/[?&]sort_key=.+&order_by=.+/g)
     return !isSorting ? '' : isSorting[0].replace(/^[?]sort_key/, '&sort_key')
@@ -36,7 +39,7 @@ const Index = () => {
     let path = requestUri.meetingRecord.list + getSortParams(data)
     path += slicedSortKeys()
     setLatestUri(path)
-    return await getRequest<Pager<MeetingRecord, SearchMeetingRecordInputs>>(
+    return await getMethod<Pager<MeetingRecord, SearchMeetingRecordInputs>>(
       path
     ).finally(() => {
       setLoading(false)
@@ -64,7 +67,7 @@ const Index = () => {
     if (args.hasOwnProperty('sort_key') && meetingRecords !== null) {
       setLoading(true)
       const uri = handlePageUri(latestUri, args)
-      await getRequest<Pager<MeetingRecord, SearchMeetingRecordInputs>>(uri)
+      await getMethod<Pager<MeetingRecord, SearchMeetingRecordInputs>>(uri)
         .then((res) => {
           setMeetingRecords(res)
           setLatestUri(uri)
@@ -114,7 +117,7 @@ const Index = () => {
 
   const handleDeleteClick = async (ids: (number | string)[]) => {
     const queryParams = latestUri.match(/\?.+$/)
-    await deleteRequest<Pager<MeetingRecord, SearchMeetingRecordInputs>>(
+    await deleteMethod<Pager<MeetingRecord, SearchMeetingRecordInputs>>(
       `${requestUri.meetingRecord.delete}/${ids[0]}${queryParams || ''}`
     ).then((res) => {
       setMeetingRecords(res)
@@ -137,19 +140,21 @@ const Index = () => {
             .map((key) => `${key}=${router.query[key]}`)
             .join('&')
       }
-      await getRequest<Pager<MeetingRecord>>(
-        requestUri.meetingRecord.list + initialQuery
-      )
-        .then((res) => {
-          setMeetingRecords(res)
-          setRows(createRows(res.data, afterBookmark))
-        })
-        .finally(() => {
-          setLoading(false)
-        })
+      if (auth.isLogin) {
+        await getMethod<Pager<MeetingRecord>>(
+          requestUri.meetingRecord.list + initialQuery
+        )
+          .then((res) => {
+            setMeetingRecords(res)
+            setRows(createRows(res.data, afterBookmark))
+          })
+          .finally(() => {
+            setLoading(false)
+          })
+      }
     }
     init()
-  }, [router])
+  }, [router, auth])
 
   return (
     <MypageLayout title="議事録">

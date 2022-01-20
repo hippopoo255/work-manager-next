@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Typography, IconButton, Popover, Tooltip } from '@material-ui/core'
+import { useLocale } from '@/hooks'
 import HelpOutlineOutlinedIcon from '@material-ui/icons/HelpOutlineOutlined'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -36,6 +37,8 @@ const HelpBox = ({ children, point, tooltip = '' }: Props) => {
   const handleHelpOpen = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
     setHelpEl(event.currentTarget)
   }
+
+  const { t } = useLocale()
 
   const handleHelpClose = () => {
     setHelpEl(null)
@@ -94,15 +97,25 @@ const HelpBox = ({ children, point, tooltip = '' }: Props) => {
           children
         ) : (
           <Typography className={classes.helpText} component={'div'}>
-            <p>パスワードの条件</p>
+            <p>{t.label.passwordRule}</p>
             <ul>
-              <li className={classes.item}>条件1: 8〜64文字</li>
-              <li className={classes.item}>
-                条件2: ①[A〜Z]、②[a〜z]、③[0〜9]を必ず含める
+              {t.rule.password.map((rule, index) => (
+                <li className={classes.item} key={`rule_${index}`}>
+                  {rule}
+                </li>
+              ))}
+              {/* <li className={classes.item}>
+                &#9313; 大文字[A〜Z]を最低1文字含める
               </li>
               <li className={classes.item}>
+                &#9314; 小文字[a〜z]を最低1文字含める
+              </li>
+              <li className={classes.item}>
+                &#9315; 数字[0〜9]を最低1文字含める
+              </li> */}
+              {/* <li className={classes.item}>
                 その他使用可能文字：「-（ハイフン）」「_（アンダーバー）」「=（イコール）」「?（クエスチョン）」
-              </li>
+              </li> */}
             </ul>
           </Typography>
         )}

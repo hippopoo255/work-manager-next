@@ -14,6 +14,7 @@ import { Task } from '@/interfaces/models'
 import { TaskStatusFlag } from '@/interfaces/enums/TaskStatusFlag'
 import { linerGradient } from '@/assets/color/gradient'
 import { customColor } from '@/assets/color/basic'
+import { useLocale } from '@/hooks'
 
 type ListProps = {
   classes: any
@@ -21,6 +22,7 @@ type ListProps = {
 }
 
 const TaskListLayout = ({ classes, tasks }: ListProps) => {
+  const { t } = useLocale()
   return (
     <List disablePadding>
       {!!tasks.length ? (
@@ -28,7 +30,7 @@ const TaskListLayout = ({ classes, tasks }: ListProps) => {
           <div key={`task_${task.id}`}>
             <CardItemBar
               main={task.body}
-              sub={toStrLabel(new Date(task.time_limit)) + 'まで'}
+              sub={toStrLabel(new Date(task.time_limit), false, t)}
               status={task.progress.name}
               key={`task_${task.id}`}
             />
@@ -91,7 +93,7 @@ const BusyTaskCard = ({
   loading,
 }: Props) => {
   const classes = useStyles()
-
+  const { t, locale } = useLocale()
   const classOfStatus: {
     [k in TaskStatusFlag]: {
       linkColor: any
@@ -108,7 +110,7 @@ const BusyTaskCard = ({
         linkColor: classes.linkDanger,
         headerColor: classes.headerDanger,
         loaderColor: classes.loaderDanger,
-        adjective: '期限を過ぎた',
+        adjective: t.mypage.expiredTasks,
         helpText: (
           <Typography component={'div'} className={classes.description}>
             次のタスクを表示しています。
@@ -118,14 +120,14 @@ const BusyTaskCard = ({
             </ul>
           </Typography>
         ),
-        tooltip: '期限を過ぎたタスクとは？',
-        footerLink: '期限経過のタスクをすべて見る',
+        tooltip: t.tooltip.qa(t.mypage.expiredTasks),
+        footerLink: t.common.showExpiredTasks,
       },
       warning: {
         linkColor: classes.linkWarning,
         headerColor: classes.headerWarning,
         loaderColor: classes.loaderWarning,
-        adjective: '期限が近い',
+        adjective: t.mypage.approachedTasks,
         helpText: (
           <Typography className={classes.description}>
             次のタスクを表示しています。
@@ -135,8 +137,8 @@ const BusyTaskCard = ({
             </ul>
           </Typography>
         ),
-        tooltip: '期限が近いタスクとは？',
-        footerLink: '期限が近いタスクをすべて見る',
+        tooltip: t.tooltip.qa(t.mypage.approachedTasks),
+        footerLink: t.common.showApproachedTasks,
       },
       safe: {
         linkColor: classes.linkWarning,
@@ -150,12 +152,12 @@ const BusyTaskCard = ({
     avatar: <TaskIcon />,
     title: (
       <CardHeaderTitle
-        title={classOfStatus[flag].adjective + 'タスク'}
+        title={classOfStatus[flag].adjective}
         description={classOfStatus[flag].helpText}
         tooltip={classOfStatus[flag].tooltip || ''}
       />
     ),
-    subTitle: `${tasks.length}件`,
+    subTitle: tasks.length + t.unit.item,
   }
   const footerLink: FooterLink = {
     to: `/mypage/task?status=${flag}&sort_key=time_limit&order_by=asc`,

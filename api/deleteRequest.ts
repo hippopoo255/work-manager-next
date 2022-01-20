@@ -1,27 +1,35 @@
-import { AxiosResponse } from 'axios'
-import { defaultErrorHandler, httpClient } from '@/lib/axios'
+import axios, { AxiosRequestConfig, AxiosInstance, AxiosResponse } from 'axios'
+import { API_STAGE_URL } from '@/lib/util'
+import { defaultErrorHandler } from './util'
 
 const deleteRequest = async <T = null>(
   path: string,
-  data: any = null,
-  handleError: ((err: AxiosResponse) => unknown) | null = null
+  config?: AxiosRequestConfig,
+  onError?: (err: AxiosResponse) => AxiosResponse | void,
+  baseURL: string = API_STAGE_URL
 ): Promise<T> => {
-  const axiosFunc: () => Promise<AxiosResponse<null>> = () => {
-    if (!!data) {
-      return httpClient.delete(path, data)
-    }
-    return httpClient.delete(path)
-  }
+  const httpClient: AxiosInstance = axios.create({
+    baseURL,
+    withCredentials: true,
+  })
 
-  const res = await axiosFunc().catch((err) => {
+  const response = await httpClient.delete(path, config).catch((err) => {
     return err.response
   })
 
-  if (res.status >= 400) {
-    handleError ? handleError(res) : defaultErrorHandler(res)
-    return res
-  } else {
-    return res.data
+  if (response.status >= 400) {
+    !!onError
+      ? onError(response)
+      : () => {
+          try {
+            defaultErrorHandler(response)
+          } catch (err) {
+            return err
+          }
+        }
+    return response
   }
+  return response.data
 }
+
 export default deleteRequest

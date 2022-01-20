@@ -16,7 +16,8 @@ import { useForm, Controller, SubmitHandler } from 'react-hook-form'
 import { TaskInputs } from '@/interfaces/form/inputs'
 import { Priority, Progress, Task } from '@/interfaces/models'
 import { AxiosResponse } from 'axios'
-import { putRequest, postRequest, requestUri } from '@/api'
+import { requestUri } from '@/api'
+import { useAuth, useRestApi } from '@/hooks'
 
 type Props = {
   defaultValues: TaskInputs
@@ -42,8 +43,8 @@ const TaskForm = React.memo(
   }: Props) => {
     // react hook form
     const [loading, setLoading] = useState<boolean>(false)
-    const { auth } = useContext(AuthContext)
-
+    const { auth } = useAuth()
+    const { postMethod, putMethod } = useRestApi()
     const {
       handleSubmit,
       control,
@@ -71,9 +72,6 @@ const TaskForm = React.memo(
         .then((task) => {
           onSaveSuccess(task)
         })
-        .catch((err: AxiosResponse) => {
-          onSaveFail(err)
-        })
         .finally(() => {
           setLoading(false)
         })
@@ -81,12 +79,17 @@ const TaskForm = React.memo(
 
     const req = async (taskData: FormData) => {
       if (!!updateFlag) {
-        return await putRequest<Task, FormData>(
+        return await putMethod<Task, FormData>(
           requestUri.task.put + `/${updateFlag}`,
-          taskData
+          taskData,
+          onSaveFail
         )
       } else {
-        return await postRequest<Task, FormData>(requestUri.task.post, taskData)
+        return await postMethod<Task, FormData>(
+          requestUri.task.post,
+          taskData,
+          onSaveFail
+        )
       }
     }
 

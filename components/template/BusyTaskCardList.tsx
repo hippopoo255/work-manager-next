@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Grid } from '@material-ui/core'
 import { BusyTaskCard } from '@/components/organisms'
-import { requestUri, getRequest } from '@/api'
+import { requestUri } from '@/api'
 import { BusyTaskList } from '@/interfaces/models/BusyTaskList'
 import { COLLAPSE_COUNT } from '@/lib/util'
+import { useInitialConnector } from '@/hooks'
 
 type Props = {
   fixedHeightPaper: any
@@ -12,21 +13,10 @@ type Props = {
 // eslint-disable-next-line react/display-name
 const BusyTaskCardList = React.memo(({ fixedHeightPaper }: Props) => {
   const [busyTasks, setBusyTasks] = useState<BusyTaskList | null>(null)
-
-  useEffect(() => {
-    let unmounted = false
-    const init = async () => {
-      getRequest<BusyTaskList>(requestUri.task.myBusyTask).then((data) => {
-        if (!unmounted) {
-          setBusyTasks(data)
-        }
-      })
-    }
-    init()
-    return () => {
-      unmounted = true
-    }
-  }, [])
+  const { loading } = useInitialConnector<BusyTaskList>({
+    path: requestUri.task.myBusyTask,
+    onSuccess: (data) => setBusyTasks(data),
+  })
 
   return (
     <Grid container spacing={3}>

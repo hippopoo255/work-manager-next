@@ -2,7 +2,7 @@ import React from 'react'
 import { Header, Footer } from '@/components/organisms'
 import styles from '@/assets/stylesheets/components/Layout.module.scss'
 import Head from 'next/head'
-import { useLocale } from '@/hooks'
+import { useInitialAuthentication, useLocale } from '@/hooks'
 
 export type LayoutOrg = {
   children: React.ReactNode
@@ -11,11 +11,12 @@ export type LayoutOrg = {
 }
 
 const Layout = ({ children, title, noShadow }: LayoutOrg) => {
+  const { auth } = useInitialAuthentication(true)
   const { t } = useLocale()
   return (
     <>
       <Head>
-        <title>{!!title ? `${title} | ${t.title}` : t.title}</title>
+        <title>{!!title ? `${title} | ${t.siteTitle}` : t.siteTitle}</title>
       </Head>
       <div className={styles.container}>
         <div className={styles.head}>

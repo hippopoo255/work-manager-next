@@ -1,151 +1,25 @@
 import { GetStaticProps } from 'next'
 import React, { useContext, useState, useMemo, useEffect } from 'react'
-import { AuthContext } from '@/provider/AuthProvider'
-import clsx from 'clsx'
-import { makeStyles, Theme } from '@material-ui/core/styles'
 import { MypageLayout } from '@/layouts'
 import { MypageTitle } from '@/components/atoms'
 import { FormTitle } from '@/components/molecules'
-import { Avatar, Typography, Box } from '@material-ui/core'
+import { Box } from '@material-ui/core'
 import { MeetingRecordIcon } from '@/components/atoms/icons'
-import { postRequest, getRequest, requestUri } from '@/api'
-import { User } from '@/interfaces/models'
+import { getRequest, requestUri } from '@/api'
 import { MeetingRecordForm } from '@/components/template'
-import { MeetingRecord, MeetingPlace } from '@/interfaces/models'
-import { MeetingRecordInputs, MemberInputs } from '@/interfaces/form/inputs'
-import { MeetingRecordSubmit } from '@/interfaces/form/submit'
+import { MeetingPlace } from '@/interfaces/models'
+import { MemberInputs } from '@/interfaces/form/inputs'
 import { Breadcrumbs } from '@/components/molecules'
 import { BreadcrumbItem } from '@/interfaces/common'
+import { useMeetingRecord } from '@/hooks'
 
 export type Props = {
   meetingPlaceList: MeetingPlace[]
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-  wrap: {
-    maxWidth: 800,
-  },
-  head: {
-    width: '100%',
-    padding: `${theme.spacing(2)}px 0`,
-    [theme.breakpoints.up('md')]: {
-      padding: theme.spacing(2),
-    },
-  },
-  body: {
-    width: '100%',
-    padding: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-    marginTop: theme.spacing(2),
-  },
-  stepper: {
-    width: '100%',
-    padding: 0,
-  },
-  stepperCol: {
-    padding: 0,
-    [theme.breakpoints.up('md')]: {
-      paddingLeft: theme.spacing(1),
-      paddingRight: theme.spacing(1),
-    },
-  },
-  tail: {
-    marginTop: theme.spacing(2),
-    padding: theme.spacing(2),
-  },
-  form: {
-    width: '100%',
-  },
-  minHeight: {
-    minHeight: 180,
-  },
-  deleteRow: {
-    color: theme.palette.error.main,
-    borderColor: theme.palette.error.main,
-    cursor: 'pointer',
-  },
-  // submitBtn: {
-  //   color: '#fff',
-  // },
-  avatar: {
-    margin: theme.spacing(1),
-    background: 'linear-gradient(135deg,#fad961,#f76b1c)',
-    boxShadow: theme.shadows[2],
-  },
-  backButton: {
-    marginRight: theme.spacing(1),
-  },
-  instructions: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
-    color: theme.palette.primary.main,
-  },
-  backdrop: {
-    zIndex: theme.zIndex.drawer + 1,
-    color: theme.palette.common.white,
-  },
-  tailWrap: {
-    position: 'relative',
-  },
-  tailBody: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonProgress: {
-    color: theme.palette.primary.main,
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    marginTop: -12,
-    marginLeft: -12,
-  },
-}))
-
 const MeetingRecordCreate = ({ meetingPlaceList }: Props) => {
-  const classes = useStyles()
-  const { auth } = useContext(AuthContext)
-
-  // react hook form
-  const defaultValues = {
-    recorded_by: auth.user.id,
-    title: '',
-    summary: '',
-    place_id: 1,
-    role_id: null,
-    meeting_date: new Date(),
-    members: [],
-    meeting_decisions: [
-      {
-        subject: '',
-        body: '',
-        written_by: auth.user.id,
-        decided_by: null,
-      },
-    ],
-  }
-
-  const req = async (submitData: MeetingRecordSubmit) =>
-    await postRequest<MeetingRecord, MeetingRecordSubmit>(
-      requestUri.meetingRecord.post,
-      submitData
-    )
-
-  // Autocomlete members
-  const [memberList, setMemberList] = useState<MemberInputs[]>([])
+  const { save, classes, defaultValues, memberList } = useMeetingRecord()
   const fixedMember: MemberInputs[] = []
-  useEffect(() => {
-    const fetch = async () => {
-      await getRequest<User[]>(requestUri.user.list).then((users: User[]) => {
-        const dataList: MemberInputs[] = users.map((u) => ({
-          id: u.id,
-          full_name: u.full_name,
-        }))
-        setMemberList(dataList)
-      })
-    }
-    fetch()
-  }, [])
 
   const handleStore = () => {
     console.log('')
@@ -175,7 +49,7 @@ const MeetingRecordCreate = ({ meetingPlaceList }: Props) => {
           memberList={memberList}
           fixedMember={fixedMember}
           defaultValues={defaultValues}
-          req={req}
+          req={save}
           classes={classes}
           meetingPlaceList={meetingPlaceList}
           handleSuccess={handleStore}

@@ -1,12 +1,8 @@
-import React, { useContext, useState, useEffect, useCallback } from 'react'
-import { AuthContext } from '@/provider/AuthProvider'
-import { useRouter } from 'next/router'
-import { DateClickArg } from '@fullcalendar/interaction'
+import React, { useState } from 'react'
 import { EventInput } from '@fullcalendar/common'
-import { EventClickArg, EventChangeArg } from '@fullcalendar/react'
 import { MypageLayout } from '@/layouts'
 import { MypageTitle } from '@/components/atoms'
-import { CustomCalendar, ConfirmDialog } from '@/components/organisms'
+import { useCalendar, ConfirmDialog } from '@/components/organisms'
 import { ScheduleForm } from '@/components/template'
 import {
   ScheduleInputs,
@@ -14,21 +10,13 @@ import {
   MemberInputs,
 } from '@/interfaces/form/inputs'
 import { ScheduleSubmit } from '@/interfaces/form/submit'
-import { Schedule, User } from '@/interfaces/models'
-import {
-  requestUri,
-  postRequest,
-  getRequest,
-  putRequest,
-  deleteRequest,
-} from '@/api'
-import { toStrData } from '@/lib/util'
+import { Schedule } from '@/interfaces/models'
 import { defaultScheduleColor } from '@/lib/fullCalendar'
 import { TextField, Grid } from '@material-ui/core'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { CustomAlert } from '@/components/atoms'
-import { initialAlertStatus } from '@/lib/initialData'
-import { AlertStatus } from '@/interfaces/common'
+import { useMemberList, useSchedule } from '@/hooks'
+import { CustomLoader } from '@/components/molecules'
 
 export type Props = {
   users: MemberInputs[]
@@ -71,18 +59,38 @@ const UserField = ({ users, onChange }: Props) => {
 }
 
 const Index = () => {
-  const [memberList, setMemberList] = useState<MemberInputs[]>([])
-  const [scheduleEvents, setScheduleEvents] = useState<EventInput[]>([])
-  const [schedules, setSchedules] = useState<Schedule[]>([])
+  const {
+    alertStatus,
+    auth,
+    deleteSchedule,
+    getSchedulesByUserId,
+    loading,
+    save,
+    schedules,
+    setAlertStatus,
+    setTargetScheduleId,
+    targetScheduleId,
+    targetUserId,
+    setTargetUserId,
+  } = useSchedule({
+    onListSuccess: (schedules: Schedule[]) =>
+      setScheduleEvents(
+        schedules.map((schedule) => ({
+          id: String(schedule.id),
+          title: schedule.title,
+          start: new Date(schedule.start),
+          end: new Date(schedule.end),
+          color: !!schedule.color ? schedule.color : defaultScheduleColor,
+          editable: schedule.can_edit,
+        }))
+      ),
+  })
   const [open, setOpen] = useState<boolean>(false)
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false)
-  const [deleteLoading, setDeleteLoading] = useState<boolean>(false)
-  const [targetUserId, setTargetUserId] = useState<number>(0)
-  const [delScheduleId, setDelScheduleId] = useState<number>(0)
-  const { auth } = useContext(AuthContext)
-  const userId = auth.user.id
+  const authorId = auth.user.id
+  const { memberList } = useMemberList({ sharedBy: authorId })
   const [defaultValues, setDefaultValues] = useState<ScheduleInputs>({
-    scheduled_by: userId,
+    scheduled_by: authorId,
     title: '',
     memo: '',
     start: new Date(),
@@ -93,9 +101,21 @@ const Index = () => {
     sharedMembers: [],
   })
   const fixedMember: MemberExtInputs[] = []
-  const mine = targetUserId === userId
-  const [alertStatus, setAlertStatus] = useState<AlertStatus>({
-    ...initialAlertStatus,
+  const mine = targetUserId === authorId
+
+  const { Calendar, scheduleEvents, setScheduleEvents } = useCalendar({
+    schedules,
+    setDefaultValues,
+    afterFetchDefaultValues: () => setOpen(true),
+    disabledSchedule: targetUserId > 0 && !mine,
+    afterDateClick: () => setOpen(true),
+    afterEventChange: async (
+      submitData: ScheduleSubmit,
+      targetScheduleId: number
+    ) =>
+      await save(submitData, targetScheduleId).then((schedule) => {
+        handleSuccess(schedule)
+      }),
   })
 
   const onAlertClose = () => {
@@ -105,123 +125,24 @@ const Index = () => {
     }))
   }
 
-  const handleTarget = (
+  const handleTarget = async (
     event: React.ChangeEvent<{}>,
-    newValue: MemberInputs | null
+    targetMember: MemberInputs | null
   ) => {
-    if (newValue !== null) {
-      setTargetUserId(newValue.id)
-    } else {
-      setTargetUserId(userId)
-    }
-  }
-
-  const handleEventClick = (e: EventClickArg) => {
-    const targetSchedule = schedules.find(
-      (schedule) => schedule.id === Number(e.event._def.publicId)
+    setTargetUserId(targetMember === null ? auth.user.id : targetMember.id)
+    // ×ボタンの際はnullが入ってくる
+    await getSchedulesByUserId(
+      targetMember === null ? undefined : targetMember.id
     )
-    if (targetSchedule !== undefined && !!targetSchedule.is_show) {
-      setDefaultValues({
-        id: targetSchedule.id,
-        scheduled_by: targetSchedule.scheduled_by!.id!,
-        title: targetSchedule.title,
-        memo: targetSchedule.memo,
-        start: new Date(targetSchedule.start),
-        end: new Date(targetSchedule.end),
-        color: targetSchedule.color || defaultScheduleColor,
-        is_public: targetSchedule.is_public,
-        disabled: !targetSchedule.can_edit,
-        sharedMembers: targetSchedule.shared_members.map((member) => ({
-          id: member.id,
-          full_name: member.full_name,
-          is_editable: member.option.is_editable,
-          shared_by: member.option.shared_by,
-        })),
-      })
-      setOpen(true)
-    }
-  }
-
-  const handleDateClick = (e: DateClickArg) => {
-    setDefaultValues((prev) => {
-      if (prev.id !== undefined) {
-        delete prev.id
-      }
-      return {
-        scheduled_by: userId,
-        title: '',
-        memo: '',
-        color: defaultScheduleColor,
-        is_public: true,
-        disabled: targetUserId > 0 && !mine,
-        sharedMembers: [],
-        start: e.date,
-        end: e.date,
-      }
-    })
-    setOpen(true)
-  }
-
-  const handleEventChange = async (e: EventChangeArg) => {
-    const targetSchedule = schedules.find(
-      (schedule) => schedule.id === Number(e.event._def.publicId)
-    )
-    if (targetSchedule !== undefined) {
-      const submitMember: ScheduleSubmit['sharedMembers'] = {}
-      targetSchedule.shared_members.forEach((member) => {
-        submitMember[member.id] = {
-          is_editable: !!member.option.is_editable,
-          shared_by: member.option.shared_by,
-        }
-      })
-      const movedStartStr =
-        e.event.start === null ? targetSchedule.start : toStrData(e.event.start)
-      const submitData = {
-        scheduled_by: targetSchedule.scheduled_by.id,
-        title: targetSchedule.title,
-        memo: targetSchedule.memo,
-        start: movedStartStr,
-        end: e.event.end === null ? movedStartStr : toStrData(e.event.end),
-        color: targetSchedule.color,
-        is_public: targetSchedule.is_public,
-        sharedMembers: submitMember,
-      }
-
-      await putRequest<Schedule, ScheduleSubmit>(
-        `/schedule/${targetSchedule.id}`,
-        submitData
-      )
-        .then((newSchedule) => {
-          handleSuccess(newSchedule)
-        })
-        .catch((err) => {})
-    }
   }
 
   const handleSuccess = (newSchedule: Schedule) => {
-    setAlertStatus((prev) => ({
-      ...prev,
-      msg: 'スケジュールを保存しました',
-      severity: 'success',
-      show: true,
-    }))
-    setSchedules((prev: Schedule[]) => {
-      const index = prev.findIndex((schedule) => schedule.id === newSchedule.id)
-      if (index !== -1) {
-        // 更新時の処理
-        prev.splice(index, 1, newSchedule)
-        return prev
-      } else {
-        // 新規追加時の処理
-        return [newSchedule].concat(prev)
-      }
-    })
-
     setScheduleEvents((prev: EventInput[]) => {
       const index = prev.findIndex(
         (event) => Number(event.id) === newSchedule.id
       )
       if (index !== -1) {
+        // 更新処理後
         prev.splice(index, 1, {
           id: String(newSchedule.id),
           title: newSchedule.title,
@@ -231,6 +152,7 @@ const Index = () => {
           editable: newSchedule.can_edit,
         })
       } else {
+        // 新規登録処理後
         prev.push({
           id: String(newSchedule.id),
           title: newSchedule.title,
@@ -247,96 +169,26 @@ const Index = () => {
   const handleDelete = (id?: number | string) => {
     setOpen(false)
     if (typeof id === 'number') {
-      setDelScheduleId(id)
+      setTargetScheduleId(id)
     }
     setDeleteOpen(true)
   }
 
   const execDelete = async () => {
-    setDeleteLoading(true)
-    if (delScheduleId > 0) {
-      await deleteRequest(`/schedule/${delScheduleId}`)
-        .then((res) => {
-          setSchedules((prev: Schedule[]) => {
-            const index = prev.findIndex(
-              (schedule) => schedule.id === delScheduleId
-            )
-            if (index !== -1) {
-              prev.splice(index, 1)
-            }
-            return prev
-          })
-          setScheduleEvents((prev: EventInput[]) => {
-            const index = prev.findIndex(
-              (event) => Number(event.id) === delScheduleId
-            )
-            if (index !== -1) {
-              prev.splice(index, 1)
-            }
-            return [...prev]
-          })
-          setDelScheduleId(0)
-          setDeleteOpen(false)
-        })
-        .finally(() => {
-          setDeleteLoading(false)
-        })
-    }
+    await deleteSchedule().then(() => {
+      setScheduleEvents((prev: EventInput[]) => {
+        const index = prev.findIndex(
+          (event) => Number(event.id) === targetScheduleId
+        )
+        if (index !== -1) {
+          prev.splice(index, 1)
+        }
+        return [...prev]
+      })
+      setDeleteOpen(false)
+    })
   }
 
-  useEffect(() => {
-    const fetchSchedules = async () => {
-      const id = targetUserId === 0 ? userId : targetUserId
-      if (id > 0) {
-        await getRequest<Schedule[]>(`/user/${id}/schedule`).then(
-          (schedules: Schedule[]) => {
-            setSchedules(schedules)
-            setScheduleEvents(
-              schedules.map((schedule) => ({
-                id: String(schedule.id),
-                title: schedule.title,
-                start: new Date(schedule.start),
-                end: new Date(schedule.end),
-                color: !!schedule.color ? schedule.color : defaultScheduleColor,
-                editable: schedule.can_edit,
-              }))
-            )
-          }
-        )
-      }
-    }
-    fetchSchedules()
-  }, [targetUserId, userId])
-
-  useEffect(() => {
-    const fetchMember = async () => {
-      await getRequest<User[]>(requestUri.user.list).then((users: User[]) => {
-        const dataList: MemberInputs[] = users.map((u) => ({
-          id: u.id,
-          full_name: u.full_name,
-        }))
-        setMemberList(dataList)
-      })
-    }
-    fetchMember()
-  }, [])
-
-  const saveReq = useCallback(
-    async (submitData: ScheduleSubmit) => {
-      if (defaultValues.id !== undefined) {
-        return await putRequest<Schedule, ScheduleSubmit>(
-          `/schedule/${defaultValues.id}`,
-          submitData
-        )
-      } else {
-        return await postRequest<Schedule, ScheduleSubmit>(
-          requestUri.schedule.post,
-          submitData
-        )
-      }
-    },
-    [defaultValues]
-  )
   return (
     <MypageLayout title="スケジュール">
       <div className="container">
@@ -349,8 +201,8 @@ const Index = () => {
           open={open}
           setOpen={setOpen}
           fixedMember={fixedMember}
-          sharedBy={userId}
-          req={saveReq}
+          sharedBy={authorId}
+          req={save}
           onSuccess={handleSuccess}
           onDelete={handleDelete}
           dialogTitle={
@@ -360,19 +212,14 @@ const Index = () => {
           }
         />
         <div className="container">
-          <CustomCalendar
-            initialEvents={scheduleEvents}
-            onEventClick={handleEventClick}
-            onDateClick={handleDateClick}
-            onEventChange={handleEventChange}
-          />
+          {scheduleEvents.length ? <Calendar /> : <CustomLoader />}
         </div>
         <ConfirmDialog
           open={deleteOpen}
           setOpen={setDeleteOpen}
           onExec={execDelete}
           isCircular
-          loading={deleteLoading}
+          loading={loading}
         />
       </section>
       <CustomAlert alertStatus={alertStatus} onClose={onAlertClose} />

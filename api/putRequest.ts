@@ -1,36 +1,23 @@
-import { AxiosResponse } from 'axios'
-import { defaultErrorHandler, httpClient } from '@/lib/axios'
-
-export type Config = {
-  headers: {
-    'X-HTTP-Method-Override': 'PUT'
-    'Content-Type'?: 'multipart/form-data'
-  }
-}
+import { AxiosRequestConfig, AxiosInstance, AxiosResponse } from 'axios'
+import { API_STAGE_URL } from '@/lib/util'
+import { postRequest } from '.'
 
 const putRequest = async <T, U>(
   path: string,
   data: U,
-  handleError: ((err: AxiosResponse) => unknown) | null = null,
-  config: Config = {
-    headers: {
-      'X-HTTP-Method-Override': 'PUT',
-    },
-  }
+  onError?: (err: AxiosResponse) => AxiosResponse | void,
+  config?: AxiosRequestConfig,
+  baseURL: string = API_STAGE_URL
 ): Promise<T> => {
-  const axiosFunc: () => Promise<AxiosResponse<T>> = () => {
-    return httpClient.post(path, data, config)
+  const headers = {
+    ...config?.headers,
+    'X-HTTP-Method-Override': 'PUT',
   }
-
-  const res = await axiosFunc().catch((err) => {
-    return err.response
-  })
-
-  if (res.status >= 400) {
-    handleError ? handleError(res) : defaultErrorHandler(res)
-    return res
-  } else {
-    return res.data
+  const putConfig = {
+    ...config,
+    headers,
   }
+  return await postRequest<T, U>(path, data, onError, { ...putConfig }, baseURL)
 }
+
 export default putRequest

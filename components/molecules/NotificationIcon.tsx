@@ -16,7 +16,8 @@ import {
 } from '@material-ui/core'
 import NotificationsIcon from '@material-ui/icons/Notifications'
 import { Activity } from '@/interfaces/models'
-import { requestUri, getRequest, putRequest } from '@/api'
+import { requestUri, putRequest } from '@/api'
+import { useAuth, useInitialConnector } from '@/hooks'
 
 const useStyles = makeStyles((theme: Theme) => ({
   menuBox: {
@@ -54,31 +55,21 @@ const useStyles = makeStyles((theme: Theme) => ({
 const NotificationIcon = React.memo(() => {
   const classes = useStyles()
   const router = useRouter()
-  const [open, setOpen] = useState(false)
+  const { auth, config } = useAuth()
   const [activities, setActivities] = useState<Activity[]>([])
-  const { auth } = useContext(AuthContext)
+  const {} = useInitialConnector<Activity[]>({
+    path: requestUri.activity.myRecently.replace(':id', String(auth.user.id)),
+    onSuccess: (res) => setActivities(res),
+  })
+  const [open, setOpen] = useState(false)
   const anchorRef = useRef<HTMLButtonElement>(null)
-  useEffect(() => {
-    let isMounted = true
-    const init = async () => {
-      await getRequest<Activity[]>(
-        requestUri.activity.myRecently.replace(':id', String(auth.user.id))
-      ).then((res) => {
-        if (isMounted) {
-          setActivities(res)
-        }
-      })
-    }
-    init()
-    return () => {
-      isMounted = false
-    }
-  }, [])
 
   const read = async () => {
     await putRequest<any, {}>(
       requestUri.activity.read.replace(':id', String(auth.user.id)),
-      {}
+      {},
+      undefined,
+      config
     ).then((res) => {})
   }
 

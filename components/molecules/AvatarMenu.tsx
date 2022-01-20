@@ -1,7 +1,4 @@
-import React, { useContext, useState, useRef, useEffect } from 'react'
-import { AuthContext } from '@/provider/AuthProvider'
-import { logoutAction } from '@/globalState/user/action'
-
+import React, { useState, useRef, useEffect } from 'react'
 import {
   ClickAwayListener,
   Grow,
@@ -13,11 +10,8 @@ import {
 } from '@material-ui/core'
 import { IconButton } from '@material-ui/core'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
-import { useRouter } from 'next/router'
-import { STORAGE_URL } from '@/lib/util'
 import { UserAvatar } from '@/components/atoms'
-import { postRequest, requestUri } from '@/api'
-import { useLocale } from '@/hooks'
+import { useAuth, useLocale } from '@/hooks'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,9 +31,8 @@ export type Letter = () => string
 
 const AvatarMenu = () => {
   const classes = useStyles()
-  const router = useRouter()
-  const { auth, dispatch } = useContext(AuthContext)
-  const { t, locale } = useLocale()
+  const { t } = useLocale()
+  const { router, auth, logout } = useAuth()
   const menus = [
     {
       id: 'mypage',
@@ -69,13 +62,6 @@ const AvatarMenu = () => {
     }
   }
 
-  const logout = async () => {
-    await postRequest<null, {}>(requestUri.logout, {}).then(() => {
-      dispatch(logoutAction())
-      router.push('/login')
-    })
-  }
-
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen)
   }
@@ -96,11 +82,8 @@ const AvatarMenu = () => {
       setOpen(false)
     }
   }
+
   const prevOpen = useRef(open)
-  const avatarSrc =
-    auth.isLogin && !!auth.user.file_path
-      ? `${STORAGE_URL}/${auth.user.file_path}`
-      : ''
 
   useEffect(() => {
     if (prevOpen.current === true && open === false) {

@@ -1,11 +1,6 @@
-import React, { useState, useContext } from 'react'
+import React, { useState } from 'react'
 import { CircularButton } from '@/components/molecules'
-import { useRouter } from 'next/router'
-import { User } from '@/interfaces/models'
-import { postRequest, requestUri } from '@/api'
-import { loginAction } from '@/globalState/user/action'
-import { AuthContext } from '@/provider/AuthProvider'
-import { useLocale } from '@/hooks'
+import { useLocale, useAuth } from '@/hooks'
 
 type Props = {
   options?: {
@@ -20,24 +15,19 @@ const TestLoginButton = ({
     fullWidth: true,
   },
 }: Props) => {
-  const router = useRouter()
   const [loading, setLoading] = useState<boolean>(false)
-  const { dispatch } = useContext(AuthContext)
+  const { testLogin, auth } = useAuth()
   const { t } = useLocale()
   const handleDemoUser = async () => {
     setLoading(true)
     await testLogin()
-      .then((testUser) => {
-        dispatch(loginAction(testUser))
-        router.push('/mypage')
+      .catch((err) => {
+        alert(err)
       })
-      .catch(() => {
+      .finally(() => {
         setLoading(false)
       })
   }
-
-  const testLogin = async () =>
-    await postRequest<User, {}>(requestUri.testLogin, {})
 
   return (
     <CircularButton

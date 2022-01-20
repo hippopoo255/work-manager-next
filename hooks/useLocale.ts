@@ -1,7 +1,6 @@
 import React from 'react'
 import { useRouter } from 'next/router'
-import ja from '@/locales/ja'
-import en from '@/locales/en'
+import { ja, en } from '@/locales'
 
 const useLocale = () => {
   const { locale } = useRouter()

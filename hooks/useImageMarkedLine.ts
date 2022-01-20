@@ -1,9 +1,10 @@
 import React, { useState, useCallback } from 'react'
-import { uploadFile } from '@/lib/file'
 import { UploadedFileResponseType } from '@/lib/file/upload'
+import { useFileUpload } from '@/hooks'
 
 const useImageMarkedLine = () => {
   const [imageMarkedLine, setImageMarkedLine] = useState<string>('')
+  const { uploadFile } = useFileUpload()
 
   const imageUploadFunction = useCallback(async (file: File) => {
     await uploadFile(file).then((response: UploadedFileResponseType) => {

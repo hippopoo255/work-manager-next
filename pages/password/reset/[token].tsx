@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
-import { postRequest, requestUri } from '@/api'
+import { requestUri } from '@/api'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import {
   Container,
@@ -19,7 +19,7 @@ import { HelpBox } from '@/components/molecules'
 import { CustomAlert } from '@/components/atoms'
 import { AlertStatus } from '@/interfaces/common'
 import { initialAlertStatus } from '@/lib/initialData'
-import { useLocale } from '@/hooks'
+import { useLocale, useRestApi } from '@/hooks'
 
 type PasswordResetInputs = {
   token: string
@@ -50,6 +50,7 @@ const PasswordReset = () => {
   const classes = useStyles()
   const router = useRouter()
   const { t } = useLocale()
+  const { postMethod } = useRestApi()
   const [loading, setLoading] = useState<boolean>(false)
   const [alertStatus, setAlertStatus] = useState<AlertStatus>({
     ...initialAlertStatus,
@@ -85,7 +86,7 @@ const PasswordReset = () => {
       ...data,
       email: atob(data.email),
     }
-    await postRequest<{ message: string }, PasswordResetInputs>(
+    await postMethod<{ message: string }, PasswordResetInputs>(
       requestUri.resetPassword,
       submitData,
       (err) => {

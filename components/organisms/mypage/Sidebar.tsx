@@ -56,7 +56,6 @@ const Sidebar = (props: Props) => {
   const theme = useTheme()
   const router = useRouter()
   const [menus, setMenus] = useState<Menus>({ ...SidebarMenus() })
-  console.log('render')
   const handleClick = (target: Menu) => {
     if (target.children === undefined) {
       onItem(target.to)

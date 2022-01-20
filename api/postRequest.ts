@@ -1,35 +1,39 @@
-import { AxiosResponse } from 'axios'
-import { defaultErrorHandler, httpClient } from '@/lib/axios'
-
-export type Config = {
-  headers: {
-    'Content-Type'?: 'multipart/form-data'
-  }
-}
+import axios, { AxiosRequestConfig, AxiosInstance, AxiosResponse } from 'axios'
+import { API_STAGE_URL } from '@/lib/util'
+import { defaultErrorHandler } from './util'
 
 const postRequest = async <T, U>(
   path: string,
   data: U,
-  handleError: ((err: AxiosResponse) => unknown) | null = null,
-  config?: Config
+  onError?: (err: AxiosResponse) => AxiosResponse | void,
+  config?: AxiosRequestConfig,
+  baseURL: string = API_STAGE_URL
 ): Promise<T> => {
-  const axiosFunc: () => Promise<AxiosResponse<T>> = () => {
-    if (config !== undefined) {
-      return httpClient.post(path, data, config)
-    } else {
-      return httpClient.post(path, data)
-    }
-  }
-
-  const res = await axiosFunc().catch((err) => {
-    return err.response
+  const httpClient: AxiosInstance = axios.create({
+    baseURL,
+    withCredentials: true,
   })
 
-  if (res.status >= 400) {
-    handleError ? handleError(res) : defaultErrorHandler(res)
-    return res
-  } else {
-    return res.data
+  const response = await httpClient
+    .post(path, data, { ...config })
+    .catch((err) => {
+      return err.response
+    })
+
+  if (response.status >= 400) {
+    !!onError
+      ? onError(response)
+      : () => {
+          try {
+            defaultErrorHandler(response)
+          } catch (err) {
+            return err
+          }
+        }
+    return response
   }
+
+  return response.data
 }
+
 export default postRequest

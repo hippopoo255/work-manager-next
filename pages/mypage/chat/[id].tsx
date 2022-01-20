@@ -22,13 +22,7 @@ import MeetingRoomIcon from '@material-ui/icons/MeetingRoom'
 import SendIcon from '@material-ui/icons/Send'
 import PanoramaOutlinedIcon from '@material-ui/icons/PanoramaOutlined'
 import { useRouter } from 'next/router'
-import {
-  putRequest,
-  getRequest,
-  postRequest,
-  deleteRequest,
-  requestUri,
-} from '@/api'
+import { requestUri } from '@/api'
 import { ChatRoom, ChatMessage, LastRead, ChatImage } from '@/interfaces/models'
 import {
   MemberExtInputs,
@@ -57,7 +51,7 @@ import {
   listenMessageDelete,
 } from '@/lib/pusher'
 import { deletedMessage } from '@/lib/initialData'
-import { AuthContext } from '@/provider/AuthProvider'
+import { useAuth, useRestApi } from '@/hooks'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -211,7 +205,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const ChatDetail = () => {
   const classes = useStyles()
   const router = useRouter()
-  const { auth } = useContext(AuthContext)
+  const { auth, config } = useAuth()
   const userId = auth.user.id
   const [chatRoom, setChatRoom] = useState<ChatRoom | null>(null)
   const [activeRoom, setActiveRoom] = useState<ChatRoom | null>(null)
@@ -223,7 +217,7 @@ const ChatDetail = () => {
   const [confirmLoading, setConfirmLoading] = useState<boolean>(false)
   const fixedMember: MemberExtInputs[] = []
   const scrollRef = useRef<HTMLElement>(null)
-
+  const { getMethod, postMethod, putMethod, deleteMethod } = useRestApi()
   const scrollToLatest = () => {
     if (!!scrollRef) {
       scrollRef!.current!.scrollTop = scrollRef!.current!.scrollHeight
@@ -250,8 +244,8 @@ const ChatDetail = () => {
 
   useEffect(() => {
     const fetchChatRoom = async () => {
-      if (router.query.id !== undefined) {
-        await getRequest<ChatRoom>(
+      if (router.query.id !== undefined && userId) {
+        await getMethod<ChatRoom>(
           requestUri.chatRoom.id + router.query.id,
           (err) => {
             setResponseError(err)
@@ -270,7 +264,7 @@ const ChatDetail = () => {
       }
     }
     fetchChatRoom()
-  }, [router])
+  }, [router, userId])
 
   useEffect(() => {
     if (userId > 0) {
@@ -358,11 +352,11 @@ const ChatDetail = () => {
 
   const read = useCallback(async () => {
     const chatRoomId = getChatRoomId()
-    await postRequest<ChatRoom, {}>(
+    await postMethod<ChatRoom, {}>(
       requestUri.chatRoom.read + `${chatRoomId}/read`,
       {}
     )
-  }, [getChatRoomId, router])
+  }, [getChatRoomId, router, auth])
 
   const title = useMemo(
     () => (chatRoom !== null ? chatRoom.name : ''),
@@ -423,7 +417,7 @@ const ChatDetail = () => {
 
   // チャットルーム更新
   const saveReq = async (submitData: ChatRoomSubmit) =>
-    await putRequest<ChatRoom, ChatRoomSubmit>(
+    await putMethod<ChatRoom, ChatRoomSubmit>(
       `${requestUri.chatRoom.put}${getChatRoomId()}`,
       submitData
     )
@@ -443,7 +437,7 @@ const ChatDetail = () => {
   // チャットルーム削除
   const handleDelete = async () => {
     setConfirmLoading(true)
-    await deleteRequest(requestUri.chatRoom.delete + getChatRoomId()).then(
+    await deleteMethod(requestUri.chatRoom.delete + getChatRoomId()).then(
       () => {
         setConfirmLoading(false)
         setConfirmOpen(false)
@@ -551,7 +545,7 @@ const ChatDetail = () => {
   }
 
   const storeMessage = async (messageSubmitData: FormData, id: number = 0) =>
-    await postRequest<ChatMessage, ChatMessageSubmit>(
+    await postMethod<ChatMessage, ChatMessageSubmit>(
       `/chat_room/${getChatRoomId()}/message`,
       messageSubmitData
     )
@@ -563,7 +557,7 @@ const ChatDetail = () => {
   }
 
   const updateMessage = async (submitData: ChatMessageSubmit, id: number) =>
-    await putRequest<ChatMessage, ChatMessageSubmit>(
+    await putMethod<ChatMessage, ChatMessageSubmit>(
       `/chat_room/${getChatRoomId()}/message/${id}`,
       submitData
     )
@@ -608,7 +602,7 @@ const ChatDetail = () => {
   )
 
   const deleteMessage = async (id?: number | string) => {
-    await deleteRequest(`/chat_room/${getChatRoomId()}/message/${id}`).then(
+    await deleteMethod(`/chat_room/${getChatRoomId()}/message/${id}`).then(
       () => {
         replaceDeleteMessage(id)
       }

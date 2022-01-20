@@ -6,9 +6,10 @@ import { ScheduleIcon } from '@/components/atoms/icons'
 import { toStrLabel, scheduleLabel } from '@/lib/util'
 import { DashboardBaseCard } from '@/components/organisms'
 import { Header, FooterLink } from '@/interfaces/common/dashboard'
-import { requestUri, getRequest } from '@/api'
+import { requestUri } from '@/api'
 import { CardItemBar } from '@/components/molecules'
 import { linerGradient } from '@/assets/color/gradient'
+import { useLocale, useInitialConnector } from '@/hooks'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -22,18 +23,6 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
-const header: Header = {
-  avatar: <ScheduleIcon />,
-  title: '本日の予定',
-  subTitle: toStrLabel(new Date(), true),
-}
-
-const footerLink: FooterLink = {
-  to: '/mypage/schedule',
-  color: 'secondary',
-  text: 'カレンダーを見る',
-}
-
 type Props = {
   wrapClasses: any
 }
@@ -41,28 +30,23 @@ type Props = {
 // eslint-disable-next-line react/display-name
 const DailyScheduleCard = React.memo(({ wrapClasses }: Props) => {
   const classes = useStyles()
+  const { t } = useLocale()
   const [schedules, setSchedules] = useState<Schedule[]>([])
-  const [loading, setLoading] = useState<boolean>(false)
+  const { loading } = useInitialConnector<Schedule[]>({
+    path: requestUri.schedule.myDaily,
+    onSuccess: (schedules) => setSchedules(schedules),
+  })
 
-  useEffect(() => {
-    let isMounted = true
-    const init = async () => {
-      setLoading(true)
-      getRequest<Schedule[]>(requestUri.schedule.myDaily)
-        .then((data) => {
-          if (isMounted) {
-            setSchedules(data)
-          }
-        })
-        .finally(() => {
-          setLoading(false)
-        })
-    }
-    init()
-    return () => {
-      isMounted = false
-    }
-  }, [])
+  const header: Header = {
+    avatar: <ScheduleIcon />,
+    title: t.mypage.dailySchedule,
+    subTitle: toStrLabel(new Date(), true, t),
+  }
+  const footerLink: FooterLink = {
+    to: '/mypage/schedule',
+    color: 'secondary',
+    text: t.common.showCalendar,
+  }
 
   return (
     <DashboardBaseCard

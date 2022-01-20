@@ -1,7 +1,7 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState } from 'react'
 import clsx from 'clsx'
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
-import { useRouter } from 'next/router'
+import { useAuth } from '@/hooks'
 
 import AppBar from '@material-ui/core/AppBar'
 import Drawer from '@material-ui/core/Drawer'
@@ -14,12 +14,7 @@ import IconButton from '@material-ui/core/IconButton'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import ExitToAppOutlinedIcon from '@material-ui/icons/ExitToAppOutlined'
 import MenuIcon from '@material-ui/icons/Menu'
-import { postRequest, requestUri } from '@/api'
 import { HeaderGrowContent, AvatarMenu } from '@/components/molecules'
-import { logoutAction } from '@/globalState/user/action'
-import { AuthContext } from '@/provider/AuthProvider'
-import { useAuth0 } from '@auth0/auth0-react'
-import { httpClient } from '@/lib/axios'
 
 export type Menu = {
   text: string
@@ -57,41 +52,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Header = ({ noShadow }: Props) => {
   const classes = useStyles()
-  const router = useRouter()
-  const {
-    isAuthenticated,
-    loginWithRedirect,
-    // logout,
-    user,
-    getAccessTokenSilently,
-  } = useAuth0()
-
-  useEffect(() => {
-    let isMounted = true
-    if (isMounted && isAuthenticated) {
-      const tokenTest = async () => {
-        const accessToken = await getAccessTokenSilently({
-          audience: process.env.NEXT_PUBLIC_AUTH0_AUTHORIZER_IDENTIFIER || '',
-        }).catch((err) => {
-          console.error(err)
-        })
-        if (!!accessToken) {
-          const response = await httpClient.get('/private', {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          })
-          console.log(response)
-        }
-      }
-      tokenTest()
-    }
-    return () => {
-      isMounted = false
-    }
-  }, [isAuthenticated])
-
-  const { auth, dispatch } = useContext(AuthContext)
+  const { auth, router, logout } = useAuth()
   const [state, setState] = useState(false)
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -117,14 +78,8 @@ const Header = ({ noShadow }: Props) => {
       icon: <ExitToAppOutlinedIcon />,
       to: '/logout',
     },
-    {
-      text: user?.name || '',
-      icon: <ExitToAppOutlinedIcon />,
-      to: '/logout',
-    },
   ]
 
-  // const switchedMenus = () => (isAuthenticated ? authMenus : menus)
   const switchedMenus = () => (auth.isLogin ? authMenus : menus)
   const headerClass = clsx(classes.header, {
     [classes.noShadow]: !!noShadow,
@@ -139,13 +94,6 @@ const Header = ({ noShadow }: Props) => {
     } else {
       router.push(to)
     }
-  }
-
-  const logout = async () => {
-    await postRequest<null, {}>(requestUri.logout, {}).then(() => {
-      dispatch(logoutAction())
-      router.push('/login')
-    })
   }
 
   const list = (menus: Menu[], anchor: Anchor) => (

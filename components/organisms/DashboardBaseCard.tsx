@@ -14,6 +14,7 @@ import { Header, FooterLink } from '@/interfaces/common/dashboard'
 import { ScheduleIcon } from '@/components/atoms/icons'
 import { linerGradient } from '@/assets/color/gradient'
 import { CustomLoader } from '@/components/molecules'
+import { useLocale } from '@/hooks'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -67,6 +68,8 @@ const DashboardBaseCard = ({
   loading,
 }: Props) => {
   const defaultClasses = { ...useStyles(), ...classes }
+  const { t } = useLocale()
+
   return (
     <Card className={wrapClasses}>
       <CardHeader
@@ -107,7 +110,7 @@ const DashboardBaseCard = ({
             size={'small'}
             className={defaultClasses.linkColor}
           >
-            {footerLink.text}
+            {footerLink.text || t.common.more}
           </Button>
         </Link>
       </CardActions>

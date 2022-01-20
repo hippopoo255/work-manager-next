@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
-import { postRequest, requestUri } from '@/api'
+import { requestUri } from '@/api'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import {
   Container,
@@ -15,7 +15,7 @@ import { Layout } from '@/layouts'
 import { FormErrorMessage } from '@/components/atoms'
 import { CircularButton } from '@/components/molecules'
 import { strPatterns } from '@/lib/util'
-import { useLocale } from '@/hooks'
+import { useLocale, useRestApi } from '@/hooks'
 
 type ForgotPasswordInputs = {
   email: string
@@ -47,6 +47,7 @@ const ForgotPassword = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const [msg, setMsg] = useState<string>('')
   const { t } = useLocale()
+  const { postMethod } = useRestApi()
   const {
     handleSubmit,
     control,
@@ -67,7 +68,7 @@ const ForgotPassword = () => {
 
   const sendReminder = async (data: ForgotPasswordInputs) => {
     setLoading(true)
-    await postRequest<
+    await postMethod<
       {
         data: string
         message: string

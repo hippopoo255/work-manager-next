@@ -3,6 +3,7 @@ import { SearchMeetingRecordInputs } from '@/interfaces/form/inputs'
 import { SortParam } from '@/interfaces/table'
 import { SearchInputs } from '@/interfaces/form/inputs'
 import { Buffer } from 'buffer'
+import ja from '@/locales/ja'
 
 export const headerHeight: number = 65
 export const drawerWidth: number = 250
@@ -16,6 +17,7 @@ export const SITE_TITLE: string =
 export const API_URL: string =
   process.env.NEXT_PUBLIC_API_URL + '/api' || 'http://localhost/api'
 export const API_STAGE_URL: string = process.env.NEXT_PUBLIC_API_STAGE_URL || ''
+export const API_TEMP_URL: string = process.env.NEXT_PUBLIC_API_TEMP_URL || ''
 export const APP_SYNC_URL: string =
   process.env.NEXT_PUBLIC_APP_SYNC_URL || 'http://localhost:8000'
 export const APP_SYNC_KEY: string =
@@ -41,7 +43,11 @@ export function toStrData(date: Date): string {
   return `${year}/${month}/${day} ${hour}:${minute}`
 }
 
-export function toStrLabel(date: Date, timeless: boolean = false): string {
+export function toStrLabel(
+  date: Date,
+  timeless: boolean = false,
+  t: any = ja
+): string {
   let year: string = ''
   if (date.getFullYear() !== new Date().getFullYear()) {
     year = `${date.getFullYear()}/`.slice(-3)
@@ -49,13 +55,15 @@ export function toStrLabel(date: Date, timeless: boolean = false): string {
   const month = `${date.getMonth() + 1}/`
   const day = `${date.getDate()}`
   const dayOfWeek = date.getDay() // 曜日(数値)
-  const dayOfWeekStr = ['日', '月', '火', '水', '木', '金', '土'][dayOfWeek] // 曜日(日本語表記)
+  const dayOfWeekStr = t.date.dayOfStrList[dayOfWeek] // 曜日(日本語表記)
   if (timeless) {
-    return `${year}${month}${day}(${dayOfWeekStr})`
+    return t.date.short(year, month, day, dayOfWeekStr)
+    // return `${year}${month}${day}(${dayOfWeekStr})`
   }
   const hour = `${date.getHours()}:`
   const minute = `0${date.getMinutes()}`.slice(-2)
-  return `${year}${month}${day}(${dayOfWeekStr}) ${hour}${minute}`
+  return t.date.simple(year, month, day, dayOfWeekStr, hour, minute)
+  // `${year}${month}${day}(${dayOfWeekStr}) ${hour}${minute}`
 }
 
 export function scheduleLabel(start: Date, end: Date): string {

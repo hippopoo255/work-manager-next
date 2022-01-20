@@ -12,8 +12,9 @@ import { MeetingRecord } from '@/interfaces/models'
 import { DashboardBaseCard } from '@/components/organisms'
 import { Header, FooterLink } from '@/interfaces/common/dashboard'
 import { MeetingRecordIcon } from '@/components/atoms/icons'
-import { requestUri, getRequest } from '@/api'
+import { requestUri } from '@/api'
 import { headCells, createRows } from '@/lib/table/meetingRecord'
+import { useLocale, useInitialConnector } from '@/hooks'
 
 const useStyles = makeStyles((theme: Theme) => ({
   seeMore: {
@@ -29,18 +30,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-const header: Header = {
-  avatar: <MeetingRecordIcon />,
-  title: '最近の議事録',
-  subTitle: '',
-}
-
-const footerLink: FooterLink = {
-  to: '/mypage/meeting_record?only_me=1',
-  color: 'primary',
-  text: 'More',
-}
-
 type Props = {
   wrapClasses: any
 }
@@ -49,27 +38,23 @@ type Props = {
 const LatestMeetingRecord = React.memo(({ wrapClasses }: Props) => {
   const classes = useStyles()
   const [meetingRecords, setMeetingRecords] = useState<MeetingRecord[]>([])
-  const [loading, setLoading] = useState<boolean>(false)
-
-  useEffect(() => {
-    let isMounted = true
-    const init = async () => {
-      setLoading(true)
-      getRequest<MeetingRecord[]>(requestUri.meetingRecord.myRecently)
-        .then((data) => {
-          if (isMounted) {
-            setMeetingRecords(data)
-          }
-        })
-        .finally(() => {
-          setLoading(false)
-        })
-    }
-    init()
-    return () => {
-      isMounted = false
-    }
-  }, [])
+  const { t } = useLocale()
+  const { loading } = useInitialConnector<MeetingRecord[]>({
+    path: requestUri.meetingRecord.myRecently,
+    onSuccess: (records) => {
+      setMeetingRecords(records)
+    },
+  })
+  const header: Header = {
+    avatar: <MeetingRecordIcon />,
+    title: t.mypage.recentMeetingRecord,
+    subTitle: '',
+  }
+  const footerLink: FooterLink = {
+    to: '/mypage/meeting_record?only_me=1',
+    color: 'primary',
+    text: t.common.more,
+  }
 
   const afterBookmark = (bookmarkedRecord: MeetingRecord) => {
     setMeetingRecords((prev: MeetingRecord[]) => {

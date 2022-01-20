@@ -4,11 +4,16 @@ import { UserAction } from '@/interfaces/action/UserAction'
 import initialState from '@/globalState/store/initialState'
 import { userReducer } from '@/globalState/user/reducer'
 
+const authState = {
+  user: initialState.user,
+  isLogin: initialState.isLogin,
+}
+
 export const AuthContext = createContext<{
   auth: UserState
   dispatch: React.Dispatch<UserAction>
 }>({
-  auth: { user: initialState.user, isLogin: initialState.isLogin },
+  auth: authState,
   dispatch: () => undefined,
 })
 
@@ -17,10 +22,7 @@ type Props = {
 }
 
 const AuthProvider = ({ children }: Props) => {
-  const [auth, dispatch] = useReducer(userReducer, {
-    user: initialState.user,
-    isLogin: initialState.isLogin,
-  })
+  const [auth, dispatch] = useReducer(userReducer, authState)
 
   return (
     <>

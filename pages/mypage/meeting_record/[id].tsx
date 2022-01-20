@@ -19,6 +19,7 @@ import {
 } from '@/components/molecules'
 import { DefinitionList } from '@/components/organisms'
 import { toStrFormalLabel } from '@/lib/util'
+import { useInitialConnector } from '@/hooks'
 // import Link from 'next/link'
 const useStyles = makeStyles((theme: Theme) => ({
   body: {
@@ -47,20 +48,16 @@ const MeetingRecordDetail = () => {
   const classes = useStyles()
   const router = useRouter()
   const [meetingRecord, setMeetingRecord] = useState<MeetingRecord | null>(null)
-  const [loading, setLoading] = useState<boolean>(false)
   const paramId = router.query.id
-  useEffect(() => {
-    const fetch = async () => {
-      if (paramId !== undefined) {
-        await getRequest<MeetingRecord>(
-          requestUri.meetingRecord.id + `/${paramId}`
-        ).then((res) => {
-          setMeetingRecord(res)
-        })
-      }
-    }
-    fetch()
-  }, [paramId])
+
+  // const [loading, setLoading] = useState<boolean>(false)
+  const { loading, setLoading } = useInitialConnector<MeetingRecord>({
+    path: requestUri.meetingRecord.id + `/${paramId}`,
+    onSuccess: (res) => {
+      setMeetingRecord(res)
+    },
+    condition: paramId !== undefined,
+  })
 
   const handleClick = async () => {
     setLoading(true)

@@ -10,6 +10,7 @@ import {
 } from '@/components/organisms'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import clsx from 'clsx'
+import { useLocale } from '@/hooks'
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -32,14 +33,14 @@ interface Props {
 
 const Dashboard = (props: Props) => {
   const classes = useStyles()
-
+  const { t } = useLocale()
   const fixedHeightPaper = useMemo(
     () => clsx(classes.paper, classes.fixedHeight, classes.relative),
     []
   )
 
   return (
-    <MypageLayout title="ダッシュボード">
+    <MypageLayout title={t.head.title.mypage.index}>
       <>
         <section className="container">
           <Grid container spacing={3}>

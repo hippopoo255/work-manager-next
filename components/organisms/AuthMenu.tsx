@@ -1,10 +1,9 @@
-import { useContext } from 'react'
-import { AuthContext } from '@/provider/AuthProvider'
+import { useAuth } from '@/hooks'
 import { AvatarMenu, NotificationIcon } from '@/components/molecules'
 import { Box } from '@material-ui/core'
 
 const AuthMenu = () => {
-  const { auth } = useContext(AuthContext)
+  const { auth } = useAuth()
   return (
     <Box display={'flex'} justifyContent={'center'} alignItems={'center'}>
       {auth.isLogin && (
