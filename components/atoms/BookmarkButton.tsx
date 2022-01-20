@@ -5,8 +5,8 @@ import BookmarkIcon from '@material-ui/icons/Bookmark'
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder'
 import { IconButton, Tooltip } from '@material-ui/core'
 import { MeetingRecord } from '@/interfaces/models'
-import { requestUri, postRequest, putRequest } from '@/api'
-
+import { requestUri } from '@/api'
+import { useAuth, useRestApi } from '@/hooks'
 const useStyles = makeStyles((theme: Theme) => ({
   common: {
     fontSize: theme.typography.h6.fontSize,
@@ -26,6 +26,8 @@ type Props = {
 }
 const BookmarkButton = ({ is_pin, id, onSuccess }: Props) => {
   const classes = useStyles()
+  const { config } = useAuth()
+  const { postMethod, putMethod } = useRestApi()
   const operationValue = () => {
     if (onSuccess === undefined) {
       return is_pin ? 'ブックマークしています' : ''
@@ -38,34 +40,24 @@ const BookmarkButton = ({ is_pin, id, onSuccess }: Props) => {
       return false
     }
     if (is_pin === false) {
-      await postRequest<MeetingRecord, {}>(
-        requestUri.meetingRecord.bookmark.replace(':id', String(id)),
-        {}
-      ).then((res) => {
-        if (!!onSuccess) {
-          onSuccess(res)
-        }
-      })
+      await bookmark()
     } else {
-      await putRequest<MeetingRecord, {}>(
-        requestUri.meetingRecord.unbookmark.replace(':id', String(id)),
-        {}
-      ).then((res) => {
-        if (!!onSuccess) {
-          onSuccess(res)
-        }
-      })
+      await unbookmark()
     }
   }
 
   const bookmark = async () =>
-    await postRequest<MeetingRecord, {}>(
+    await postMethod<MeetingRecord, {}>(
       requestUri.meetingRecord.bookmark.replace(':id', String(id)),
       {}
-    )
+    ).then((res) => {
+      if (!!onSuccess) {
+        onSuccess(res)
+      }
+    })
 
   const unbookmark = async () => {
-    await putRequest<MeetingRecord, {}>(
+    await putMethod<MeetingRecord, {}>(
       requestUri.meetingRecord.unbookmark.replace(':id', String(id)),
       {}
     ).then((res) => {

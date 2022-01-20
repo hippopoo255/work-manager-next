@@ -17,6 +17,7 @@ export const SITE_TITLE: string =
 export const API_URL: string =
   process.env.NEXT_PUBLIC_API_URL + '/api' || 'http://localhost/api'
 export const API_STAGE_URL: string = process.env.NEXT_PUBLIC_API_STAGE_URL || ''
+export const API_TEMP_URL: string = process.env.NEXT_PUBLIC_API_TEMP_URL || ''
 export const APP_SYNC_URL: string =
   process.env.NEXT_PUBLIC_APP_SYNC_URL || 'http://localhost:8000'
 export const APP_SYNC_KEY: string =

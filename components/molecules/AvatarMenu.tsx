@@ -32,7 +32,7 @@ export type Letter = () => string
 const AvatarMenu = () => {
   const classes = useStyles()
   const { t } = useLocale()
-  const { router, auth, logout } = useAuth(true)
+  const { router, auth, logout } = useAuth()
   const menus = [
     {
       id: 'mypage',

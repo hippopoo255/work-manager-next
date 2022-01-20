@@ -71,7 +71,7 @@ const AccountVerification = () => {
     setValue,
     formState: { errors },
   } = useForm<AccountVerificationInputs>()
-  const { verifyUser, router } = useAuth(true)
+  const { verifyUser, router } = useAuth()
 
   const onSubmit: SubmitHandler<AccountVerificationInputs> = async (data) => {
     setLoading(true)

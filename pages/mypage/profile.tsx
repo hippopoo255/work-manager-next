@@ -1,8 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { AuthContext } from '@/provider/AuthProvider'
+import React, { useState, useEffect } from 'react'
 import { loginAction } from '@/globalState/user/action'
 import clsx from 'clsx'
-import { useRouter } from 'next/router'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import { MypageLayout } from '@/layouts'
 import { MypageTitle, FormErrorMessage, CustomAlert } from '@/components/atoms'
@@ -26,10 +24,11 @@ import { User } from '@/interfaces/models'
 import { useForm, Controller } from 'react-hook-form'
 import { ProfileInputs } from '@/interfaces/form/inputs'
 import { strPatterns, STORAGE_URL } from '@/lib/util'
-import { putRequest } from '@/api'
 import { defaultErrorHandler } from '@/lib/axios'
+import { putRequest } from '@/api'
 import { AlertStatus } from '@/interfaces/common'
 import { initialAlertStatus } from '@/lib/initialData'
+import { useAuth } from '@/hooks'
 
 const usePaperStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -147,8 +146,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Profile = () => {
   const classes = useStyles()
-  const router = useRouter()
-  const { auth, dispatch } = useContext(AuthContext)
+  const { auth, dispatch, config } = useAuth()
   const [loading, setLoading] = useState<boolean>(false)
   const [alertStatus, setAlertStatus] = useState<AlertStatus>({
     ...initialAlertStatus,
@@ -208,6 +206,7 @@ const Profile = () => {
           headers: {
             'X-HTTP-Method-Override': 'PUT',
             'Content-Type': 'multipart/form-data',
+            ...config.headers,
           },
         }
       )
@@ -222,7 +221,9 @@ const Profile = () => {
             severity: 'success',
             show: true,
           }))
-          dispatch(loginAction(response))
+          dispatch(
+            loginAction({ ...response, jwt: config.headers.Authorization })
+          )
           setThumbnailData(null)
         })
         .finally(() => {

@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Header = ({ noShadow }: Props) => {
   const classes = useStyles()
-  const { auth, router, logout } = useAuth(true)
+  const { auth, router, logout } = useAuth()
   const [state, setState] = useState(false)
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {

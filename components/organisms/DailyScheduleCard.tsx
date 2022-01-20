@@ -6,10 +6,10 @@ import { ScheduleIcon } from '@/components/atoms/icons'
 import { toStrLabel, scheduleLabel } from '@/lib/util'
 import { DashboardBaseCard } from '@/components/organisms'
 import { Header, FooterLink } from '@/interfaces/common/dashboard'
-import { requestUri, getRequest } from '@/api'
+import { requestUri } from '@/api'
 import { CardItemBar } from '@/components/molecules'
 import { linerGradient } from '@/assets/color/gradient'
-import { useLocale } from '@/hooks'
+import { useLocale, useInitialConnector } from '@/hooks'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -32,7 +32,10 @@ const DailyScheduleCard = React.memo(({ wrapClasses }: Props) => {
   const classes = useStyles()
   const { t } = useLocale()
   const [schedules, setSchedules] = useState<Schedule[]>([])
-  const [loading, setLoading] = useState<boolean>(false)
+  const { loading } = useInitialConnector<Schedule[]>({
+    path: requestUri.schedule.myDaily,
+    onSuccess: (schedules) => setSchedules(schedules),
+  })
 
   const header: Header = {
     avatar: <ScheduleIcon />,
@@ -44,26 +47,6 @@ const DailyScheduleCard = React.memo(({ wrapClasses }: Props) => {
     color: 'secondary',
     text: t.common.showCalendar,
   }
-
-  useEffect(() => {
-    let isMounted = true
-    const init = async () => {
-      setLoading(true)
-      getRequest<Schedule[]>(requestUri.schedule.myDaily)
-        .then((data) => {
-          if (isMounted) {
-            setSchedules(data)
-          }
-        })
-        .finally(() => {
-          setLoading(false)
-        })
-    }
-    init()
-    return () => {
-      isMounted = false
-    }
-  }, [])
 
   return (
     <DashboardBaseCard

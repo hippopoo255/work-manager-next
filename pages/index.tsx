@@ -6,10 +6,10 @@ import { TestLoginButton } from '@/components/molecules'
 import { ProductIntroductionCardList } from '@/components/template'
 import { AboutNotification, AboutRealTime } from '@/components/organisms'
 import { Layout } from '@/layouts'
-import { headerHeight, API_STAGE_URL } from '@/lib/util'
+import { headerHeight } from '@/lib/util'
 import Shakehand from '@/assets/images/shakehand.svg'
 import { RoundedIcon } from '@/components/atoms'
-import { useLocale } from '@/hooks'
+import { useAuth, useLocale } from '@/hooks'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

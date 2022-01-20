@@ -4,7 +4,7 @@ import styles from '@/assets/stylesheets/components/MypageLayout.module.scss'
 import Head from 'next/head'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
-import { useAuth, useLocale } from '@/hooks'
+import { useInitialAuthentication, useLocale } from '@/hooks'
 
 export type LayoutOrg = {
   children: React.ReactNode
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const MypageLayout = ({ children, title }: LayoutOrg) => {
   const classes = useStyles()
-  const { auth } = useAuth()
+  const { auth } = useInitialAuthentication()
   const { t } = useLocale()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [tabletOpen, setTabletOpen] = useState(false)

@@ -1,15 +1,11 @@
-import userPool from './userPool'
+// import userPool from './userPool'
 import { handleError } from './util'
 import { cognitoTestUser, amplifyConfigure } from './config'
 import { Auth } from 'aws-amplify'
 amplifyConfigure()
 
-import {
-  CognitoUser,
-  ISignUpResult,
-  CognitoUserSession,
-} from 'amazon-cognito-identity-js'
-
+import { ISignUpResult, CognitoUserSession } from 'amazon-cognito-identity-js'
+import { requestUri, getRequest } from '@/api'
 import router from 'next/router'
 import { encode64 } from '@/lib/util'
 
@@ -19,38 +15,60 @@ import {
   AccountVerificationInputs,
 } from '@/interfaces/form/inputs'
 import { User } from '@/interfaces/models'
+import { AxiosRequestConfig } from 'axios'
 
-const currentUser = async () => {
-  const userInfo: '' | CognitoUserSession = await Auth.currentSession().catch(
+const currentUser = async (
+  currentAuthorPath: string = requestUri.currentUser
+) => {
+  const authResult: '' | CognitoUserSession = await Auth.currentSession().catch(
     (err) => {
       console.log('current user err:', err)
       return ''
     }
   )
-  if (!!userInfo) {
-    console.log('current user:', userInfo)
-    const user = userInfo.getIdToken().payload
-    user.family_name = user['cognito:username']
+  if (!!authResult) {
+    const result = authResult.getIdToken()
+    const jwt = result.getJwtToken()
+    const config: AxiosRequestConfig = {
+      headers: {
+        Authorization: jwt || '',
+      },
+    }
+    const user = await getRequest<User | ''>(
+      currentAuthorPath,
+      undefined,
+      config
+    ).then((u) => {
+      if (!!u) {
+        return {
+          ...u,
+          jwt,
+        }
+      }
+      return ''
+    })
     return user
   }
-  return userInfo
+  return authResult // ''
 }
 
 const signin = async ({ login_id, password }: LoginInputs) => {
   const cognitoUser = await Auth.signIn(login_id, password).catch((error) => {
     handleError<LoginInputs>(error)
   })
-  console.log('signin succeeded:', cognitoUser)
-  const user = cognitoUser.attributes
-  user.family_name = cognitoUser.username
-  return user as User
+
+  if (!!cognitoUser) {
+    return (await currentUser()) as User
+  }
+
+  return ''
 }
 
 const signout = async () => {
   const res = await Auth.signOut().catch((error) => {
     handleError(error, 'logout failed')
   })
-  console.log('logout success:', res)
+  // console.log('logout success:', res)
   return null
 }
 
@@ -62,11 +80,17 @@ const signup = async ({ email, login_id, password, address }: SignupInputs) => {
       attributes: {
         email, // optional
         address, // optional - E.164 number convention
-        'custom:login_id': login_id,
+        // given_name: '太郎',
+        // family_name: 'テスト',
         // other custom attributes
+        'custom:login_id': login_id,
+        // 'custom:given_name_kana': '太郎',
+        // 'custom:family_name_kana': 'テスト',
+        // 'custom:role_id': '2',
+        // 'custom:department_code': '5',
       },
     })
-    console.log('signup succeeded:', user)
+    // console.log('signup succeeded:', user)
     router.push({
       pathname: '/account_verification',
       query: {
@@ -97,7 +121,7 @@ const verifyUser = async ({
     }
   )
   if (result === 'SUCCESS') {
-    console.log('confirmation success:', result)
+    // console.log('confirmation success:', result)
     alert(
       '検証に成功しました。数秒後ログイン画面に移動しますので、ログインをお試しください'
     )

@@ -53,7 +53,7 @@ const requestUri = {
     myRecently: '/author/meeting_record/recently',
   },
   schedule: {
-    list: '/user/{id}/schedule',
+    list: '/user/:id/schedule',
     post: '/schedule',
     put: '/schedule/',
     delete: '/schedule/',

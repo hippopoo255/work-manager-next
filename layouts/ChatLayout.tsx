@@ -5,7 +5,7 @@ import { MypageHeader as Header, Sidebar } from '@/components/organisms'
 import Head from 'next/head'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { postRequest, requestUri } from '@/api'
+import { requestUri } from '@/api'
 import { ChatRoomList } from '@/components/organisms'
 import { Box, TextField, Tooltip, IconButton } from '@material-ui/core'
 import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined'
@@ -18,7 +18,7 @@ import { MemberExtInputs } from '@/interfaces/form/inputs'
 import { ChatRoomSubmit } from '@/interfaces/form/submit'
 import { SITE_TITLE, chatMainWidth } from '@/lib/util'
 import { listenMessageSent, listenMessageRead } from '@/lib/pusher'
-import { useAuthWithChat } from '@/hooks'
+import { useInitialAuthenticationOnChat, useRestApi } from '@/hooks'
 import { currentUserAction } from '@/globalState/user/action'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -146,7 +146,8 @@ const ChatLayout = React.memo(
   }: Props) => {
     const classes = useStyles()
     const router = useRouter()
-    const { auth, dispatch } = useAuthWithChat()
+    const { auth, dispatch } = useInitialAuthenticationOnChat()
+    const { postMethod } = useRestApi()
     const userId = auth.user.id
     const [open, setOpen] = useState<boolean>(false)
     const fixedMember: MemberExtInputs[] = []
@@ -195,15 +196,15 @@ const ChatLayout = React.memo(
 
     const handleRoomSelect = (
       event: React.ChangeEvent<{}>,
-      newValue: ChatRoom | null
+      selectedChatRoom: ChatRoom | null
     ) => {
-      if (newValue !== null) {
-        router.push(`/mypage/chat/${newValue.id}`)
+      if (selectedChatRoom !== null) {
+        router.push(`/mypage/chat/${selectedChatRoom.id}`)
       }
     }
 
     const saveReq = async (submitData: ChatRoomSubmit) =>
-      await postRequest<ChatRoom, ChatRoomSubmit>(
+      await postMethod<ChatRoom, ChatRoomSubmit>(
         requestUri.chatRoom.post,
         submitData,
         (err) => {

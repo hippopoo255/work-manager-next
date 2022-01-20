@@ -64,7 +64,7 @@ const Login = () => {
     ...initialAlertStatus,
   })
   const { t } = useLocale()
-  const { login } = useAuth(true)
+  const { login } = useAuth()
 
   const onAlertClose = () => {
     setAlertStatus((prev) => ({

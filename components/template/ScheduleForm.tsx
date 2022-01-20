@@ -18,15 +18,14 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date'
 import { ScheduleInputs, MemberExtInputs } from '@/interfaces/form/inputs'
 import { ScheduleSubmit } from '@/interfaces/form/submit'
-import { User, Schedule } from '@/interfaces/models'
-import { getRequest, requestUri } from '@/api'
+import { Schedule } from '@/interfaces/models'
 import { FormErrorMessage } from '@/components/atoms'
 import { DateTimeInput } from '@/components/molecules'
 import { CustomMenuBox } from '@/components/organisms'
-import { useRouter } from 'next/router'
 import PropTypes from 'prop-types'
 import { toStrData } from '@/lib/util'
 import { scheduleColors } from '@/lib/fullCalendar'
+import { useMemberList } from '@/hooks'
 
 const useStyles = makeStyles({
   label: {
@@ -44,7 +43,7 @@ export type Props = {
   sharedBy: number
   open: boolean
   setOpen: (isOpen: boolean) => void
-  req: (submitData: ScheduleSubmit) => Promise<Schedule>
+  req: (submitData: ScheduleSubmit, id?: number) => Promise<Schedule>
   onSuccess: (response: Schedule) => void
   saveAction: 'create' | 'update'
   dialogTitle: string
@@ -64,7 +63,8 @@ const ScheduleForm = ({
 }: Props) => {
   const classes = useStyles()
   const [loading, setLoading] = useState<boolean>(false)
-  const [memberList, setMemberList] = useState<MemberExtInputs[]>([])
+  const { memberList } = useMemberList({ sharedBy })
+
   const {
     handleSubmit,
     control,
@@ -79,22 +79,6 @@ const ScheduleForm = ({
     defaultValues,
   })
   const selectedMembers = watch('sharedMembers', fixedMember)
-  const router = useRouter()
-
-  useEffect(() => {
-    const fetchMember = async () => {
-      await getRequest<User[]>(requestUri.user.list).then((users: User[]) => {
-        const memberList: MemberExtInputs[] = users.map((u) => ({
-          id: u.id,
-          full_name: u.full_name,
-          is_editable: true,
-          shared_by: sharedBy,
-        }))
-        setMemberList(memberList)
-      })
-    }
-    fetchMember()
-  }, [])
 
   useEffect(() => {
     if (!!defaultValues.id) {
@@ -201,7 +185,7 @@ const ScheduleForm = ({
       is_public: data.is_public,
       sharedMembers: submitMember,
     }
-    await req(submitData)
+    await req(submitData, defaultValues.id)
       .then((newSchedule) => {
         setOpen(false)
         reset()

@@ -130,6 +130,7 @@ export default {
     qa: (contents: string) => `what is "${contents}"？`,
   },
   message: {
+    testLoginFail: 'please log out of your current account.',
     cognitoError: {
       UserNotFoundException: "Account did'nt found",
       NotAuthorizedException: 'Authorization Failed',

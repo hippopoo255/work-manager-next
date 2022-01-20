@@ -3,7 +3,7 @@ import { AvatarMenu, NotificationIcon } from '@/components/molecules'
 import { Box } from '@material-ui/core'
 
 const AuthMenu = () => {
-  const { auth } = useAuth(true)
+  const { auth } = useAuth()
   return (
     <Box display={'flex'} justifyContent={'center'} alignItems={'center'}>
       {auth.isLogin && (

@@ -33,8 +33,7 @@ import {
 import { FormErrorMessage } from '@/components/atoms'
 import { BlogIcon } from '@/components/atoms/icons'
 import { useRouter } from 'next/router'
-import { uploadFile } from '@/lib/file'
-import { useLocale } from '@/hooks'
+import { useLocale, useFileUpload } from '@/hooks'
 
 type Props = {
   defaultValues: CreateBlogInput | UpdateBlogInput
@@ -72,6 +71,7 @@ const BlogForm = (
   const classes = useStyles()
   const [loading, setLoading] = useState<boolean>(false)
   const { t, locale } = useLocale()
+  const { uploadFile } = useFileUpload()
   const [submitText, setSubmitText] = useState<string>(t.common.post)
   const router = useRouter()
   const { tagList } = useTags()

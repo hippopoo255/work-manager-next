@@ -98,10 +98,10 @@ const Signup = () => {
     setError,
     formState: { errors },
   } = useForm<SignupInputs>()
-  const { signup } = useAuth(true)
+  const { signup } = useAuth()
 
   const onSubmit: SubmitHandler<SignupInputs> = async (data) => {
-    setLoading(true)
+    // setLoading(true)
     await signup(data).catch(({ key, message }) => {
       setLoading(false)
       setError(key, {

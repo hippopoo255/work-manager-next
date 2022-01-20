@@ -1,187 +1,64 @@
 // import { GetStaticProps, GetStaticPaths } from 'next'
-import React, { useContext, useState, useMemo, useEffect } from 'react'
-import { AuthContext } from '@/provider/AuthProvider'
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import React from 'react'
 import { MypageLayout } from '@/layouts'
 import { MypageTitle } from '@/components/atoms'
-import { FormTitle } from '@/components/molecules'
+import { FormTitle, CustomLoader } from '@/components/molecules'
 import { Box } from '@material-ui/core'
 import MenuBookOutlinedIcon from '@material-ui/icons/MenuBookOutlined'
-import { putRequest, getRequest, requestUri } from '@/api'
+import { requestUri } from '@/api'
 import { User } from '@/interfaces/models'
 import { MeetingRecordForm } from '@/components/template'
-import { MeetingRecord, MeetingPlace } from '@/interfaces/models'
+import { MeetingRecord } from '@/interfaces/models'
 import { MeetingRecordInputs, MemberInputs } from '@/interfaces/form/inputs'
-import { MeetingRecordSubmit } from '@/interfaces/form/submit'
-import { useRouter } from 'next/router'
 import { PROCESS_FLAG } from '@/lib/util'
 import { Breadcrumbs } from '@/components/molecules'
 import { BreadcrumbItem } from '@/interfaces/common'
-
-const useStyles = makeStyles((theme: Theme) => ({
-  wrap: {
-    maxWidth: 800,
-    // marginBottom: theme.spacing(4),
-  },
-  head: {
-    width: '100%',
-    padding: `${theme.spacing(2)}px 0`,
-    [theme.breakpoints.up('md')]: {
-      padding: theme.spacing(2),
-    },
-  },
-  body: {
-    width: '100%',
-    padding: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-    marginTop: theme.spacing(2),
-  },
-  stepper: {
-    width: '100%',
-    padding: 0,
-  },
-  stepperCol: {
-    padding: 0,
-    [theme.breakpoints.up('md')]: {
-      paddingLeft: theme.spacing(1),
-      paddingRight: theme.spacing(1),
-    },
-  },
-  tail: {
-    marginTop: theme.spacing(2),
-    padding: theme.spacing(2),
-  },
-  form: {
-    width: '100%',
-  },
-  minHeight: {
-    minHeight: 180,
-  },
-  deleteRow: {
-    color: theme.palette.error.main,
-    borderColor: theme.palette.error.main,
-    cursor: 'pointer',
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    background: 'linear-gradient(135deg,#fad961,#f76b1c)',
-    boxShadow: theme.shadows[2],
-  },
-  backButton: {
-    marginRight: theme.spacing(1),
-  },
-  instructions: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
-    color: theme.palette.primary.main,
-  },
-  backdrop: {
-    zIndex: theme.zIndex.drawer + 1,
-    color: theme.palette.common.white,
-  },
-  tailWrap: {
-    position: 'relative',
-  },
-  tailBody: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonProgress: {
-    color: theme.palette.primary.main,
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    marginTop: -12,
-    marginLeft: -12,
-  },
-}))
+import { useInitialConnector, useMeetingRecord } from '@/hooks'
 
 const MeetingRecordUpdate = () => {
-  const classes = useStyles()
-  const router = useRouter()
-  const { auth } = useContext(AuthContext)
-  const [meetingPlaceList, setMeetingPlaceList] = useState<MeetingPlace[]>([])
-  const paramId = router.query.id
-  const meetingRecordId = useMemo(() => paramId, [paramId])
-  // react hook form
-  const req = async (submitData: MeetingRecordSubmit) =>
-    await putRequest<MeetingRecord, MeetingRecordSubmit>(
-      `${requestUri.meetingRecord.put}/${meetingRecordId}`,
-      submitData
-    )
+  const {
+    save,
+    classes,
+    defaultValues,
+    meetingPlaceList,
+    meetingRecordId,
+    memberList,
+    setDefaultValues,
+  } = useMeetingRecord()
 
-  // Autocomlete members
-  const [memberList, setMemberList] = useState<MemberInputs[]>([])
-  const [defaultValues, setDefaultValues] = useState<MeetingRecordInputs>({
-    recorded_by: auth.user.id,
-    title: '',
-    summary: '',
-    place_id: 1,
-    role_id: null,
-    meeting_date: new Date(),
-    members: [],
-    meeting_decisions: [
-      {
-        subject: '',
-        body: '',
-        written_by: auth.user.id,
-        decided_by: null,
-      },
-    ],
-  })
   const fixedMember: MemberInputs[] = []
 
-  useEffect(() => {
-    const fetch = async () => {
-      await getRequest<User[]>(requestUri.user.list).then((users: User[]) => {
-        const dataList: MemberInputs[] = users.map((u) => ({
-          id: u.id,
-          full_name: u.full_name,
-        }))
-        setMemberList(dataList)
-      })
-      await getRequest<MeetingPlace[]>(requestUri.meetingPlace.list).then(
-        (meetingPlaceList: MeetingPlace[]) => {
-          setMeetingPlaceList(meetingPlaceList)
+  const { loading } = useInitialConnector<MeetingRecord>({
+    path: requestUri.meetingRecord.id + `/${meetingRecordId}`,
+    onSuccess: (meetingRecord: MeetingRecord) => {
+      setDefaultValues(() => {
+        const d = {
+          recorded_by: meetingRecord.recorded_by.id,
+          title: meetingRecord.title,
+          summary: meetingRecord.summary,
+          place_id: meetingRecord.place_id,
+          role_id: meetingRecord.role_id,
+          meeting_date: new Date(meetingRecord.meeting_date),
+          members: meetingRecord.members.map((member: User) => ({
+            id: member.id,
+            full_name: member.full_name,
+          })),
+          meeting_decisions: meetingRecord.decisions.map((decision) => ({
+            subject: decision.subject,
+            body: decision.body,
+            written_by: decision.written_by.id,
+            decided_by:
+              decision.decided_by === null ? null : decision.decided_by.id,
+            id: decision.id,
+            flag: PROCESS_FLAG.updateFlag,
+          })),
         }
-      )
-    }
-    fetch()
-  }, [])
-
-  useEffect(() => {
-    const fetchUpdateRecord = async () => {
-      if (paramId !== undefined) {
-        return await getRequest<MeetingRecord>(
-          requestUri.meetingRecord.id + `/${paramId}`
-        ).then((meetingRecord: MeetingRecord) => {
-          setDefaultValues({
-            recorded_by: meetingRecord.recorded_by.id,
-            title: meetingRecord.title,
-            summary: meetingRecord.summary,
-            place_id: meetingRecord.place_id,
-            role_id: meetingRecord.role_id,
-            meeting_date: new Date(meetingRecord.meeting_date),
-            members: meetingRecord.members.map((member: User) => ({
-              id: member.id,
-              full_name: member.full_name,
-            })),
-            meeting_decisions: meetingRecord.decisions.map((decision) => ({
-              subject: decision.subject,
-              body: decision.body,
-              written_by: decision.written_by.id,
-              decided_by:
-                decision.decided_by === null ? null : decision.decided_by.id,
-              id: decision.id,
-              flag: PROCESS_FLAG.updateFlag,
-            })),
-          })
-        })
-      }
-    }
-    fetchUpdateRecord()
-  }, [paramId])
+        return { ...d }
+      })
+    },
+    condition: !!meetingRecordId,
+    depend: meetingRecordId,
+  })
 
   const handleUpdate = (data: MeetingRecordInputs) => {
     setDefaultValues(data)
@@ -207,12 +84,14 @@ const MeetingRecordUpdate = () => {
         <Box className={classes.wrap}>
           <FormTitle title={'更新フォーム'} icon={<MenuBookOutlinedIcon />} />
         </Box>
-        {!!meetingPlaceList.length && (
+        {loading ? (
+          <CustomLoader />
+        ) : (
           <MeetingRecordForm
             memberList={memberList}
             fixedMember={fixedMember}
             defaultValues={defaultValues}
-            req={req}
+            req={save}
             classes={classes}
             meetingPlaceList={meetingPlaceList}
             handleSuccess={handleUpdate}

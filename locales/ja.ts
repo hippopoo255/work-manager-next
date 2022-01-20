@@ -127,6 +127,7 @@ export default {
     qa: (contents: string) => `${contents}とは？`,
   },
   message: {
+    testLoginFail: '現在のアカウントからログアウトしてください',
     cognitoError: {
       UserNotFoundException: 'アカウントが存在しません',
       NotAuthorizedException: '認証に失敗しました',

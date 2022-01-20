@@ -1,7 +1,6 @@
 import React from 'react'
 import clsx from 'clsx'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
-import { deepOrange } from '@material-ui/core/colors'
 import { Avatar } from '@material-ui/core'
 import { User } from '@/interfaces/models'
 import { STORAGE_URL } from '@/lib/util'
@@ -27,7 +26,8 @@ export type Letter = () => string
 
 const UserAvatar = ({ user }: Props) => {
   const classes = useStyles()
-  const letter: Letter = () => (!!user ? user.family_name.slice(0, 1) : '')
+  const letter: Letter = () =>
+    !!user.family_name ? user.family_name.slice(0, 1) : ''
   const avatarSrc =
     !!user && !!user.file_path ? `${STORAGE_URL}/${user.file_path}` : ''
 

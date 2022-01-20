@@ -11,11 +11,10 @@ import {
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { ChatRoomInputs, MemberExtInputs } from '@/interfaces/form/inputs'
 import { ChatRoomSubmit } from '@/interfaces/form/submit'
-import { User, ChatRoom } from '@/interfaces/models'
-import { getRequest, requestUri } from '@/api'
+import { ChatRoom } from '@/interfaces/models'
 import { FormErrorMessage } from '@/components/atoms'
-import { useRouter } from 'next/router'
 import PropTypes from 'prop-types'
+import { useMemberList } from '@/hooks'
 
 export type Props = {
   defaultValues: ChatRoomInputs
@@ -42,7 +41,8 @@ const ChatRoomForm = ({
 }: Props) => {
   // const [open, setOpen] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
-  const [memberList, setMemberList] = useState<MemberExtInputs[]>([])
+  const { memberList } = useMemberList({ sharedBy })
+
   const {
     handleSubmit,
     control,
@@ -57,22 +57,6 @@ const ChatRoomForm = ({
     defaultValues,
   })
   const selectedMembers = watch('members', fixedMember)
-  const router = useRouter()
-
-  useEffect(() => {
-    const fetchMember = async () => {
-      await getRequest<User[]>(requestUri.user.list).then((users: User[]) => {
-        const dataList: MemberExtInputs[] = users.map((u) => ({
-          id: u.id,
-          full_name: u.full_name,
-          is_editable: true,
-          shared_by: sharedBy,
-        }))
-        setMemberList(dataList)
-      })
-    }
-    fetchMember()
-  }, [])
 
   useEffect(() => {
     setValue('name', defaultValues.name)

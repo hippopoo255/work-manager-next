@@ -6,7 +6,8 @@ import { CustomAlert, MypageTitle } from '@/components/atoms'
 import { AddButton } from '@/components/molecules'
 import { CommonTable, SearchTaskForm, SearchBox } from '@/components/organisms'
 import { TaskForm } from '@/components/template'
-import { requestUri, getRequest, deleteRequest } from '@/api'
+import { requestUri } from '@/api'
+import { useAuth, useInitialConnector, useRestApi } from '@/hooks'
 import { Pager, AlertStatus } from '@/interfaces/common'
 import { SortParam } from '@/interfaces/table'
 import { TaskTableRowData } from '@/interfaces/table/rowData'
@@ -32,11 +33,19 @@ const Index = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const [open, setOpen] = useState<boolean>(false)
   const [updateFlag, setUpdateFlag] = useState<number | null>(null)
-  // TODO: 状態管理すべき
   const [alertStatus, setAlertStatus] = useState<AlertStatus>({
     ...initialAlertStatus,
   })
-
+  const { getMethod, deleteMethod } = useRestApi()
+  const { auth, config } = useAuth()
+  const {} = useInitialConnector<Progress[]>({
+    path: requestUri.progress.list,
+    onSuccess: (res) => setProgressList(res),
+  })
+  const {} = useInitialConnector<Priority[]>({
+    path: requestUri.priority.list,
+    onSuccess: (res) => setPriorityList(res),
+  })
   const add = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     setDefaultValues({
       body: '',
@@ -147,7 +156,7 @@ const Index = () => {
     setLoading(true)
     let path = requestUri.task.myTask + getSortParams(data)
     setLatestUri(path)
-    return await getRequest<Pager<Task, SearchTaskInputs>>(path).finally(() => {
+    return await getMethod<Pager<Task, SearchTaskInputs>>(path).finally(() => {
       setLoading(false)
     })
   }
@@ -167,7 +176,7 @@ const Index = () => {
     if (args.hasOwnProperty('sort_key') && tasks !== null) {
       setLoading(true)
       const uri = handlePageUri(latestUri, args)
-      await getRequest<Pager<Task, SearchTaskInputs>>(uri)
+      await getMethod<Pager<Task, SearchTaskInputs>>(uri)
         .then((res) => {
           setTasks(res)
           setLatestUri(uri)
@@ -182,8 +191,9 @@ const Index = () => {
   const handleDeleteClick = async (ids: (number | string)[]) => {
     const data: { ids: (number | string)[] } = { ids }
     // const queryParams = latestUri.match(/\?.+$/)
-    await deleteRequest<Pager<Task, SearchTaskInputs>>(latestUri, {
+    await deleteMethod<Pager<Task, SearchTaskInputs>>(latestUri, {
       data,
+      ...config,
     }).then((res) => {
       setTasks(res)
       setAlertStatus((prev) => ({
@@ -208,18 +218,20 @@ const Index = () => {
             .join('&')
       }
       const path = requestUri.task.myTask + initialQuery
-      await getRequest<Pager<Task, SearchTaskInputs>>(path)
-        .then((res) => {
-          setTasks(res)
-          setLatestUri(path)
-          setRows(createRows(res.data))
-        })
-        .finally(() => {
-          setLoading(false)
-        })
+      if (auth.isLogin) {
+        await getMethod<Pager<Task, SearchTaskInputs>>(path)
+          .then((res) => {
+            setTasks(res)
+            setLatestUri(path)
+            setRows(createRows(res.data))
+          })
+          .finally(() => {
+            setLoading(false)
+          })
+      }
     }
     init()
-  }, [router])
+  }, [router, auth])
 
   const calc = alertStatus.show
 
@@ -231,18 +243,6 @@ const Index = () => {
       }))
     }, 5000)
   }, [calc])
-
-  useEffect(() => {
-    const init = async () => {
-      await getRequest<Priority[]>(requestUri.priority.list).then((res) =>
-        setPriorityList(res)
-      )
-      await getRequest<Progress[]>(requestUri.progress.list).then((res) =>
-        setProgressList(res)
-      )
-    }
-    init()
-  }, [])
 
   return (
     <MypageLayout title="タスク">

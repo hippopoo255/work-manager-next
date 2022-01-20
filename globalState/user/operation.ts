@@ -7,15 +7,21 @@ import {
 import { laravelAuth, cognitoAuth, Auth0 } from '@/lib/auth'
 import { UserAction } from '@/interfaces/action/UserAction'
 import { User } from '@/interfaces/models'
+import { requestUri } from '@/api'
 
-export const currentUser = async (dispatch: React.Dispatch<UserAction>) => {
-  const user = (await cognitoAuth.currentUser()) as User | ''
-  dispatch(currentUserAction(user))
-  return user
+export const currentUser = async (
+  dispatch: React.Dispatch<UserAction>,
+  currentAuthorPath: string = requestUri.currentUser
+) => {
+  const loggedInUser = (await cognitoAuth.currentUser(currentAuthorPath)) as
+    | User
+    | ''
+  dispatch(currentUserAction(loggedInUser))
+  return loggedInUser
   // =====================
-  // const res = await laravelAuth.currentUser()
-  // dispatch(currentUserAction(res))
-  // return res
+  // const loggedInUser = await laravelAuth.currentUser()
+  // dispatch(currentUserAction(loggedInUser))
+  // return loggedInUser
   // =====================
 }
 
@@ -23,18 +29,20 @@ export const login = async (
   { login_id, password }: LoginInputs,
   dispatch: React.Dispatch<UserAction>
 ) => {
-  // cognitoAuth.signout()
-  const user = (await cognitoAuth.signin({ login_id, password })) as User
-  dispatch(loginAction(user))
-  return user
-  // TODO: cognitoで詰まったら↓のLaravel認証に戻す
+  const loggedInUser = (await cognitoAuth.signin({
+    login_id,
+    password,
+  })) as User
+  dispatch(loginAction(loggedInUser))
+  return loggedInUser
+  // cognitoで詰まったら↓のLaravel認証に戻す
   // =====================
-  // const user = await laravelAuth.login({ login_id, password }).catch((err) => {
+  // const loggedInUser = await laravelAuth.login({ login_id, password }).catch((err) => {
   //   const errBody: { [k: string]: string[] } = err.data.errors
   //   throw errBody
   // })
-  // dispatch(loginAction(user))
-  // return user
+  // dispatch(loginAction(loggedInUser))
+  // return loggedInUser
   // =====================
 }
 
@@ -50,21 +58,23 @@ export const logout = async (dispatch: React.Dispatch<UserAction>) => {
 }
 
 export const signup = async (data: SignupInputs) => {
-  const user = await cognitoAuth.signup(data)
-  return user
+  const newAccount = await cognitoAuth.signup(data)
+  return newAccount
 }
 
 export const testLogin = async (dispatch: React.Dispatch<UserAction>) => {
-  const user = await cognitoAuth.testSignin()
-  dispatch(loginAction(user))
-  return user
+  const loggedInUser = await cognitoAuth.testSignin()
+  if (!!loggedInUser) {
+    dispatch(loginAction(loggedInUser))
+  }
+  return loggedInUser
   // =================
-  // const user = await laravelAuth.testLogin().catch((err) => {
+  // const loggedInUser = await laravelAuth.testLogin().catch((err) => {
   //   const errBody: { [k: string]: string[] } = err.data.errors
   //   throw errBody
   // })
-  // dispatch(loginAction(user))
-  // return user
+  // dispatch(loginAction(loggedInUser))
+  // return loggedInUser
   // =================
 }
 

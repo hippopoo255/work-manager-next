@@ -12,9 +12,9 @@ import { MeetingRecord } from '@/interfaces/models'
 import { DashboardBaseCard } from '@/components/organisms'
 import { Header, FooterLink } from '@/interfaces/common/dashboard'
 import { MeetingRecordIcon } from '@/components/atoms/icons'
-import { requestUri, getRequest } from '@/api'
+import { requestUri } from '@/api'
 import { headCells, createRows } from '@/lib/table/meetingRecord'
-import { useLocale } from '@/hooks'
+import { useLocale, useInitialConnector } from '@/hooks'
 
 const useStyles = makeStyles((theme: Theme) => ({
   seeMore: {
@@ -38,8 +38,13 @@ type Props = {
 const LatestMeetingRecord = React.memo(({ wrapClasses }: Props) => {
   const classes = useStyles()
   const [meetingRecords, setMeetingRecords] = useState<MeetingRecord[]>([])
-  const [loading, setLoading] = useState<boolean>(false)
   const { t } = useLocale()
+  const { loading } = useInitialConnector<MeetingRecord[]>({
+    path: requestUri.meetingRecord.myRecently,
+    onSuccess: (records) => {
+      setMeetingRecords(records)
+    },
+  })
   const header: Header = {
     avatar: <MeetingRecordIcon />,
     title: t.mypage.recentMeetingRecord,
@@ -50,25 +55,6 @@ const LatestMeetingRecord = React.memo(({ wrapClasses }: Props) => {
     color: 'primary',
     text: t.common.more,
   }
-  useEffect(() => {
-    let isMounted = true
-    const init = async () => {
-      setLoading(true)
-      getRequest<MeetingRecord[]>(requestUri.meetingRecord.myRecently)
-        .then((data) => {
-          if (isMounted) {
-            setMeetingRecords(data)
-          }
-        })
-        .finally(() => {
-          setLoading(false)
-        })
-    }
-    init()
-    return () => {
-      isMounted = false
-    }
-  }, [])
 
   const afterBookmark = (bookmarkedRecord: MeetingRecord) => {
     setMeetingRecords((prev: MeetingRecord[]) => {

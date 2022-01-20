@@ -16,25 +16,26 @@ const TestLoginButton = ({
   },
 }: Props) => {
   const [loading, setLoading] = useState<boolean>(false)
-  const { testLogin, auth } = useAuth(true)
+  const { testLogin, auth } = useAuth()
   const { t } = useLocale()
   const handleDemoUser = async () => {
     setLoading(true)
-    await testLogin().catch((err) => {
-      setLoading(false)
-      alert(err)
-    })
+    await testLogin()
+      .catch((err) => {
+        alert(err)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
   }
 
   return (
-    !auth.isLogin && (
-      <CircularButton
-        loading={loading}
-        submitText={t.common.testLogin}
-        onClick={handleDemoUser}
-        options={{ ...options }}
-      />
-    )
+    <CircularButton
+      loading={loading}
+      submitText={t.common.testLogin}
+      onClick={handleDemoUser}
+      options={{ ...options }}
+    />
   )
 }
 

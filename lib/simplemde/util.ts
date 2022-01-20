@@ -1,5 +1,3 @@
-import { uploadFile } from '@/lib/file'
-
 export const MDE_BODY_HEIGHT = 500
 export const MDE_BODY_OUT_SPACE = 20 // padding10px * 2
 export const MDE_BODY_BORDER_SIZE = 2 // border1px * 2

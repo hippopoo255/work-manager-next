@@ -1,9 +1,13 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { AuthContext } from '@/provider/AuthProvider'
+import React, { useState } from 'react'
 import clsx from 'clsx'
 import { MypageLayout } from '@/layouts'
 import { MypageTitle, FormErrorMessage } from '@/components/atoms'
-import { FormTitle, HelpBox, CircularButton } from '@/components/molecules'
+import {
+  FormTitle,
+  HelpBox,
+  CircularButton,
+  CustomLoader,
+} from '@/components/molecules'
 import { makeStyles, Theme } from '@material-ui/core'
 import {
   Box,
@@ -24,13 +28,15 @@ import {
 import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined'
 import { useForm, Controller } from 'react-hook-form'
 import { strPatterns } from '@/lib/util'
-import { getRequest, putRequest, requestUri } from '@/api'
+import { requestUri } from '@/api'
 import { User } from '@/interfaces/models'
 import { NotifyStatus } from '@/interfaces/common'
 import { SettingInputs } from '@/interfaces/form/inputs'
 import { AlertStatus } from '@/interfaces/common'
 import { initialAlertStatus } from '@/lib/initialData'
 import { CustomAlert } from '@/components/atoms'
+import { useAuth, useInitialConnector } from '@/hooks'
+import { putRequest } from '@/api'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -71,7 +77,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const Index = () => {
   const classes = useStyles()
-  const [loading, setLoading] = useState<boolean>(false)
+  const { auth, config } = useAuth()
+  const [submitLoading, setSubmitLoading] = useState<boolean>(false)
   const [alertStatus, setAlertStatus] = useState<AlertStatus>({
     ...initialAlertStatus,
   })
@@ -79,7 +86,6 @@ const Index = () => {
   const [dailyNotifyValidation, setDailyNotifyValidation] = useState<
     NotifyStatus[]
   >([])
-  const { auth } = useContext(AuthContext)
   const {
     handleSubmit,
     control,
@@ -113,7 +119,7 @@ const Index = () => {
 
   const handleUpdate = async (data: SettingInputs) => {
     if (auth.isLogin) {
-      setLoading(true)
+      setSubmitLoading(true)
       const submitData = new FormData()
       Object.keys(data.notify_validation).forEach((key) => {
         submitData.append(
@@ -131,17 +137,8 @@ const Index = () => {
 
       await putRequest<User, FormData>(
         `/user/${auth.user.id}/setting`,
-        submitData
-      )
-        .then((updateUser: User) => {
-          setAlertStatus((prev) => ({
-            ...prev,
-            msg: '設定を更新しました',
-            severity: 'success',
-            show: true,
-          }))
-        })
-        .catch((err) => {
+        submitData,
+        (err) => {
           setAlertStatus((prev) => ({
             ...prev,
             msg: '設定の更新に失敗しました',
@@ -158,37 +155,37 @@ const Index = () => {
               })
             })
           }
+        },
+        config
+      )
+        .then((updateUser: User) => {
+          setAlertStatus((prev) => ({
+            ...prev,
+            msg: '設定を更新しました',
+            severity: 'success',
+            show: true,
+          }))
         })
         .finally(() => {
-          setLoading(false)
+          setSubmitLoading(false)
         })
     }
   }
-
-  useEffect(() => {
-    const fetchNotifyStatus = async () => {
-      if (auth.isLogin) {
-        await getRequest<NotifyStatus[]>(
-          requestUri.notifyStatus + `${auth.user.id}/notify_validation`,
-          (err) => {
-            console.error(err)
-          }
-        ).then((fetchedStatus) => {
-          setNotifyValidation((prev) =>
-            fetchedStatus.filter(
-              (notifyValidation) => !notifyValidation.key.match(/^daily_.+$/g)
-            )
-          )
-          setDailyNotifyValidation((prev) =>
-            fetchedStatus.filter((notifyValidation) =>
-              notifyValidation.key.match(/^daily_.+$/g)
-            )
-          )
-        })
-      }
-    }
-    fetchNotifyStatus()
-  }, [auth])
+  const { loading } = useInitialConnector<NotifyStatus[]>({
+    path: requestUri.notifyStatus + `${auth.user.id}/notify_validation`,
+    onSuccess: (fetchedStatus) => {
+      setNotifyValidation((prev) =>
+        fetchedStatus.filter(
+          (notifyValidation) => !notifyValidation.key.match(/^daily_.+$/g)
+        )
+      )
+      setDailyNotifyValidation((prev) =>
+        fetchedStatus.filter((notifyValidation) =>
+          notifyValidation.key.match(/^daily_.+$/g)
+        )
+      )
+    },
+  })
 
   return (
     <MypageLayout title="設定">
@@ -204,14 +201,16 @@ const Index = () => {
             <form onSubmit={handleSubmit(handleUpdate)}>
               <CardContent className={classes.wrap}>
                 <Grid container spacing={2} className={classes.wrap}>
-                  {!!notifyValidation.length && (
-                    <Grid item xs={12}>
-                      <Typography component={'h4'} variant={'h4'} gutterBottom>
-                        メール配信設定
-                      </Typography>
-                      <Divider style={{ marginTop: 12 }} />
-                      <List>
-                        {notifyValidation.map((sts: NotifyStatus, index) => (
+                  <Grid item xs={12}>
+                    <Typography component={'h4'} variant={'h4'} gutterBottom>
+                      メール配信設定
+                    </Typography>
+                    <Divider style={{ marginTop: 12 }} />
+                    <List>
+                      {loading || !notifyValidation.length ? (
+                        <CustomLoader />
+                      ) : (
+                        notifyValidation.map((sts: NotifyStatus, index) => (
                           <ListItem key={sts.key} dense>
                             <Controller
                               name={`notify_validation.${sts.id}`}
@@ -239,55 +238,51 @@ const Index = () => {
                               )}
                             />
                           </ListItem>
-                        ))}
-                        <ListItem dense>
-                          <ListItemText
-                            primaryTypographyProps={{
-                              color: 'primary',
-                              variant: 'subtitle1',
-                              component: 'h5',
-                              classes: {
-                                subtitle1: classes.subtitle,
-                              },
-                            }}
-                          >
-                            デイリー配信
-                          </ListItemText>
-                        </ListItem>
-                        {dailyNotifyValidation.map(
-                          (sts: NotifyStatus, index) => (
-                            <ListItem key={sts.key} dense>
-                              <Controller
-                                name={`notify_validation.${sts.id}`}
-                                defaultValue={!!sts.is_valid}
-                                control={control}
-                                render={({ field }) => (
-                                  <FormControlLabel
-                                    {...field}
-                                    control={
-                                      <Switch
-                                        color={'primary'}
-                                        // size={'small'}
-                                        checked={
-                                          !!getValues(
-                                            `notify_validation.${sts.id}`
-                                          )
-                                        }
-                                      />
+                        ))
+                      )}
+                      <ListItem dense>
+                        <ListItemText
+                          primaryTypographyProps={{
+                            color: 'primary',
+                            variant: 'subtitle1',
+                            component: 'h5',
+                            classes: {
+                              subtitle1: classes.subtitle,
+                            },
+                          }}
+                        >
+                          デイリー配信
+                        </ListItemText>
+                      </ListItem>
+                      {dailyNotifyValidation.map((sts: NotifyStatus, index) => (
+                        <ListItem key={sts.key} dense>
+                          <Controller
+                            name={`notify_validation.${sts.id}`}
+                            defaultValue={!!sts.is_valid}
+                            control={control}
+                            render={({ field }) => (
+                              <FormControlLabel
+                                {...field}
+                                control={
+                                  <Switch
+                                    color={'primary'}
+                                    // size={'small'}
+                                    checked={
+                                      !!getValues(`notify_validation.${sts.id}`)
                                     }
-                                    label={sts.label_name}
-                                    classes={{
-                                      label: classes.swicthText,
-                                    }}
                                   />
-                                )}
+                                }
+                                label={sts.label_name}
+                                classes={{
+                                  label: classes.swicthText,
+                                }}
                               />
-                            </ListItem>
-                          )
-                        )}
-                      </List>
-                    </Grid>
-                  )}
+                            )}
+                          />
+                        </ListItem>
+                      ))}
+                    </List>
+                  </Grid>
                   <Grid item xs={12} style={{ marginTop: 12 }}>
                     <Grid container spacing={2}>
                       <Grid item xs={12}>
@@ -456,7 +451,7 @@ const Index = () => {
               <CardActions className={classes.footer}>
                 <div className={classes.wrap}>
                   <CircularButton
-                    loading={loading}
+                    loading={submitLoading}
                     onClick={handleSubmit(handleUpdate)}
                   />
                 </div>

@@ -1,6 +1,3 @@
-import { AxiosRequestConfig } from 'axios'
-import { postRequestToApiGateway } from '@/lib/axios'
-
 type UploadedFileSrcType = {
   src: string[]
 }
@@ -16,21 +13,3 @@ export type UploadedFileResponseType = {
   headers: UploadedFileHeadersType
   statusCode: number
 }
-
-const uploadFile = async (file: File, path: string = '/blog_asset') => {
-  const submitData = new FormData()
-  submitData.append('thumbnail', file)
-  const config: AxiosRequestConfig = {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  }
-  const d = await postRequestToApiGateway<UploadedFileResponseType>(
-    path,
-    submitData,
-    config
-  )
-  return d
-}
-
-export default uploadFile
