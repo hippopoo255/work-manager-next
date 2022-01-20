@@ -21,16 +21,8 @@ const postRequest = async <T, U>(
     })
 
   if (response.status >= 400) {
-    !!onError
-      ? onError(response)
-      : () => {
-          try {
-            defaultErrorHandler(response)
-          } catch (err) {
-            return err
-          }
-        }
-    return response
+    !!onError ? onError(response) : defaultErrorHandler(response)
+    // return response
   }
 
   return response.data

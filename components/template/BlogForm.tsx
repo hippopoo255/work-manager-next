@@ -142,7 +142,7 @@ const BlogForm = (
 
   const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     await uploadFile(e.target.files![0]).then((d) => {
-      console.log(d)
+      // console.log(d)
     })
   }
 

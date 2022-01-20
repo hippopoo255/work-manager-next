@@ -16,7 +16,12 @@ export const currentUser = async (
   const loggedInUser = (await cognitoAuth.currentUser(currentAuthorPath)) as
     | User
     | ''
-  dispatch(currentUserAction(loggedInUser))
+
+  if (loggedInUser === '') {
+    dispatch(currentUserAction(loggedInUser))
+  } else {
+    dispatch(currentUserAction({ ...loggedInUser }))
+  }
   return loggedInUser
   // =====================
   // const loggedInUser = await laravelAuth.currentUser()

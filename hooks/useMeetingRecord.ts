@@ -1,7 +1,7 @@
-import React, { useState, useMemo, useCallback } from 'react'
+import React, { useState, useMemo, useCallback, useEffect } from 'react'
 import { MeetingRecordInputs } from '@/interfaces/form/inputs'
 import { MeetingRecordSubmit } from '@/interfaces/form/submit'
-import { useMemberList, useInitialConnector, useAuth } from '.'
+import { useMemberList, useMeetingPlaceList, useAuth } from '@/hooks'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { requestUri } from '@/api'
 import { useRestApi } from '@/hooks'
@@ -90,15 +90,6 @@ const useMeetingRecord = () => {
   const { postMethod, putMethod } = useRestApi()
   const paramId = router.query.id || 0
   const meetingRecordId = useMemo(() => paramId, [paramId])
-  const { memberList } = useMemberList({ sharedBy: 0 })
-  const [meetingPlaceList, setMeetingPlaceList] = useState<MeetingPlace[]>([])
-  useInitialConnector({
-    path: requestUri.meetingPlace.list,
-    onSuccess: (meetingPlaceList: MeetingPlace[]) => {
-      setMeetingPlaceList(meetingPlaceList)
-    },
-  })
-  const classes = useStyles()
   const [defaultValues, setDefaultValues] = useState<MeetingRecordInputs>({
     recorded_by: auth.user.id,
     title: '',
@@ -117,17 +108,30 @@ const useMeetingRecord = () => {
     ],
   })
 
-  const store = async (submitData: MeetingRecordSubmit) =>
-    await postMethod<MeetingRecord, MeetingRecordSubmit>(
-      requestUri.meetingRecord.post,
-      submitData
-    )
+  const { memberList } = useMemberList({ sharedBy: 0 })
+  const { meetingPlaceList } = useMeetingPlaceList({
+    paramId,
+  })
 
-  const update = async (submitData: MeetingRecordSubmit) =>
-    await putMethod<MeetingRecord, MeetingRecordSubmit>(
-      `${requestUri.meetingRecord.put}/${meetingRecordId}`,
-      submitData
-    )
+  const classes = useStyles()
+
+  const store = useCallback(
+    async (submitData: MeetingRecordSubmit) =>
+      await postMethod<MeetingRecord, MeetingRecordSubmit>(
+        requestUri.meetingRecord.post,
+        submitData
+      ),
+    [meetingRecordId, auth]
+  )
+
+  const update = useCallback(
+    async (submitData: MeetingRecordSubmit) =>
+      await putMethod<MeetingRecord, MeetingRecordSubmit>(
+        `${requestUri.meetingRecord.put}/${meetingRecordId}`,
+        submitData
+      ),
+    [meetingRecordId, auth]
+  )
 
   const save = useCallback(
     async (submitData: MeetingRecordSubmit) => {
@@ -137,7 +141,7 @@ const useMeetingRecord = () => {
         return await store(submitData)
       }
     },
-    [meetingRecordId]
+    [meetingRecordId, auth]
   )
 
   return {

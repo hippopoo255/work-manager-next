@@ -26,7 +26,6 @@ const Auth0 = () => {
               Authorization: `Bearer ${accessToken}`,
             },
           })
-          console.log(response)
         }
       }
       tokenTest()
