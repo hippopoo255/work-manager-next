@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useCallback } from 'react'
 import { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { useAuth } from '@/hooks'
 import { getRequest, postRequest, putRequest, deleteRequest } from '@/api'
@@ -9,7 +9,7 @@ type Props = {
 }
 
 const useRestApi = () => {
-  const { config } = useAuth()
+  const { auth, config } = useAuth()
 
   const getMethod = async <T = any>(
     path: string,
@@ -56,8 +56,9 @@ const useRestApi = () => {
   const mergeConfig = (specifiedConfig?: AxiosRequestConfig) => {
     const headers = {
       ...specifiedConfig?.headers,
-      ...config.headers,
+      Authorization: auth.user.jwt,
     }
+
     return { ...specifiedConfig, headers }
   }
 
@@ -66,6 +67,7 @@ const useRestApi = () => {
     postMethod,
     putMethod,
     deleteMethod,
+    config,
   }
 }
 

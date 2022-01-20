@@ -58,7 +58,7 @@ type Props = {
   req: (submitData: MeetingRecordSubmit) => Promise<MeetingRecord>
   classes: any
   meetingPlaceList: MeetingPlace[]
-  handleSuccess: (submitData: MeetingRecordInputs) => void
+  handleSuccess?: (submitData: MeetingRecordInputs) => void
   saveAction: 'update' | 'create'
 }
 
@@ -167,7 +167,8 @@ const MeetingRecordForm = ({
         .then(() => {
           if (saveAction === 'create') {
             reset()
-          } else {
+          }
+          if (handleSuccess !== undefined) {
             handleSuccess(data)
           }
           handleNext()

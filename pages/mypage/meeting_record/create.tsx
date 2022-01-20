@@ -1,5 +1,5 @@
 import { GetStaticProps } from 'next'
-import React, { useContext, useState, useMemo, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { MypageLayout } from '@/layouts'
 import { MypageTitle } from '@/components/atoms'
 import { FormTitle } from '@/components/molecules'
@@ -18,12 +18,17 @@ export type Props = {
 }
 
 const MeetingRecordCreate = ({ meetingPlaceList }: Props) => {
-  const { save, classes, defaultValues, memberList } = useMeetingRecord()
+  const { auth, save, classes, defaultValues, setDefaultValues, memberList } =
+    useMeetingRecord()
   const fixedMember: MemberInputs[] = []
-
-  const handleStore = () => {
-    console.log('')
-  }
+  useEffect(() => {
+    if (auth.isLogin) {
+      setDefaultValues((prev) => ({
+        ...prev,
+        recorded_by: auth.user.id,
+      }))
+    }
+  }, [auth])
 
   const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -52,7 +57,6 @@ const MeetingRecordCreate = ({ meetingPlaceList }: Props) => {
           req={save}
           classes={classes}
           meetingPlaceList={meetingPlaceList}
-          handleSuccess={handleStore}
           saveAction="create"
         />
       </section>
