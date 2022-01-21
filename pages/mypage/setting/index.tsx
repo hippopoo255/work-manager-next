@@ -102,9 +102,6 @@ const Index = () => {
     formState: { errors },
   } = useForm<SettingInputs>({
     defaultValues: {
-      notify_validation: {
-        notify: false,
-      },
       change_password: {
         old_password: '',
         password: '',
