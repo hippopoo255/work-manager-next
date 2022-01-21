@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(1),
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
+    margin: theme.spacing(2, 0),
     background: `linear-gradient(165deg, ${darken('#5dff26', 0.1)}, #5cb363)`,
     color: theme.palette.common.white,
   },

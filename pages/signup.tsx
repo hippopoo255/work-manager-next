@@ -40,12 +40,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(1),
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
+    margin: theme.spacing(2, 0),
     background: linerGradient.red,
     color: theme.palette.common.white,
     fontWeight: theme.typography.fontWeightBold,
     '&:hover': {
       opacity: theme.palette.action.focusOpacity * 5,
+    },
+    '&.Mui-disabled': {
+      background: theme.palette.action.focus,
+      color: theme.palette.action.disabled,
     },
   },
   label: {
@@ -101,7 +105,7 @@ const Signup = () => {
   const { signup } = useAuth()
 
   const onSubmit: SubmitHandler<SignupInputs> = async (data) => {
-    // setLoading(true)
+    setLoading(true)
     await signup(data).catch(({ key, message }) => {
       setLoading(false)
       setError(key, {
@@ -201,31 +205,6 @@ const Signup = () => {
                   {...field}
                   fullWidth
                   variant="outlined"
-                  required
-                  margin="normal"
-                  label="住所"
-                  autoFocus
-                  id="address"
-                  error={!!errors.address}
-                  style={{ marginBottom: 0 }}
-                />
-              )}
-              name="address"
-              control={control}
-              defaultValue=""
-            />
-            <Box style={{ minHeight: 20 }}>
-              {!!errors.address && (
-                <FormErrorMessage msg={errors.address.message} />
-              )}
-            </Box>
-
-            <Controller
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  fullWidth
-                  variant="outlined"
                   margin="normal"
                   required
                   error={!!errors.password}
@@ -256,7 +235,7 @@ const Signup = () => {
                 label: classes.label, // class name, e.g. `classes-nesting-label-x`
               }}
             /> */}
-            <Box my={2}>
+            <Box>
               <CircularButton
                 loading={loading}
                 submitText={t.common.signup}

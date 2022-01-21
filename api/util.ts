@@ -12,8 +12,8 @@ export const defaultErrorHandler = (err: AxiosResponse) => {
     case 404:
       router.push('/404', router.router?.asPath)
       throw err
-    case 422:
-      return err
+    // case 422:
+    //   return err
     default:
       throw err
   }

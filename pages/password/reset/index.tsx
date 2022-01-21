@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
-import { requestUri } from '@/api'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import {
   Container,
@@ -18,15 +17,10 @@ import { strPatterns } from '@/lib/util'
 import { HelpBox } from '@/components/molecules'
 import { CustomAlert } from '@/components/atoms'
 import { AlertStatus } from '@/interfaces/common'
+import { ForgotPasswordResetInputs } from '@/interfaces/form/inputs'
 import { initialAlertStatus } from '@/lib/initialData'
-import { useLocale, useRestApi } from '@/hooks'
+import { useLocale, usePasswordReset } from '@/hooks'
 
-type ForgotPasswordResetInputs = {
-  token: string
-  email: string
-  password: string
-  password_confirmation: string
-}
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
     paddingTop: theme.spacing(3),
@@ -49,7 +43,8 @@ const PasswordReset = () => {
   const classes = useStyles()
   const router = useRouter()
   const { t } = useLocale()
-  const { postMethod } = useRestApi()
+  const { resetForgottenPassword } = usePasswordReset()
+  const queryN = router.query.n
   const [loading, setLoading] = useState<boolean>(false)
   const [alertStatus, setAlertStatus] = useState<AlertStatus>({
     ...initialAlertStatus,
@@ -65,15 +60,9 @@ const PasswordReset = () => {
     clearErrors,
     reset,
     formState: { errors },
-  } = useForm<ForgotPasswordResetInputs>({
-    defaultValues: {
-      token: '',
-      email: '',
-      password: '',
-      password_confirmation: '',
-    },
-  })
-  const comparePassword = watch('password', '')
+  } = useForm<ForgotPasswordResetInputs>()
+
+  const comparisonPassword = watch('password', '')
 
   const onSubmit: SubmitHandler<ForgotPasswordResetInputs> = async (data) => {
     await resetPassword(data)
@@ -81,46 +70,17 @@ const PasswordReset = () => {
 
   const resetPassword = async (data: ForgotPasswordResetInputs) => {
     setLoading(true)
-    const submitData = {
-      ...data,
-      email: atob(data.email),
-    }
-    await postMethod<{ message: string }, ForgotPasswordResetInputs>(
-      requestUri.resetPassword,
-      submitData,
-      (err) => {
-        console.error(err)
-        throw err
-      }
-    )
-      .then((res) => {
-        setAlertStatus((prev) => ({
-          ...prev,
-          msg: res.message,
-          severity: 'success',
-          show: true,
-        }))
-        setTimeout(() => {
-          router.push('/login')
-        }, 4000)
-      })
-      .catch((err) => {
-        if (err.status === 422) {
-          const errBody: { [k: string]: string[] } = err.data.errors
-          Object.keys(errBody).forEach((key) => {
-            setError('password', {
-              type: 'invalid',
-              message: errBody[key][0],
-            })
-          })
-        }
+    await resetForgottenPassword(data)
+      .catch(({ key, message }) => {
+        setError(key, {
+          type: 'invalid',
+          message,
+        })
       })
       .finally(() => {
         setLoading(false)
       })
   }
-
-  const paramToken = router.query.token
 
   const handleAlertClose = () => {
     setAlertStatus((prev) => ({
@@ -130,14 +90,13 @@ const PasswordReset = () => {
   }
 
   useEffect(() => {
-    if (router.query !== undefined) {
-      setValue('email', String(router.query.email))
-      setValue('token', String(paramToken))
+    if (queryN !== undefined) {
+      setValue('login_id', String(queryN))
     }
-  }, [paramToken])
+  }, [queryN])
 
   return (
-    <Layout title={'パスワード再設定'}>
+    <Layout title={t.head.title.reset_password}>
       <Head>
         <meta
           name="viewport"
@@ -176,6 +135,37 @@ const PasswordReset = () => {
           </Grid>
           <form noValidate onSubmit={handleSubmit(onSubmit)}>
             <Grid container spacing={2} justifyContent={'center'}>
+              <Grid item xs={12}>
+                <Controller
+                  control={control}
+                  name={'verification_code'}
+                  rules={{
+                    required: {
+                      value: true,
+                      message: '必須項目です',
+                    },
+                  }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      name="code"
+                      type="number"
+                      variant="outlined"
+                      required
+                      label={'検証用コード'}
+                      autoFocus
+                      fullWidth
+                      size={'small'}
+                      error={!!errors.verification_code}
+                    />
+                  )}
+                />
+                <p className={classes.msg}>
+                  {!!errors.verification_code && (
+                    <FormErrorMessage msg={errors.verification_code.message} />
+                  )}
+                </p>
+              </Grid>
               <Grid item xs={12}>
                 <Controller
                   control={control}
@@ -218,7 +208,7 @@ const PasswordReset = () => {
                   )}
                 </p>
               </Grid>
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <Controller
                   control={control}
                   name={'password_confirmation'}
@@ -228,7 +218,7 @@ const PasswordReset = () => {
                       message: '必須項目です',
                     },
                     pattern: {
-                      value: strPatterns.confirm(comparePassword),
+                      value: strPatterns.confirm(comparisonPassword),
                       message: '新しいパスワードと一致しません',
                     },
                   }}
@@ -253,7 +243,7 @@ const PasswordReset = () => {
                     />
                   )}
                 </p>
-              </Grid>
+              </Grid> */}
               <Grid item style={{ textAlign: 'center' }}>
                 <CircularButton
                   loading={loading}

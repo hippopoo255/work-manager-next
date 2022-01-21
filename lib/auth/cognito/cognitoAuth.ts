@@ -7,12 +7,15 @@ amplifyConfigure()
 import { ISignUpResult, CognitoUserSession } from 'amazon-cognito-identity-js'
 import { requestUri, getRequest } from '@/api'
 import router from 'next/router'
-import { encode64 } from '@/lib/util'
+import { encode64, decode64 } from '@/lib/util'
 
 import {
-  LoginInputs,
-  SignupInputs,
   AccountVerificationInputs,
+  ForgotPasswordInputs,
+  LoginInputs,
+  PasswordResetInputs,
+  SignupInputs,
+  ForgotPasswordResetInputs,
 } from '@/interfaces/form/inputs'
 import { User } from '@/interfaces/models'
 import { AxiosRequestConfig } from 'axios'
@@ -22,7 +25,6 @@ const currentUser = async (
 ) => {
   const authResult: '' | CognitoUserSession = await Auth.currentSession().catch(
     (err) => {
-      console.log('current user err:', err)
       return ''
     }
   )
@@ -52,11 +54,78 @@ const currentUser = async (
   return authResult // ''
 }
 
+const forgotPassword = async ({ login_id }: ForgotPasswordInputs) => {
+  const response = await Auth.forgotPassword(login_id).catch((error) => {
+    handleError<ForgotPasswordInputs>(error, 'reset password error')
+    return {}
+  })
+
+  if (!!response) {
+    setTimeout(() => {
+      router.push({
+        pathname: '/password/reset',
+        query: {
+          n: encode64(login_id),
+        },
+      })
+    }, 4000)
+  }
+  return {
+    message:
+      'ご登録いただいているメールアドレスに検証用コードを送信しました。\n数秒後に画面が切り替わりますので、検証コードと新しいパスワードを入力してください。',
+    data: 'SENDED',
+  }
+}
+
+const resetForgottenPassword = async ({
+  login_id,
+  verification_code,
+  password,
+}: ForgotPasswordResetInputs) => {
+  const username = decode64(login_id)
+  const result = await Auth.forgotPasswordSubmit(
+    username,
+    verification_code,
+    password
+  ).catch((error) => {
+    handleError<ForgotPasswordResetInputs>(error, 'reset password error')
+  })
+  if (result === 'SUCCESS') {
+    // console.log('confirmation success:', result)
+    alert(
+      '再設定に成功しました。数秒後ログイン画面に移動しますので、ログインをお試しください'
+    )
+    router.push('/login')
+  }
+}
+
+const resetPassword = async ({
+  old_password,
+  password,
+}: PasswordResetInputs) => {
+  const response = await Auth.currentAuthenticatedUser()
+    .then((user) => {
+      return Auth.changePassword(user, old_password, password)
+    })
+    .then((data) => {
+      return data
+    })
+    .catch((error) => {
+      handleError<PasswordResetInputs>(
+        error,
+        'incorrect password',
+        'change_password.old_password'
+      )
+      return {}
+    })
+  return response
+  // console.log(response)
+}
+
 const signin = async ({ login_id, password }: LoginInputs) => {
   const cognitoUser = await Auth.signIn(login_id, password).catch((error) => {
     handleError<LoginInputs>(error)
   })
-
   if (!!cognitoUser) {
     return (await currentUser()) as User
   }
@@ -68,7 +137,7 @@ const signout = async () => {
   const res = await Auth.signOut().catch((error) => {
     handleError(error, 'logout failed')
   })
-  // console.log('logout success:', res)
+  console.log('logout succeeded')
   return null
 }
 
@@ -79,7 +148,7 @@ const signup = async ({ email, login_id, password, address }: SignupInputs) => {
       password,
       attributes: {
         email, // optional
-        address, // optional - E.164 number convention
+        address: address || '', // optional - E.164 number convention
         // given_name: '太郎',
         // family_name: 'テスト',
         // other custom attributes
@@ -90,7 +159,7 @@ const signup = async ({ email, login_id, password, address }: SignupInputs) => {
         // 'custom:department_code': '5',
       },
     })
-    // console.log('signup succeeded:', user)
+    console.log('signup succeeded')
     router.push({
       pathname: '/account_verification',
       query: {
@@ -131,6 +200,9 @@ const verifyUser = async ({
 
 const cognitoAuth = {
   currentUser,
+  forgotPassword,
+  resetForgottenPassword,
+  resetPassword,
   signin,
   signout,
   signup,

@@ -14,6 +14,8 @@ export default {
         },
       },
       accountVerification: 'アカウント確認',
+      forgot_password: 'アカウント確認',
+      reset_password: 'パスワードリセット',
     },
   },
   main: {
@@ -130,13 +132,14 @@ export default {
     testLoginFail: '現在のアカウントからログアウトしてください',
     cognitoError: {
       UserNotFoundException: 'アカウントが存在しません',
-      NotAuthorizedException: '認証に失敗しました',
+      NotAuthorizedException: 'ユーザー名またはパスワードが違います',
       UserNotConfirmedException: 'アカウントの検証が完了していません',
       UsernameExistsException: '同じ名前のユーザーが既に登録されています',
       CodeMismatchException: '検証コードに誤りがあります',
       InvalidParameterException: '入力項目が正しくありません',
       InvalidPasswordException: 'パスワードの形式が正しくありません',
-      LimitExceededException: 'パスワードが試行回数を超えました',
+      LimitExceededException:
+        'パスワードが試行回数を超えました。しばらくしてからもう一度お試しください',
       ExpiredCodeException:
         '既に検証済みのアカウントか、有効期限切れの可能性があります',
       default: '検証に失敗しました',
