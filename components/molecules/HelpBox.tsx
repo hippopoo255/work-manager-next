@@ -50,7 +50,7 @@ const HelpBox = ({ children, point, tooltip = '' }: Props) => {
   const helpOpen = Boolean(helpEl)
 
   return (
-    <div>
+    <div style={{ display: 'inline-block' }}>
       <Tooltip title={tooltip}>
         <Typography
           aria-owns={helpOpen ? 'simple-popover' : undefined}

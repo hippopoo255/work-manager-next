@@ -8,7 +8,7 @@ export type CognitoErrorMessageType =
   | 'UserNotFoundException'
   // 認証に失敗した
   // 既にステータスが CONFIRMED
-  // パスワードを間違え続けた場合
+  // パスワードを間違い続けた場合
   | 'NotAuthorizedException'
   // ユーザのステータスがUNCONFIRMED
   | 'UserNotConfirmedException'
@@ -24,25 +24,42 @@ export type CognitoErrorMessageType =
   | 'InvalidPasswordException'
   // パスワード試行回数を超えた
   | 'LimitExceededException'
-  // 検証が完了しているアカウントについてサイド検証リクエストがあった
+  // 検証が完了しているアカウントについて再度検証リクエストがあった
   | 'ExpiredCodeException'
   | 'default'
 
+const errorKeys = {
+  UserNotFoundException: 'login_id',
+  NotAuthorizedException: 'login_id',
+  UserNotConfirmedException: 'login_id',
+  UsernameExistsException: 'login_id',
+  CodeMismatchException: 'verification_code',
+  InvalidParameterException: 'password',
+  InvalidPasswordException: 'password',
+  LimitExceededException: 'password',
+  ExpiredCodeException: 'login_id',
+  default: 'login_id',
+}
+
 export const handleError = <T = LoginInputs>(
   error: any,
-  logPrefix: string = 'sign in failed'
+  logPrefix: string = 'sign in failed',
+  specifiedKey?: string
 ) => {
-  console.error(`${logPrefix}:`, error)
+  console.error(`${logPrefix}`)
   if (error.code !== undefined) {
     const errCode = error.code as CognitoErrorMessageType
-    const { key, message } = getErrorBody<T>(errCode)
+    const { key, message } = getErrorBody<T>(errCode, specifiedKey)
     throw { key, message }
   }
   throw error
 }
 
-const getErrorBody = <T = LoginInputs>(errCode: CognitoErrorMessageType) => {
-  const key = 'password' as Path<T>
+const getErrorBody = <T = LoginInputs>(
+  errCode: CognitoErrorMessageType,
+  specifiedKey?: string
+) => {
+  const key = (specifiedKey || errorKeys[errCode]) as Path<T>
   const t = router.locale === 'en' ? en : ja
   const message =
     t.message.cognitoError[errCode] || t.message.cognitoError.default

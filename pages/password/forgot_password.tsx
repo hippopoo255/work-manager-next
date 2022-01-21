@@ -1,8 +1,6 @@
 import React, { useState } from 'react'
 import Head from 'next/head'
-import { useRouter } from 'next/router'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
-import { requestUri } from '@/api'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import {
   Container,
@@ -15,11 +13,8 @@ import { Layout } from '@/layouts'
 import { FormErrorMessage } from '@/components/atoms'
 import { CircularButton } from '@/components/molecules'
 import { strPatterns } from '@/lib/util'
-import { useLocale, useRestApi } from '@/hooks'
-
-type ForgotPasswordInputs = {
-  email: string
-}
+import { ForgotPasswordInputs } from '@/interfaces/form/inputs'
+import { useLocale, usePasswordReset } from '@/hooks'
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -43,11 +38,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const ForgotPassword = () => {
   const classes = useStyles()
-  const router = useRouter()
   const [loading, setLoading] = useState<boolean>(false)
   const [msg, setMsg] = useState<string>('')
   const { t } = useLocale()
-  const { postMethod } = useRestApi()
+  const { forgotPassword } = usePasswordReset()
   const {
     handleSubmit,
     control,
@@ -59,7 +53,7 @@ const ForgotPassword = () => {
     reset,
     formState: { errors },
   } = useForm<ForgotPasswordInputs>({
-    defaultValues: { email: '' },
+    defaultValues: { login_id: '' },
   })
 
   const onSubmit: SubmitHandler<ForgotPasswordInputs> = async (data) => {
@@ -68,30 +62,15 @@ const ForgotPassword = () => {
 
   const sendReminder = async (data: ForgotPasswordInputs) => {
     setLoading(true)
-    await postMethod<
-      {
-        data: string
-        message: string
-      },
-      ForgotPasswordInputs
-    >(requestUri.forgotPassword, data, (err) => {
-      console.error(err)
-      throw err
-    })
-      .then((res) => {
-        setMsg(res.message)
-        setTimeout(() => {
-          router.push('/')
-        }, 5000)
+    await forgotPassword(data)
+      .then(({ message }) => {
+        setMsg(message)
       })
-      .catch((err) => {
-        if (err.status === 422) {
-          const errBody: { [k: string]: string[] } = err.data.errors
-          setError('email', {
-            type: 'invalid',
-            message: errBody.email[0],
-          })
-        }
+      .catch(({ key, message }) => {
+        setError(key, {
+          type: 'invalid',
+          message,
+        })
       })
       .finally(() => {
         setLoading(false)
@@ -133,35 +112,35 @@ const ForgotPassword = () => {
           >
             再設定用のURLを送信します。
             <br />
-            ご登録のメールアドレスを入力して下さい。
+            ご登録のメールアドレスまたはユーザ名を入力して下さい。
           </Typography>
           <form noValidate onSubmit={handleSubmit(onSubmit)}>
             <Grid container spacing={2}>
               <Grid item xs={12} md={10}>
                 <Controller
                   control={control}
-                  name={'email'}
+                  name={'login_id'}
                   rules={{
                     required: {
                       value: true,
                       message: '必須項目です',
                     },
-                    pattern: {
-                      value: strPatterns.email,
-                      message: 'メールアドレスの形式が正しくありません',
-                    },
+                    // pattern: {
+                    //   value: strPatterns.email,
+                    //   message: 'メールアドレスの形式が正しくありません',
+                    // },
                   }}
                   render={({ field }) => (
                     <TextField
                       {...field}
-                      type="email"
-                      name="email"
+                      type="text"
+                      name="login_id"
                       variant="outlined"
-                      label={'ご登録のメールアドレス'}
+                      label={'ご登録のユーザID'}
                       required
                       fullWidth
                       size={'small'}
-                      error={!!errors.email}
+                      error={!!errors.login_id}
                     />
                   )}
                 />
@@ -169,8 +148,8 @@ const ForgotPassword = () => {
                   <p className={classes.msg}>{msg}</p>
                 ) : (
                   <p className={classes.msg}>
-                    {!!errors.email && (
-                      <FormErrorMessage msg={errors.email.message} />
+                    {!!errors.login_id && (
+                      <FormErrorMessage msg={errors.login_id.message} />
                     )}
                   </p>
                 )}

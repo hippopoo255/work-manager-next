@@ -13,6 +13,8 @@ export default {
         },
       },
       accountVerification: 'Account verification',
+      forgot_password: 'Forgot Password',
+      reset_password: 'Reset Password',
     },
   },
   main: {
@@ -132,15 +134,15 @@ export default {
   message: {
     testLoginFail: 'please log out of your current account.',
     cognitoError: {
-      UserNotFoundException: "Account did'nt found",
-      NotAuthorizedException: 'Authorization Failed',
+      UserNotFoundException: 'User does not exist.',
+      NotAuthorizedException: 'Incorrect username or password',
       UserNotConfirmedException: 'Account verification is not yet completed',
-      UsernameExistsException: 'Username already exists',
+      UsernameExistsException: 'User already exists',
       CodeMismatchException: 'Invalid verification code',
       InvalidParameterException: 'Invalid attribute',
-      InvalidPasswordException:
-        "The input value doesn't meet the rules of password",
-      LimitExceededException: 'Password trial has been exceeded',
+      InvalidPasswordException: 'Invalid password format',
+      LimitExceededException:
+        'Attempt limit exceeded, please try after some time.',
       ExpiredCodeException:
         'Invalid code provided, please request a code again.',
       default: 'Verification failed',

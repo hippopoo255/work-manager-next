@@ -7,6 +7,7 @@ import {
   HelpBox,
   CircularButton,
   CustomLoader,
+  CustomTabs,
 } from '@/components/molecules'
 import { makeStyles, Theme } from '@material-ui/core'
 import {
@@ -14,7 +15,6 @@ import {
   Card,
   CardActions,
   CardContent,
-  Checkbox,
   Divider,
   FormControlLabel,
   Grid,
@@ -28,15 +28,11 @@ import {
 import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined'
 import { useForm, Controller } from 'react-hook-form'
 import { strPatterns } from '@/lib/util'
-import { requestUri } from '@/api'
-import { User } from '@/interfaces/models'
-import { NotifyStatus } from '@/interfaces/common'
-import { SettingInputs } from '@/interfaces/form/inputs'
-import { AlertStatus } from '@/interfaces/common'
-import { initialAlertStatus } from '@/lib/initialData'
+import { NotifyStatus, AlertStatus, TabItem } from '@/interfaces/common'
+import { SettingInputs, PasswordResetInputs } from '@/interfaces/form/inputs'
 import { CustomAlert } from '@/components/atoms'
-import { useAuth, useInitialConnector } from '@/hooks'
-import { putRequest } from '@/api'
+import { useChangePassword, useNotifyValidation } from '@/hooks'
+import { initialAlertStatus } from '@/lib/initialData'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -75,17 +71,25 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
+type NotifyValidationMethod = (
+  inputs: SettingInputs['notify_validation']
+) => Promise<void>
+type ChangePasswordMethod = (
+  inputs: SettingInputs['change_password']
+) => Promise<void>
+
+interface SettingTabItem extends TabItem {
+  inputKey: keyof SettingInputs
+  method: NotifyValidationMethod | ChangePasswordMethod
+}
+
 const Index = () => {
   const classes = useStyles()
-  const { auth, config } = useAuth()
-  const [submitLoading, setSubmitLoading] = useState<boolean>(false)
+  const [currentTab, setCurrentTab] = useState<number>(0)
+  const [formLoading, setFormLoading] = useState<boolean>(false)
   const [alertStatus, setAlertStatus] = useState<AlertStatus>({
     ...initialAlertStatus,
   })
-  const [notifyValidation, setNotifyValidation] = useState<NotifyStatus[]>([])
-  const [dailyNotifyValidation, setDailyNotifyValidation] = useState<
-    NotifyStatus[]
-  >([])
   const {
     handleSubmit,
     control,
@@ -96,9 +100,45 @@ const Index = () => {
     clearErrors,
     reset,
     formState: { errors },
-  } = useForm<SettingInputs>()
+  } = useForm<SettingInputs>({
+    defaultValues: {
+      notify_validation: {
+        notify: false,
+      },
+      change_password: {
+        old_password: '',
+        password: '',
+        password_confirmation: '',
+      },
+    },
+  })
 
-  const comparePassword = watch('password', '')
+  const {
+    dailyNotifyValidation,
+    loading,
+    notifyValidation,
+    updateNotifyValidation,
+  } = useNotifyValidation({
+    setError,
+    setAlertStatus,
+  })
+
+  const { changePassword } = useChangePassword({ setError, setAlertStatus })
+
+  const tabList: SettingTabItem[] = [
+    {
+      label: '通知設定',
+      inputKey: 'notify_validation',
+      method: updateNotifyValidation,
+    },
+    {
+      label: 'パスワード変更',
+      inputKey: 'change_password',
+      method: changePassword,
+    },
+  ]
+
+  const comparePassword = watch('change_password.password', '')
 
   const handleAlertClose = () => {
     setAlertStatus((prev) => ({
@@ -107,85 +147,17 @@ const Index = () => {
     }))
   }
 
-  const handleChangePassword = () => {
-    setValue('change_password', !getValues('change_password'))
-    clearErrors('current_password')
-    clearErrors('password')
-    clearErrors('password_confirmation')
-    setValue('current_password', '')
-    setValue('password', '')
-    setValue('password_confirmation', '')
-  }
-
   const handleUpdate = async (data: SettingInputs) => {
-    if (auth.isLogin) {
-      setSubmitLoading(true)
-      const submitData = new FormData()
-      Object.keys(data.notify_validation).forEach((key) => {
-        submitData.append(
-          `notify_validation[${key}]`,
-          !!data.notify_validation[key] ? '1' : '0'
-        )
-      })
-
-      submitData.append('change_password', data.change_password ? '1' : '0')
-      if (data.change_password) {
-        submitData.append('current_password', data.current_password!)
-        submitData.append('password', data.password!)
-        submitData.append('password_confirmation', data.password_confirmation!)
-      }
-
-      await putRequest<User, FormData>(
-        `/user/${auth.user.id}/setting`,
-        submitData,
-        (err) => {
-          setAlertStatus((prev) => ({
-            ...prev,
-            msg: '設定の更新に失敗しました',
-            severity: 'error',
-            show: true,
-          }))
-          if (err.status === 422) {
-            const errBody: { [k: string]: string[] } = err.data.errors
-            Object.keys(errBody).forEach((key: string) => {
-              const targetKey: any = key
-              setError(targetKey, {
-                type: 'invalid',
-                message: errBody[key][0],
-              })
-            })
-          }
-        },
-        config
-      )
-        .then((updateUser: User) => {
-          setAlertStatus((prev) => ({
-            ...prev,
-            msg: '設定を更新しました',
-            severity: 'success',
-            show: true,
-          }))
-        })
-        .finally(() => {
-          setSubmitLoading(false)
-        })
-    }
+    setFormLoading(true)
+    const dataKey = tabList[currentTab].inputKey as keyof SettingInputs
+    const updateMethod = tabList[currentTab].method
+    const inputs = data[dataKey] as {
+      [k: string]: boolean
+    } & PasswordResetInputs
+    await updateMethod(inputs).finally(() => {
+      setFormLoading(false)
+    })
   }
-  const { loading } = useInitialConnector<NotifyStatus[]>({
-    path: requestUri.notifyStatus + `${auth.user.id}/notify_validation`,
-    onSuccess: (fetchedStatus) => {
-      setNotifyValidation((prev) =>
-        fetchedStatus.filter(
-          (notifyValidation) => !notifyValidation.key.match(/^daily_.+$/g)
-        )
-      )
-      setDailyNotifyValidation((prev) =>
-        fetchedStatus.filter((notifyValidation) =>
-          notifyValidation.key.match(/^daily_.+$/g)
-        )
-      )
-    },
-  })
 
   return (
     <MypageLayout title="設定">
@@ -200,177 +172,164 @@ const Index = () => {
             </div>
             <form onSubmit={handleSubmit(handleUpdate)}>
               <CardContent className={classes.wrap}>
+                <Box mb={3}>
+                  <CustomTabs
+                    tabList={tabList}
+                    value={currentTab}
+                    setValue={setCurrentTab}
+                    variant={'fullWidth'}
+                  />
+                </Box>
                 <Grid container spacing={2} className={classes.wrap}>
-                  <Grid item xs={12}>
-                    <Typography component={'h4'} variant={'h4'} gutterBottom>
-                      メール配信設定
-                    </Typography>
-                    <Divider style={{ marginTop: 12 }} />
-                    <List>
-                      {loading || !notifyValidation.length ? (
-                        <CustomLoader />
-                      ) : (
-                        notifyValidation.map((sts: NotifyStatus, index) => (
-                          <ListItem key={sts.key} dense>
-                            <Controller
-                              name={`notify_validation.${sts.id}`}
-                              defaultValue={!!sts.is_valid}
-                              control={control}
-                              render={({ field }) => (
-                                <FormControlLabel
-                                  {...field}
-                                  control={
-                                    <Switch
-                                      color={'primary'}
-                                      // size={'small'}
-                                      checked={
-                                        !!getValues(
-                                          `notify_validation.${sts.id}`
-                                        )
-                                      }
-                                    />
-                                  }
-                                  label={sts.label_name}
-                                  classes={{
-                                    label: classes.swicthText,
-                                  }}
-                                />
-                              )}
-                            />
-                          </ListItem>
-                        ))
-                      )}
-                      <ListItem dense>
-                        <ListItemText
-                          primaryTypographyProps={{
-                            color: 'primary',
-                            variant: 'subtitle1',
-                            component: 'h5',
-                            classes: {
-                              subtitle1: classes.subtitle,
-                            },
-                          }}
-                        >
-                          デイリー配信
-                        </ListItemText>
-                      </ListItem>
-                      {dailyNotifyValidation.map((sts: NotifyStatus, index) => (
-                        <ListItem key={sts.key} dense>
-                          <Controller
-                            name={`notify_validation.${sts.id}`}
-                            defaultValue={!!sts.is_valid}
-                            control={control}
-                            render={({ field }) => (
-                              <FormControlLabel
-                                {...field}
-                                control={
-                                  <Switch
-                                    color={'primary'}
-                                    // size={'small'}
-                                    checked={
-                                      !!getValues(`notify_validation.${sts.id}`)
+                  {currentTab === 0 && (
+                    <Grid item xs={12}>
+                      <Typography component={'h4'} variant={'h4'} gutterBottom>
+                        メール配信設定
+                      </Typography>
+                      <Divider style={{ marginTop: 12 }} />
+                      <List>
+                        {loading || !notifyValidation.length ? (
+                          <CustomLoader />
+                        ) : (
+                          notifyValidation.map((sts: NotifyStatus, index) => (
+                            <ListItem key={sts.key} dense>
+                              <Controller
+                                name={`notify_validation.${sts.id}`}
+                                defaultValue={!!sts.is_valid}
+                                control={control}
+                                render={({ field }) => (
+                                  <FormControlLabel
+                                    {...field}
+                                    control={
+                                      <Switch
+                                        color={'primary'}
+                                        // size={'small'}
+                                        checked={
+                                          !!getValues(
+                                            `notify_validation.${sts.id}`
+                                          )
+                                        }
+                                      />
                                     }
+                                    label={sts.label_name}
+                                    classes={{
+                                      label: classes.swicthText,
+                                    }}
                                   />
-                                }
-                                label={sts.label_name}
-                                classes={{
-                                  label: classes.swicthText,
-                                }}
+                                )}
                               />
-                            )}
-                          />
+                            </ListItem>
+                          ))
+                        )}
+                        <ListItem dense>
+                          <ListItemText
+                            primaryTypographyProps={{
+                              color: 'primary',
+                              variant: 'subtitle1',
+                              component: 'h5',
+                              classes: {
+                                subtitle1: classes.subtitle,
+                              },
+                            }}
+                          >
+                            デイリー配信
+                          </ListItemText>
                         </ListItem>
-                      ))}
-                    </List>
-                  </Grid>
-                  <Grid item xs={12} style={{ marginTop: 12 }}>
-                    <Grid container spacing={2}>
+                        {dailyNotifyValidation.map(
+                          (sts: NotifyStatus, index) => (
+                            <ListItem key={sts.key} dense>
+                              <Controller
+                                name={`notify_validation.${sts.id}`}
+                                defaultValue={!!sts.is_valid}
+                                control={control}
+                                render={({ field }) => (
+                                  <FormControlLabel
+                                    {...field}
+                                    control={
+                                      <Switch
+                                        color={'primary'}
+                                        // size={'small'}
+                                        checked={
+                                          !!getValues(
+                                            `notify_validation.${sts.id}`
+                                          )
+                                        }
+                                      />
+                                    }
+                                    label={sts.label_name}
+                                    classes={{
+                                      label: classes.swicthText,
+                                    }}
+                                  />
+                                )}
+                              />
+                            </ListItem>
+                          )
+                        )}
+                      </List>
+                    </Grid>
+                  )}
+                  {currentTab === 1 && (
+                    <>
                       <Grid item xs={12}>
-                        <Typography
-                          component={'h4'}
-                          variant={'h4'}
-                          gutterBottom
-                        >
-                          その他
-                        </Typography>
-                        <Divider style={{ marginTop: 12 }} />
+                        <Box display={'flex'} alignItems={'center'} gridGap={8}>
+                          <Typography component={'h4'} variant={'h4'}>
+                            パスワードの変更
+                          </Typography>
+                          <HelpBox />
+                        </Box>
+                        <Divider style={{ margin: `12px 0 24px` }} />
                       </Grid>
-                      <Grid item xs={12} className={classes.checkRow}>
+
+                      <Grid item xs={12}>
                         <Controller
                           control={control}
-                          name="change_password"
+                          name="change_password.old_password"
+                          rules={{
+                            required: {
+                              value: currentTab === 1,
+                              message: '現在のパスワードを指定して下さい',
+                            },
+                            minLength: {
+                              value: 8,
+                              message:
+                                '現在のパスワードは8文字以上64文字以下です',
+                            },
+                            maxLength: {
+                              value: 64,
+                              message:
+                                '現在のパスワードは8文字以上64文字以下です',
+                            },
+                          }}
                           render={({ field }) => (
-                            <FormControlLabel
+                            <TextField
                               {...field}
-                              control={
-                                <Checkbox
-                                  checked={getValues('change_password')}
-                                  onChange={handleChangePassword}
-                                  name="change_password"
-                                  color="primary"
-                                />
-                              }
-                              label="パスワードを変更する"
+                              id="change_password.old_password"
+                              label="現在のパスワード"
+                              variant="outlined"
+                              type="password"
+                              placeholder="半角英数字"
+                              size={'small'}
+                              fullWidth
+                              error={!!errors.change_password?.old_password}
                             />
                           )}
                         />
-                        <HelpBox />
+                        <p className={classes.err}>
+                          {!!errors.change_password?.old_password && (
+                            <FormErrorMessage
+                              msg={errors.change_password?.old_password.message}
+                            />
+                          )}
+                        </p>
                       </Grid>
-                    </Grid>
-                  </Grid>
-                  {getValues('change_password') && (
-                    <>
-                      <Grid item xs={12} spacing={2}>
-                        <Grid item xs={12} md={6}>
-                          <Controller
-                            control={control}
-                            name="current_password"
-                            rules={{
-                              required: {
-                                value: getValues('change_password'),
-                                message: '現在のパスワードを指定して下さい',
-                              },
-                              minLength: {
-                                value: 8,
-                                message:
-                                  '現在のパスワードは8文字以上64文字以下です',
-                              },
-                              maxLength: {
-                                value: 64,
-                                message:
-                                  '現在のパスワードは8文字以上64文字以下です',
-                              },
-                            }}
-                            render={({ field }) => (
-                              <TextField
-                                {...field}
-                                id="current_password"
-                                label="現在のパスワード"
-                                variant="outlined"
-                                type="password"
-                                placeholder="半角英数字"
-                                size={'small'}
-                                fullWidth
-                                error={!!errors.current_password}
-                              />
-                            )}
-                          />
-                          <p className={classes.err}>
-                            {!!errors.current_password && (
-                              <FormErrorMessage
-                                msg={errors.current_password.message}
-                              />
-                            )}
-                          </p>
-                        </Grid>
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
+                      <Grid item xs={12}>
                         <Controller
                           control={control}
-                          name="password"
+                          name="change_password.password"
                           rules={{
                             required: {
-                              value: getValues('change_password'),
+                              value: currentTab === 1,
                               message: '新しいパスワードを指定して下さい',
                             },
                             pattern: {
@@ -389,32 +348,41 @@ const Index = () => {
                           render={({ field }) => (
                             <TextField
                               {...field}
-                              id="password"
+                              id="change_password.password"
                               label="新しいパスワード"
                               variant="outlined"
                               type="password"
                               placeholder="半角英数字"
                               size={'small'}
                               fullWidth
-                              error={!!errors.password}
+                              error={!!errors.change_password?.password}
                             />
                           )}
                         />
                         <p className={classes.err}>
-                          {!!errors.password && (
-                            <FormErrorMessage msg={errors.password.message} />
+                          {!!errors.change_password?.password && (
+                            <FormErrorMessage
+                              msg={errors.change_password?.password.message}
+                            />
                           )}
                         </p>
                       </Grid>
-
-                      <Grid item xs={12} sm={6}>
+                      <Grid item xs={12}>
                         <Controller
                           control={control}
-                          name="password_confirmation"
+                          name="change_password.password_confirmation"
                           rules={{
                             required: {
-                              value: getValues('change_password'),
+                              value: currentTab === 1,
                               message: '新しいパスワードを指定して下さい',
+                            },
+                            minLength: {
+                              value: 8,
+                              message: '8文字以上64文字以下で入力してください',
+                            },
+                            maxLength: {
+                              value: 64,
+                              message: '8文字以上64文字以下で入力してください',
                             },
                             pattern: {
                               value: strPatterns.confirm(comparePassword!),
@@ -424,21 +392,26 @@ const Index = () => {
                           render={({ field }) => (
                             <TextField
                               {...field}
-                              id="password_confirmation"
-                              label="新しいパスワード（確認）"
+                              id="change_password.password_confirmation"
+                              label="新しいパスワード(確認)"
                               variant="outlined"
                               type="password"
                               placeholder="半角英数字"
                               size={'small'}
                               fullWidth
-                              error={!!errors.password_confirmation}
+                              error={
+                                !!errors.change_password?.password_confirmation
+                              }
                             />
                           )}
                         />
                         <p className={classes.err}>
-                          {!!errors.password_confirmation && (
+                          {!!errors.change_password?.password_confirmation && (
                             <FormErrorMessage
-                              msg={errors.password_confirmation.message}
+                              msg={
+                                errors.change_password?.password_confirmation
+                                  .message
+                              }
                             />
                           )}
                         </p>
@@ -451,7 +424,7 @@ const Index = () => {
               <CardActions className={classes.footer}>
                 <div className={classes.wrap}>
                   <CircularButton
-                    loading={submitLoading}
+                    loading={formLoading}
                     onClick={handleSubmit(handleUpdate)}
                   />
                 </div>
