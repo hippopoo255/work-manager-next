@@ -71,16 +71,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-type NotifyValidationMethod = (
-  inputs: SettingInputs['notify_validation']
-) => Promise<void>
-type ChangePasswordMethod = (
-  inputs: SettingInputs['change_password']
+type InputKey = keyof SettingInputs
+
+type SaveProfileMethod<K extends InputKey> = (
+  inputs: SettingInputs[K]
 ) => Promise<void>
 
-interface SettingTabItem extends TabItem {
+interface SettingTabItem<K extends InputKey> extends TabItem {
   inputKey: keyof SettingInputs
-  method: NotifyValidationMethod | ChangePasswordMethod
+  method: SaveProfileMethod<K>
 }
 
 const Index = () => {
@@ -122,17 +121,17 @@ const Index = () => {
 
   const { changePassword } = useChangePassword({ setError, setAlertStatus })
 
-  const tabList: SettingTabItem[] = [
+  const tabList = [
     {
       label: '通知設定',
       inputKey: 'notify_validation',
       method: updateNotifyValidation,
-    },
+    } as SettingTabItem<'notify_validation'>,
     {
       label: 'パスワード変更',
       inputKey: 'change_password',
       method: changePassword,
-    },
+    } as SettingTabItem<'change_password'>,
   ]
 
   const comparePassword = watch('change_password.password', '')
@@ -146,12 +145,13 @@ const Index = () => {
 
   const handleUpdate = async (data: SettingInputs) => {
     setFormLoading(true)
-    const dataKey = tabList[currentTab].inputKey as keyof SettingInputs
-    const updateMethod = tabList[currentTab].method
+
+    const dataKey = tabList[currentTab].inputKey
+    const save = tabList[currentTab].method
     const inputs = data[dataKey] as {
       [k: string]: boolean
     } & PasswordResetInputs
-    await updateMethod(inputs).finally(() => {
+    await save(inputs).finally(() => {
       setFormLoading(false)
     })
   }
