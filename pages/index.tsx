@@ -9,7 +9,7 @@ import { Layout } from '@/layouts'
 import { headerHeight } from '@/lib/util'
 import Shakehand from '@/assets/images/shakehand.svg'
 import { RoundedIcon } from '@/components/atoms'
-import { useAuth, useLocale } from '@/hooks'
+import { useLocale } from '@/hooks'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -65,6 +65,7 @@ const Home = () => {
   const { t } = useLocale()
   const description = t.main.description.replace(':site_title', t.siteTitle)
   let fillRef = useRef<HTMLDivElement>(null)
+
   useEffect(() => {
     const resize = () => {
       const fullHeight = window.innerHeight - headerHeight

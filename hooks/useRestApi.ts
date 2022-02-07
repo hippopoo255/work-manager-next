@@ -56,13 +56,14 @@ const useRestApi = () => {
   const mergeConfig = (specifiedConfig?: AxiosRequestConfig) => {
     const headers = {
       ...specifiedConfig?.headers,
-      Authorization: auth.user.jwt,
+      Authorization: auth.user.jwt || '',
     }
 
     return { ...specifiedConfig, headers }
   }
 
   return {
+    auth,
     getMethod,
     postMethod,
     putMethod,
