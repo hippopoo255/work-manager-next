@@ -1,4 +1,3 @@
-import { useEffect, useCallback } from 'react'
 import { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { useAuth } from '@/hooks'
 import { getRequest, postRequest, putRequest, deleteRequest } from '@/api'

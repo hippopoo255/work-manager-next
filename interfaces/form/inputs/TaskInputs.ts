@@ -3,4 +3,5 @@ export interface TaskInputs {
   time_limit: Date
   progress_id: number
   priority_id: number
+  [k: string]: string | number | Date
 }

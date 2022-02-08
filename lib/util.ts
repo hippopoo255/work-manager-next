@@ -14,16 +14,16 @@ export const COLLAPSE_COUNT: number = 3
 export const SITE_TITLE: string =
   process.env.NEXT_PUBLIC_SITE_NAME || 'Next App'
 
-export const API_URL: string =
-  process.env.NEXT_PUBLIC_API_URL + '/api' || 'http://localhost/api'
-export const API_STAGE_URL: string = process.env.NEXT_PUBLIC_API_STAGE_URL || ''
-export const API_TEMP_URL: string = process.env.NEXT_PUBLIC_API_TEMP_URL || ''
+export const API_STAGE_URL: string =
+  process.env.NEXT_PUBLIC_API_STAGE_URL || 'http://localhost:8080'
+export const API_DIRECT_URL: string =
+  process.env.NEXT_PUBLIC_API_DIRECT_URL + '/api' || 'http://localhost:8080/api'
 export const APP_SYNC_URL: string =
   process.env.NEXT_PUBLIC_APP_SYNC_URL || 'http://localhost:8000'
 export const APP_SYNC_KEY: string =
   process.env.NEXT_PUBLIC_APP_SYNC_KEY || 'secret'
 export const PUSHER_URL: string =
-  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
+  process.env.NEXT_PUBLIC_API_DIRECT_URL || 'http://localhost:8080'
 export const STORAGE_URL: string =
   process.env.NEXT_PUBLIC_STORAGE_URL || 'http://localhost:8080/storage'
 export const APP_URL =

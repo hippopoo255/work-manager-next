@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import router from 'next/router'
-import { API_URL, API_STAGE_URL } from '@/lib/util'
+import { API_STAGE_URL } from '@/lib/util'
 
 export const defaultErrorHandler = (err: AxiosResponse) => {
   console.error(err)
@@ -19,7 +19,7 @@ export const defaultErrorHandler = (err: AxiosResponse) => {
   }
 }
 
-export const httpClient = axios.create({
-  baseURL: API_URL,
-  withCredentials: true,
-})
+export const httpClient = (baseURL: string = API_STAGE_URL): AxiosInstance =>
+  axios.create({
+    baseURL,
+  })

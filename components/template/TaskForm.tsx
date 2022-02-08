@@ -30,6 +30,14 @@ type Props = {
   priorityList: Priority[]
 }
 
+type TaskSubmit = {
+  body: string
+  progress_id: number
+  priority_id: number
+  time_limit: string
+  [k: string]: string | number | Date
+}
+
 const TaskForm = React.memo(
   ({
     defaultValues,
@@ -61,14 +69,12 @@ const TaskForm = React.memo(
 
     const save = async (data: TaskInputs) => {
       setLoading(true)
-      const submitData: FormData = new FormData()
-      submitData.append('body', data.body)
-      submitData.append('time_limit', toStrData(data.time_limit))
-      submitData.append('owner_id', String(auth.user.id))
-      submitData.append('priority_id', String(data.priority_id))
-      submitData.append('progress_id', String(data.progress_id))
 
-      await req(submitData)
+      await req({
+        ...data,
+        time_limit: toStrData(data.time_limit),
+        owner_id: auth.user.id,
+      })
         .then((task) => {
           onSaveSuccess(task)
         })
@@ -77,15 +83,15 @@ const TaskForm = React.memo(
         })
     }
 
-    const req = async (taskData: FormData) => {
+    const req = async (taskData: TaskSubmit) => {
       if (!!updateFlag) {
-        return await putMethod<Task, FormData>(
+        return await putMethod<Task, TaskSubmit>(
           requestUri.task.put + `/${updateFlag}`,
           taskData,
           onSaveFail
         )
       } else {
-        return await postMethod<Task, FormData>(
+        return await postMethod<Task, TaskSubmit>(
           requestUri.task.post,
           taskData,
           onSaveFail
@@ -94,7 +100,7 @@ const TaskForm = React.memo(
     }
 
     useEffect(() => {
-      ;(Object.keys(defaultValues) as (keyof TaskInputs)[]).forEach((key) => {
+      Object.keys(defaultValues).forEach((key) => {
         setValue(key, defaultValues[key])
       })
     }, [defaultValues])

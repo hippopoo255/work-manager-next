@@ -25,10 +25,10 @@ const forgotPassword = async (data: ForgotPasswordInputs) => {
 }
 
 const login = async ({ login_id, password }: LoginInputs) => {
-  const loginData: FormData = new FormData()
-  loginData.append('login_id', login_id)
-  loginData.append('password', password)
-  const user = await postRequest<User, FormData>(requestUri.login, loginData)
+  const user = await postRequest<User, LoginInputs>(requestUri.login, {
+    login_id,
+    password,
+  })
   return user
 }
 

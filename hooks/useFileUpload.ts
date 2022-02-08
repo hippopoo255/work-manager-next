@@ -1,7 +1,6 @@
 import { useRestApi } from '@/hooks'
 import { AxiosRequestConfig } from 'axios'
 import { UploadedFileResponseType } from '@/lib/file/upload'
-import { API_TEMP_URL } from '@/lib/util'
 
 const useFileUpload = () => {
   const { postMethod } = useRestApi()
@@ -18,8 +17,7 @@ const useFileUpload = () => {
       path,
       submitData,
       undefined,
-      config,
-      API_TEMP_URL
+      config
     )
     return d
   }

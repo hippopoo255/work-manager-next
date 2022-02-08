@@ -23,7 +23,7 @@ import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined'
 import { User } from '@/interfaces/models'
 import { useForm, Controller } from 'react-hook-form'
 import { ProfileInputs } from '@/interfaces/form/inputs'
-import { strPatterns, STORAGE_URL } from '@/lib/util'
+import { strPatterns, STORAGE_URL, API_DIRECT_URL } from '@/lib/util'
 import { defaultErrorHandler } from '@/lib/axios'
 import { putRequest } from '@/api'
 import { AlertStatus } from '@/interfaces/common'
@@ -208,7 +208,8 @@ const Profile = () => {
             'Content-Type': 'multipart/form-data',
             ...config.headers,
           },
-        }
+        },
+        API_DIRECT_URL
       )
         .then((response: User) => {
           if (data.delete_flag) {

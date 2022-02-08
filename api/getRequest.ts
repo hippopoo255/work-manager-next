@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosInstance, AxiosResponse } from 'axios'
 import { API_STAGE_URL } from '@/lib/util'
 import { defaultErrorHandler } from './util'
+import { httpClient } from '@/lib/axios'
 
 const getRequest = async <T = any>(
   path: string,
@@ -8,12 +9,7 @@ const getRequest = async <T = any>(
   config?: AxiosRequestConfig,
   baseURL: string = API_STAGE_URL
 ) => {
-  const httpClient: AxiosInstance = axios.create({
-    baseURL,
-    withCredentials: true,
-  })
-
-  const response = await httpClient
+  const response = await httpClient(baseURL)
     .get<T>(path, { ...config })
     .then((res: AxiosResponse<T>) => {
       return res

@@ -21,7 +21,7 @@ const Auth0 = () => {
           console.error(err)
         })
         if (!!accessToken) {
-          const response = await httpClient.get('/private', {
+          const response = await httpClient().get('/private', {
             headers: {
               Authorization: `Bearer ${accessToken}`,
             },

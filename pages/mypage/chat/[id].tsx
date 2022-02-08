@@ -44,6 +44,7 @@ import {
   chatMainWidth,
   mine,
   STORAGE_URL,
+  API_DIRECT_URL,
 } from '@/lib/util'
 import {
   listenMessageSent,
@@ -547,7 +548,10 @@ const ChatDetail = () => {
   const storeMessage = async (messageSubmitData: FormData, id: number = 0) =>
     await postMethod<ChatMessage, ChatMessageSubmit>(
       `/chat_room/${getChatRoomId()}/message`,
-      messageSubmitData
+      messageSubmitData,
+      undefined,
+      undefined,
+      API_DIRECT_URL
     )
 
   const handleAfterStore = (responseMessage: ChatMessage) => {
@@ -559,7 +563,10 @@ const ChatDetail = () => {
   const updateMessage = async (submitData: ChatMessageSubmit, id: number) =>
     await putMethod<ChatMessage, ChatMessageSubmit>(
       `/chat_room/${getChatRoomId()}/message/${id}`,
-      submitData
+      submitData,
+      undefined,
+      undefined,
+      API_DIRECT_URL
     )
 
   const handleAfterUpdate = (responseMessage: ChatMessage) => {

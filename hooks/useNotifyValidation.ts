@@ -5,6 +5,7 @@ import { NotifyStatus, AlertStatus } from '@/interfaces/common'
 import { SettingInputs } from '@/interfaces/form/inputs'
 import { User } from '@/interfaces/models'
 import { UseFormSetError } from 'react-hook-form'
+import { API_DIRECT_URL } from '@/lib/util'
 
 type Props = {
   setError: UseFormSetError<SettingInputs>
@@ -38,7 +39,6 @@ const useNotifyValidation = ({ setError, setAlertStatus }: Props) => {
   const updateNotifyValidation = useCallback(
     async (inputs: SettingInputs['notify_validation']) => {
       if (auth.isLogin) {
-        // setFormLoading(true)
         const submitData = new FormData()
 
         Object.keys(inputs).forEach((key) => {
@@ -50,7 +50,10 @@ const useNotifyValidation = ({ setError, setAlertStatus }: Props) => {
 
         await putMethod<User, FormData>(
           `/user/${auth.user.id}/setting`,
-          submitData
+          submitData,
+          undefined,
+          undefined,
+          API_DIRECT_URL
         )
           .then(() => {
             setAlertStatus((prev) => ({

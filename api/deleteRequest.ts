@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosInstance, AxiosResponse } from 'axios'
 import { API_STAGE_URL } from '@/lib/util'
 import { defaultErrorHandler } from './util'
+import { httpClient } from '@/lib/axios'
 
 const deleteRequest = async <T = null>(
   path: string,
@@ -8,14 +9,11 @@ const deleteRequest = async <T = null>(
   onError?: (err: AxiosResponse) => AxiosResponse | void,
   baseURL: string = API_STAGE_URL
 ): Promise<T> => {
-  const httpClient: AxiosInstance = axios.create({
-    baseURL,
-    withCredentials: true,
-  })
-
-  const response = await httpClient.delete(path, config).catch((err) => {
-    return err.response
-  })
+  const response = await httpClient(baseURL)
+    .delete(path, config)
+    .catch((err) => {
+      return err.response
+    })
 
   if (response.status >= 400) {
     !!onError
