@@ -95,7 +95,7 @@ const LatestMeetingRecord = React.memo(({ wrapClasses }: Props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {!!meetingRecords.length &&
+          {!!meetingRecords.length ? (
             createRows(meetingRecords, afterBookmark).map((row) => (
               <TableRow key={row.id}>
                 {!!headCells.length &&
@@ -121,7 +121,17 @@ const LatestMeetingRecord = React.memo(({ wrapClasses }: Props) => {
                       )
                   )}
               </TableRow>
-            ))}
+            ))
+          ) : (
+            <TableRow>
+              <TableCell
+                style={{ height: 53, borderBottomColor: 'transparent' }}
+                colSpan={headCells.length + 1}
+              >
+                参加者として登録された議事録はありません。
+              </TableCell>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
     </DashboardBaseCard>

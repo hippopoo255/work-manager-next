@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosInstance, AxiosResponse } from 'axios'
+import axios, { AxiosRequestConfig, AxiosError, AxiosResponse } from 'axios'
 import { API_STAGE_URL } from '@/lib/util'
 import { defaultErrorHandler } from './util'
 import { httpClient } from '@/lib/axios'
@@ -14,8 +14,8 @@ const getRequest = async <T = any>(
     .then((res: AxiosResponse<T>) => {
       return res
     })
-    .catch((err) => {
-      return err.response
+    .catch((err: AxiosError<T>) => {
+      return err.response || ({ status: 500, data: {} } as AxiosResponse<T>)
     })
 
   if (response.status >= 400) {

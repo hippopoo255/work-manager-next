@@ -8,15 +8,20 @@ import {
   AccountVerificationInputs,
 } from '@/interfaces/form/inputs'
 import { en, ja } from '@/locales'
+import { User } from '@/interfaces/models'
 
 const useAuth = () => {
   const router = useRouter()
   const { auth, dispatch } = useContext(AuthContext)
 
   const login = useCallback(async (inputs: LoginInputs) => {
-    await authOperation.login(inputs, dispatch).then((loggedInUser) => {
-      router.push('/mypage')
-    })
+    await authOperation
+      .login(inputs, dispatch)
+      .then((loggedInUser: User | '') => {
+        if (loggedInUser !== '') {
+          router.push('/mypage')
+        }
+      })
   }, [])
 
   const logout = useCallback(async () => {
@@ -41,11 +46,18 @@ const useAuth = () => {
     } catch (err) {
       throw err
     }
-  }, [])
+  }, [auth])
 
   const verifyUser = useCallback(async (inputs: AccountVerificationInputs) => {
     await authOperation.verifyUser(inputs)
   }, [])
+
+  const duplicateEmailCount = useCallback(
+    async (email: SignupInputs['email']) => {
+      return await authOperation.duplicateEmailCount(email)
+    },
+    []
+  )
 
   const config = useMemo(() => {
     return {
@@ -57,6 +69,7 @@ const useAuth = () => {
 
   return {
     auth,
+    duplicateEmailCount,
     config,
     dispatch,
     login,

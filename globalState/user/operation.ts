@@ -7,12 +7,24 @@ import {
 import { laravelAuth, cognitoAuth, Auth0 } from '@/lib/auth'
 import { UserAction } from '@/interfaces/action/UserAction'
 import { User } from '@/interfaces/models'
-import { requestUri } from '@/api'
+import { requestUri, getRequest } from '@/api'
+
+export const duplicateEmailCount = async (
+  email: SignupInputs['email']
+): Promise<number> => {
+  return await getRequest<User[]>(
+    requestUri.user.list + `?email=${email}&likely=0&slim=1`
+  )
+    .then((userList) => userList.length)
+    .catch((err) => {
+      throw err
+    })
+}
 
 export const currentUser = async (
   dispatch: React.Dispatch<UserAction>,
   currentAuthorPath: string = requestUri.currentUser
-) => {
+): Promise<User | ''> => {
   const loggedInUser = (await cognitoAuth.currentUser(currentAuthorPath)) as
     | User
     | ''
@@ -33,14 +45,15 @@ export const currentUser = async (
 export const login = async (
   { login_id, password }: LoginInputs,
   dispatch: React.Dispatch<UserAction>
-) => {
-  const loggedInUser = (await cognitoAuth.signin({
+): Promise<User | ''> => {
+  const loggedInUser = await cognitoAuth.signin({
     login_id,
     password,
-  })) as User
-  dispatch(loginAction(loggedInUser))
+  })
+  if (loggedInUser !== '') {
+    dispatch(loginAction(loggedInUser))
+  }
   return loggedInUser
-  // cognitoで詰まったら↓のLaravel認証に戻す
   // =====================
   // const loggedInUser = await laravelAuth.login({ login_id, password }).catch((err) => {
   //   const errBody: { [k: string]: string[] } = err.data.errors
@@ -51,7 +64,9 @@ export const login = async (
   // =====================
 }
 
-export const logout = async (dispatch: React.Dispatch<UserAction>) => {
+export const logout = async (
+  dispatch: React.Dispatch<UserAction>
+): Promise<null> => {
   const responseNull = await cognitoAuth.signout()
   dispatch(logoutAction())
   return responseNull
@@ -67,7 +82,9 @@ export const signup = async (data: SignupInputs) => {
   return newAccount
 }
 
-export const testLogin = async (dispatch: React.Dispatch<UserAction>) => {
+export const testLogin = async (
+  dispatch: React.Dispatch<UserAction>
+): Promise<User | ''> => {
   const loggedInUser = await cognitoAuth.testSignin()
   if (!!loggedInUser) {
     dispatch(loginAction(loggedInUser))
@@ -94,4 +111,5 @@ export const authOperation = {
   signup,
   testLogin,
   verifyUser,
+  duplicateEmailCount,
 }

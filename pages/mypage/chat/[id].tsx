@@ -1,4 +1,3 @@
-import { GetStaticProps, GetStaticPaths } from 'next'
 import clsx from 'clsx'
 import React, {
   useState,

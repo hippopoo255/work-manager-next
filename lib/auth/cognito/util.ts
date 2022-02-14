@@ -46,7 +46,7 @@ export const handleError = <T = LoginInputs>(
   logPrefix: string = 'sign in failed',
   specifiedKey?: string
 ) => {
-  console.error(`${logPrefix}`)
+  // console.error(`${logPrefix}`)
   if (error.code !== undefined) {
     const errCode = error.code as CognitoErrorMessageType
     const { key, message } = getErrorBody<T>(errCode, specifiedKey)
