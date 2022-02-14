@@ -1,4 +1,3 @@
-// import { GetStaticProps, GetStaticPaths } from 'next'
 import React from 'react'
 import { MypageLayout } from '@/layouts'
 import { MypageTitle } from '@/components/atoms'

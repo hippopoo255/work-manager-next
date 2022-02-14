@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from 'react'
 import { MypageLayout } from '@/layouts'
-import { GetStaticProps, GetServerSideProps, GetStaticPropsContext } from 'next'
 import Grid from '@material-ui/core/Grid'
 import { BusyTaskCardList } from '@/components/template'
 import {

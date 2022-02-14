@@ -40,15 +40,30 @@ const currentUser = async (
       currentAuthorPath,
       undefined,
       config
-    ).then((u) => {
-      if (!!u) {
-        return {
-          ...u,
-          jwt,
+    )
+      .then((u) => {
+        if (!!u) {
+          return {
+            ...u,
+            jwt,
+          } as User
         }
-      }
-      return ''
-    })
+        return ''
+      })
+      .catch((err) => {
+        let message: string = !!err.data.message
+          ? err.data.message
+          : 'ネットワークまたはサーバエラーです。'
+        if (message.match(/Duplicate entry/)) {
+          message = 'このメールアドレスは既に登録されています'
+        } else {
+          message = 'ネットワークまたはサーバエラーです。'
+        }
+        throw {
+          key: 'login_id',
+          message,
+        }
+      })
     return user
   }
   return authResult // ''
@@ -137,11 +152,20 @@ const signout = async () => {
   const res = await Auth.signOut().catch((error) => {
     handleError(error, 'logout failed')
   })
-  console.log('logout succeeded')
+  // console.log('logout succeeded')
   return null
 }
 
-const signup = async ({ email, login_id, password, address }: SignupInputs) => {
+const signup = async ({
+  email,
+  login_id,
+  password,
+  address,
+  family_name,
+  family_name_kana,
+  given_name,
+  given_name_kana,
+}: SignupInputs) => {
   try {
     const { user }: ISignUpResult = await Auth.signUp({
       username: login_id,
@@ -149,17 +173,17 @@ const signup = async ({ email, login_id, password, address }: SignupInputs) => {
       attributes: {
         email, // optional
         address: address || '', // optional - E.164 number convention
-        // given_name: '太郎',
-        // family_name: 'テスト',
+        given_name: given_name,
+        family_name: family_name,
         // other custom attributes
         'custom:login_id': login_id,
-        // 'custom:given_name_kana': '太郎',
-        // 'custom:family_name_kana': 'テスト',
+        'custom:given_name_kana': given_name_kana,
+        'custom:family_name_kana': family_name_kana,
         // 'custom:role_id': '2',
         // 'custom:department_code': '5',
       },
     })
-    console.log('signup succeeded')
+    // console.log('signup succeeded')
     router.push({
       pathname: '/account_verification',
       query: {
