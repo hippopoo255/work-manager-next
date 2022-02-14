@@ -16,7 +16,7 @@ type Blog {
   tags: [Tag!]!
   title: String!
   updated_at: Date
-  writtenBy: User
+  createdBy: User
 }
 
 type Mutation {
@@ -67,7 +67,7 @@ input CreateBlogInput {
   title: String!
   body: String!
   status: BlogStatus!
-  writtenBy: WrittenBy!
+  createdBy: CreatedBy!
   tags: [TagInput]!
 }
 
@@ -87,7 +87,7 @@ input UpdateBlogInput {
   title: String!
   body: String!
   status: BlogStatus!
-  writtenBy: WrittenBy!
+  createdBy: CreatedBy!
   tags: [TagInput]!
 }
 
@@ -96,7 +96,7 @@ input TagInput {
   name: String!
 }
 
-input WrittenBy {
+input CreatedBy {
   id: String!
   name: String!
 }

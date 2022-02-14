@@ -3,7 +3,7 @@ import { Inputs, MemberExtInputs, MeetingDecisionInputs } from '.'
 export interface ScheduleInputs
   extends Inputs<MemberExtInputs, MeetingDecisionInputs> {
   id?: number
-  scheduled_by: number
+  created_by: number
   title: string
   memo: string
   start: Date

@@ -5,6 +5,6 @@ export interface MeetingDecisionInputs {
   flag?: ProcessFlag
   subject: string
   body: string
-  written_by: number
+  created_by: number
   decided_by: null | number
 }

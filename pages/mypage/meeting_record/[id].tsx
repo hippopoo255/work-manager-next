@@ -65,7 +65,7 @@ const MeetingRecordDetail = () => {
   }
 
   const labels: MeetingRecordTermKey = {
-    recorded_by: '記録者',
+    created_by: '記録者',
     title: '会議名',
     meeting_date: '開催日時',
     place: '開催場所',
@@ -115,8 +115,8 @@ const MeetingRecordDetail = () => {
                 {toStrFormalLabel(new Date(meetingRecord.meeting_date))}
               </span>
             )
-          } else if (key === 'recorded_by') {
-            el = <span>{meetingRecord.recorded_by.full_name}</span>
+          } else if (key === 'created_by') {
+            el = <span>{meetingRecord.created_by.full_name}</span>
           } else {
             el = <span>{meetingRecord[key]}</span>
           }

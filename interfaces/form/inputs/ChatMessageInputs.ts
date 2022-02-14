@@ -3,6 +3,6 @@ export interface ChatMessageInputs {
   delete_flags: (number | null)[]
   previews: any[]
   body: string
-  written_by: number
+  created_by: number
   image_ids?: (number | null)[]
 }

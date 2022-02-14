@@ -55,7 +55,7 @@ const BlogDetail = () => {
   const classes = useStyles()
   const editable = useMemo(
     () =>
-      blog?.writtenBy && mine(blog?.writtenBy.id, String(auth.user.user_code)),
+      blog?.createdBy && mine(blog?.createdBy.id, String(auth.user.user_code)),
     [blog, auth]
   )
   const handleEdit = () => {
@@ -126,7 +126,7 @@ const BlogDetail = () => {
                     <div className={classes.meta}>
                       <BlogMeta
                         label={'投稿者'}
-                        value={blog.writtenBy?.name || ''}
+                        value={blog.createdBy?.name || ''}
                         Icon={AccountCircleIcon}
                       />
                       <BlogMeta

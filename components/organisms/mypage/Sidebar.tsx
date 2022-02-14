@@ -100,7 +100,7 @@ const Sidebar = (props: Props) => {
 
   // useEffect(() => {
   //   listenMessageSent((message: ChatMessage) => {
-  //     if (!!user && message.written_by.id !== user.id) {
+  //     if (!!user && message.created_by.id !== user.id) {
   //       setMenus((prev) => {
   //         const newTop = prev.top
   //         const index = newTop.findIndex((menu) => menu.id === 'chat')

@@ -57,7 +57,7 @@ export const headCells: HeadCell<MeetingTableRowData>[] = [
     size: 140,
   },
   {
-    id: 'recorded_by',
+    id: 'created_by',
     numeric: false,
     disablePadding: false,
     label: '記録者',
@@ -97,7 +97,7 @@ export const createRows = (
       place_id: meetingRecord.place.name,
       summary: meetingRecord.summary,
       created_at: toStrLabel(new Date(meetingRecord.created_at)),
-      recorded_by: meetingRecord.recorded_by.full_name,
+      created_by: meetingRecord.created_by.full_name,
       id: meetingRecord.id,
       is_editable: meetingRecord.is_editable,
     }

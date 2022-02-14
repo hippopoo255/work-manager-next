@@ -3,7 +3,7 @@ import { User, ChatImage, ChatMessageRead, Reaction } from '.'
 export interface ChatMessage {
   readonly id: number
   body: string
-  written_by: User
+  created_by: User
   to: User | null
   images: (ChatImage | null)[]
   reactions: (Reaction | null)[]

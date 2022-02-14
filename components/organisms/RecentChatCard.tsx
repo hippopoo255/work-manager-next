@@ -25,7 +25,7 @@ const MessageList = ({ unreadMessages, classes }: ListProps) => {
           <div key={`unreadMessage_${message.id}`}>
             <CardItemBar
               main={message.body}
-              sub={<UserBar user={message.written_by} variant={'caption'} />}
+              sub={<UserBar user={message.created_by} variant={'caption'} />}
               status={postTiming(new Date(message.created_at))}
             />
           </div>

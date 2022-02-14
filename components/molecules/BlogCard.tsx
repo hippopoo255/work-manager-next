@@ -138,7 +138,7 @@ const BlogCard = React.memo(({ blog, fetch, onTagClick }: Props) => {
             {postTiming(new Date(blog.created_at))}
           </span>
           <span className={clsx([classes.subText, classes.strong])}>
-            {blog.writtenBy?.name}
+            {blog.createdBy?.name}
           </span>
         </Typography>
       </article>

@@ -1,7 +1,7 @@
 import { MeetingDecisionInputs } from '@/interfaces/form/inputs'
 
 export interface MeetingRecordSubmit {
-  recorded_by: number
+  created_by: number
   title: string
   summary: string
   place_id: number

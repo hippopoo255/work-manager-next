@@ -34,7 +34,7 @@ const useBlog = () => {
       title: data.blog?.title || '',
       body: data.blog?.body || '',
       status: data.blog?.status || BlogStatus.Done,
-      writtenBy: {
+      createdBy: {
         id: auth.user.user_code,
         name: auth.user.full_name,
       },

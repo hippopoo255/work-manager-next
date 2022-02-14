@@ -39,7 +39,7 @@ const useCalendar = ({
     if (targetSchedule !== undefined && !!targetSchedule.is_show) {
       setDefaultValues({
         id: targetSchedule.id,
-        scheduled_by: targetSchedule.scheduled_by!.id!,
+        created_by: targetSchedule.created_by!.id!,
         title: targetSchedule.title,
         memo: targetSchedule.memo,
         start: new Date(targetSchedule.start),
@@ -66,7 +66,7 @@ const useCalendar = ({
         delete prev.id
       }
       return {
-        scheduled_by: auth.user.id,
+        created_by: auth.user.id,
         title: '',
         memo: '',
         color: defaultScheduleColor,
@@ -97,7 +97,7 @@ const useCalendar = ({
       const movedStartStr =
         e.event.start === null ? targetSchedule.start : toStrData(e.event.start)
       const submitData = {
-        scheduled_by: targetSchedule.scheduled_by.id,
+        created_by: targetSchedule.created_by.id,
         title: targetSchedule.title,
         memo: targetSchedule.memo,
         start: movedStartStr,

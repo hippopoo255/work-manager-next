@@ -182,7 +182,7 @@ const ChatRoomForm = ({
       }
     })
     submitData.append('body', data.body)
-    submitData.append('written_by', String(data.written_by))
+    submitData.append('created_by', String(data.created_by))
     await req(submitData, data.id!)
       .then((newChatRoom) => {
         setOpen(false)
@@ -275,7 +275,7 @@ const ChatRoomForm = ({
   useEffect(() => {
     setValue('id', defaultValues.id)
     setValue('body', defaultValues.body)
-    setValue('written_by', defaultValues.written_by)
+    setValue('created_by', defaultValues.created_by)
     setFiles([{ val: null }, { val: null }, { val: null }, { val: null }])
     setPreview((prev: { val: any }[]) => {
       let newPreview = [
