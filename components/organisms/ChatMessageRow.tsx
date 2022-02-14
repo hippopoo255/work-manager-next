@@ -193,7 +193,7 @@ const ChatMessageRow = ({ message, mine, onEdit, onDelete, index }: Props) => {
           [classes.none]: mine,
         })}
       >
-        <UserAvatar user={message.written_by} />
+        <UserAvatar user={message.created_by} />
       </li>
       <li
         className={clsx(classes.msgContent, {
@@ -209,7 +209,7 @@ const ChatMessageRow = ({ message, mine, onEdit, onDelete, index }: Props) => {
             component={'span'}
             variant="caption"
           >
-            {message.written_by.full_name}
+            {message.created_by.full_name}
           </Typography>
           <Typography
             className={classes.msgTime}

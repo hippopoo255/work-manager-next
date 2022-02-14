@@ -272,7 +272,7 @@ const ChatDetail = () => {
         ({ message, flag }: { message: ChatMessage; flag: string }) => {
           if (
             message.chat_room_id === getChatRoomId() &&
-            !mine(message.written_by.id, userId)
+            !mine(message.created_by.id, userId)
           ) {
             if (flag === 'update') {
               addUpdateMessage(message)
@@ -287,7 +287,7 @@ const ChatDetail = () => {
       listenMessageDelete((message: ChatMessage) => {
         if (
           message.chat_room_id === getChatRoomId() &&
-          !mine(message.written_by.id, userId)
+          !mine(message.created_by.id, userId)
         ) {
           replaceDeleteMessage(message.id)
         }
@@ -313,7 +313,7 @@ const ChatDetail = () => {
             const lastMessageId = prev.last_reads[i].last_message_id
             const newMessages = prev.messages.map((message: ChatMessage) => {
               if (message.id <= lastMessageId) {
-              } else if (!mine(readUser.id, message!.written_by.id)) {
+              } else if (!mine(readUser.id, message!.created_by.id)) {
                 message!.chat_message_reads.push(readUser)
               } else {
               }
@@ -327,7 +327,7 @@ const ChatDetail = () => {
             }
           } else {
             const newMessages = prev.messages.map((message: ChatMessage) => {
-              if (!mine(readUser.id, message.written_by.id)) {
+              if (!mine(readUser.id, message.created_by.id)) {
                 message.chat_message_reads.push(readUser)
               }
               return message
@@ -478,7 +478,7 @@ const ChatDetail = () => {
     mode: 'onChange',
     defaultValues: {
       body: '',
-      written_by: userId,
+      created_by: userId,
       previews: [],
     },
   })
@@ -486,7 +486,7 @@ const ChatDetail = () => {
   const saveSimpleMessage = async (data: ChatMessageInputs) => {
     const messageSubmitData = new FormData()
     messageSubmitData.append('body', data.body)
-    messageSubmitData.append('written_by', String(userId))
+    messageSubmitData.append('created_by', String(userId))
     await storeMessage(messageSubmitData).then((newMessage: ChatMessage) => {
       handleAfterStore(newMessage)
     })
@@ -495,7 +495,7 @@ const ChatDetail = () => {
   // チャットメッセージ操作（更新・削除）
   const [updateMsgInput, setUpdateMsgInput] = useState<ChatMessageInputs>({
     body: '',
-    written_by: userId,
+    created_by: userId,
     previews: [],
     delete_flags: [],
   })
@@ -513,7 +513,7 @@ const ChatDetail = () => {
       setUpdateMsgInput({
         id: updateMsg!.id!,
         body: updateMsg!.body!,
-        written_by: updateMsg!.written_by.id,
+        created_by: updateMsg!.created_by.id,
         previews:
           updateMsg !== undefined
             ? updateMsg.images.map((image: ChatImage | null) =>
@@ -536,7 +536,7 @@ const ChatDetail = () => {
     setUpdateMsgInput({
       id: 0,
       body: getValues('body'),
-      written_by: userId,
+      created_by: userId,
       previews: [],
       delete_flags: [],
       image_ids: undefined,
@@ -681,7 +681,7 @@ const ChatDetail = () => {
                     {message !== null && (
                       <ChatMessageRow
                         message={message}
-                        mine={mine(message!.written_by.id, userId)}
+                        mine={mine(message!.created_by.id, userId)}
                         onEdit={handleMsgUpdateForm}
                         onDelete={deleteMessage}
                         index={index}
@@ -757,7 +757,7 @@ const ChatDetail = () => {
             <div className={classes.sentMsgBar}>
               <SilentBar
                 main={silentMessage.body}
-                sub={silentMessage.written_by.full_name + 'さん'}
+                sub={silentMessage.created_by.full_name + 'さん'}
                 onClick={handleSentMsg}
               />
             </div>

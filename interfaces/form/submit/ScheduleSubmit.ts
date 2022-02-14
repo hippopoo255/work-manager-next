@@ -1,5 +1,5 @@
 export interface ScheduleSubmit {
-  scheduled_by: number
+  created_by: number
   title: string
   memo: string
   start: string

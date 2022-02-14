@@ -17,13 +17,13 @@ export const SITE_TITLE: string =
 export const API_STAGE_URL: string =
   process.env.NEXT_PUBLIC_API_STAGE_URL || 'http://localhost:8080'
 export const API_DIRECT_URL: string =
-  process.env.NEXT_PUBLIC_API_DIRECT_URL + '/api' || 'http://localhost:8080/api'
+  process.env.NEXT_PUBLIC_API_DIRECT_URL || 'http://localhost:8080/api'
 export const APP_SYNC_URL: string =
   process.env.NEXT_PUBLIC_APP_SYNC_URL || 'http://localhost:8000'
 export const APP_SYNC_KEY: string =
   process.env.NEXT_PUBLIC_APP_SYNC_KEY || 'secret'
 export const PUSHER_URL: string =
-  process.env.NEXT_PUBLIC_API_DIRECT_URL || 'http://localhost:8080'
+  process.env.NEXT_PUBLIC_API_PUSHER_URL || 'http://localhost:8080'
 export const STORAGE_URL: string =
   process.env.NEXT_PUBLIC_STORAGE_URL || 'http://localhost:8080/storage'
 export const APP_URL =

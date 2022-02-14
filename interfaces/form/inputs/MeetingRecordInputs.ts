@@ -2,7 +2,7 @@ import { Inputs, MemberInputs, MeetingDecisionInputs } from '.'
 
 export interface MeetingRecordInputs
   extends Inputs<MemberInputs, MeetingDecisionInputs> {
-  recorded_by: number
+  created_by: number
   title: string
   summary: string
   place_id: number

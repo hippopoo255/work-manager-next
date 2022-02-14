@@ -8,7 +8,7 @@ export interface MeetingTableRowData extends TableRowData {
   place_id: string
   summary: string
   created_at: string
-  recorded_by: string
+  created_by: string
   id: number
   is_editable: boolean
 }

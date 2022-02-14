@@ -65,6 +65,7 @@ const Index = () => {
     deleteSchedule,
     getSchedulesByUserId,
     loading,
+    formLoading,
     save,
     schedules,
     setAlertStatus,
@@ -90,7 +91,7 @@ const Index = () => {
   const authorId = auth.user.id
   const { memberList } = useMemberList({ sharedBy: authorId })
   const [defaultValues, setDefaultValues] = useState<ScheduleInputs>({
-    scheduled_by: authorId,
+    created_by: authorId,
     title: '',
     memo: '',
     start: new Date(),
@@ -212,14 +213,14 @@ const Index = () => {
           }
         />
         <div className="container">
-          {scheduleEvents.length ? <Calendar /> : <CustomLoader />}
+          {!loading ? <Calendar /> : <CustomLoader />}
         </div>
         <ConfirmDialog
           open={deleteOpen}
           setOpen={setDeleteOpen}
           onExec={execDelete}
           isCircular
-          loading={loading}
+          loading={formLoading}
         />
       </section>
       <CustomAlert alertStatus={alertStatus} onClose={onAlertClose} />

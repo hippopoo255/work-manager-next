@@ -5,7 +5,7 @@ export interface MeetingRecord {
   title: string
   summary: string
   meeting_date: string
-  recorded_by: User
+  created_by: User
   place: MeetingPlace
   decisions: MeetingDecision[]
   members: User[]

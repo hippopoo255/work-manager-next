@@ -93,7 +93,7 @@ const ScheduleForm = ({
     setValue('end', defaultValues.end)
     setValue('is_public', defaultValues.is_public)
     setValue('disabled', defaultValues.disabled)
-    setValue('scheduled_by', defaultValues.scheduled_by)
+    setValue('created_by', defaultValues.created_by)
     setValue('sharedMembers', defaultValues.sharedMembers)
   }, [setValue, defaultValues])
 
@@ -176,7 +176,7 @@ const ScheduleForm = ({
       }
     })
     const submitData = {
-      scheduled_by: data.scheduled_by,
+      created_by: data.created_by,
       title: data.title,
       memo: data.memo,
       start: toStrData(data.start),

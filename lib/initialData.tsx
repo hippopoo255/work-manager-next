@@ -76,7 +76,7 @@ export const createBlogInput: CreateBlogInput = {
   title: '',
   body: '',
   status: BlogStatus.Pending,
-  writtenBy: {
+  createdBy: {
     id: '',
     name: '',
   },

@@ -32,7 +32,7 @@ const MeetingRecordUpdate = () => {
     onSuccess: (meetingRecord: MeetingRecord) => {
       setDefaultValues(() => {
         const d = {
-          recorded_by: meetingRecord.recorded_by.id,
+          created_by: meetingRecord.created_by.id,
           title: meetingRecord.title,
           summary: meetingRecord.summary,
           place_id: meetingRecord.place_id,
@@ -45,7 +45,7 @@ const MeetingRecordUpdate = () => {
           meeting_decisions: meetingRecord.decisions.map((decision) => ({
             subject: decision.subject,
             body: decision.body,
-            written_by: decision.written_by.id,
+            created_by: decision.created_by.id,
             decided_by:
               decision.decided_by === null ? null : decision.decided_by.id,
             id: decision.id,

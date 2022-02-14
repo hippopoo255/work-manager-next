@@ -185,7 +185,7 @@ const Index = () => {
                       </Typography>
                       <Divider style={{ marginTop: 12 }} />
                       <List>
-                        {loading || !notifyValidation.length ? (
+                        {loading ? (
                           <CustomLoader />
                         ) : (
                           notifyValidation.map((sts: NotifyStatus, index) => (

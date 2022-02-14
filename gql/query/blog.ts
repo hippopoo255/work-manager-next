@@ -15,7 +15,7 @@ const getAll = (tagId?: string) => `
         id
         name
       }
-      writtenBy {
+      createdBy {
         id
         name
       }
@@ -40,7 +40,7 @@ const getPager = (query?: QueryInput, nextToken?: string | null) => {
             id
             name
           }
-          writtenBy {
+          createdBy {
             id
             name
           }
@@ -64,7 +64,7 @@ const findById = (id: string) => `
         id
         name
       }
-      writtenBy {
+      createdBy {
         id
         name
       }

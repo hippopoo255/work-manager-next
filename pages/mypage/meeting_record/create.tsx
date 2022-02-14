@@ -25,7 +25,7 @@ const MeetingRecordCreate = ({ meetingPlaceList }: Props) => {
     if (auth.isLogin) {
       setDefaultValues((prev) => ({
         ...prev,
-        recorded_by: auth.user.id,
+        created_by: auth.user.id,
       }))
     }
   }, [auth])

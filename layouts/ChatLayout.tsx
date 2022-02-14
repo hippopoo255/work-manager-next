@@ -259,7 +259,7 @@ const ChatLayout = React.memo(
             if (flag === 'update') {
               return true
             }
-            if (message.written_by.id !== auth.user.id) {
+            if (message.created_by.id !== auth.user.id) {
               const index = chatRooms.findIndex(
                 (chatRoom) => chatRoom.id === message.chat_room_id
               )

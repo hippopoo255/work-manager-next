@@ -10,9 +10,9 @@ const createBlog = ({ input }: MutationCreateBlogArgs) => `
       title: "${input.title}",
       body: "${input.body}",
       status: ${input.status},
-      writtenBy: {
-        id: "${input.writtenBy.id}",
-        name: "${input.writtenBy.name}",
+      createdBy: {
+        id: "${input.createdBy.id}",
+        name: "${input.createdBy.name}",
       }
       tags: ${arrToGqlStr(input.tags)}
     }) {
@@ -21,7 +21,7 @@ const createBlog = ({ input }: MutationCreateBlogArgs) => `
       body
       created_at
       status
-      writtenBy {
+      createdBy {
         id
         name
       }
@@ -35,9 +35,9 @@ const updateBlog = ({ id, input }: MutationUpdateBlogArgs) => `
       title: "${input.title}",
       body: "${input.body}",
       status: ${input.status},
-      writtenBy: {
-        id: "${input.writtenBy.id}",
-        name: "${input.writtenBy.name}",
+      createdBy: {
+        id: "${input.createdBy.id}",
+        name: "${input.createdBy.name}",
       }
       tags: ${arrToGqlStr(input.tags)}
     }) {
@@ -46,7 +46,7 @@ const updateBlog = ({ id, input }: MutationUpdateBlogArgs) => `
       body
       created_at
       status
-      writtenBy {
+      createdBy {
         id
         name
       }
@@ -62,7 +62,7 @@ const deleteBlog = ({ id }: MutationDeleteBlogArgs) => `
       body
       created_at
       status
-      writtenBy {
+      createdBy {
         id
         name
       }

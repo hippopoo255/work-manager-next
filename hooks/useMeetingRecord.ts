@@ -91,7 +91,7 @@ const useMeetingRecord = () => {
   const paramId = router.query.id || 0
   const meetingRecordId = useMemo(() => paramId, [paramId])
   const [defaultValues, setDefaultValues] = useState<MeetingRecordInputs>({
-    recorded_by: auth.user.id,
+    created_by: auth.user.id,
     title: '',
     summary: '',
     place_id: 1,
@@ -102,7 +102,7 @@ const useMeetingRecord = () => {
       {
         subject: '',
         body: '',
-        written_by: auth.user.id,
+        created_by: auth.user.id,
         decided_by: null,
       },
     ],

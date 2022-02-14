@@ -2,7 +2,7 @@ import { User } from '.'
 
 export interface Schedule {
   readonly id: number
-  scheduled_by: User
+  created_by: User
   title: string
   start: string
   end: string

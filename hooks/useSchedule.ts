@@ -11,7 +11,7 @@ type Props = {
 }
 
 const useSchedule = ({ onListSuccess }: Props) => {
-  const [loading, setLoading] = useState<boolean>(false)
+  const [formLoading, setFormLoading] = useState<boolean>(false)
   const [schedules, setSchedules] = useState<Schedule[]>([])
   const [targetUserId, setTargetUserId] = useState<number>(0)
   const [targetScheduleId, setTargetScheduleId] = useState<number>(0)
@@ -21,7 +21,7 @@ const useSchedule = ({ onListSuccess }: Props) => {
   const { auth, config } = useAuth()
   const { getMethod, postMethod, putMethod, deleteMethod } = useRestApi()
 
-  useInitialConnector<Schedule[]>({
+  const { loading } = useInitialConnector<Schedule[]>({
     path: requestUri.schedule.list.replace(':id', String(auth.user.id)),
     onSuccess: (schedules: Schedule[]) => {
       setSchedules(schedules)
@@ -109,14 +109,14 @@ const useSchedule = ({ onListSuccess }: Props) => {
   )
 
   const deleteSchedule = async () => {
-    setLoading(true)
+    setFormLoading(true)
     return await deleteMethod(`/schedule/${targetScheduleId}`)
       .then(() => {
         afterDeleted()
         return null
       })
       .finally(() => {
-        setLoading(false)
+        setFormLoading(false)
       })
   }
 
@@ -127,6 +127,7 @@ const useSchedule = ({ onListSuccess }: Props) => {
     deleteSchedule,
     getSchedulesByUserId,
     loading,
+    formLoading,
     schedules,
     setAlertStatus,
     setSchedules,

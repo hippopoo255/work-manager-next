@@ -143,7 +143,7 @@ const MeetingRecordForm = ({
         title: data.title,
         summary: data.summary,
         meeting_date: toStrData(data.meeting_date),
-        recorded_by: data.recorded_by,
+        created_by: data.created_by,
         place_id: data.place_id,
         role_id: data.role_id,
         members: data.members.map((m) => m.id),
@@ -151,7 +151,7 @@ const MeetingRecordForm = ({
           const meetingDecisionData: MeetingDecisionInputs = {
             subject: decision.subject,
             body: decision.body,
-            written_by: decision.written_by,
+            created_by: decision.created_by,
             decided_by: decision.decided_by,
           }
           if (decision.id !== undefined) {
@@ -228,7 +228,7 @@ const MeetingRecordForm = ({
     item.flag !== undefined && item.flag === PROCESS_FLAG.deleteFlag
 
   const labels: { [k: string]: string } = {
-    recorded_by: '記録者',
+    created_by: '記録者',
     title: '会議名',
     meeting_date: '開催日時',
     place_id: '開催場所',
@@ -286,9 +286,9 @@ const MeetingRecordForm = ({
       el = <span>{meetingPlaceList[index].name}</span>
     } else if (key === 'meeting_date') {
       el = <span>{toStrFormalLabel(currentFormVals.meeting_date)}</span>
-    } else if (key === 'recorded_by') {
+    } else if (key === 'created_by') {
       const index = memberList.findIndex(
-        (member) => member.id === currentFormVals.recorded_by
+        (member) => member.id === currentFormVals.created_by
       )
       if (index !== -1) {
         el = <span>{memberList.length > 0 && memberList[index].full_name}</span>
@@ -666,7 +666,7 @@ const MeetingRecordForm = ({
                   append({
                     subject: '',
                     body: '',
-                    written_by: 1,
+                    created_by: 1,
                     decided_by: null,
                   })
                 }}

@@ -1,7 +1,7 @@
 import { DefinitionTermKey } from '.'
 
 export interface MeetingRecordTermKey extends DefinitionTermKey {
-  recorded_by: '記録者'
+  created_by: '記録者'
   title: '会議名'
   meeting_date: '開催日時'
   place: '開催場所'

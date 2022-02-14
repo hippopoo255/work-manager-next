@@ -22,7 +22,7 @@ const findById = (id: string) => `
         id
         name
       }
-      writtenBy {
+      createdBy {
         id
         name
       }
