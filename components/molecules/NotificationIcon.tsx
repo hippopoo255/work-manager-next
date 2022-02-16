@@ -57,9 +57,10 @@ const NotificationIcon = React.memo(() => {
   const router = useRouter()
   const { auth, config } = useAuth()
   const [activities, setActivities] = useState<Activity[]>([])
-  const {} = useInitialConnector<Activity[]>({
+  useInitialConnector<Activity[]>({
     path: requestUri.activity.myRecently.replace(':id', String(auth.user.id)),
     onSuccess: (res) => setActivities(res),
+    condition: auth.user.is_initialized,
   })
   const [open, setOpen] = useState(false)
   const anchorRef = useRef<HTMLButtonElement>(null)

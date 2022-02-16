@@ -65,6 +65,7 @@ const Index = () => {
     deleteSchedule,
     getSchedulesByUserId,
     loading,
+    setLoading,
     formLoading,
     save,
     schedules,

@@ -11,10 +11,10 @@ const useInitialAuthentication = (canGuest: boolean = false) => {
     if (isMounted) {
       const init = async () => {
         const loggedInUser = await authOperation.currentUser(dispatch)
-        if (loggedInUser === '' && !canGuest) {
+        if (!(loggedInUser || canGuest)) {
           router.push('/login')
         }
-        if (loggedInUser !== '' && router.pathname === '/login') {
+        if (loggedInUser && router.pathname === '/login') {
           router.push('/')
         }
       }
@@ -28,6 +28,7 @@ const useInitialAuthentication = (canGuest: boolean = false) => {
   return {
     auth,
     dispatch,
+    router,
   }
 }
 

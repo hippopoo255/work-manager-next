@@ -1,4 +1,7 @@
 {
   "extends": ["next", "next/core-web-vitals"],
+  "rules": {
+    "@next/next/no-sync-scripts": "off"
+  },
   "root": true
 }

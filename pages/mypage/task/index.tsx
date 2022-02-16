@@ -218,7 +218,7 @@ const Index = () => {
             .join('&')
       }
       const path = requestUri.task.myTask + initialQuery
-      if (auth.isLogin) {
+      if (auth.isLogin && auth.user.is_initialized) {
         await getMethod<Pager<Task, SearchTaskInputs>>(path)
           .then((res) => {
             setTasks(res)

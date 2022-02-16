@@ -6,6 +6,7 @@ export default {
     title: {
       login: 'ログイン',
       signup: 'ユーザ登録',
+      organizationStore: '組織情報登録',
       mypage: {
         index: 'ダッシュボード',
         blog: {
@@ -72,6 +73,7 @@ export default {
   },
   common: {
     post: '投稿',
+    store: '登録',
     preSave: '下書き保存',
     save: '保存',
     testLogin: 'デモユーザとして試す',

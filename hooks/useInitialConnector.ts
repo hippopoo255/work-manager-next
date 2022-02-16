@@ -36,7 +36,12 @@ const useInitialConnector = <T = any>({
   useEffect(() => {
     setLoading(true)
     let unmounted = true
-    if ((canGuest || auth.isLogin) && condition && unmounted) {
+    if (
+      (canGuest || auth.isLogin) &&
+      auth.user.is_initialized &&
+      condition &&
+      unmounted
+    ) {
       const init = async () => {
         const res = await getMethod<T>(path, onError).finally(() => {
           setLoading(false)

@@ -170,6 +170,7 @@ const Login = () => {
                 />
               )}
               name="password"
+              defaultValue=""
               control={control}
               rules={{
                 required: {

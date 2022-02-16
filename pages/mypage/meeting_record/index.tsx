@@ -140,7 +140,7 @@ const Index = () => {
             .map((key) => `${key}=${router.query[key]}`)
             .join('&')
       }
-      if (auth.isLogin) {
+      if (auth.isLogin && auth.user.is_initialized) {
         await getMethod<Pager<MeetingRecord>>(
           requestUri.meetingRecord.list + initialQuery
         )

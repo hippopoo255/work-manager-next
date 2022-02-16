@@ -21,7 +21,7 @@ const useSchedule = ({ onListSuccess }: Props) => {
   const { auth, config } = useAuth()
   const { getMethod, postMethod, putMethod, deleteMethod } = useRestApi()
 
-  const { loading } = useInitialConnector<Schedule[]>({
+  const { loading, setLoading } = useInitialConnector<Schedule[]>({
     path: requestUri.schedule.list.replace(':id', String(auth.user.id)),
     onSuccess: (schedules: Schedule[]) => {
       setSchedules(schedules)
@@ -33,6 +33,7 @@ const useSchedule = ({ onListSuccess }: Props) => {
   })
 
   const getSchedulesByUserId = async (targetUId?: number) => {
+    setLoading(true)
     await getMethod<Schedule[]>(
       requestUri.schedule.list.replace(':id', String(targetUId || auth.user.id))
     ).then((schedules) => {
@@ -42,6 +43,7 @@ const useSchedule = ({ onListSuccess }: Props) => {
         onListSuccess(schedules)
       }
     })
+    setLoading(false)
   }
 
   const afterSaved = (newSchedule: Schedule) => {
@@ -130,12 +132,13 @@ const useSchedule = ({ onListSuccess }: Props) => {
     formLoading,
     schedules,
     setAlertStatus,
+    setLoading,
     setSchedules,
     setTargetScheduleId,
+    setTargetUserId,
     save,
     targetScheduleId,
     targetUserId,
-    setTargetUserId,
   }
 }
 

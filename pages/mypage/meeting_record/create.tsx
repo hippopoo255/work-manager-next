@@ -26,6 +26,12 @@ const MeetingRecordCreate = ({ meetingPlaceList }: Props) => {
       setDefaultValues((prev) => ({
         ...prev,
         created_by: auth.user.id,
+        meeting_decisions: [
+          {
+            ...prev.meeting_decisions[0],
+            created_by: auth.user.id,
+          },
+        ],
       }))
     }
   }, [auth])

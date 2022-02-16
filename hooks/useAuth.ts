@@ -19,7 +19,10 @@ const useAuth = () => {
       .login(inputs, dispatch)
       .then((loggedInUser: User | '') => {
         if (loggedInUser !== '') {
-          router.push('/mypage')
+          const path = loggedInUser.is_initialized
+            ? '/mypage'
+            : '/organization/create'
+          router.push(path)
         }
       })
   }, [])
@@ -41,7 +44,11 @@ const useAuth = () => {
         throw t.message.testLoginFail
       }
       await authOperation.testLogin(dispatch).then((testUser) => {
-        router.push('/mypage')
+        const path =
+          testUser && testUser.is_initialized
+            ? '/mypage'
+            : '/organization/create'
+        router.push(path)
       })
     } catch (err) {
       throw err

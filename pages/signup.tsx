@@ -294,6 +294,7 @@ const Signup = () => {
                 <Controller
                   control={control}
                   name="family_name"
+                  defaultValue=""
                   rules={{
                     required: {
                       value: true,
@@ -328,6 +329,7 @@ const Signup = () => {
                 <Controller
                   control={control}
                   name="given_name"
+                  defaultValue=""
                   rules={{
                     required: {
                       value: true,
@@ -362,6 +364,7 @@ const Signup = () => {
                 <Controller
                   control={control}
                   name="family_name_kana"
+                  defaultValue=""
                   rules={{
                     required: {
                       value: true,
@@ -400,6 +403,7 @@ const Signup = () => {
                 <Controller
                   control={control}
                   name="given_name_kana"
+                  defaultValue=""
                   rules={{
                     required: {
                       value: true,
@@ -455,6 +459,7 @@ const Signup = () => {
                     />
                   )}
                   name="password"
+                  defaultValue=""
                   control={control}
                   rules={{
                     required: {

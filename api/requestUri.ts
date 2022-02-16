@@ -7,6 +7,10 @@ const requestUri = {
   currentUserWithChat: '/user/current/chat_rooms',
   forgotPassword: '/password/email',
   resetPassword: '/password/reset',
+  organization: {
+    store: '/organization',
+    update: '/organization/{id}',
+  },
   // master
   priority: {
     list: '/priority',
@@ -16,6 +20,9 @@ const requestUri = {
   },
   meetingPlace: {
     list: '/meeting_place',
+  },
+  prefecture: {
+    list: '/prefecture',
   },
   user: {
     list: '/user',

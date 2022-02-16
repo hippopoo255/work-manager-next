@@ -5,6 +5,7 @@ export default {
     title: {
       login: 'Log in',
       signup: 'Sign Up',
+      organizationStore: 'Organization register',
       mypage: {
         index: 'Dashboard',
         blog: {
@@ -73,6 +74,7 @@ export default {
     post: 'post',
     preSave: 'pre save',
     save: 'save',
+    store: '登録',
     testLogin: 'Try as a demo user',
     send: 'send',
     login: 'Log in',

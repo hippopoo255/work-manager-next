@@ -5,7 +5,6 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import { drawerWidth } from '@/lib/util'
 import { AuthMenu } from '@/components/organisms'
 import { Hidden } from '@material-ui/core'
-import { HeaderGrowContent } from '@/components/molecules'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
