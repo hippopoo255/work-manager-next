@@ -179,16 +179,17 @@ const MeetingRecordDetail = () => {
                   </Grid>
                   {meetingRecord.is_editable && (
                     <Grid item>
-                      <Link href={`/mypage/meeting_record/update/${paramId}`}>
-                        <a>
-                          <CircularButton
-                            loading={loading}
-                            options={{ variant: 'outlined' }}
-                            color={'primary'}
-                            submitText={'編集画面へ'}
-                            onClick={handleClick}
-                          />
-                        </a>
+                      <Link
+                        href={`/mypage/meeting_record/update/${paramId}`}
+                        underline="none"
+                      >
+                        <CircularButton
+                          loading={loading}
+                          options={{ variant: 'outlined' }}
+                          color={'primary'}
+                          submitText={'編集画面へ'}
+                          onClick={handleClick}
+                        />
                       </Link>
                     </Grid>
                   )}

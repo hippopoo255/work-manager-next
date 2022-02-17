@@ -34,13 +34,6 @@ const signup = async ({
         // 'custom:department_code': '5',
       },
     })
-    // console.log('signup succeeded')
-    // router.push({
-    //   pathname: '/account_verification',
-    //   query: {
-    //     n: encode64(login_id),
-    //   },
-    // })
     amplifyConfigure()
     return user
   } catch (error) {

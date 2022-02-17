@@ -8,11 +8,12 @@ import { OrganizationInputs } from '@/interfaces/form/inputs'
 import { Organization, Prefecture, User } from '@/interfaces/models'
 import { cognitoAdmin } from '@/lib/auth'
 import fetchAddressByPostalCode, { Address } from '@/lib/axios-jsonp'
-import { CognitoUser } from 'amazon-cognito-identity-js'
+import { authOperation } from '@/globalState/user/operation'
+import { loginAction } from '@/globalState/user/action'
 
 const useOrganization = () => {
   const router = useRouter()
-  const { auth } = useContext(AuthContext)
+  const { auth, dispatch } = useContext(AuthContext)
   const { getMethod, postMethod, putMethod } = useRestApi()
   const [loading, setLoading] = useState<boolean>(false)
   const [prefectureList, setPrefecturelist] = useState<Prefecture[]>([])
@@ -41,27 +42,21 @@ const useOrganization = () => {
 
   const store = useCallback(
     async (inputs: OrganizationInputs) => {
-      const response = await postMethod<User, OrganizationInputs>(
+      const user = await postMethod<User, OrganizationInputs>(
         requestUri.organization.store,
         inputs
       )
-        .then((user) => {
-          if (user) {
-            const signupInputs = {
-              email: auth.user.email,
-              login_id: user.login_id || '',
-              password: inputs.password,
-              given_name: auth.user.given_name,
-              given_name_kana: auth.user.given_name_kana,
-              family_name: auth.user.family_name,
-              family_name_kana: auth.user.family_name_kana,
-            }
-            const admin = cognitoAdmin.signup(signupInputs)
-            return admin
-          }
-          return ''
-        })
-        .catch((err) => {
+      if (user.organization_id) {
+        const signupInputs = {
+          email: auth.user.email,
+          login_id: user.login_id || '',
+          password: inputs.password,
+          given_name: auth.user.given_name,
+          given_name_kana: auth.user.given_name_kana,
+          family_name: auth.user.family_name,
+          family_name_kana: auth.user.family_name_kana,
+        }
+        const admin = await cognitoAdmin.signup(signupInputs).catch((err) => {
           const errBody: { [k: string]: string[] } = err.data.errors
           const errMessages = Object.keys(errBody).map((key: any) => ({
             key,
@@ -69,7 +64,18 @@ const useOrganization = () => {
           }))
           throw errMessages
         })
-      return response
+        if (admin) {
+          dispatch(
+            loginAction({
+              ...auth.user,
+              organization_id: user.organization_id,
+            })
+          )
+          return user
+        }
+        return ''
+      }
+      return ''
     },
     [auth]
   )
@@ -88,7 +94,7 @@ const useOrganization = () => {
       setLoading(true)
       if (id === undefined) {
         await store(inputs)
-          .then((res: CognitoUser | '') => {
+          .then((res) => {
             if (!!res) {
               router.push('/mypage')
             }
