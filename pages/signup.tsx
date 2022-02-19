@@ -1,36 +1,27 @@
-import React, { useState, useMemo, useEffect } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { Layout } from '@/layouts'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import {
   Box,
-  darken,
   Avatar,
   Container,
   CssBaseline,
   Grid,
+  TextField,
   Typography,
-  IconButton,
 } from '@material-ui/core'
-import { InputAdornment, TextField } from '@material-ui/core'
-import VisibilityIcon from '@material-ui/icons/Visibility'
-import VisibilityOffIcon from '@material-ui/icons/VisibilityOff'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
-import { useForm, Controller, SubmitHandler } from 'react-hook-form'
+import { Controller } from 'react-hook-form'
 import { CustomAlert, FormErrorMessage } from '@/components/atoms'
 import {
   CircularButton,
-  HelpBox,
+  PasswordTextField,
   TestLoginButton,
 } from '@/components/molecules'
-import { AlertStatus } from '@/interfaces/common'
-import { SignupInputs } from '@/interfaces/form/inputs'
-import { initialAlertStatus } from '@/lib/initialData'
 import { strPatterns } from '@/lib/util'
 import { linerGradient } from '@/assets/color/gradient'
-import { useLocale, useAuth } from '@/hooks'
-import { AxiosError } from 'axios'
+import { useLocale, useAccountSetup } from '@/hooks'
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -77,118 +68,22 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const Signup = () => {
   const classes = useStyles()
-  const [loading, setLoading] = useState<boolean>(false)
-  const [alertStatus, setAlertStatus] = useState<AlertStatus>({
-    ...initialAlertStatus,
-  })
   const { t } = useLocale()
+
   const options = {
     fullWidth: true,
     className: classes.submit,
   }
 
-  const onAlertClose = () => {
-    setAlertStatus((prev) => ({
-      ...prev,
-      show: false,
-    }))
-  }
-
-  const calc = alertStatus.show
-
-  useEffect(() => {
-    setTimeout(() => {
-      setAlertStatus((prev) => ({
-        ...prev,
-        show: false,
-      }))
-    }, 5000)
-  }, [calc])
-
   const {
-    handleSubmit,
+    alertStatus,
     control,
-    setError,
-    clearErrors,
-    getValues,
-    formState: { errors },
-  } = useForm<SignupInputs>()
-  const { signup, duplicateEmailCount } = useAuth()
-
-  const onSubmit: SubmitHandler<SignupInputs> = async (data) => {
-    setLoading(true)
-    const isDuplicateEmail = await checkDuplicateEmail(data.email)
-    if (isDuplicateEmail) {
-      setLoading(false)
-      return false
-    }
-    await signup(data).catch(({ key, message }) => {
-      setLoading(false)
-      setError(key, {
-        type: 'invalid',
-        message,
-      })
-    })
-  }
-
-  // メールアドレスの重複チェック
-  // const handleEnteredValue = async (
-  //   e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
-  // ) => {
-  //   const invalidType = errors.email === undefined ? '' : errors.email.type
-  //   const canSend = !(['required', 'pattern'].includes(invalidType) || !getValues('email'))
-  //   if (canSend) {
-  //     await checkDuplicateEmail(e.target.value)
-  //   }
-  // }
-
-  const checkDuplicateEmail = async (email: SignupInputs['email']) => {
-    return await duplicateEmailCount(email)
-      .then((count: number) => {
-        if (count > 0) {
-          setError('email', {
-            type: 'validate',
-            message: 'このメールアドレスは既に登録されています',
-          })
-        } else {
-          clearErrors('email')
-        }
-        // \!!count...isDuplicate
-        return !!count
-      })
-      .catch((err: AxiosError['response']) => {
-        setAlertStatus((prev) => ({
-          ...prev,
-          severity: 'error',
-          msg: 'ネットワークまたはサーバエラーです',
-          show: true,
-        }))
-        const hasError = 1
-        return !!hasError
-      })
-  }
-
-  // パスワードの表示 / 非表示
-  const [type, setType] = useState<'text' | 'password'>('password')
-  const handleType = () => {
-    setType((prev) => (prev === 'text' ? 'password' : 'text'))
-  }
-  const iconByType = useMemo(() => {
-    const icon = type === 'text' ? <VisibilityIcon /> : <VisibilityOffIcon />
-    return {
-      endAdornment: (
-        <InputAdornment position="end">
-          <IconButton
-            aria-label="toggle password visibility"
-            onClick={handleType}
-            edge="end"
-          >
-            {icon}
-          </IconButton>
-        </InputAdornment>
-      ),
-    }
-  }, [type])
+    errors,
+    handleSubmit,
+    loading,
+    onSubmit,
+    onAlertClose,
+  } = useAccountSetup({})
 
   return (
     <Layout title={t.head.title.signup}>
@@ -439,45 +334,16 @@ const Signup = () => {
                 </Box>
               </Grid>
               <Grid item xs={12}>
-                <Box textAlign={'right'}>
-                  <HelpBox />
-                </Box>
-                <Controller
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      variant="outlined"
-                      margin="normal"
-                      required
-                      error={!!errors.password}
-                      label="パスワード"
-                      type={type}
-                      id="password"
-                      style={{ margin: 0 }}
-                      InputProps={iconByType}
-                    />
-                  )}
-                  name="password"
-                  defaultValue=""
+                <PasswordTextField
                   control={control}
-                  rules={{
-                    required: {
-                      value: true,
-                      message: 'パスワードは必須です',
-                    },
-                    pattern: {
-                      value: strPatterns.password,
-                      message: 'パスワードの形式が違います',
-                    },
-                    minLength: {
-                      value: 8,
-                      message: '8文字以上64文字以下で入力してください',
-                    },
-                    maxLength: {
-                      value: 64,
-                      message: '8文字以上64文字以下で入力してください',
-                    },
+                  error={!!errors.password}
+                  helpBox
+                  textProps={{
+                    variant: 'outlined',
+                    margin: 'normal',
+                    id: 'password',
+                    label: 'パスワード',
+                    style: { margin: 0 },
                   }}
                 />
                 <Box style={{ minHeight: 20 }}>
@@ -515,13 +381,6 @@ const Signup = () => {
                 </Grid>
               </Grid>
             </Grid>
-            {/* <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="パスワードを記憶する"
-              classes={{
-                label: classes.label, // class name, e.g. `classes-nesting-label-x`
-              }}
-            /> */}
           </form>
         </div>
         <CustomAlert alertStatus={alertStatus} onClose={onAlertClose} />

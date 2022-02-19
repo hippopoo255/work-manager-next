@@ -12,12 +12,15 @@ import {
 } from '@material-ui/core'
 import { Layout } from '@/layouts'
 import { FormErrorMessage } from '@/components/atoms'
-import { CircularButton } from '@/components/molecules'
+import { CircularButton, PasswordTextField } from '@/components/molecules'
 import { strPatterns } from '@/lib/util'
 import { HelpBox } from '@/components/molecules'
 import { CustomAlert } from '@/components/atoms'
 import { AlertStatus } from '@/interfaces/common'
-import { ForgotPasswordResetInputs } from '@/interfaces/form/inputs'
+import {
+  ForgotPasswordResetInputs,
+  PasswordResetInputs,
+} from '@/interfaces/form/inputs'
 import { initialAlertStatus } from '@/lib/initialData'
 import { useLocale, usePasswordReset } from '@/hooks'
 
@@ -61,8 +64,6 @@ const PasswordReset = () => {
     reset,
     formState: { errors },
   } = useForm<ForgotPasswordResetInputs>()
-
-  const comparisonPassword = watch('password', '')
 
   const onSubmit: SubmitHandler<ForgotPasswordResetInputs> = async (data) => {
     await resetPassword(data)
@@ -167,40 +168,14 @@ const PasswordReset = () => {
                 </p>
               </Grid>
               <Grid item xs={12}>
-                <Controller
+                <PasswordTextField
                   control={control}
-                  name={'password'}
-                  rules={{
-                    required: {
-                      value: true,
-                      message: '必須項目です',
-                    },
-                    minLength: {
-                      value: 8,
-                      message: '8文字以上64文字以下で入力してください',
-                    },
-                    maxLength: {
-                      value: 64,
-                      message: '8文字以上64文字以下で入力してください',
-                    },
-                    pattern: {
-                      value: strPatterns.password,
-                      message: 'パスワードの形式が正しくありません',
-                    },
+                  error={!!errors.password}
+                  textProps={{
+                    size: 'small',
+                    variant: 'outlined',
+                    label: '新しいパスワード',
                   }}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      type="password"
-                      name="password"
-                      variant="outlined"
-                      label={'新しいパスワード'}
-                      required
-                      fullWidth
-                      size={'small'}
-                      error={!!errors.password}
-                    />
-                  )}
                 />
                 <p className={classes.msg}>
                   {!!errors.password && (
@@ -208,42 +183,6 @@ const PasswordReset = () => {
                   )}
                 </p>
               </Grid>
-              {/* <Grid item xs={12}>
-                <Controller
-                  control={control}
-                  name={'password_confirmation'}
-                  rules={{
-                    required: {
-                      value: true,
-                      message: '必須項目です',
-                    },
-                    pattern: {
-                      value: strPatterns.confirm(comparisonPassword),
-                      message: '新しいパスワードと一致しません',
-                    },
-                  }}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      type="password"
-                      name="password_confirmation"
-                      variant="outlined"
-                      label={'新しいパスワード（確認）'}
-                      required
-                      fullWidth
-                      size={'small'}
-                      error={!!errors.password_confirmation}
-                    />
-                  )}
-                />
-                <p className={classes.msg}>
-                  {!!errors.password_confirmation && (
-                    <FormErrorMessage
-                      msg={errors.password_confirmation.message}
-                    />
-                  )}
-                </p>
-              </Grid> */}
               <Grid item style={{ textAlign: 'center' }}>
                 <CircularButton
                   loading={loading}

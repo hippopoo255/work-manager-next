@@ -8,10 +8,11 @@ export type LayoutOrg = {
   children: React.ReactNode
   title?: string
   noShadow?: boolean
+  canGuest?: boolean
 }
 
-const Layout = ({ children, title, noShadow }: LayoutOrg) => {
-  const { auth } = useInitialAuthentication(true)
+const Layout = ({ children, title, noShadow, canGuest = true }: LayoutOrg) => {
+  const { auth } = useInitialAuthentication(canGuest)
   const { t } = useLocale()
   return (
     <>

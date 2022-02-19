@@ -50,7 +50,7 @@ const SearchBlogResultBox = ({
   const [loading, setLoading] = useState<boolean>(false)
 
   const handleSubmit = () => {
-    console.log('submit')
+    // console.log('submit')
   }
 
   const handleClear = async () => {

@@ -4,6 +4,7 @@ import { useContext, useEffect, useMemo } from 'react'
 import { requestUri } from '@/api'
 import { ChatRoom } from '@/interfaces/models'
 import { authOperation } from '@/globalState/user/operation'
+import { handleRedirectByAuth } from '@/lib/route'
 
 const useInitialAuthenticationOnChat = (canGuest: boolean = false) => {
   const { auth, dispatch } = useContext(AuthContext)
@@ -16,11 +17,8 @@ const useInitialAuthenticationOnChat = (canGuest: boolean = false) => {
           dispatch,
           requestUri.currentUserWithChat
         )
-        if (loggedInUserWithChat === '' && !canGuest) {
-          router.push('/login')
-        }
-        if (loggedInUserWithChat !== '' && router.pathname === '/login') {
-          router.push('/')
+        if (!canGuest) {
+          handleRedirectByAuth(loggedInUserWithChat)
         }
         if (!!loggedInUserWithChat && isMounted) {
           loggedInUserWithChat.chat_rooms.sort(

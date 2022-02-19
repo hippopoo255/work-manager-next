@@ -35,16 +35,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const MypageLayout = ({ children, title }: LayoutOrg) => {
   const classes = useStyles()
-  const { auth, router } = useInitialAuthentication()
-  useEffect(() => {
-    if (
-      auth.isLogin &&
-      !auth.user.is_initialized &&
-      router.pathname !== '/organization/create'
-    ) {
-      router.push('/organization/create')
-    }
-  }, [auth])
+  const { auth } = useInitialAuthentication()
+
   const { t } = useLocale()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [tabletOpen, setTabletOpen] = useState(false)
@@ -69,6 +61,7 @@ const MypageLayout = ({ children, title }: LayoutOrg) => {
       setTabletOpen(specified)
     }
   }
+
   return (
     <>
       <Head>

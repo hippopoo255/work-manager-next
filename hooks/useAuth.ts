@@ -14,15 +14,17 @@ const useAuth = () => {
   const router = useRouter()
   const { auth, dispatch } = useContext(AuthContext)
 
+  const pushToOrgCreateOrMyPage = (hasOrgData: boolean = true) => {
+    const path = hasOrgData ? '/mypage' : '/organization/create'
+    router.push(path)
+  }
+
   const login = useCallback(async (inputs: LoginInputs) => {
     await authOperation
       .login(inputs, dispatch)
       .then((loggedInUser: User | '') => {
-        if (loggedInUser !== '') {
-          const path = loggedInUser.is_initialized
-            ? '/mypage'
-            : '/organization/create'
-          router.push(path)
+        if (loggedInUser) {
+          pushToOrgCreateOrMyPage(loggedInUser.is_initialized)
         }
       })
   }, [])
@@ -44,11 +46,9 @@ const useAuth = () => {
         throw t.message.testLoginFail
       }
       await authOperation.testLogin(dispatch).then((testUser) => {
-        const path =
-          testUser && testUser.is_initialized
-            ? '/mypage'
-            : '/organization/create'
-        router.push(path)
+        if (testUser) {
+          pushToOrgCreateOrMyPage(testUser.is_initialized)
+        }
       })
     } catch (err) {
       throw err

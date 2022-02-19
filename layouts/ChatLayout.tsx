@@ -231,16 +231,6 @@ const ChatLayout = React.memo(
     }
 
     useEffect(() => {
-      if (
-        auth.isLogin &&
-        !auth.user.is_initialized &&
-        router.pathname !== '/organization/create'
-      ) {
-        router.push('/organization/create')
-      }
-    }, [auth])
-
-    useEffect(() => {
       if (activeRoom !== null) {
         const updatedUser = (): User | '' => {
           if (auth.isLogin) {

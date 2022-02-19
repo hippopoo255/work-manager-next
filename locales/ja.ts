@@ -15,6 +15,7 @@ export default {
         },
       },
       accountVerification: 'アカウント確認',
+      accountSetup: 'アカウント設定',
       forgot_password: 'アカウント確認',
       reset_password: 'パスワードリセット',
     },

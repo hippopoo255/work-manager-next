@@ -85,9 +85,9 @@ const Header = ({ noShadow }: Props) => {
     [classes.noShadow]: !!noShadow,
   })
 
-  const onItem = (to: string) => {
+  const onItem = async (to: string) => {
     if (to === '/logout') {
-      logout()
+      await logout()
     } else if (to === '/login') {
       // loginWithRedirect()
       router.push(to)

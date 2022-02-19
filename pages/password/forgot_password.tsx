@@ -141,6 +141,7 @@ const ForgotPassword = () => {
                       fullWidth
                       size={'small'}
                       error={!!errors.login_id}
+                      autoFocus
                     />
                   )}
                 />

@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react'
 import Head from 'next/head'
-import { MypageLayout } from '@/layouts'
+import { Layout } from '@/layouts'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import {
   Box,
@@ -26,6 +26,7 @@ import { initialAlertStatus } from '@/lib/initialData'
 import { strPatterns } from '@/lib/util'
 import { useLocale, useOrganization } from '@/hooks'
 import { useRouter } from 'next/router'
+import { PasswordTextField } from '@/components/molecules'
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -129,38 +130,14 @@ const OrganizationCreate = () => {
     })
   }
 
-  // パスワードの表示 / 非表示
-  const [type, setType] = useState<'text' | 'password'>('password')
-  const handleType = () => {
-    setType((prev) => (prev === 'text' ? 'password' : 'text'))
-  }
-  const iconByType = useMemo(() => {
-    const icon = type === 'text' ? <VisibilityIcon /> : <VisibilityOffIcon />
-    return {
-      endAdornment: (
-        <InputAdornment position="end">
-          <IconButton
-            aria-label="toggle password visibility"
-            onClick={handleType}
-            edge="end"
-          >
-            {icon}
-          </IconButton>
-        </InputAdornment>
-      ),
-    }
-  }, [type])
-
   useEffect(() => {
-    if (auth.user.is_initialized) {
-      router.push('/mypage')
-    } else if (auth.isLogin) {
+    if (auth.isLogin && !auth.user.is_initialized) {
       setInitialLoader(false)
     }
   }, [auth])
 
   return (
-    <MypageLayout title={t.head.title.organizationStore}>
+    <Layout title={t.head.title.organizationStore} canGuest={false}>
       <Head>
         <meta
           name="viewport"
@@ -443,41 +420,13 @@ const OrganizationCreate = () => {
                 </Grid>
 
                 <Grid item xs={12}>
-                  <Controller
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        fullWidth
-                        variant="outlined"
-                        required
-                        error={!!errors.password}
-                        label="管理システム用のパスワード"
-                        type={type}
-                        id="password"
-                        InputProps={iconByType}
-                        size={'small'}
-                      />
-                    )}
-                    name="password"
+                  <PasswordTextField
                     control={control}
-                    defaultValue=""
-                    rules={{
-                      required: {
-                        value: true,
-                        message: '管理システム用のパスワードは必須です',
-                      },
-                      pattern: {
-                        value: strPatterns.password,
-                        message: 'パスワードの形式が違います',
-                      },
-                      minLength: {
-                        value: 8,
-                        message: '8文字以上64文字以下で入力してください',
-                      },
-                      maxLength: {
-                        value: 64,
-                        message: '8文字以上64文字以下で入力してください',
-                      },
+                    error={!!errors.password}
+                    textProps={{
+                      size: 'small',
+                      variant: 'outlined',
+                      label: '管理システム用のパスワード',
                     }}
                   />
                   <Box style={{ minHeight: 20 }}>
@@ -502,7 +451,7 @@ const OrganizationCreate = () => {
         </div>
         <CustomAlert alertStatus={alertStatus} onClose={onAlertClose} />
       </Container>
-    </MypageLayout>
+    </Layout>
   )
 }
 export default OrganizationCreate

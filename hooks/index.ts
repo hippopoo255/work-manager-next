@@ -1,3 +1,4 @@
+export { default as useAccountSetup } from './useAccountSetup'
 export { default as useAuth } from './useAuth'
 export { default as useBlog } from './useBlog'
 export { default as useChangePassword } from './useChangePassword'

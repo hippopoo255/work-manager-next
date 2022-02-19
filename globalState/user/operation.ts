@@ -15,7 +15,9 @@ export const duplicateEmailCount = async (
   return await getRequest<User[]>(
     requestUri.user.list + `?email=${email}&likely=0&slim=1`
   )
-    .then((userList) => userList.length)
+    .then(
+      (userList) => userList.filter((user) => !!user.email_verified_at).length
+    )
     .catch((err) => {
       throw err
     })

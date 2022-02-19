@@ -14,6 +14,7 @@ export default {
         },
       },
       accountVerification: 'Account verification',
+      accountSetup: 'Account setup',
       forgot_password: 'Forgot Password',
       reset_password: 'Reset Password',
     },
