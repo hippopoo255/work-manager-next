@@ -89,7 +89,7 @@ const NotificationPanel = () => {
 
   return (
     <div className={clsx([styles.root, styles['--notification']])}>
-      <div className={styles.bg}></div>
+      <div className={clsx([styles.bg, styles['--notification']])}></div>
       <div className={clsx(['u-container', styles.content])}>
         <div className={styles.items}>
           <div className={clsx([styles.item, styles.first])}>

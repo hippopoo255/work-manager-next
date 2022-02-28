@@ -24,10 +24,12 @@ $assetPath: 'https://asset.job-support.site/assets';
   left: 0;
   width: 100%;
   height: 100%;
-  // @include bgGradient();
   background: $black;
   z-index: -1;
-  opacity: $opacityImcompletion - 0.2;
+  opacity: $opacityImcompletion - 0.4;
+  &.--notification {
+    opacity: $opacityImcompletion - 0.2;
+  }
 }
 .content {
   height: 100%;

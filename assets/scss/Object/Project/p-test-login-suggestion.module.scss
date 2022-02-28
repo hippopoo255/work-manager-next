@@ -14,10 +14,12 @@
   border-radius: $radiusBasis;
   transition: $transitionBasis;
   transition-delay: $transitionBasis;
-  &.--close {
-    animation: popout 0.4s ease-out forwards;
+  &.--open {
+    &.--close {
+      animation: popout 0.4s ease-out forwards;
+    }
+    animation: popup 0.4s ease-out forwards;
   }
-  animation: popup 0.4s 5s ease-out forwards;
 }
 .contents {
   color: $white;
