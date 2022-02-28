@@ -246,10 +246,10 @@ const Index = () => {
 
   return (
     <MypageLayout title="タスク">
-      <div className="container">
+      <div className="u-container">
         <MypageTitle>タスク</MypageTitle>
       </div>
-      <section className="container">
+      <section className="u-container">
         <TaskForm
           defaultValues={defaultValues}
           updateFlag={updateFlag}

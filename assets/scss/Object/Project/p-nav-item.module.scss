@@ -1,0 +1,44 @@
+@import '../../Foundation/variable';
+@import '../../Foundation/mixin';
+
+.root {
+  display: block;
+  padding: 20px 16px;
+  border-width: 0 0 3px 0;
+  border-style: solid;
+  border-color: transparent;
+  cursor: pointer;
+  transition: $transitionBasis;
+  font-size: $fontSizeSm;
+  position: relative;
+
+  &:hover {
+    opacity: 0.7;
+    color: $fontColorPrimary;
+    &::before {
+      width: 100%;
+      border-color: transparent transparent $primaryDark transparent;
+    }
+  }
+
+  &::before {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: -3px;
+    left: 50%;
+    transform: translate3d(-50%, 0, 0);
+    width: 0;
+    height: 0;
+    border-width: 0 0 3px 0;
+    border-style: solid;
+    border-color: transparent;
+    transition: width $transitionBasis;
+  }
+
+  @include media() {
+    width: 100%;
+    padding: 20px;
+    font-size: $fontSizeLg;
+  }
+}

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Header, Footer } from '@/components/organisms'
-import styles from '@/assets/stylesheets/components/Layout.module.scss'
+import layout from '@/assets/scss/Layout/l-layout.module.scss'
 import Head from 'next/head'
 import { useInitialAuthentication, useLocale } from '@/hooks'
 
@@ -19,14 +19,14 @@ const Layout = ({ children, title, noShadow, canGuest = true }: LayoutOrg) => {
       <Head>
         <title>{!!title ? `${title} | ${t.siteTitle}` : t.siteTitle}</title>
       </Head>
-      <div className={styles.container}>
-        <div className={styles.head}>
+      <div className={layout.root}>
+        <div className={layout.head}>
           <Header noShadow={!!noShadow} />
         </div>
-        <div className={styles.body}>
-          <main className={styles.main}>{children}</main>
+        <div className={layout.body}>
+          <main className={layout.main}>{children}</main>
         </div>
-        <div className={styles.tail}>
+        <div className={layout.tail}>
           <Footer />
         </div>
       </div>

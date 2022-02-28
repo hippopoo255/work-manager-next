@@ -5,7 +5,8 @@ import { SearchInputs } from '@/interfaces/form/inputs'
 import { Buffer } from 'buffer'
 import ja from '@/locales/ja'
 
-export const headerHeight: number = 65
+export const headerHeight: number = 64
+export const footerHeight: number = 100
 export const drawerWidth: number = 250
 export const drawerClosingWidth: number = 65
 export const chatRoomListWidth: number = 320

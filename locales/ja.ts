@@ -5,7 +5,7 @@ export default {
   head: {
     title: {
       login: 'ログイン',
-      signup: 'ユーザ登録',
+      signup: 'アカウント登録',
       organizationStore: '組織情報登録',
       mypage: {
         index: 'ダッシュボード',
@@ -65,6 +65,17 @@ export default {
     schedule: 'スケジュール機能',
     task: 'タスク機能',
     chat: 'チャット機能',
+    notification: '通知のタイミング',
+    realtime: 'リアルタイムチャット',
+  },
+  feature: {
+    meetingRecord: '議事録',
+    schedule: 'スケジュール',
+    task: 'タスク',
+    blog: 'ブログ',
+    chat: 'チャット',
+    notification: '通知',
+    realtime: 'リアルタイム',
   },
   blog: {
     status: {

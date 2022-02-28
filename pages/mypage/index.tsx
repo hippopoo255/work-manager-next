@@ -41,7 +41,7 @@ const Dashboard = (props: Props) => {
   return (
     <MypageLayout title={t.head.title.mypage.index}>
       <>
-        <section className="container">
+        <section className="u-container">
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <LatestMeetingRecord wrapClasses={fixedHeightPaper} />

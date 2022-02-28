@@ -117,7 +117,6 @@ const BlogForm = (
     await save(input)
       .then((data: Blog | null) => {
         if (data === null) {
-          console.log('投稿に失敗しました')
           return false
         }
         router.push('/mypage/blog')
@@ -141,14 +140,12 @@ const BlogForm = (
   }, [defaultValues])
 
   const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    await uploadFile(e.target.files![0]).then((d) => {
-      // console.log(d)
-    })
+    await uploadFile(e.target.files![0]).then((d) => {})
   }
 
   return (
     <>
-      <Card className={clsx(['container', classes.top])}>
+      <Card className={clsx(['u-container', classes.top])}>
         <div>
           <div className={classes.wrap}>
             <FormTitle

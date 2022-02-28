@@ -1,0 +1,109 @@
+@import '../Foundation/variable';
+
+.root {
+  z-index: $zIndexHeader;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  color: $fontColorBasis;
+  transition: $transitionBasis;
+  box-shadow: $shadow4;
+  // opacity: 0.5;
+  &.__transparent {
+    background: transparent;
+    color: $white;
+    box-shadow: none;
+    .overlay {
+      opacity: 0;
+    }
+    .site-logo {
+      border-color: $white;
+      &__svg {
+        fill: $white;
+      }
+    }
+    &:hover {
+      color: $fontColorBasis;
+      box-shadow: $shadow4;
+      .overlay {
+        opacity: $opacityImcompletion;
+      }
+      .site-logo {
+        border-color: $fontColorBasis;
+        &__svg {
+          fill: $fontColorBasis;
+        }
+      }
+    }
+    @media (hover: none) {
+      &:hover {
+        color: $white;
+        box-shadow: none;
+        .overlay {
+          opacity: 0;
+        }
+        .site-logo {
+          border-color: $white;
+          &__svg {
+            fill: $white;
+          }
+        }
+      }
+      &:active {
+        color: $fontColorBasis;
+        box-shadow: $shadow4;
+        .overlay {
+          opacity: $opacityImcompletion;
+        }
+        .site-logo {
+          border-color: $fontColorBasis;
+          &__svg {
+            fill: $fontColorBasis;
+          }
+        }
+      }
+    }
+  }
+}
+
+.site-logo {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  // border: 1px solid $fontColorBasis;
+  transition: $transitionBasis;
+  &:hover {
+    opacity: $opacityImcompletion - 0.1;
+  }
+  &__svg {
+    fill: $fontColorBasis;
+    transition: $transitionBasis;
+    width: 32px;
+    height: 32px;
+    &.white {
+      fill: $white;
+    }
+  }
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: $white;
+  opacity: $opacityImcompletion;
+  transition: $transitionBasis;
+  z-index: -1;
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

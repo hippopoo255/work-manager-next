@@ -20,12 +20,12 @@ const BlogEdit = () => {
 
   return (
     <MypageLayout title="ブログ更新">
-      <div className="container">
+      <div className="u-container">
         <Breadcrumbs links={breadcrumbs} />
         <MypageTitle>ブログ新規投稿</MypageTitle>
       </div>
       <section>
-        <div className="container">
+        <div className="u-container">
           <BlogForm defaultValues={defaultValues} save={updateBlog} />
         </div>
       </section>

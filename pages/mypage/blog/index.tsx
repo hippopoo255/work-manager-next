@@ -74,11 +74,11 @@ const Index = () => {
 
   return (
     <MypageLayout title="ブログ">
-      <div className="container">
+      <div className="u-container">
         <MypageTitle>ブログ</MypageTitle>
       </div>
       <section>
-        <Box className="container" mt={5}>
+        <Box className="u-container" mt={5}>
           <SearchBox
             position={{
               paddingBottom: 16,
@@ -106,7 +106,7 @@ const Index = () => {
           </Grid>
           {nextToken && (
             <Box
-              className="container"
+              className="u-container"
               mt={2}
               display={'flex'}
               justifyContent={'center'}

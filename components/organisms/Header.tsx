@@ -120,7 +120,7 @@ const Header = ({ noShadow }: Props) => {
 
   return (
     <AppBar position="fixed" className={headerClass} color="inherit">
-      <Toolbar className="container">
+      <Toolbar className="u-container">
         <nav className={classes.list}>
           <HeaderGrowContent />
         </nav>

@@ -12,7 +12,7 @@ import { IconButton } from '@material-ui/core'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import { UserAvatar } from '@/components/atoms'
 import { useAuth, useLocale } from '@/hooks'
-
+import Link from 'next/link'
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     menuBox: {
@@ -46,16 +46,19 @@ const AvatarMenu = () => {
     },
     {
       id: 'logout',
-      to: '/logout',
+      to: null,
       text: t.authMenu.logout,
     },
   ]
   const [open, setOpen] = useState(false)
   const anchorRef = useRef<HTMLButtonElement>(null)
 
-  const handleItem = async (to: string, e: React.MouseEvent<EventTarget>) => {
+  const handleItem = async (
+    to: string | null,
+    e: React.MouseEvent<EventTarget>
+  ) => {
     handleClose(e)
-    if (to === '/logout') {
+    if (!to) {
       await logout()
     } else {
       router.push(to)
@@ -136,11 +139,18 @@ const AvatarMenu = () => {
                   >
                     {menus.length > 0 &&
                       menus.map((menu) => (
-                        <MenuItem
-                          key={menu.id}
-                          onClick={handleItem.bind(null, menu.to)}
-                        >
-                          {menu.text}
+                        <MenuItem key={menu.id}>
+                          {!!menu.to ? (
+                            <Link href={menu.to!} key={menu.id} passHref>
+                              <a onClick={handleItem.bind(null, menu.to)}>
+                                {menu.text}
+                              </a>
+                            </Link>
+                          ) : (
+                            <span onClick={handleItem.bind(null, menu.to)}>
+                              {menu.text}
+                            </span>
+                          )}
                         </MenuItem>
                       ))}
                   </MenuList>

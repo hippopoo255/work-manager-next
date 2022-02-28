@@ -73,7 +73,6 @@ const BlogDetail = () => {
     await deleteBlog()
       .then((blog) => {
         if (blog === null) {
-          console.log('投稿に失敗しました')
           return false
         }
         Router.push(`/mypage/blog`)
@@ -109,11 +108,11 @@ const BlogDetail = () => {
 
   return !!blog ? (
     <MypageLayout title={blog.title}>
-      <div className="container">
+      <div className="u-container">
         <Breadcrumbs links={breadcrumbs} />
       </div>
       <section>
-        <div className="container">
+        <div className="u-container">
           <div>
             <div className={classes.layout}>
               <div className={classes.operator}>

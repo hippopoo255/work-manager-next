@@ -3,10 +3,11 @@ import SendOutlinedIcon from '@material-ui/icons/SendOutlined'
 
 type Props = {
   className?: any
+  fontSize?: string
 }
 
-const ChatIcon = ({ className }: Props) => {
-  return <SendOutlinedIcon className={className} />
+const ChatIcon = ({ className, fontSize }: Props) => {
+  return <SendOutlinedIcon style={{ fontSize }} className={className} />
 }
 
 export default ChatIcon

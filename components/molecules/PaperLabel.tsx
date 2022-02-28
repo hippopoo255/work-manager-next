@@ -8,12 +8,12 @@ import { linerGradient } from '@/assets/color/gradient'
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     wrap: {
-      filter: `drop-shadow(0 3px 6px #aaaaaa)`,
+      filter: `drop-shadow(-6px 4px 10px rgba(0,0,0,0.32))`,
       overflow: 'hidden',
       borderRadius: 4,
     },
     colorPaper: {
-      background: linerGradient.primary,
+      background: linerGradient.colder,
       color: theme.palette.common.white,
       padding: `${theme.spacing(2)}px ${theme.spacing(2)}px `,
       clipPath: 'polygon(15% 0, 100% 0, 100% 85%, 85% 100%, 0 100%, 0 15%)',

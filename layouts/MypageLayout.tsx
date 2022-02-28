@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { MypageHeader as Header, Footer, Sidebar } from '@/components/organisms'
-import styles from '@/assets/stylesheets/components/MypageLayout.module.scss'
+import layout from '@/assets/scss/Layout/l-mypage-layout.module.scss'
 import Head from 'next/head'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
@@ -13,10 +13,6 @@ export type LayoutOrg = {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      display: 'flex',
-      minHeight: '100%',
-    },
     // necessary for main to be below app bar
     appBarSpacer: theme.mixins.toolbar,
     content: {
@@ -67,7 +63,7 @@ const MypageLayout = ({ children, title }: LayoutOrg) => {
       <Head>
         <title>{!!title ? `${title} | ${t.siteTitle}` : t.siteTitle}</title>
       </Head>
-      <div className={classes.root}>
+      <div className={layout.root}>
         <CssBaseline />
         <Header toggleMenu={handleDrawerToggle} />
         <Sidebar
@@ -81,7 +77,7 @@ const MypageLayout = ({ children, title }: LayoutOrg) => {
             <div className={classes.appBarSpacer} />
             {children}
           </main>
-          <div className={styles.tail}>
+          <div className={layout.tail}>
             <Footer />
           </div>
         </div>

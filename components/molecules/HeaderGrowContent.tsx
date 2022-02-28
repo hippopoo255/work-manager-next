@@ -35,7 +35,7 @@ const HeaderGrowContent = () => {
       <ListItem disableGutters className={clsx([classes.item, classes.link])}>
         <Link href={'/'}>
           <a>
-            <SiteLogo />
+            <SiteLogo white />
           </a>
         </Link>
       </ListItem>

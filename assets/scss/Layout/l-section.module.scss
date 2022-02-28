@@ -1,0 +1,10 @@
+@import '../Foundation/variable';
+
+.root {
+  // padding: 80px 0;
+  // background: blue;
+  height: 1000px;
+  &:nth-of-type(odd) {
+    background: $white;
+  }
+}

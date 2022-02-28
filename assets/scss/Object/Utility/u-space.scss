@@ -1,0 +1,15 @@
+@mixin space() {
+  @for $i from 1 through 20 {
+    @each $propKey, $propVal in $property {
+      @each $positionKey, $positionValueArr in $position {
+        .u-#{$propKey}#{$positionKey}-#{$i} {
+          @each $position in $positionValueArr {
+            #{$propVal}-#{$position}: $spaceBasis * $i;
+          }
+        }
+      }
+    }
+  }
+}
+
+@include space();

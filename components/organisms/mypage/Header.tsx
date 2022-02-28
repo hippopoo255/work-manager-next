@@ -53,7 +53,7 @@ const MypageHeader = ({ toggleMenu }: Props) => {
   return (
     <AppBar position="fixed" className={classes.appBar}>
       <div className={classes.toolBarWrap}>
-        <Toolbar className={clsx([classes.toolBar, 'container'])}>
+        <Toolbar className={clsx([classes.toolBar, 'u-container'])}>
           <Hidden mdUp implementation="css">
             <IconButton
               color="inherit"
