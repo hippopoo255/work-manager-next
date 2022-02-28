@@ -1,0 +1,39 @@
+@import './variable';
+
+@mixin media($breakPoint: 'md') {
+  @media #{map-get($breakPoints, $breakPoint)} {
+    @content;
+  }
+}
+
+@mixin gap() {
+  @for $i from 1 through 20 {
+    &__gap-#{$i} {
+      gap: $spaceBasis * $i;
+    }
+  }
+}
+
+@mixin bgGradient($color: 'primary') {
+  background: map-get($gradients, $color);
+}
+
+@mixin space($t, $r, $b, $l) {
+  padding: $spaceBasis * $t $spaceBasis * $r $spaceBasis * $b $spaceBasis * $l;
+}
+
+@mixin gradientModifier() {
+  @each $modifier, $gradient in $featuresColor {
+    &.#{$modifier} {
+      background: $gradient;
+    }
+  }
+}
+
+@mixin bgModifier() {
+  @each $modifier, $image in $featuresImage {
+    &.#{$modifier} {
+      background-image: url('#{$assetPath}/#{$image}');
+    }
+  }
+}

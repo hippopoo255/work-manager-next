@@ -3,9 +3,12 @@ import EventAvailableOutlinedIcon from '@material-ui/icons/EventAvailableOutline
 
 type Props = {
   className?: any
+  fontSize?: string
 }
-const ScheduleIcon = ({ className }: Props) => {
-  return <EventAvailableOutlinedIcon className={className} />
+const ScheduleIcon = ({ className, fontSize }: Props) => {
+  return (
+    <EventAvailableOutlinedIcon style={{ fontSize }} className={className} />
+  )
 }
 
 export default ScheduleIcon

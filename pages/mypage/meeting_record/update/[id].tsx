@@ -75,11 +75,11 @@ const MeetingRecordUpdate = () => {
 
   return (
     <MypageLayout title="議事録更新">
-      <div className="container">
+      <div className="u-container">
         <Breadcrumbs links={breadcrumbs} />
         <MypageTitle>{defaultValues.title}</MypageTitle>
       </div>
-      <section className="container">
+      <section className="u-container">
         <Box className={classes.wrap}>
           <FormTitle title={'更新フォーム'} icon={<MenuBookOutlinedIcon />} />
         </Box>

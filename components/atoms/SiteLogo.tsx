@@ -1,41 +1,32 @@
 import React from 'react'
-import { Typography, Box } from '@material-ui/core'
-import { makeStyles, Theme } from '@material-ui/core'
-import Image from 'next/image'
+import Logo from '@/assets/images/site_logo.svg'
+import Link from 'next/link'
+import clsx from 'clsx'
+import headerStyle from '@/assets/scss/Layout/l-header.module.scss'
 
-const useStyles = makeStyles((theme: Theme) => ({
-  logo: {
-    display: 'inline-block',
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.common.white,
-  },
-  overline: {
-    lineHeight: 1.3,
-  },
-}))
-const SiteLogo = () => {
-  const classes = useStyles()
+type Props = {
+  white?: boolean
+}
+
+const SiteLogo = ({ white }: Props) => {
   return (
-    <Box className={classes.logo}>
-      <Box>
-        <Image
-          src={'/site_icon_white.svg'}
-          alt="site icon"
-          height={28}
-          width={32}
+    <div className={headerStyle['site-logo']}>
+      <Link href="/" passHref>
+        <Logo
+          className={clsx('c-site-logo', headerStyle['site-logo__svg'], {
+            [headerStyle.white]: white,
+          })}
         />
-      </Box>
-      <Typography
-        className={classes.overline}
-        variant={'overline'}
-        color={'inherit'}
-        component={'p'}
-      >
-        JYOBU SAPO
-      </Typography>
-    </Box>
+      </Link>
+      {/* <Typography
+          className={classes.overline}
+          variant={'overline'}
+          color={'inherit'}
+          component={'p'}
+        >
+          JYOBU SAPO
+        </Typography> */}
+    </div>
   )
 }
 

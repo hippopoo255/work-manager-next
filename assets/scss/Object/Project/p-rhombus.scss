@@ -1,0 +1,33 @@
+@import '../../Foundation/variable';
+@import '../../Foundation/mixin';
+
+.p-rhombus {
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  color: $white;
+  position: relative;
+  .bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transform: rotate3d(0, 0, 1, 45deg);
+    border-radius: $radiusBasis;
+    box-shadow: $shadow4;
+    z-index: -1;
+    @include bgGradient();
+    @include gradientModifier();
+  }
+}
+
+@include media() {
+  .p-rhombus {
+    width: 96px;
+    height: 96px;
+  }
+}

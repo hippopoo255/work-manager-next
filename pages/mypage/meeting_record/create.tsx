@@ -48,11 +48,11 @@ const MeetingRecordCreate = ({ meetingPlaceList }: Props) => {
 
   return (
     <MypageLayout title="議事録追加">
-      <div className="container">
+      <div className="u-container">
         <Breadcrumbs links={breadcrumbs} />
         <MypageTitle>議事録</MypageTitle>
       </div>
-      <section className="container">
+      <section className="u-container">
         <Box className={classes.wrap}>
           <FormTitle title={'新規追加フォーム'} icon={<MeetingRecordIcon />} />
         </Box>

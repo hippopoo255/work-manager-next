@@ -4,7 +4,7 @@ import { useLocale, useAuth } from '@/hooks'
 
 type Props = {
   options?: {
-    [k: string]: boolean | string
+    [k: string]: any
   }
 }
 
@@ -34,7 +34,9 @@ const TestLoginButton = ({
       loading={loading}
       submitText={t.common.testLogin}
       onClick={handleDemoUser}
-      options={{ ...options }}
+      options={{
+        ...options,
+      }}
     />
   )
 }

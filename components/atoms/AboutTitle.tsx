@@ -45,7 +45,7 @@ type Props = {
 const AboutTitle = ({ main, sub, Icon }: Props) => {
   const classes = useStyles()
   return (
-    <Box className={clsx(['container', classes.top])}>
+    <Box className={clsx(['u-container', classes.top])}>
       <Box className={classes.title}>
         <Typography component={'h3'} variant={'h5'} className={classes.main}>
           <span>{main}</span>

@@ -49,9 +49,7 @@ const SearchBlogResultBox = ({
   const classes = useStyles()
   const [loading, setLoading] = useState<boolean>(false)
 
-  const handleSubmit = () => {
-    // console.log('submit')
-  }
+  const handleSubmit = () => {}
 
   const handleClear = async () => {
     setLoading(true)

@@ -22,9 +22,9 @@ export default {
   main: {
     title: 'What is :site_title？',
     description:
-      ':site_title is a service that aims to be a "convenient and easy-to-use business support system." By using this service, you can complete tasks such as "meeting minutes creation", "schedule management", and "task management".  n In recent years, due to the promotion of telework, etc., there have been more opportunities to work while there is a physical distance between internal members.  nThis service also has a "chat function" that contributes to communication in such an environment.',
+      ':site_title is a service that aims to be a "convenient and easy-to-use business support system." By using this service, you can complete tasks such as "minutes creation", "schedule management", and "task management".  n In recent years, due to the promotion of telework, etc., there have been more opportunities to work while there is a physical distance between internal members.  nThis service also has a "chat function" that contributes to communication in such an environment.',
     descriptionOmit:
-      ':site_title is a business support service that provides functions such as "meeting record creation," "schedule management," "task management," and "chat."',
+      ':site_title is a business support service that provides functions such as "minutes creation," "schedule management," "task management," and "chat."',
   },
   authMenu: {
     mypage: 'My Page',
@@ -60,11 +60,23 @@ export default {
     },
   },
   application: {
-    meetingRecord: 'Meeting Record',
+    meetingRecord: 'Minutes',
     schedule: 'Schedule Manager',
     task: 'Task Manager',
     chat: 'Chat',
+    notification: 'About Notification',
+    realtime: 'About Realtime',
   },
+  feature: {
+    meetingRecord: 'minutes',
+    schedule: 'Schedule',
+    task: 'Task',
+    blog: 'Blog',
+    chat: 'Chat',
+    notification: 'Notification',
+    realtime: 'Realtime',
+  },
+
   blog: {
     status: {
       done: 'post',
@@ -90,7 +102,7 @@ export default {
     moveToLogin: 'Do you already have an account?',
   },
   mypage: {
-    recentMeetingRecord: 'Recent Meeting Record',
+    recentMeetingRecord: 'Recent Minutes',
     dailySchedule: "Today's Schedule",
     expiredTasks: 'Expired Tasks',
     approachedTasks: 'Approached Tasks',

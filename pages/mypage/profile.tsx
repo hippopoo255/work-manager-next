@@ -271,10 +271,10 @@ const Profile = () => {
   return (
     <MypageLayout title={'プロフィール'}>
       <MypageTitle>
-        <div className="container">プロフィール</div>
+        <div className="u-container">プロフィール</div>
       </MypageTitle>
       <section>
-        <Card className={clsx(['container', classes.top])}>
+        <Card className={clsx(['u-container', classes.top])}>
           <div>
             <div className={classes.wrap}>
               <FormTitle

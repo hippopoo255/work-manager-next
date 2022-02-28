@@ -159,10 +159,10 @@ const Index = () => {
   return (
     <MypageLayout title="設定">
       <MypageTitle>
-        <div className="container">設定</div>
+        <div className="u-container">設定</div>
       </MypageTitle>
       <section>
-        <Card className={clsx(['container', classes.top])}>
+        <Card className={clsx(['u-container', classes.top])}>
           <div>
             <div className={classes.wrap}>
               <FormTitle title={'設定'} icon={<SettingsOutlinedIcon />} />

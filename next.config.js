@@ -23,4 +23,7 @@ module.exports = withTM({
 
     return config
   },
+  experimental: {
+    scrollRestoration: true,
+  },
 })

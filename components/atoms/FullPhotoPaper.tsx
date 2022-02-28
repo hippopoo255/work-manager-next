@@ -5,12 +5,16 @@ import { STORAGE_URL } from '@/lib/util'
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
-    width: '100%',
-    height: '100%',
-    minHeight: 88,
+    width: 160,
+    height: 160,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
-    [theme.breakpoints.down('xs')]: {},
+    borderRadius: 9999,
+    boxShadow: theme.shadows[5],
+    [theme.breakpoints.down('xs')]: {
+      width: 120,
+      height: 120,
+    },
   },
 }))
 

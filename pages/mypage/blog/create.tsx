@@ -19,12 +19,12 @@ const BlogCreate = () => {
   const { defaultValues, createBlog } = useBlog()
   return (
     <MypageLayout title="ブログ新規投稿">
-      <div className="container">
+      <div className="u-container">
         <Breadcrumbs links={breadcrumbs} />
         <MypageTitle>ブログ新規投稿</MypageTitle>
       </div>
       <section>
-        <div className="container">
+        <div className="u-container">
           <BlogForm defaultValues={defaultValues} save={createBlog} />
         </div>
       </section>

@@ -1,8 +1,8 @@
 import React from 'react'
-import styles from '@/assets/stylesheets/components/Footer.module.scss'
+import styles from '@/assets/scss/Layout/l-footer.module.scss'
 import { Box, Typography } from '@material-ui/core'
 import Link from '@material-ui/core/Link'
-import { BIRTH_DAY, SITE_TITLE, APP_URL } from '@/lib/util'
+import { BIRTH_DAY, APP_URL } from '@/lib/util'
 import { makeStyles } from '@material-ui/core/styles'
 import { useLocale } from '@/hooks'
 
@@ -34,7 +34,7 @@ const Footer = () => {
 
   return (
     <footer className={styles.footer}>
-      <div className="container">
+      <div className="u-container">
         <Copyright />
         <Box className={classes.logoby}>
           Logo created by{' '}

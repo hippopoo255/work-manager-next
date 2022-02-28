@@ -1,0 +1,33 @@
+@import '../../Foundation/variable';
+
+.logo {
+  height: 1em;
+  margin-left: 0.5rem;
+}
+
+.u-container {
+  width: 100%;
+  max-width: $baseWidth;
+  margin: 0 auto;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.u-text-center {
+  text-align: center;
+}
+
+.u-animation-fadein {
+  opacity: 0;
+  animation: fadein 1s ease-out forwards;
+}
+
+@keyframes fadein {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}

@@ -158,10 +158,10 @@ const Index = () => {
 
   return (
     <MypageLayout title="議事録">
-      <div className="container">
+      <div className="u-container">
         <MypageTitle>議事録</MypageTitle>
       </div>
-      <section className="container">
+      <section className="u-container">
         <CommonTable
           headCells={headCells}
           onDelete={handleDeleteClick}

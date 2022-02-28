@@ -5,9 +5,9 @@ import { AboutTitle } from '@/components/atoms'
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     top: {
-      padding: '64px 32px',
+      padding: theme.spacing(0, 4),
       [theme.breakpoints.down('sm')]: {
-        padding: '64px 0',
+        padding: theme.spacing(0),
       },
     },
   })

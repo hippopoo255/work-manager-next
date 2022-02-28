@@ -1,0 +1,214 @@
+@import '../Foundation/variable';
+@import '../Foundation/mixin';
+
+.root {
+  display: flex;
+  height: 100%;
+  position: relative;
+  // width: 100%;
+
+  &.even {
+    .inner {
+      justify-content: flex-start;
+    }
+    .first {
+      order: 2;
+    }
+    .feature-name {
+      left: initial;
+      right: -120px;
+      text-align: right;
+    }
+  }
+}
+.inner {
+  flex: 1 0 auto;
+  width: 50%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.content {
+  padding: 120px;
+  max-width: 1000px;
+}
+.first {
+  background: darken($primaryColor, 5%);
+  color: #fff;
+}
+.mission {
+  font-family: $fontFamilyTitleSimple;
+  display: flex;
+  align-items: flex-start;
+  line-height: 1;
+  // gap: 4px;
+}
+.fixed {
+  flex-shrink: 0;
+}
+.main-title {
+  font-size: $titleSizeKing * 1.2;
+  display: block;
+  letter-spacing: 0.1em;
+}
+.sub-title {
+  margin-top: 4px;
+  display: block;
+}
+.index {
+  font-size: 88px;
+  display: block;
+  position: relative;
+  top: -4px;
+}
+.description {
+  line-height: 1.8;
+  margin: 60px 0 0;
+  word-break: break-all;
+  // max-width: 600px;
+}
+.second {
+  @include bgModifier();
+  background-position: center;
+  background-size: cover;
+  position: relative;
+  z-index: 1;
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: $black;
+    opacity: 0.3;
+    z-index: -1;
+  }
+}
+.feature-name {
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    @include bgGradient();
+    opacity: $opacityImcompletion - 0.2;
+    z-index: -1;
+  }
+  max-width: 1000px;
+  position: absolute;
+  top: 90px;
+  left: -120px;
+  width: 100%;
+  padding: 20px 60px 32px;
+  text-align: left;
+  color: $white;
+  font-size: $titleSizeKing;
+  letter-spacing: 0.1em;
+  font-family: $fontFamilyTitle;
+  z-index: 1;
+}
+.feature-name-text {
+  position: relative;
+  &::before {
+    content: '- ' attr(data-subja) ' -';
+    position: absolute;
+    bottom: -12px;
+    right: 50%;
+    transform: translate3d(50%, 0, 0);
+    font-size: $fontSizeSm;
+    color: darken($white, 5%);
+    letter-spacing: 0;
+    word-break: keep-all;
+    white-space: nowrap;
+    letter-spacing: 0.1em;
+  }
+}
+
+.central-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  z-index: 1;
+}
+
+@include media('xl') {
+  .inner {
+    justify-content: center;
+  }
+}
+
+@include media('lg') {
+  .main-title {
+    font-size: $titleSizeKing;
+    letter-spacing: 0.1em;
+  }
+  .sub-title {
+    margin-top: 4px;
+    font-size: $fontSizeSm;
+  }
+  .index {
+    font-size: 72px;
+  }
+  .inner {
+    justify-content: center;
+  }
+  .content {
+    padding: 96px;
+  }
+}
+
+@include media() {
+  .root {
+    flex-direction: column;
+    &.even {
+      .feature-name {
+        text-align: center;
+        right: initial;
+        left: 0;
+        width: 100%;
+      }
+    }
+  }
+  .inner {
+    width: 100%;
+    height: 50%;
+  }
+  .first {
+    order: 2;
+  }
+  .feature-name {
+    text-align: center;
+    top: initial;
+    right: initial;
+    bottom: 120px;
+    left: 0;
+    width: 100%;
+  }
+}
+
+@include media('sm') {
+  .feature-name {
+    bottom: 100px;
+    font-size: $titleSizeXl;
+    padding: 20px 28px 36px;
+  }
+  .feature-name-text {
+    &::before {
+      bottom: -16px;
+    }
+  }
+  .content {
+    padding: 45px 30px;
+  }
+  .mission {
+    justify-content: center;
+  }
+  .main-title {
+    letter-spacing: 0.04em;
+  }
+}

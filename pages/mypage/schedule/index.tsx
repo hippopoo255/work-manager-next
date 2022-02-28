@@ -34,7 +34,7 @@ const UserField = ({ users, onChange }: Props) => {
     onChange(event, newValue)
   }
   return (
-    <div className={'container'}>
+    <div className={'u-container'}>
       <Grid container justifyContent={'flex-end'} alignItems={'center'}>
         <Grid item style={{ marginBottom: 16 }}>
           <Autocomplete
@@ -193,7 +193,7 @@ const Index = () => {
 
   return (
     <MypageLayout title="スケジュール">
-      <div className="container">
+      <div className="u-container">
         <MypageTitle>スケジュール</MypageTitle>
       </div>
       <section>
@@ -213,7 +213,7 @@ const Index = () => {
               : 'スケジュールの登録'
           }
         />
-        <div className="container">
+        <div className="u-container">
           {!loading ? <Calendar /> : <CustomLoader />}
         </div>
         <ConfirmDialog

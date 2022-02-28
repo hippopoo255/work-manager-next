@@ -1,0 +1,43 @@
+@import '../../Foundation/variable';
+@import '../../Foundation/mixin';
+
+.root {
+}
+
+.list {
+  height: 100%;
+  display: flex;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+}
+
+@include media() {
+  .root {
+  }
+  .list {
+    padding-top: $headerHeight + $spaceBasis * 4;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: $white;
+    width: 100%;
+    flex-direction: column;
+    color: $fontColorBasis;
+    box-shadow: $shadow4;
+    z-index: -1;
+    transform: translate3d(100%, 0, 0);
+    transition: $transitionBasis;
+    overflow-y: scroll;
+    &.open {
+      transform: none;
+    }
+  }
+  .item {
+    width: 100%;
+    border-bottom: 1px solid #dddddd;
+  }
+}

@@ -1,0 +1,10 @@
+@import '../Foundation/variable';
+
+.root {
+  padding-top: $headerHeight;
+  // background: $primaryColor;
+  &.isTop {
+    // 中にmain-visualが入るので0にする
+    padding-top: 0;
+  }
+}

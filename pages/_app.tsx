@@ -1,4 +1,7 @@
-import '@/assets/stylesheets/globals.scss'
+import 'swiper/swiper-bundle.min.css'
+import '@/assets/scss/globals.scss'
+// import 'swiper/swiper.scss'
+// import 'swiper/swiper.min.css'
 import { ThemeProvider } from '@material-ui/core/styles'
 import { StylesProvider } from '@material-ui/styles'
 

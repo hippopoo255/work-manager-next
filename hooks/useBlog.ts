@@ -44,7 +44,6 @@ const useBlog = () => {
   )
 
   const createBlog = async (input: CreateBlogInput) => {
-    console.log()
     input.body = input.body.replace(/\r?\n/g, '\\n')
     input.body = input.body.replace(/"/g, '\\"')
     const args = { input }

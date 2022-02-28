@@ -145,13 +145,13 @@ const MeetingRecordDetail = () => {
 
   return (
     <MypageLayout title={!!meetingRecord ? meetingRecord.title : ''}>
-      <div className="container">
+      <div className="u-container">
         <Breadcrumbs links={links} />
         <MypageTitle>
           {meetingRecord === null ? '' : meetingRecord.title}
         </MypageTitle>
       </div>
-      <section className="container">
+      <section className="u-container">
         <Paper className={classes.body}>
           <Grid container spacing={2} className={classes.minHeight}>
             <Grid item xs={12}>
