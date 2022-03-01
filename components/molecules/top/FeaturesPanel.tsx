@@ -38,7 +38,7 @@ const FeaturesPanel = () => {
             {/* <div className={styles.picture}></div> */}
           </div>
           <div className={clsx([styles.item, styles.second])}>
-            <ul className={clsx([styles.icons, 'u-px-5'])}>
+            <ul className={clsx([styles.icons])}>
               {feats.slice(0, 4).map((feature) => (
                 <li className={styles.icon} key={feature.to}>
                   <RoundedIcon

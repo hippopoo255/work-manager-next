@@ -42,13 +42,29 @@ $assetPath: 'https://asset.job-support.site/assets';
   flex-wrap: wrap;
   justify-content: space-around;
   width: 100%;
-  gap: $spaceBasis * 5;
+  margin: -20px;
 }
 
 .icon {
   display: flex;
   align-items: center;
   flex-direction: column;
+  padding: 20px;
+  z-index: 1;
+  position: relative;
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: $black;
+    opacity: $opacityImcompletion - 0.2;
+    z-index: -1;
+    border-radius: $radiusBasis;
+  }
+  color: $white;
 }
 
 .icon-devide {
@@ -57,7 +73,8 @@ $assetPath: 'https://asset.job-support.site/assets';
 
 .link {
   width: 100%;
-  box-shadow: $shadow4;
+  color: $white;
+  box-shadow: $shadow2;
 }
 
 .items {
@@ -148,6 +165,10 @@ $assetPath: 'https://asset.job-support.site/assets';
   .sub {
     font-size: $fontSizeSm;
   }
+  .icon {
+    margin: 8px;
+    padding: 8px 12px;
+  }
 }
 
 @include media() {
@@ -193,7 +214,7 @@ $assetPath: 'https://asset.job-support.site/assets';
   }
   .cards {
     gap: 0;
-    align-items: flex-start;
+    align-items: stretch;
     > *:not(:first-child) {
       margin-top: 8px;
     }
@@ -235,13 +256,14 @@ $assetPath: 'https://asset.job-support.site/assets';
   }
   .icons {
     align-items: flex-start;
-    gap: 0;
-    margin: -8px -16px;
+    margin: -16px 20px;
   }
-  .icon {
-    margin: 8px 16px;
-  }
+
   .icon-devide {
     margin-top: 4px;
+  }
+  .icon {
+    margin: 4px;
+    padding: 8px 12px;
   }
 }

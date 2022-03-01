@@ -4,15 +4,21 @@ import clsx from 'clsx'
 import Features from '@/lib/features'
 import { MissionTitle } from '@/components/molecules/top'
 import ScheduleFeat01Icon from '@/assets/images/schedule_feat01.svg'
-import { featuresIcon } from '@/assets/images'
+import ScheduleFeat02Icon from '@/assets/images/schedule_feat02.svg'
+import ScheduleFeat03Icon from '@/assets/images/schedule_feat03.svg'
 
 type Props = {
   index: number
   icon: JSX.Element
 }
 
-const BaseSection = ({ index, icon }: Props) => {
+const ScheduleSection = ({ index, icon }: Props) => {
   const feature = Features()[index]
+  const icons = [
+    <ScheduleFeat01Icon key="01" className={'p-panel__icon'} />,
+    <ScheduleFeat02Icon key="02" className={'p-panel__icon'} />,
+    <ScheduleFeat03Icon key="03" className={'p-panel__icon'} />,
+  ]
   return (
     <div
       className={clsx(styles.root, {
@@ -20,12 +26,6 @@ const BaseSection = ({ index, icon }: Props) => {
       })}
     >
       <div className={clsx([styles.inner, styles.first, styles[feature.id]])}>
-        {/* <div className={clsx([styles['central-icon']])}>
-          <div className={clsx(['p-rhombus', feature.id])}>
-            <div className={clsx(['bg', feature.id])}></div>
-            {icon}
-          </div>
-        </div> */}
         <div className={styles.content}>
           <div className={styles['title-wrap']}>
             <MissionTitle
@@ -60,7 +60,7 @@ const BaseSection = ({ index, icon }: Props) => {
                         className={clsx(['p-panel__title-line', feature.id])}
                       ></div>
                     </h4>
-                    <div className="u-text-center">{point.icon}</div>
+                    <div className="p-panel__icon-wrap">{icons[index]}</div>
                     <p className="p-panel__body">{point.text}</p>
                   </div>
                 </div>
@@ -73,4 +73,4 @@ const BaseSection = ({ index, icon }: Props) => {
   )
 }
 
-export default BaseSection
+export default ScheduleSection

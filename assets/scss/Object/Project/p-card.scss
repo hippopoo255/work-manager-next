@@ -1,12 +1,16 @@
 // @import '../../Foundation/variable';
 @import '../../Foundation/mixin';
 
-.root {
+.p-card {
   width: 100%;
   max-width: 320px;
   margin: 0 auto;
   box-shadow: 0px 6px 6px -3px rgb(0 0 0 / 20%),
     0px 10px 14px 1px rgb(0 0 0 / 14%), 0px 4px 18px 3px rgb(0 0 0 / 12%);
+
+  &__content {
+    padding: 16px;
+  }
 }
 
 @include media('sm') {

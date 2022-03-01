@@ -1,22 +1,34 @@
 @import '../Foundation/variable';
 @import '../Foundation/mixin';
 
+$pointWidth: 300px;
+$pointHeight: 170px;
+
 .root {
   display: flex;
   height: 100%;
   position: relative;
-
   &.even {
     .inner {
       justify-content: flex-start;
     }
     .first {
       order: 2;
+      &::after {
+        left: 0;
+        right: initial;
+        transform: translate3d(-100%, 0, 0);
+        border-width: 32px 32px 32px 0;
+        border-color: transparent $darkGreen transparent transparent;
+      }
     }
-    .feature-name {
-      left: initial;
-      right: -120px;
-      text-align: right;
+    .central-icon {
+      left: 0;
+      right: initial;
+      transform: translate3d(-50%, -50%, 0);
+    }
+    .body {
+      margin: 0 90px 0 auto;
     }
   }
 }
@@ -27,88 +39,49 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  padding: 80px 0;
 }
 .content {
   padding: 120px;
   max-width: 1000px;
 }
 .first {
-  background: $primaryColor;
+  background: $darkGreen;
   color: $white;
-}
-.mission {
-  font-family: $fontFamilyTitleSimple;
-  display: flex;
-  align-items: flex-start;
-  line-height: 1;
-  // gap: 4px;
-}
-.fixed {
-  flex-shrink: 0;
-}
-.main-title {
-  font-size: $titleSizeKing * 1.2;
-  display: block;
-  letter-spacing: 0.1em;
-}
-.sub-title {
-  margin-top: 4px;
-  display: block;
-}
-.index {
-  font-size: 88px;
-  display: block;
   position: relative;
-  top: -4px;
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translate3d(100%, 0, 0);
+    width: 0;
+    height: 0;
+    border-width: 32px 0 32px 32px;
+    border-style: solid;
+    border-color: transparent transparent transparent $darkGreen;
+    z-index: 2;
+  }
 }
 .description {
   line-height: 1.8;
   margin: 60px 0 0;
   word-break: break-all;
-  // max-width: 600px;
+  white-space: pre-wrap;
 }
 .second {
-  @include bgModifier();
-  background-position: center;
-  background-size: cover;
-  position: relative;
+  background: $creamGreen;
   z-index: 1;
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: $black;
-    opacity: 0.2;
-    z-index: -1;
-  }
 }
+
 .feature-name {
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    @include bgGradient();
-    opacity: $opacityImcompletion - 0.2;
-    z-index: -1;
-  }
-  max-width: 1000px;
-  position: absolute;
-  top: 90px;
-  left: -120px;
-  width: 100%;
-  padding: 20px 60px 32px;
-  text-align: left;
-  color: $white;
+  color: $darkGreen;
+  text-align: center;
   font-size: $titleSizeKing;
-  letter-spacing: 0.1em;
   font-family: $fontFamilyTitle;
-  z-index: 1;
+  letter-spacing: 0.1em;
+  padding-bottom: 44px;
+  margin-bottom: 44px;
 }
 .feature-name-text {
   position: relative;
@@ -119,20 +92,34 @@
     right: 50%;
     transform: translate3d(50%, 0, 0);
     font-size: $fontSizeSm;
-    color: darken($white, 5%);
-    letter-spacing: 0;
     word-break: keep-all;
     white-space: nowrap;
     letter-spacing: 0.1em;
   }
 }
 
-.central-icon {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate3d(-50%, -50%, 0);
-  z-index: 1;
+.body {
+  width: 100%;
+  max-width: 770px;
+  margin: 0 auto 0 90px;
+}
+
+.points {
+  width: 100%;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.point {
+  width: 240px;
+  margin: 8px;
+}
+
+.panel-wrap {
+  height: 100%;
+  width: 100%;
 }
 
 @include media('xl') {
@@ -142,22 +129,21 @@
 }
 
 @include media('lg') {
-  .main-title {
-    font-size: $titleSizeKing;
-    letter-spacing: 0.1em;
-  }
-  .sub-title {
-    margin-top: 4px;
-    font-size: $fontSizeSm;
-  }
-  .index {
-    font-size: 72px;
+  .root {
+    &.even {
+      .body {
+        margin: 0 48px 0 auto;
+      }
+    }
   }
   .inner {
     justify-content: center;
   }
   .content {
-    padding: 96px;
+    padding: 48px;
+  }
+  .body {
+    margin: 0 auto 0 48px;
   }
 }
 
@@ -165,34 +151,71 @@
   .root {
     flex-direction: column;
     &.even {
-      .feature-name {
-        text-align: center;
-        right: initial;
-        left: 0;
-        width: 100%;
+      .inner {
+        justify-content: center;
+      }
+      .body {
+        margin: 44px auto;
+      }
+      .central-icon {
+        position: absolute;
+        top: initial;
+        left: 50%;
+        bottom: 0;
+        transform: translate3d(-50%, 50%, 0);
+      }
+      .first {
+        order: 0;
+        &::after {
+          top: initial;
+          left: 50%;
+          bottom: 0;
+          transform: translate3d(-50%, 100%, 0);
+          border-width: 32px 32px 0 32px;
+          border-color: $darkGreen transparent transparent transparent;
+        }
       }
     }
   }
   .inner {
     width: 100%;
-    height: 50%;
+    padding: 0;
+    display: block;
+    justify-content: center;
   }
   .first {
-    order: 2;
+    order: 0;
+    &::after {
+      top: initial;
+      left: 50%;
+      bottom: 0;
+      transform: translate3d(-50%, 100%, 0);
+      border-width: 32px 32px 0 32px;
+      border-color: $darkGreen transparent transparent transparent;
+    }
   }
+  .title-wrap {
+    display: flex;
+    justify-content: center;
+  }
+
+  .description {
+    max-width: 400px;
+    margin: 40px auto 0;
+  }
+
+  .body {
+    margin: 44px auto;
+  }
+
   .feature-name {
-    text-align: center;
-    top: initial;
-    right: initial;
-    bottom: 120px;
-    left: 0;
-    width: 100%;
+    padding-bottom: 24px;
+    margin-bottom: 36px;
   }
 }
 
 @include media('sm') {
   .feature-name {
-    bottom: 100px;
     font-size: $titleSizeXl;
     padding: 20px 28px 36px;
   }
@@ -202,12 +225,17 @@
     }
   }
   .content {
-    padding: 45px 30px;
+    padding: 60px 30px;
   }
-  .mission {
-    justify-content: center;
+
+  .points {
+    max-width: $pointWidth;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+    height: initial;
   }
-  .main-title {
-    letter-spacing: 0.04em;
+  .point:not(:last-of-type) {
+    margin-bottom: 30px;
   }
 }

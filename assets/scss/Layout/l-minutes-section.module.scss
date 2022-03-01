@@ -1,0 +1,157 @@
+@import '../Foundation/variable';
+@import '../Foundation/mixin';
+
+.root {
+  background: $darkGreen;
+  position: relative;
+  color: $white;
+  z-index: 1;
+  padding: 8% 0;
+  &::before {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    right: 0;
+    bottom: 0;
+    content: '';
+    background: #d5e7af;
+    z-index: -1;
+  }
+}
+
+.wrapper {
+  width: 100%;
+  max-width: $baseWidth;
+  margin: 0 auto;
+  padding-left: 0;
+  padding-right: 0;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+}
+.content {
+  width: 50%;
+  flex: 0 0 auto;
+  padding: 0 4%;
+}
+.first {
+  position: relative;
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translate3d(100%, -50%, 0);
+    border-color: transparent transparent transparent $darkGreen;
+    border-style: solid;
+    border-width: 32px 0 32px 32px;
+    width: 0;
+    height: 0;
+  }
+}
+.description {
+  margin-top: 40px;
+  max-width: 400px;
+  // margin: 0 auto;
+}
+.second {
+  color: $darkGreen;
+  font-size: 16px;
+}
+
+.points {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin: -24px;
+  flex-wrap: wrap;
+}
+.feat-item {
+  padding: 24px;
+  position: relative;
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: 180px;
+}
+.feat-item__inner {
+  width: 100%;
+}
+
+.feat-title {
+  text-align: center;
+  font-family: $fontFamilyTitle;
+  font-size: $titleSizeXl;
+  line-height: 1;
+  margin: 0 -12px 12px;
+}
+
+.feat-description {
+  margin-top: 12px;
+  font-size: $fontSizeSm;
+  line-height: 1.5;
+}
+
+@include media() {
+  .root {
+    display: block;
+    padding: 0;
+    &::before {
+      display: none;
+    }
+  }
+
+  .wrapper {
+    display: block;
+  }
+  .first {
+    padding: 80px 30px;
+    &::after {
+      top: initial;
+      bottom: 0;
+      right: 50%;
+      transform: translate3d(50%, 100%, 0);
+      border-color: $darkGreen transparent transparent transparent;
+      border-width: 32px 32px 0 32px;
+      width: 0;
+      height: 0;
+    }
+  }
+  .second {
+    background: #d5e7af;
+    padding: 80px 30px;
+  }
+  .title {
+    display: flex;
+    justify-content: center;
+  }
+  .description {
+    margin: 20px auto 0;
+  }
+  .content {
+    width: 100%;
+  }
+  .points {
+    flex-direction: column;
+    align-items: center;
+  }
+  .feat-item {
+    &:not(:last-of-type)::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 1px;
+      transform: none;
+      background: $darkGreen;
+    }
+    padding: 32px 30px;
+  }
+}
+
+@include media('sm') {
+  .first,
+  .second {
+    padding: 60px 30px;
+  }
+}

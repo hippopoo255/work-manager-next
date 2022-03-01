@@ -23,9 +23,18 @@
 }
 
 @mixin gradientModifier() {
-  @each $modifier, $gradient in $featuresColor {
+  @each $modifier, $gradient in $featuresGradient {
     &.#{$modifier} {
       background: $gradient;
+      @content;
+    }
+  }
+}
+
+@mixin colorModifier() {
+  @each $modifier, $monoColor in $featuresMonoColor {
+    &.#{$modifier} {
+      background: $monoColor;
     }
   }
 }

@@ -3,8 +3,9 @@ import styles from '@/assets/scss/Layout/l-base-section.module.scss'
 import clsx from 'clsx'
 import Features from '@/lib/features'
 import { MissionTitle } from '@/components/molecules/top'
-import ScheduleFeat01Icon from '@/assets/images/schedule_feat01.svg'
-import { featuresIcon } from '@/assets/images'
+import TaskFeat01Icon from '@/assets/images/task_feat01.svg'
+import TaskFeat02Icon from '@/assets/images/task_feat02.svg'
+import TaskFeat03Icon from '@/assets/images/task_feat03.svg'
 
 type Props = {
   index: number
@@ -13,6 +14,12 @@ type Props = {
 
 const BaseSection = ({ index, icon }: Props) => {
   const feature = Features()[index]
+  const icons = [
+    <TaskFeat01Icon key="01" className={'p-panel__icon'} />,
+    <TaskFeat02Icon key="02" className={'p-panel__icon'} />,
+    <TaskFeat03Icon key="03" className={'p-panel__icon'} />,
+  ]
+
   return (
     <div
       className={clsx(styles.root, {
@@ -60,7 +67,7 @@ const BaseSection = ({ index, icon }: Props) => {
                         className={clsx(['p-panel__title-line', feature.id])}
                       ></div>
                     </h4>
-                    <div className="u-text-center">{point.icon}</div>
+                    <div className="p-panel__icon-wrap">{icons[index]}</div>
                     <p className="p-panel__body">{point.text}</p>
                   </div>
                 </div>
