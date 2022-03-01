@@ -14,24 +14,21 @@ $pointHeight: 170px;
     }
     .first {
       order: 2;
-    }
-    .feature-name {
-      left: initial;
-      right: -120px;
-      text-align: right;
+      &::after {
+        left: 0;
+        right: initial;
+        transform: translate3d(-100%, 0, 0);
+        border-width: 32px 32px 32px 0;
+        border-color: transparent $darkGreen transparent transparent;
+      }
     }
     .central-icon {
       left: 0;
       right: initial;
       transform: translate3d(-50%, -50%, 0);
     }
-    .points {
-      right: -120px;
-      left: initial;
-      // transform: translate3d(124%, 0, 0);
-    }
-    .point {
-      margin: 30px auto 0 0;
+    .body {
+      margin: 0 90px 0 auto;
     }
   }
 }
@@ -42,16 +39,29 @@ $pointHeight: 170px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  padding: 200px 0;
+  padding: 80px 0;
 }
 .content {
   padding: 120px;
   max-width: 1000px;
 }
 .first {
-  // background: $primaryColor;
+  background: $darkGreen;
   color: $white;
-  @include colorModifier();
+  position: relative;
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translate3d(100%, 0, 0);
+    width: 0;
+    height: 0;
+    border-width: 32px 0 32px 32px;
+    border-style: solid;
+    border-color: transparent transparent transparent $darkGreen;
+    z-index: 2;
+  }
 }
 .description {
   line-height: 1.8;
@@ -60,48 +70,18 @@ $pointHeight: 170px;
   white-space: pre-wrap;
 }
 .second {
-  @include bgModifier();
-  background-position: center;
-  background-size: cover;
-  position: relative;
+  background: $creamGreen;
   z-index: 1;
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: $black;
-    opacity: 0.2;
-    z-index: -1;
-  }
 }
 
 .feature-name {
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    @include bgGradient();
-    opacity: $opacityImcompletion - 0.2;
-    z-index: -1;
-  }
-  max-width: 1000px;
-  position: absolute;
-  top: 90px;
-  left: -120px;
-  width: 100%;
-  padding: 20px 60px 32px;
-  text-align: left;
-  color: $white;
+  color: $darkGreen;
+  text-align: center;
   font-size: $titleSizeKing;
-  letter-spacing: 0.1em;
   font-family: $fontFamilyTitle;
-  z-index: 1;
+  letter-spacing: 0.1em;
+  padding-bottom: 44px;
+  margin-bottom: 44px;
 }
 .feature-name-text {
   position: relative;
@@ -112,37 +92,34 @@ $pointHeight: 170px;
     right: 50%;
     transform: translate3d(50%, 0, 0);
     font-size: $fontSizeSm;
-    color: darken($white, 5%);
-    letter-spacing: 0;
     word-break: keep-all;
     white-space: nowrap;
     letter-spacing: 0.1em;
   }
 }
 
-.central-icon {
-  position: absolute;
-  top: 50%;
-  right: 0;
-  transform: translate3d(50%, -50%, 0);
-  z-index: 2;
+.body {
+  width: 100%;
+  max-width: 770px;
+  margin: 0 auto 0 90px;
+}
+
+.points {
+  width: 100%;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.point {
+  width: 240px;
+  margin: 8px;
 }
 
 .panel-wrap {
-  height: $pointHeight;
+  height: 100%;
   width: 100%;
-}
-.points {
-  max-width: 1000px;
-  width: 100%;
-  position: absolute;
-  top: 210px;
-  left: -120px;
-  // transform: translate3d(124%, 0, 0);
-}
-.point {
-  margin: 40px 0 0 auto;
-  width: 300px;
 }
 
 @include media('xl') {
@@ -154,8 +131,8 @@ $pointHeight: 170px;
 @include media('lg') {
   .root {
     &.even {
-      .point {
-        margin: 12px auto 0 0;
+      .body {
+        margin: 0 48px 0 auto;
       }
     }
   }
@@ -165,8 +142,8 @@ $pointHeight: 170px;
   .content {
     padding: 48px;
   }
-  .point {
-    margin: 12px 0 0 auto;
+  .body {
+    margin: 0 auto 0 48px;
   }
 }
 
@@ -177,15 +154,8 @@ $pointHeight: 170px;
       .inner {
         justify-content: center;
       }
-      .feature-name {
-        margin-top: 96px;
-        position: relative;
-        top: initial;
-        left: initial;
-        bottom: initial;
-        right: initial;
-        text-align: center;
-        width: 100%;
+      .body {
+        margin: 44px auto;
       }
       .central-icon {
         position: absolute;
@@ -196,15 +166,14 @@ $pointHeight: 170px;
       }
       .first {
         order: 0;
-      }
-      .points {
-        position: initial;
-        top: initial;
-        left: initial;
-        max-width: initial;
-      }
-      .point {
-        margin: initial;
+        &::after {
+          top: initial;
+          left: 50%;
+          bottom: 0;
+          transform: translate3d(-50%, 100%, 0);
+          border-width: 32px 32px 0 32px;
+          border-color: $darkGreen transparent transparent transparent;
+        }
       }
     }
   }
@@ -216,28 +185,18 @@ $pointHeight: 170px;
   }
   .first {
     order: 0;
+    &::after {
+      top: initial;
+      left: 50%;
+      bottom: 0;
+      transform: translate3d(-50%, 100%, 0);
+      border-width: 32px 32px 0 32px;
+      border-color: $darkGreen transparent transparent transparent;
+    }
   }
   .title-wrap {
     display: flex;
     justify-content: center;
-  }
-  .feature-name {
-    margin-top: 96px;
-    text-align: center;
-    top: initial;
-    left: initial;
-    bottom: initial;
-    right: initial;
-    position: relative;
-    width: 100%;
-  }
-  .central-icon {
-    position: absolute;
-    top: initial;
-    bottom: 0;
-    right: initial;
-    left: 50%;
-    transform: translate3d(-50%, 50%, 0);
   }
 
   .description {
@@ -246,41 +205,16 @@ $pointHeight: 170px;
   }
 
   .body {
-    // margin: 40px 0;
+    margin: 44px auto;
   }
 
-  .points {
-    position: initial;
-    top: initial;
-    left: initial;
-    max-width: initial;
-    display: flex;
-    width: 100%;
-    height: 340px;
-  }
-
-  .point {
-    flex: 1 1 auto;
-    display: flex;
-    width: 100%;
-    max-width: initial;
-    flex-direction: column;
-    margin: initial;
-    &:nth-of-type(2) {
-      justify-content: flex-end;
-    }
+  .feature-name {
+    padding-bottom: 24px;
+    margin-bottom: 36px;
   }
 }
 
 @include media('sm') {
-  .root.even {
-    .points {
-      max-width: $pointWidth;
-    }
-    .point:not(:last-of-type) {
-      margin-bottom: 30px;
-    }
-  }
   .feature-name {
     font-size: $titleSizeXl;
     padding: 20px 28px 36px;
@@ -292,10 +226,6 @@ $pointHeight: 170px;
   }
   .content {
     padding: 60px 30px;
-  }
-
-  .body {
-    margin: 40px 0 45px;
   }
 
   .points {

@@ -5,9 +5,9 @@ import clsx from 'clsx'
 import Features from '@/lib/features'
 import { MissionTitle } from '@/components/molecules/top'
 import { FeatGreenIcon } from '@/components/atoms/top'
-import Feature01 from '@/assets/images/minute_feat01.svg'
-import Feature02 from '@/assets/images/minute_feat02.svg'
-import Feature03 from '@/assets/images/minute_feat03.svg'
+import Feature01 from '@/assets/images/minutes_feat01.svg'
+import Feature02 from '@/assets/images/minutes_feat02.svg'
+import Feature03 from '@/assets/images/minutes_feat03.svg'
 
 type Props = {
   index: number

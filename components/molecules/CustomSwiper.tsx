@@ -21,10 +21,10 @@ const CustomSwiper = ({ contents }: Props) => {
       pagination={{
         clickable: true,
       }}
-      // autoplay={{
-      //   delay: 7000,
-      //   disableOnInteraction: false,
-      // }}
+      autoplay={{
+        delay: 7000,
+        disableOnInteraction: false,
+      }}
       // onSlideChange={() => console.log('slide change')}
       // onSwiper={(swiper) => console.log(swiper)}
       className={styles.root}

@@ -3,22 +3,23 @@ import styles from '@/assets/scss/Layout/l-base-section.module.scss'
 import clsx from 'clsx'
 import Features from '@/lib/features'
 import { MissionTitle } from '@/components/molecules/top'
-import ScheduleFeat01Icon from '@/assets/images/schedule_feat01.svg'
-import ScheduleFeat02Icon from '@/assets/images/schedule_feat02.svg'
-import ScheduleFeat03Icon from '@/assets/images/schedule_feat03.svg'
+import ChatFeat01Icon from '@/assets/images/chat_feat01.svg'
+import ChatFeat02Icon from '@/assets/images/chat_feat02.svg'
+import ChatFeat03Icon from '@/assets/images/chat_feat03.svg'
 
 type Props = {
   index: number
   icon: JSX.Element
 }
 
-const ScheduleSection = ({ index, icon }: Props) => {
+const BaseSection = ({ index, icon }: Props) => {
   const feature = Features()[index]
   const icons = [
-    <ScheduleFeat01Icon key="01" className={'p-panel__icon'} />,
-    <ScheduleFeat02Icon key="02" className={'p-panel__icon'} />,
-    <ScheduleFeat03Icon key="03" className={'p-panel__icon'} />,
+    <ChatFeat01Icon key="01" className={'p-panel__icon'} />,
+    <ChatFeat02Icon key="02" className={'p-panel__icon'} />,
+    <ChatFeat03Icon key="03" className={'p-panel__icon'} />,
   ]
+
   return (
     <div
       className={clsx(styles.root, {
@@ -73,4 +74,4 @@ const ScheduleSection = ({ index, icon }: Props) => {
   )
 }
 
-export default ScheduleSection
+export default BaseSection

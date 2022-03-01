@@ -3,22 +3,23 @@ import styles from '@/assets/scss/Layout/l-base-section.module.scss'
 import clsx from 'clsx'
 import Features from '@/lib/features'
 import { MissionTitle } from '@/components/molecules/top'
-import ScheduleFeat01Icon from '@/assets/images/schedule_feat01.svg'
-import ScheduleFeat02Icon from '@/assets/images/schedule_feat02.svg'
-import ScheduleFeat03Icon from '@/assets/images/schedule_feat03.svg'
+import TaskFeat01Icon from '@/assets/images/task_feat01.svg'
+import TaskFeat02Icon from '@/assets/images/task_feat02.svg'
+import TaskFeat03Icon from '@/assets/images/task_feat03.svg'
 
 type Props = {
   index: number
   icon: JSX.Element
 }
 
-const ScheduleSection = ({ index, icon }: Props) => {
+const BaseSection = ({ index, icon }: Props) => {
   const feature = Features()[index]
   const icons = [
-    <ScheduleFeat01Icon key="01" className={'p-panel__icon'} />,
-    <ScheduleFeat02Icon key="02" className={'p-panel__icon'} />,
-    <ScheduleFeat03Icon key="03" className={'p-panel__icon'} />,
+    <TaskFeat01Icon key="01" className={'p-panel__icon'} />,
+    <TaskFeat02Icon key="02" className={'p-panel__icon'} />,
+    <TaskFeat03Icon key="03" className={'p-panel__icon'} />,
   ]
+
   return (
     <div
       className={clsx(styles.root, {
@@ -26,6 +27,12 @@ const ScheduleSection = ({ index, icon }: Props) => {
       })}
     >
       <div className={clsx([styles.inner, styles.first, styles[feature.id]])}>
+        {/* <div className={clsx([styles['central-icon']])}>
+          <div className={clsx(['p-rhombus', feature.id])}>
+            <div className={clsx(['bg', feature.id])}></div>
+            {icon}
+          </div>
+        </div> */}
         <div className={styles.content}>
           <div className={styles['title-wrap']}>
             <MissionTitle
@@ -73,4 +80,4 @@ const ScheduleSection = ({ index, icon }: Props) => {
   )
 }
 
-export default ScheduleSection
+export default BaseSection
