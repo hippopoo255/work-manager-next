@@ -1,11 +1,13 @@
 @import '../Foundation/variable';
 @import '../Foundation/mixin';
 
+$pointWidth: 300px;
+$pointHeight: 170px;
+
 .root {
   display: flex;
   height: 100%;
   position: relative;
-
   &.even {
     .inner {
       justify-content: flex-start;
@@ -18,6 +20,19 @@
       right: -120px;
       text-align: right;
     }
+    .central-icon {
+      left: 0;
+      right: initial;
+      transform: translate3d(-50%, -50%, 0);
+    }
+    .points {
+      right: -120px;
+      left: initial;
+      // transform: translate3d(124%, 0, 0);
+    }
+    .point {
+      margin: 30px auto 0 0;
+    }
   }
 }
 .inner {
@@ -27,45 +42,22 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  padding: 200px 0;
 }
 .content {
   padding: 120px;
   max-width: 1000px;
 }
 .first {
-  background: $primaryColor;
+  // background: $primaryColor;
   color: $white;
-}
-.mission {
-  font-family: $fontFamilyTitleSimple;
-  display: flex;
-  align-items: flex-start;
-  line-height: 1;
-  // gap: 4px;
-}
-.fixed {
-  flex-shrink: 0;
-}
-.main-title {
-  font-size: $titleSizeKing * 1.2;
-  display: block;
-  letter-spacing: 0.1em;
-}
-.sub-title {
-  margin-top: 4px;
-  display: block;
-}
-.index {
-  font-size: 88px;
-  display: block;
-  position: relative;
-  top: -4px;
+  @include colorModifier();
 }
 .description {
   line-height: 1.8;
   margin: 60px 0 0;
   word-break: break-all;
-  // max-width: 600px;
+  white-space: pre-wrap;
 }
 .second {
   @include bgModifier();
@@ -85,6 +77,7 @@
     z-index: -1;
   }
 }
+
 .feature-name {
   &::after {
     content: '';
@@ -130,9 +123,26 @@
 .central-icon {
   position: absolute;
   top: 50%;
-  left: 50%;
-  transform: translate3d(-50%, -50%, 0);
-  z-index: 1;
+  right: 0;
+  transform: translate3d(50%, -50%, 0);
+  z-index: 2;
+}
+
+.panel-wrap {
+  height: $pointHeight;
+  width: 100%;
+}
+.points {
+  max-width: 1000px;
+  width: 100%;
+  position: absolute;
+  top: 210px;
+  left: -120px;
+  // transform: translate3d(124%, 0, 0);
+}
+.point {
+  margin: 40px 0 0 auto;
+  width: 300px;
 }
 
 @include media('xl') {
@@ -142,22 +152,21 @@
 }
 
 @include media('lg') {
-  .main-title {
-    font-size: $titleSizeKing;
-    letter-spacing: 0.1em;
-  }
-  .sub-title {
-    margin-top: 4px;
-    font-size: $fontSizeSm;
-  }
-  .index {
-    font-size: 72px;
+  .root {
+    &.even {
+      .point {
+        margin: 12px auto 0 0;
+      }
+    }
   }
   .inner {
     justify-content: center;
   }
   .content {
-    padding: 96px;
+    padding: 48px;
+  }
+  .point {
+    margin: 12px 0 0 auto;
   }
 }
 
@@ -165,34 +174,114 @@
   .root {
     flex-direction: column;
     &.even {
+      .inner {
+        justify-content: center;
+      }
       .feature-name {
-        text-align: center;
+        margin-top: 96px;
+        position: relative;
+        top: initial;
+        left: initial;
+        bottom: initial;
         right: initial;
-        left: 0;
+        text-align: center;
         width: 100%;
+      }
+      .central-icon {
+        position: absolute;
+        top: initial;
+        left: 50%;
+        bottom: 0;
+        transform: translate3d(-50%, 50%, 0);
+      }
+      .first {
+        order: 0;
+      }
+      .points {
+        position: initial;
+        top: initial;
+        left: initial;
+        max-width: initial;
+      }
+      .point {
+        margin: initial;
       }
     }
   }
   .inner {
     width: 100%;
-    height: 50%;
+    padding: 0;
+    display: block;
+    justify-content: center;
   }
   .first {
-    order: 2;
+    order: 0;
+  }
+  .title-wrap {
+    display: flex;
+    justify-content: center;
   }
   .feature-name {
+    margin-top: 96px;
     text-align: center;
     top: initial;
+    left: initial;
+    bottom: initial;
     right: initial;
-    bottom: 120px;
-    left: 0;
+    position: relative;
     width: 100%;
+  }
+  .central-icon {
+    position: absolute;
+    top: initial;
+    bottom: 0;
+    right: initial;
+    left: 50%;
+    transform: translate3d(-50%, 50%, 0);
+  }
+
+  .description {
+    max-width: 400px;
+    margin: 40px auto 0;
+  }
+
+  .body {
+    // margin: 40px 0;
+  }
+
+  .points {
+    position: initial;
+    top: initial;
+    left: initial;
+    max-width: initial;
+    display: flex;
+    width: 100%;
+    height: 340px;
+  }
+
+  .point {
+    flex: 1 1 auto;
+    display: flex;
+    width: 100%;
+    max-width: initial;
+    flex-direction: column;
+    margin: initial;
+    &:nth-of-type(2) {
+      justify-content: flex-end;
+    }
   }
 }
 
 @include media('sm') {
+  .root.even {
+    .points {
+      max-width: $pointWidth;
+    }
+    .point:not(:last-of-type) {
+      margin-bottom: 30px;
+    }
+  }
   .feature-name {
-    bottom: 100px;
     font-size: $titleSizeXl;
     padding: 20px 28px 36px;
   }
@@ -202,12 +291,21 @@
     }
   }
   .content {
-    padding: 45px 30px;
+    padding: 60px 30px;
   }
-  .mission {
-    justify-content: center;
+
+  .body {
+    margin: 40px 0 45px;
   }
-  .main-title {
-    letter-spacing: 0.04em;
+
+  .points {
+    max-width: $pointWidth;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+    height: initial;
+  }
+  .point:not(:last-of-type) {
+    margin-bottom: 30px;
   }
 }

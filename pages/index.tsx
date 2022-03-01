@@ -20,7 +20,7 @@ const Home = () => {
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
         ></meta>
         <link
-          href="https://fonts.googleapis.com/css?family=Vollkorn&display=swap"
+          href="https://fonts.googleapis.com/css?family=Teko&display=swap"
           rel="stylesheet"
         />
         <link

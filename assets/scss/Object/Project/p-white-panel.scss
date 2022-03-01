@@ -1,0 +1,59 @@
+@import '../../Foundation/variable';
+@import '../../Foundation/mixin';
+
+.p-white-panel {
+  width: 100%;
+  height: 100%;
+  min-width: 180px;
+  max-width: 500px;
+  z-index: 1;
+  padding: 0;
+  position: relative;
+  // padding: 24px 0;
+  &::after {
+    content: '';
+    opacity: $opacityImcompletion;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    background: $white;
+    box-shadow: $shadow2;
+  }
+  &__title {
+    padding: 12px;
+    line-height: 1;
+    background: map-get($gradients, 'primary');
+    letter-spacing: 0.02em;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: $titleSizeKing;
+    font-family: $fontFamilyTitle;
+    position: relative;
+    @include gradientModifier() {
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    &-line {
+      content: '';
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      right: 12px;
+      height: 4px;
+      display: block;
+      transform: skewX(-60deg);
+      @include gradientModifier();
+    }
+    &-index {
+      margin-left: 4px;
+    }
+  }
+
+  &__body {
+    padding: 0 12px;
+    opacity: 0.6;
+  }
+}

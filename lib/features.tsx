@@ -8,7 +8,7 @@ import {
   SignupIcon,
   MeetingRecordIcon,
 } from '@/components/atoms/icons'
-import { BaseSection } from '@/components/organisms/top'
+import { BaseSection, MinutesSection } from '@/components/organisms/top'
 import router from 'next/router'
 
 export type FeatureItem = {
@@ -32,11 +32,19 @@ const Features = () => {
       name: t.feature.meetingRecord,
       text: t.application.meetingRecord,
       component: (
-        <BaseSection index={0} icon={<MeetingRecordIcon fontSize={'48px'} />} />
+        <MinutesSection
+          index={0}
+          icon={<MeetingRecordIcon fontSize={'48px'} />}
+        />
       ),
-      mission: '会議での意思決定を書き起こす',
+      mission: '会議の決定事項を記録する',
+      points: [
+        '追加フォームからステップに沿って入力',
+        '絞り込み機能で一覧の中から自分が参加した会議のみを表示できる',
+        '議事録を新規追加すると、参加メンバーにメールでアラート',
+      ],
       description:
-        '開催した会議の日時、会議名、アジェンダ、参加者等を入力し、会議の議事録を保存します。\n保存した議事録のデータは、一覧形式であとから一覧でき、読み返すことができます。',
+        '開催した会議の日時、会議名、アジェンダ、参加者等を入力し、会議の議事録を保存できます。\n決定事項を記録しておくことで定期的に振り返ることができます。',
       icon: <MeetingRecordIcon fontSize={'28px'} />,
     },
     {
@@ -48,8 +56,13 @@ const Features = () => {
         <BaseSection index={1} icon={<ScheduleIcon fontSize={'48px'} />} />
       ),
       mission: 'スケジュールを立てる',
+      points: [
+        '他のユーザーとスケジュールを共有できる',
+        '共有相手の編集権限や、共有していないユーザーに対する公開設定ができる',
+        '当日のスケジュールを毎朝メールでアラート',
+      ],
       description:
-        '出張やミーティングの予定を他のユーザと共有できます。\n通知をオンにすると、当日のスケジュールを毎朝メールでリマインドします。',
+        '出張やミーティングの予定を他のユーザと共有できます。\nスケジュールはドラッグアンドドロップで変更でき、リスケも手軽に行えます。',
       icon: <ScheduleIcon fontSize={'28px'} />,
     },
     {
@@ -61,8 +74,13 @@ const Features = () => {
         <BaseSection index={2} icon={<TaskIcon fontSize={'48px'} />} />
       ),
       description:
-        'タスクの入力フォームから優先度や締切日時を設定できます。\n通知をオンにすると、期日の迫ったタスクをメールでリマインドします。',
+        '入力フォームから優先度や締切日時を設定するため、緊急性と重要性の二軸でタスクを管理できます。\nメール通知をオンにすると、期日の迫ったタスクの漏れを防止できます。',
       mission: '仕事の優先度を決める',
+      points: [
+        '優先度や締切日時を設定できる',
+        '期限の迫ったタスクに絞り込んで一覧表示',
+        '締切が翌日に迫ったタスクを前日にメールでアラート',
+      ],
       icon: <TaskIcon fontSize={'28px'} />,
     },
     {
@@ -74,8 +92,13 @@ const Features = () => {
         <BaseSection index={3} icon={<ChatIcon fontSize={'48px'} />} />
       ),
       mission: 'テキストベースで会話する',
+      points: [
+        'チャットによるコミュニケーションができる',
+        '1回あたり4枚まで画像の送信ができる',
+        'ブラウザをリロードしなくても、新着メッセージやメンバーの既読が確認できる',
+      ],
       description:
-        'テキスト以外に1回の投稿で4枚まで画像をアップロードできます。\nブラウザをリロードしなくても、メンバーの既読がリアルタイムで分かります。',
+        '業務報告や相談等の専用ルームを作成し、テレワークの環境でも円滑なコミュニケーションができます。\n\nテキストでのチャットはもちろん、1回のメッセージで最大4枚まで画像をアップロードできます。',
       icon: <ChatIcon fontSize={'28px'} />,
     },
     {

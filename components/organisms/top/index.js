@@ -1,4 +1,6 @@
 export { default as BaseSection } from './BaseSection'
+export { default as MinutesSection } from './MinutesSection'
+export { default as ScheduleSection } from './ScheduleSection'
 export { default as Header } from './Header'
 export { default as Main } from './Main'
 export { default as MainVisual } from './MainVisual'
