@@ -1,0 +1,48 @@
+@import '../../Foundation/variable';
+@import '../../Foundation/mixin';
+@import '../../Foundation/animation';
+
+.root {
+  width: 100%;
+  // &.isOpacity {
+  //   opacity: 0;
+  // }
+}
+.title {
+  text-align: center;
+  font-family: $fontFamilyTitle;
+  font-size: $titleSizeXl;
+  line-height: 1;
+  margin: 0 -12px 8px;
+}
+
+.description {
+  margin: 12px 0 0;
+  font-size: $fontSizeSm;
+  line-height: 1.5;
+}
+
+.hidden {
+  opacity: 0;
+}
+
+.fade-in {
+  animation: scaleIn 0.6s $transitionBasis forwards;
+}
+
+@include media() {
+  .description {
+    margin: 12px -28px 0;
+    font-size: $fontSizeSm;
+    line-height: 1.5;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

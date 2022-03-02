@@ -10,6 +10,7 @@ const TestLoginSuggestion = () => {
   const testLoginOption = {
     variant: 'outlined',
     color: 'inherit',
+    size: 'small',
   }
 
   const handleClose = () => {

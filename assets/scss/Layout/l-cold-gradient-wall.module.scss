@@ -1,5 +1,5 @@
-@import '../../Foundation/variable';
-@import '../../Foundation/mixin';
+@import '../Foundation/variable';
+@import '../Foundation/mixin';
 $assetPath: 'https://asset.job-support.site/assets';
 .root {
   color: $white;
@@ -8,7 +8,7 @@ $assetPath: 'https://asset.job-support.site/assets';
   justify-content: center;
   align-items: center;
   height: 100%;
-  background-image: url('#{$assetPath}/introduction.jpg');
+  background-image: url('#{$assetPath}/recommend_2.jpg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;

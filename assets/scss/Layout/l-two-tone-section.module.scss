@@ -74,30 +74,6 @@ $pointHeight: 170px;
   z-index: 1;
 }
 
-.feature-name {
-  color: $darkGreen;
-  text-align: center;
-  font-size: $titleSizeKing;
-  font-family: $fontFamilyTitle;
-  letter-spacing: 0.1em;
-  padding-bottom: 44px;
-  margin-bottom: 44px;
-}
-.feature-name-text {
-  position: relative;
-  &::before {
-    content: '- ' attr(data-subja) ' -';
-    position: absolute;
-    bottom: -12px;
-    right: 50%;
-    transform: translate3d(50%, 0, 0);
-    font-size: $fontSizeSm;
-    word-break: keep-all;
-    white-space: nowrap;
-    letter-spacing: 0.1em;
-  }
-}
-
 .body {
   width: 100%;
   max-width: 770px;
@@ -123,12 +99,6 @@ $pointHeight: 170px;
 }
 
 @include media('xl') {
-  .inner {
-    justify-content: center;
-  }
-}
-
-@include media('lg') {
   .root {
     &.even {
       .body {
@@ -136,14 +106,20 @@ $pointHeight: 170px;
       }
     }
   }
+  .body {
+    margin: 0 auto 0 48px;
+  }
+  .inner {
+    justify-content: center;
+  }
+}
+
+@include media('lg') {
   .inner {
     justify-content: center;
   }
   .content {
     padding: 48px;
-  }
-  .body {
-    margin: 0 auto 0 48px;
   }
 }
 
@@ -207,23 +183,9 @@ $pointHeight: 170px;
   .body {
     margin: 44px auto;
   }
-
-  .feature-name {
-    padding-bottom: 24px;
-    margin-bottom: 36px;
-  }
 }
 
 @include media('sm') {
-  .feature-name {
-    font-size: $titleSizeXl;
-    padding: 20px 28px 36px;
-  }
-  .feature-name-text {
-    &::before {
-      bottom: -16px;
-    }
-  }
   .content {
     padding: 60px 30px;
   }

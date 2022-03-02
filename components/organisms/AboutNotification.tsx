@@ -1,10 +1,9 @@
-import React, { useEffect, useState, useRef } from 'react'
-import clsx from 'clsx'
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
-import { Box, Container, Grid } from '@material-ui/core'
+import React from 'react'
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import { Box, Grid } from '@material-ui/core'
 import { AboutFormat } from '@/components/organisms'
 import { PaperLabel } from '@/components/molecules'
-import { FullPhotoPaper, AnimationBoxByScroll } from '@/components/atoms'
+import { FullPhotoPaper } from '@/components/atoms'
 import {
   MeetingRecordIcon,
   ScheduleIcon,
@@ -108,20 +107,14 @@ const AboutNotification = () => {
           {notificationList.length > 0 &&
             notificationList.map((itm: Product) => (
               <Grid item key={itm.id} className={classes.item} md={4}>
-                <AnimationBoxByScroll
-                  classes={{
-                    root: classes.card,
-                  }}
-                >
-                  <Box className={classes.inner}>
-                    <Box className={classes.bgImage}>
-                      <FullPhotoPaper src={itm.bgImage} />
-                    </Box>
-                    <Box className={classes.paperLabel}>
-                      <PaperLabel item={itm} />
-                    </Box>
+                <Box className={classes.inner}>
+                  <Box className={classes.bgImage}>
+                    <FullPhotoPaper src={itm.bgImage} />
                   </Box>
-                </AnimationBoxByScroll>
+                  <Box className={classes.paperLabel}>
+                    <PaperLabel item={itm} />
+                  </Box>
+                </Box>
               </Grid>
             ))}
         </Grid>

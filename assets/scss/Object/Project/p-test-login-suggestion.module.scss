@@ -1,5 +1,6 @@
 @import '../../Foundation/variable';
 @import '../../Foundation/mixin';
+@import '../../Foundation/animation';
 
 .root {
   position: fixed;
@@ -8,7 +9,9 @@
   padding: 16px;
   background: $green;
   z-index: $zIndexHeader;
-  transform: translate3d(0, calc(100% + 32px), 0);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(0, 50%, 0);
   box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2),
     0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
   border-radius: $radiusBasis;
@@ -16,9 +19,9 @@
   transition-delay: $transitionBasis;
   &.--open {
     &.--close {
-      animation: popout 0.4s ease-out forwards;
+      animation: popOut 1s ease-out forwards;
     }
-    animation: popup 0.4s ease-out forwards;
+    animation: popUp 0.4s 2s ease-out forwards;
   }
 }
 .contents {
@@ -43,6 +46,7 @@
 @include media() {
   .root {
     right: 16px;
+    padding: 8px 12px;
   }
   .text {
     font-size: $fontSizeSm;
@@ -51,26 +55,17 @@
 
 @include media('sm') {
   .root {
-    left: 16px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 0;
   }
   .text {
     font-size: $fontSizeSm;
+    text-align: center;
+    margin-bottom: 8px;
   }
-}
-
-@keyframes popup {
-  0% {
-    transform: translate3d(0, calc(100% + 32px), 0);
-  }
-  100% {
-    transform: translate3d(0, 0, 0);
-  }
-}
-@keyframes popout {
-  0% {
-    transform: translate3d(0, 0, 0);
-  }
-  100% {
-    transform: translate3d(0, calc(100% + 32px), 0);
+  .close {
+    transform: translate3d(0, -50%, 0);
   }
 }

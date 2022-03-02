@@ -1,7 +1,7 @@
 @import '../../Foundation/variable';
 @import '../../Foundation/mixin';
 
-.p-panel {
+.p-toplined-paper {
   width: 100%;
   height: 100%;
   min-width: 180px;
@@ -48,13 +48,14 @@
     height: 160px;
     &-wrap {
       text-align: center;
-      margin: -32px 0;
+      margin: -24px 0;
     }
   }
 
   &__body {
     padding: 12px;
-    opacity: 0.6;
+    opacity: $opacityImcompletion;
+    color: $darkGreen;
     font-size: $fontSizeSm;
   }
 }

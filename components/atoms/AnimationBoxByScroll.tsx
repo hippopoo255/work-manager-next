@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     opacity: 0,
   },
   show: {
-    animation: '$fadeIn forwards 1s',
+    animation: '$fadeIn forwards 1s 3s',
   },
   '@keyframes fadeIn': {
     '0%': { opacity: 0 },
@@ -18,19 +18,36 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type Props = {
   children: React.ReactNode
-  classes: any
+  optionClasses?: any
+  className?: any
 }
 
-const AnimationBoxByScroll = ({ children, classes }: Props) => {
+const AnimationBoxByScroll = ({
+  children,
+  optionClasses,
+  className,
+}: Props) => {
   const [isReached, setIsReached] = useState<boolean>(false)
   const ref = useRef<HTMLDivElement>(null)
-  const defaultClass = { ...useStyles(), ...classes }
+  const classes = { ...useStyles(), ...optionClasses }
 
   const handleShow = () => {
-    const current = window.scrollY + window.innerHeight
-    if (ref !== null && current > ref.current!.offsetTop) {
+    if (!ref) {
+      return false
+      // console.log(rect)
+      // console.log(window.scrollY)
+      // console.log(window.scrollY + window.innerHeight)
+    }
+
+    const rect = ref.current!.getBoundingClientRect().top
+    console.log(rect < window.scrollY + window.innerHeight)
+    if (rect < window.scrollY + window.innerHeight) {
       setIsReached(true)
     }
+
+    // const current = window.scrollY + window.innerHeight
+    // if (ref !== null && current > ref.current!.offsetTop) {
+    // }
   }
 
   useEffect(() => {
@@ -43,11 +60,12 @@ const AnimationBoxByScroll = ({ children, classes }: Props) => {
       isMounted = false
     }
   }, [setIsReached])
+
   return (
     <div
       ref={ref}
-      className={clsx(defaultClass.root, {
-        [defaultClass.show]: isReached,
+      className={clsx([classes.root, className], {
+        [classes.show]: isReached,
       })}
     >
       {children}

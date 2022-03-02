@@ -1,0 +1,38 @@
+import React, { useRef, useCallback } from 'react'
+import { FeatGreenIcon } from '@/components/atoms/top'
+import styles from '@/assets/scss/Object/Project/p-vertical-point-box.module.scss'
+import { useAnimationByScroll } from '@/hooks'
+import clsx from 'clsx'
+
+type Props = {
+  icon: React.ReactNode
+  index?: number
+  pointText: string
+  animation?: boolean
+}
+
+const VerticalPointBox = ({
+  icon,
+  index,
+  pointText,
+  animation = false,
+}: Props) => {
+  const ref = useRef(null)
+  const { isReached } = useAnimationByScroll({ ref })
+
+  return (
+    <div
+      className={clsx([styles['root']], {
+        [styles['hidden']]: animation,
+        [styles['fade-in']]: isReached,
+      })}
+      ref={ref}
+    >
+      <h4 className={styles['title']}>{`POINT 0${index || 0}`}</h4>
+      <FeatGreenIcon>{icon}</FeatGreenIcon>
+      <div className={styles['description']}>{pointText}</div>
+    </div>
+  )
+}
+
+export default VerticalPointBox
