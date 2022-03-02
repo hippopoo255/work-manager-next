@@ -4,32 +4,21 @@ import lMainVisual from '@/assets/scss/Layout/l-main-visual.module.scss'
 import { useFillHeight } from '@/hooks'
 import {
   Introduction,
-  FeaturesPanel,
+  Recommend,
+  ColdGradientWall,
+  AboutAllFeatures,
   NotificationPanel,
 } from '@/components/molecules/top'
 
 const MainVisual = () => {
   const { fillRef } = useFillHeight()
-  const [params] = useState({
-    pagination: {
-      el: '.swiper-pagination',
-      type: 'bullets',
-      clickable: true,
-      dynamicBullets: true,
-    },
-    navigation: {
-      nextEl: '.swiper-button-next',
-      prevEl: '.swiper-button-prev',
-    },
-    loop: true,
-  })
 
   const contents = [
     {
-      component: <Introduction />,
+      component: <Recommend />,
     },
     {
-      component: <FeaturesPanel />,
+      component: <ColdGradientWall />,
     },
     {
       component: <NotificationPanel />,

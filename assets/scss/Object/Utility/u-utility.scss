@@ -1,4 +1,5 @@
 @import '../../Foundation/variable';
+@import '../../Foundation/animation';
 
 .logo {
   height: 1em;
@@ -22,15 +23,5 @@
 
 .u-animation-fadein {
   opacity: 0;
-  animation: fadein 1s ease-out forwards;
-}
-
-@keyframes fadein {
-  0% {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 1;
-  }
+  animation: fadeIn 1s ease-out forwards;
 }

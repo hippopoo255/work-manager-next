@@ -22,6 +22,14 @@
   padding: $spaceBasis * $t $spaceBasis * $r $spaceBasis * $b $spaceBasis * $l;
 }
 
+@mixin animationDelayModifier() {
+  @for $i from 1 through 30 {
+    &.--delay-#{$i} {
+      animation-delay: #{$i}s;
+    }
+  }
+}
+
 @mixin gradientModifier() {
   @each $modifier, $gradient in $featuresGradient {
     &.#{$modifier} {

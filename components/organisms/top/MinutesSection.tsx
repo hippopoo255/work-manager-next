@@ -1,71 +1,59 @@
-import React from 'react'
-import base from '@/assets/scss/Layout/l-base-section.module.scss'
+import React, { useRef } from 'react'
 import styles from '@/assets/scss/Layout/l-minutes-section.module.scss'
 import clsx from 'clsx'
 import Features from '@/lib/features'
-import { MissionTitle } from '@/components/molecules/top'
-import { FeatGreenIcon } from '@/components/atoms/top'
+import { FeatureNameTitle, MissionTitle } from '@/components/molecules/top'
 import Feature01 from '@/assets/images/minutes_feat01.svg'
 import Feature02 from '@/assets/images/minutes_feat02.svg'
 import Feature03 from '@/assets/images/minutes_feat03.svg'
+import { MeetingRecordIcon } from '@/components/atoms/icons'
+import { VerticalPointBox } from '@/components/molecules/top'
+import { useAnimationByScroll } from '@/hooks'
 
-type Props = {
-  index: number
-  icon: JSX.Element
-}
-
-const MinutesSection = ({ index, icon }: Props) => {
-  const feature = Features()[index]
+const MinutesSection = () => {
+  const feature = Features()[0]
+  const icons = [
+    <Feature01 key="01" width="120" />,
+    <Feature02 key="02" width="120" />,
+    <Feature03 key="03" width="120" />,
+  ]
+  const featureTitleRef = useRef(null)
+  const { isReached } = useAnimationByScroll({ ref: featureTitleRef })
   return (
-    <div className={styles.root}>
+    <section className={styles.root} id={feature.to.replace('#', '')}>
       <div className={styles.wrapper}>
         <div className={clsx([styles.content, styles.first])}>
           <div className={styles.title}>
-            <MissionTitle
-              index={`0${index + 1}`}
-              mission={feature.mission || ''}
-            />
+            <MissionTitle index={`01`} mission={feature.mission || ''} />
           </div>
           <div className={styles.description}>{feature.description}</div>
         </div>
         <div className={clsx([styles.content, styles.second])}>
           <div>
+            <div className={clsx(styles['feature-title'])}>
+              <div
+                className={clsx('c-pop-up', {
+                  ['--reached']: isReached,
+                })}
+                ref={featureTitleRef}
+              >
+                <FeatureNameTitle
+                  featureId={feature.id}
+                  featureName={feature.name}
+                />
+              </div>
+            </div>
             <ul className={styles.points}>
-              <li className={styles['feat-item']}>
-                <div className={styles['feat-item__inner']}>
-                  <h4 className={styles['feat-title']}>POINT 01</h4>
-                  <FeatGreenIcon>
-                    <Feature01 width="120" />
-                  </FeatGreenIcon>
-                  <div className={styles['feat-description']}>
-                    追加フォームからステップに沿って入力
-                  </div>
-                </div>
-                <span className={styles['feat-item-divider']}></span>
-              </li>
-              <li className={styles['feat-item']}>
-                <div className={styles['feat-item__inner']}>
-                  <h4 className={styles['feat-title']}>POINT 02</h4>
-                  <FeatGreenIcon>
-                    <Feature02 width="120" />
-                  </FeatGreenIcon>
-                  <div className={styles['feat-description']}>
-                    絞込機能で月別や自分が参加した会議のみを一覧できる
-                  </div>
-                </div>
-                <span className={styles['feat-item-divider']}></span>
-              </li>
-              <li className={styles['feat-item']}>
-                <div className={styles['feat-item__inner']}>
-                  <h4 className={styles['feat-title']}>POINT 03</h4>
-                  <FeatGreenIcon>
-                    <Feature03 width="120" />
-                  </FeatGreenIcon>
-                  <div className={styles['feat-description']}>
-                    議事録を新規追加すると、参加メンバーにメールでアラート
-                  </div>
-                </div>
-              </li>
+              {feature.points?.map((point, i) => (
+                <li key={`point_${i}`} className={styles['feat-item']}>
+                  <VerticalPointBox
+                    icon={icons[i]}
+                    index={i + 1}
+                    pointText={point.text}
+                    animation
+                  />
+                </li>
+              ))}
             </ul>
           </div>
           <div>
@@ -73,7 +61,7 @@ const MinutesSection = ({ index, icon }: Props) => {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   )
 }
 

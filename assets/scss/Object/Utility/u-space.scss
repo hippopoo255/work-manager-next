@@ -1,5 +1,5 @@
 @mixin space() {
-  @for $i from 1 through 20 {
+  @for $i from 1 through 30 {
     @each $propKey, $propVal in $property {
       @each $positionKey, $positionValueArr in $position {
         .u-#{$propKey}#{$positionKey}-#{$i} {

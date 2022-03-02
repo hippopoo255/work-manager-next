@@ -1,16 +1,20 @@
 /* eslint-disable @next/next/no-page-custom-font */
 import Head from 'next/head'
-import { Section } from '@/components/atoms/top'
 import { useLocale } from '@/hooks'
 import { Footer } from '@/components/organisms'
 import { Header, Main, MainVisual } from '@/components/organisms/top'
 import { TestLoginSuggestion } from '@/components/molecules/top'
 import Features from '@/lib/features'
+import {
+  ChatSection,
+  MinutesSection,
+  ScheduleSection,
+  TaskSection,
+} from '@/components/organisms/top'
 
 const Home = () => {
   const { t } = useLocale()
   const description = t.main.description.replace(':site_title', t.siteTitle)
-  const features = Features()
   return (
     <div className={'u-animation-fadein'}>
       <Head>
@@ -32,12 +36,10 @@ const Home = () => {
       <Header />
       <Main top>
         <MainVisual />
-        {features.slice(0, 4).map((feature) => (
-          <Section key={feature.to} id={feature.to.replace('#', '')}>
-            {/* 議事録管理 */}
-            {feature.component || feature.to.replace('#', '')}
-          </Section>
-        ))}
+        <MinutesSection />
+        <ScheduleSection />
+        <TaskSection />
+        <ChatSection />
       </Main>
       <TestLoginSuggestion />
       <Footer />

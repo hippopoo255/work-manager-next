@@ -17,7 +17,6 @@ import {
   ChatIcon,
   TaskIcon,
 } from '@/components/atoms/icons'
-import EmailOutlinedIcon from '@material-ui/icons/EmailOutlined'
 
 import { RoundedIcon } from '@/components/molecules/top'
 

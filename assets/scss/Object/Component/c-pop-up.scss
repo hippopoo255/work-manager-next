@@ -1,0 +1,10 @@
+@import '../../Foundation/variable';
+@import '../../Foundation/animation';
+
+.c-pop-up {
+  opacity: 0;
+  transform: translate3d(0, 32px, 0);
+  &.--reached {
+    animation: popUp 0.6s 0.75s ease-out forwards;
+  }
+}

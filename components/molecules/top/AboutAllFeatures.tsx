@@ -6,7 +6,7 @@ import { useLocale } from '@/hooks'
 import clsx from 'clsx'
 import { Button } from '@material-ui/core'
 
-const FeaturesPanel = () => {
+const AboutAllFeatures = () => {
   const { t } = useLocale()
   const feats = Features()
 
@@ -66,4 +66,4 @@ const FeaturesPanel = () => {
   )
 }
 
-export default FeaturesPanel
+export default AboutAllFeatures
