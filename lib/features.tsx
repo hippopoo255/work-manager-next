@@ -5,7 +5,6 @@ import {
   TaskIcon,
   MeetingRecordIcon,
 } from '@/components/atoms/icons'
-import { featuresIcon } from '@/assets/images'
 
 export type FeatureItem = {
   id: string
@@ -31,15 +30,12 @@ const Features = () => {
       points: [
         {
           text: '入力フォームから議事録を作成し、会議の決議事項を記録できます。',
-          icon: featuresIcon.minutes[0],
         },
         {
           text: '過去の議事録をオンラインで確認でき、自分の参加した会議のみを表示させたり、ブックマークに追加したりできます。',
-          icon: featuresIcon.minutes[1],
         },
         {
           text: '議事録を新規で追加すると、通知をオンにしている参加メンバーにはメールが届きます。',
-          icon: featuresIcon.minutes[2],
         },
       ],
       description:
@@ -55,15 +51,12 @@ const Features = () => {
       points: [
         {
           text: '他のユーザーとスケジュールを共有できます。',
-          icon: featuresIcon.schedule[0],
         },
         {
           text: '共有相手の編集権限や、共有していないユーザーに対する公開設定などのオプションを設定できます。',
-          icon: featuresIcon.schedule[1],
         },
         {
           text: '当日のスケジュールを毎朝メールで通知します。',
-          icon: featuresIcon.schedule[2],
         },
       ],
       description:
@@ -81,15 +74,12 @@ const Features = () => {
       points: [
         {
           text: '優先度や締切日時を設定できます。',
-          icon: featuresIcon.task[0],
         },
         {
           text: 'ステータスを更新して進捗状況を管理できます。',
-          icon: featuresIcon.task[1],
         },
         {
           text: '期限が翌日に迫ったタスクは前日にメールでアラートされます。',
-          icon: featuresIcon.task[2],
         },
       ],
       icon: <TaskIcon fontSize={'28px'} />,
@@ -103,15 +93,12 @@ const Features = () => {
       points: [
         {
           text: 'チャットによるコミュニケーションができます。',
-          icon: featuresIcon.chat[0],
         },
         {
           text: '投稿1回につき4枚まで画像の送信ができます。',
-          icon: featuresIcon.chat[1],
         },
         {
           text: 'ブラウザをリロードしなくても、新着メッセージやメンバーの既読が確認できます。',
-          icon: featuresIcon.chat[2],
         },
       ],
       description:

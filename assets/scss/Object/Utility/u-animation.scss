@@ -5,7 +5,7 @@
 .u-animation {
   &__pop-up {
     opacity: 0;
-    transform: translate3d(0, 32px, 0);
+    // transform: translate3d(0, 32px, 0);
     &.--reached {
       animation: popUp 0.6s ease-out forwards;
       animation-delay: 0.75s;
@@ -13,8 +13,30 @@
       @include animationDelayModifier();
     }
   }
+  &__pop-out {
+    transform: translate3d(0, 0, 0);
+    &.--left.--reached {
+      animation: popOut 0.6s ease-out forwards;
+
+      @include animationDelayModifier();
+    }
+  }
   &__fade-in {
     opacity: 0;
     animation: fadeIn 1s ease-out forwards;
+  }
+  &__pop-down {
+    opacity: 0;
+    transform: translate3d(0, -16px, 0);
+    &.--reached {
+      animation: popdown 1s 3s ease-out forwards,
+        bound 0.3s 4s infinite linear alternate;
+    }
+  }
+  &__scale-in {
+    transform: scale3d(0, 0, 0);
+    &.--reached {
+      animation: scaleIn 0.6s $transitionBasis ease-in-out forwards;
+    }
   }
 }

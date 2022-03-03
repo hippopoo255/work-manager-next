@@ -44,12 +44,10 @@
     }
   }
   &__icon {
-    width: 160px;
-    height: 160px;
-    &-wrap {
-      text-align: center;
-      margin: -24px 0;
-    }
+    width: 100%;
+    height: 120px;
+    // margin: 24px 0;
+    @include bgImageStyle(160px);
   }
 
   &__body {

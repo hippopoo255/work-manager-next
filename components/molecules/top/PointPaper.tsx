@@ -6,23 +6,23 @@ import clsx from 'clsx'
 type Props = {
   id: string
   text: string
-  icon: any
+  iconPath: string
   index: number
 }
 
-const PointPaper = ({ id, text, icon, index }: Props) => {
+const PointPaper = ({ id, text, iconPath, index }: Props) => {
   const ref = useRef(null)
   const { isReached } = useAnimationByScroll({ ref })
   return (
     <div
       ref={ref}
-      className={clsx(styles['root'], {
-        [styles['scale']]: isReached,
+      className={clsx([styles['root'], 'u-animation__scale-in'], {
+        ['--reached']: isReached,
       })}
     >
       <TopLinedPaper
         featureId={id}
-        icon={icon}
+        iconPath={iconPath}
         text={text}
         zerofill={`0${index}`}
       />

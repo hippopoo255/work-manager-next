@@ -49,12 +49,14 @@ const Recommend = ({ active = true }: Props) => {
           ))}
         </ul>
         <button
-          className={clsx(styles.arrow, {
-            [styles.reached]: active,
+          className={clsx([styles.arrow, 'u-animation__pop-down'], {
+            ['--reached']: active,
           })}
           onClick={handleClick}
         >
-          <ArrowExpandDownIcon className={styles['arrow-icon']} />
+          <span className={styles['arrow-icon']}>
+            <ArrowExpandDownIcon className={styles['arrow-body']} />
+          </span>
         </button>
       </div>
     </div>
