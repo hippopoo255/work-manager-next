@@ -1,22 +1,32 @@
 /* eslint-disable @next/next/no-page-custom-font */
+import { useState } from 'react'
 import Head from 'next/head'
 import { useLocale } from '@/hooks'
 import { Footer } from '@/components/organisms'
-import { Header, Main, MainVisual } from '@/components/organisms/top'
+import {} from '@/components/organisms/top'
 import { TestLoginSuggestion } from '@/components/molecules/top'
-import Features from '@/lib/features'
+import { FilledLoader } from '@/components/atoms/top'
 import {
   ChatSection,
   MinutesSection,
   ScheduleSection,
   TaskSection,
+  Header,
+  Main,
+  MainVisual,
 } from '@/components/organisms/top'
 
 const Home = () => {
   const { t } = useLocale()
   const description = t.main.description.replace(':site_title', t.siteTitle)
+  const [loading, setLoading] = useState(true)
+
+  const handleAfterFilled = () => {
+    setLoading(false)
+  }
+
   return (
-    <div className={'u-animation-fadein'}>
+    <div className={'u-animation__fade-in'}>
       <Head>
         <meta name="description" content={description} />
         <meta
@@ -35,7 +45,8 @@ const Home = () => {
       </Head>
       <Header />
       <Main top>
-        <MainVisual />
+        <FilledLoader loading={loading} />
+        <MainVisual onFilled={handleAfterFilled} />
         <MinutesSection />
         <ScheduleSection />
         <TaskSection />

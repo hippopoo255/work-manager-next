@@ -4,16 +4,22 @@ import clsx from 'clsx'
 type Props = {
   text: string
   isPopup?: boolean
+  animationStart?: boolean
   children?: React.ReactNode
 }
 
-const LinedPaper = ({ text, isPopup = true, children = null }: Props) => {
+const LinedPaper = ({
+  text,
+  isPopup = true,
+  animationStart = true,
+  children = null,
+}: Props) => {
   return (
     <div
       className={clsx(styles.root, {
-        ['c-animation__pop-up']: isPopup,
-        ['--reached']: isPopup,
-        ['--delay-2']: isPopup,
+        ['u-animation__pop-up']: isPopup,
+        ['--reached']: animationStart,
+        ['--delay-1500']: isPopup,
       })}
     >
       <div className={styles.line}></div>

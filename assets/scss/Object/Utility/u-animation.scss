@@ -2,7 +2,7 @@
 @import '../../Foundation/mixin';
 @import '../../Foundation/animation';
 
-.c-animation {
+.u-animation {
   &__pop-up {
     opacity: 0;
     transform: translate3d(0, 32px, 0);
@@ -12,5 +12,9 @@
 
       @include animationDelayModifier();
     }
+  }
+  &__fade-in {
+    opacity: 0;
+    animation: fadeIn 1s ease-out forwards;
   }
 }

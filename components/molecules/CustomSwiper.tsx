@@ -22,7 +22,7 @@ const CustomSwiper = ({ contents }: Props) => {
         clickable: true,
       }}
       autoplay={{
-        delay: 7000,
+        delay: 10000,
         disableOnInteraction: false,
       }}
       // onSlideChange={() => console.log('slide change')}

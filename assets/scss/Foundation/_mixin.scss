@@ -23,9 +23,10 @@
 }
 
 @mixin animationDelayModifier() {
-  @for $i from 1 through 30 {
-    &.--delay-#{$i} {
-      animation-delay: #{$i}s;
+  @for $i from 1 through 100 {
+    $ms: $i * 100;
+    &.--delay-#{$ms} {
+      animation-delay: #{$ms}ms;
     }
   }
 }

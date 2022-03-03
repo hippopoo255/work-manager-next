@@ -58,7 +58,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-const NotificationPanel = () => {
+type Props = {
+  active: boolean
+}
+
+const NotificationPanel = ({ active = true }: Props) => {
   const { t } = useLocale()
   const classes = useStyles()
 

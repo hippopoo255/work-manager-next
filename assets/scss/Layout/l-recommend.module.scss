@@ -84,8 +84,6 @@ $assetPath: 'https://asset.job-support.site/assets';
   cursor: pointer;
   transform: translate3d(0, -16px, 0);
   transition: $transitionBasis;
-  animation: popdown 1s 3s ease-out forwards,
-    bound 0.3s 4s infinite linear alternate;
   &:hover {
     background: $white;
     .arrow-icon {
@@ -106,6 +104,10 @@ $assetPath: 'https://asset.job-support.site/assets';
       }
     }
   }
+}
+.reached {
+  animation: popdown 1s 3s ease-out forwards,
+    bound 0.3s 4s infinite linear alternate;
 }
 .arrow-icon {
   position: absolute;
