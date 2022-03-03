@@ -4,19 +4,24 @@ import { LinedPaper } from '@/components/molecules/top'
 import TouchAppOutlinedIcon from '@material-ui/icons/TouchAppOutlined'
 import clsx from 'clsx'
 import ArrowExpandDownIcon from '@/assets/images/arrow-expand-down.svg'
-const Recommend = () => {
+
+type Props = {
+  active: boolean
+}
+
+const Recommend = ({ active = true }: Props) => {
   const list = [
     {
-      text: '会議の議事録をオンラインで管理したい方',
+      text: '社内の議事録をオンラインで管理したい方',
     },
     {
-      text: '予定やタスクの管理システムを一本化したい方',
+      text: '議事録を手間なく参加者に共有したい方',
     },
     {
-      text: 'まだチャットツールの選定が決まっていない方',
+      text: '予定やタスク管理のシステムを一本化したい方',
     },
     {
-      text: 'クラウドサービスによる管理が大変になった方',
+      text: 'チャットツールがまだ決まっていない方',
     },
   ]
 
@@ -34,7 +39,7 @@ const Recommend = () => {
         <ul className={styles.wills}>
           {list.map((item, index) => (
             <li key={`item_${index}`} className={styles.will}>
-              <LinedPaper text={item.text}>
+              <LinedPaper text={item.text} animationStart={active}>
                 <h5 className={styles['point-title']}>
                   <TouchAppOutlinedIcon />
                   <span>Check {`0${index + 1}`}</span>
@@ -43,7 +48,12 @@ const Recommend = () => {
             </li>
           ))}
         </ul>
-        <button className={styles.arrow} onClick={handleClick}>
+        <button
+          className={clsx(styles.arrow, {
+            [styles.reached]: active,
+          })}
+          onClick={handleClick}
+        >
           <ArrowExpandDownIcon className={styles['arrow-icon']} />
         </button>
       </div>

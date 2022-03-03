@@ -17,7 +17,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-const ColdGradientWall = () => {
+type Props = {
+  active: boolean
+}
+
+const ColdGradientWall = ({ active = true }: Props) => {
   const classes = useStyles()
 
   const testButtonOptions = {
