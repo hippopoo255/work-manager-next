@@ -26,7 +26,7 @@ const Home = () => {
   }
 
   return (
-    <div className={'u-animation__fade-in'}>
+    <div className={'u-animation__fade-in --reached'}>
       <Head>
         <meta name="description" content={description} />
         <meta

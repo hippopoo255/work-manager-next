@@ -18,6 +18,16 @@
   background: map-get($gradients, $color);
 }
 
+@mixin bgCoverBaseStyle() {
+  background-position: center;
+  background-size: cover;
+}
+@mixin bgImageStyle($size: cover) {
+  background-position: center;
+  background-size: $size;
+  background-repeat: no-repeat;
+}
+
 @mixin space($t, $r, $b, $l) {
   padding: $spaceBasis * $t $spaceBasis * $r $spaceBasis * $b $spaceBasis * $l;
 }

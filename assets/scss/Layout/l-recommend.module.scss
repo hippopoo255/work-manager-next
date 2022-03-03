@@ -1,6 +1,5 @@
 @import '../Foundation/variable';
 @import '../Foundation/mixin';
-@import '../Foundation/animation';
 $assetPath: 'https://asset.job-support.site/assets';
 .root {
   padding-top: 64px;
@@ -80,41 +79,43 @@ $assetPath: 'https://asset.job-support.site/assets';
   border-radius: 9999px;
   background: lighten($darkGreen, 10%);
   box-shadow: $shadow4;
-  opacity: 0;
   cursor: pointer;
-  transform: translate3d(0, -16px, 0);
   transition: $transitionBasis;
   &:hover {
     background: $white;
-    .arrow-icon {
+    .arrow-body {
       fill: lighten($darkGreen, 10%);
     }
   }
   @media (hover: none) {
     &:hover {
       background: lighten($darkGreen, 10%);
-      .arrow-icon {
+      .arrow-body {
         fill: $white;
       }
     }
     &:active {
       background: $white;
-      .arrow-icon {
+      .arrow-body {
         fill: lighten($darkGreen, 10%);
       }
     }
   }
 }
-.reached {
-  animation: popdown 1s 3s ease-out forwards,
-    bound 0.3s 4s infinite linear alternate;
+
+.arrow-body {
+  width: 24px;
+  height: 24px;
+  fill: $white;
 }
 .arrow-icon {
   position: absolute;
   top: 50%;
   left: 50%;
+  display: inline-block;
+  width: 24px;
+  height: 24px;
   transform: translate3d(-50%, -50%, 0);
-  fill: $white;
 }
 
 @include media('xl') {
@@ -143,16 +144,5 @@ $assetPath: 'https://asset.job-support.site/assets';
     width: 48px;
     height: 48px;
     margin-top: 12px;
-  }
-}
-
-@keyframes popdown {
-  0% {
-    opacity: 0;
-    transform: translate3d(0, -16px, 0);
-  }
-  100% {
-    opacity: 1;
-    transform: none;
   }
 }

@@ -11,7 +11,7 @@ import { useAnimationByScroll } from '@/hooks'
 
 type Props = {
   index: number
-  pointIcons: JSX.Element[]
+  pointIcons: string[]
 }
 
 const TwoToneSection = ({ index, pointIcons }: Props) => {
@@ -40,7 +40,7 @@ const TwoToneSection = ({ index, pointIcons }: Props) => {
       <div className={clsx([styles.inner, styles.second, styles[feature.id]])}>
         <div className={styles.body}>
           <div
-            className={clsx('c-pop-up', {
+            className={clsx('u-animation__pop-up', {
               ['--reached']: isReached,
             })}
             ref={featureTitleRef}
@@ -54,7 +54,7 @@ const TwoToneSection = ({ index, pointIcons }: Props) => {
             {feature.points?.map((point, index) => (
               <li className={styles.point} key={`point_${index}`}>
                 <PointPaper
-                  icon={pointIcons[index]}
+                  iconPath={pointIcons[index]}
                   text={point.text}
                   id={feature.id}
                   index={index + 1}

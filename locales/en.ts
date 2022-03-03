@@ -60,7 +60,7 @@ export default {
     },
   },
   application: {
-    meetingRecord: 'Minutes',
+    minutes: 'Minutes',
     schedule: 'Schedule Manager',
     task: 'Task Manager',
     chat: 'Chat',
@@ -68,15 +68,99 @@ export default {
     realtime: 'About Realtime',
   },
   feature: {
-    meetingRecord: 'minutes',
-    schedule: 'Schedule',
-    task: 'Task',
-    blog: 'Blog',
-    chat: 'Chat',
-    notification: 'Notification',
-    realtime: 'Realtime',
+    minutes: {
+      name: 'Minutes',
+      linkText: 'Minutes',
+      mission: '会議の決定事項を記録する',
+      points: [
+        {
+          text: '入力フォームから議事録を作成し、会議の決議事項を記録できます。',
+        },
+        {
+          text: '過去の議事録をオンラインで確認でき、自分の参加した会議のみを表示させたり、ブックマークに追加したりできます。',
+        },
+        {
+          text: '議事録を新規で追加すると、通知をオンにしている参加メンバーにはメールが届きます。',
+        },
+      ],
+      description:
+        '会議で決まったことを定期的に振り返り、プロジェクトの進行状況をスムーズに把握することができます。\n議事録をオンラインで管理したい方はぜひお試しください。',
+    },
+    schedule: {
+      name: 'Schedule',
+      linkText: 'Schedule Manager',
+      mission: 'スケジュールを立てる',
+      points: [
+        {
+          text: '他のユーザーとスケジュールを共有できます。',
+        },
+        {
+          text: '共有相手の編集権限や、共有していないユーザーに対する公開設定などのオプションを設定できます。',
+        },
+        {
+          text: '当日のスケジュールを毎朝メールで通知します。',
+        },
+      ],
+      description:
+        '出張やミーティングの予定を他のユーザーと共有できます。\nスケジュールはドラッグアンドドロップで変更でき、リスケも手軽に行えます。',
+    },
+    task: {
+      name: 'Task',
+      linkText: 'Task Manager',
+      mission: 'Set priorities',
+      points: [
+        {
+          text: '優先度や締切日時を設定できます。',
+        },
+        {
+          text: 'ステータスを更新して進捗状況を管理できます。',
+        },
+        {
+          text: '期限が翌日に迫ったタスクは前日にメールでアラートされます。',
+        },
+      ],
+      description:
+        '入力フォームに「優先度」や「締切日時」を指定することで、緊急性と重要性の2軸からタスクを管理できます。\nメール通知をオンにすると、期日の迫ったタスクの漏れを防止できます。',
+    },
+    blog: {
+      name: 'Blog',
+      linkText: 'Blog',
+      mission: 'Share knowledge',
+      points: [
+        {
+          text: '優先度や締切日時を設定できます。',
+        },
+        {
+          text: 'ステータスを更新して進捗状況を管理できます。',
+        },
+        {
+          text: '期限が翌日に迫ったタスクは前日にメールでアラートされます。',
+        },
+      ],
+      description:
+        '入力フォームに「優先度」や「締切日時」を指定することで、緊急性と重要性の2軸からタスクを管理できます。\nメール通知をオンにすると、期日の迫ったタスクの漏れを防止できます。',
+    },
+    chat: {
+      name: 'Chat',
+      linkText: 'Chat',
+      mission: 'Talk using text',
+      points: [
+        {
+          text: 'チャットによるコミュニケーションができます。',
+        },
+        {
+          text: '投稿1回につき4枚まで画像の送信ができます。',
+        },
+        {
+          text: 'ブラウザをリロードしなくても、新着メッセージやメンバーの既読が確認できます。',
+        },
+      ],
+      description:
+        '業務報告や相談等の専用ルームを作成し、テレワークの環境でも円滑なコミュニケーションができます。\n\nテキストでのチャットはもちろん、1回のメッセージで最大4枚まで画像をアップロードできます。',
+    },
+    notification: '通知',
+    realtime: 'リアルタイム',
   },
-
   blog: {
     status: {
       done: 'post',
@@ -102,7 +186,7 @@ export default {
     moveToLogin: 'Do you already have an account?',
   },
   mypage: {
-    recentMeetingRecord: 'Recent Minutes',
+    minutes: 'Recent Minutes',
     dailySchedule: "Today's Schedule",
     expiredTasks: 'Expired Tasks',
     approachedTasks: 'Approached Tasks',

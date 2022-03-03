@@ -36,10 +36,13 @@ const TestLoginSuggestion = () => {
 
   return (
     <div
-      className={clsx(styles.root, {
-        [styles['--close']]: close,
-        [styles['--open']]: isReached,
-      })}
+      className={clsx(
+        [styles.root, 'u-animation__pop-up', 'u-animation__pop-out'],
+        {
+          ['--left']: close,
+          ['--reached']: isReached,
+        }
+      )}
     >
       <div className={styles.contents}>
         <p className={styles.text}>アカウント作成の前にお試しいただけます。</p>
@@ -48,7 +51,7 @@ const TestLoginSuggestion = () => {
         </div>
       </div>
       <button className={styles.close} onClick={handleClose}>
-        <CancelIcon />
+        <CancelIcon width={234} className={styles['close-icon']} />
       </button>
     </div>
   )

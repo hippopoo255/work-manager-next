@@ -47,7 +47,7 @@ const LatestMeetingRecord = React.memo(({ wrapClasses }: Props) => {
   })
   const header: Header = {
     avatar: <MeetingRecordIcon />,
-    title: t.mypage.recentMeetingRecord,
+    title: t.mypage.minutes,
     subTitle: '',
   }
   const footerLink: FooterLink = {

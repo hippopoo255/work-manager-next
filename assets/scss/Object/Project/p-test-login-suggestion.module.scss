@@ -9,20 +9,11 @@
   padding: 16px;
   background: $green;
   z-index: $zIndexHeader;
-  opacity: 0;
-  pointer-events: none;
-  transform: translate3d(0, 50%, 0);
   box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2),
     0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
   border-radius: $radiusBasis;
   transition: $transitionBasis;
   transition-delay: $transitionBasis;
-  &.--open {
-    &.--close {
-      animation: popOut 1s ease-out forwards;
-    }
-    animation: popUp 0.4s 2s ease-out forwards;
-  }
 }
 .contents {
   color: $white;
@@ -41,6 +32,10 @@
   border-radius: 9999px;
   cursor: pointer;
   background: #dddddd;
+}
+.close-icon {
+  width: 24px;
+  height: 24px;
 }
 
 @include media() {

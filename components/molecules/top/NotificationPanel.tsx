@@ -125,7 +125,7 @@ const NotificationPanel = ({ active = true }: Props) => {
                             id={itm.id}
                           />
                         </div>
-                        <span className={styles['timing']}>
+                        <span className={clsx([styles['timing'], 'u-ml-2'])}>
                           {itm.description}
                         </span>
                       </div>
@@ -134,7 +134,7 @@ const NotificationPanel = ({ active = true }: Props) => {
                 ))}
               <Hidden smUp implementation="css">
                 <li className={styles.cards__item}>
-                  <div className={'u-flex__align-center gap-2'}>
+                  <div className={'u-flex__align-center'}>
                     <div className="u-flex__static">
                       <RoundedIcon
                         sizes={{ width: 40, height: 40 }}
@@ -142,7 +142,7 @@ const NotificationPanel = ({ active = true }: Props) => {
                         id={'task'}
                       />
                     </div>
-                    <span className={styles['timing']}>
+                    <span className={clsx([styles['timing'], 'u-ml-2'])}>
                       翌日に迫ったタスクを夕方にお届け
                     </span>
                   </div>

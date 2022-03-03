@@ -3,19 +3,15 @@ import styles from '@/assets/scss/Layout/l-minutes-section.module.scss'
 import clsx from 'clsx'
 import Features from '@/lib/features'
 import { FeatureNameTitle, MissionTitle } from '@/components/molecules/top'
-import Feature01 from '@/assets/images/minutes_feat01.svg'
-import Feature02 from '@/assets/images/minutes_feat02.svg'
-import Feature03 from '@/assets/images/minutes_feat03.svg'
-import { MeetingRecordIcon } from '@/components/atoms/icons'
 import { VerticalPointBox } from '@/components/molecules/top'
 import { useAnimationByScroll } from '@/hooks'
 
 const MinutesSection = () => {
   const feature = Features()[0]
   const icons = [
-    <Feature01 key="01" width="120" />,
-    <Feature02 key="02" width="120" />,
-    <Feature03 key="03" width="120" />,
+    'point_minutes01.svg',
+    'point_minutes02.svg',
+    'point_minutes03.svg',
   ]
   const featureTitleRef = useRef(null)
   const { isReached } = useAnimationByScroll({ ref: featureTitleRef })
@@ -32,7 +28,7 @@ const MinutesSection = () => {
           <div>
             <div className={clsx(styles['feature-title'])}>
               <div
-                className={clsx('c-pop-up', {
+                className={clsx('u-animation__pop-up', {
                   ['--reached']: isReached,
                 })}
                 ref={featureTitleRef}

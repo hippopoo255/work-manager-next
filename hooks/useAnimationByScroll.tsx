@@ -7,7 +7,7 @@ type Props = {
 const useAnimationByScroll = ({ ref }: Props) => {
   const [isReached, setIsReached] = useState<boolean>(false)
   const [range, setRange] = useState<null | number>(null)
-
+  const MAX_HEIGHT = 50
   const handleShow = () => {
     if (!ref.current) {
       return false
@@ -17,7 +17,9 @@ const useAnimationByScroll = ({ ref }: Props) => {
       // ページ最上部から要素までの距離
       const remain = ref.current.getBoundingClientRect().top
       // 要素の上端がデバイスの高さの10分の１にかかったらアニメーションを発生させたい
-      const halfHeight = window.innerHeight / 10
+      const relatedToDeviceHeight = window.innerHeight / 10
+      const halfHeight =
+        relatedToDeviceHeight > MAX_HEIGHT ? MAX_HEIGHT : relatedToDeviceHeight
       setRange(remain + halfHeight)
     }
     // 現在の距離 = スクロールの量 + デバイスの高さ
