@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-page-custom-font */
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import Head from 'next/head'
 import { useLocale } from '@/hooks'
 import { Footer } from '@/components/organisms'
@@ -21,9 +21,9 @@ const Home = () => {
   const description = t.main.description.replace(':site_title', t.siteTitle)
   const [loading, setLoading] = useState(true)
 
-  const handleAfterFilled = () => {
+  const handleAfterFilled = useCallback(() => {
     setLoading(false)
-  }
+  }, [])
 
   return (
     <div className={'u-animation__fade-in'}>

@@ -4,10 +4,10 @@ import { useFillHeight } from '@/hooks'
 import { MainVisualSwiper } from '@/components/molecules/top'
 
 type Props = {
-  onFilled?: Function
+  onFilled: Function
 }
 
-const MainVisual = ({ onFilled }: Props) => {
+const MainVisual = React.memo(({ onFilled }: Props) => {
   const { fillRef, isFilled } = useFillHeight({ onFilled })
 
   return (
@@ -17,6 +17,6 @@ const MainVisual = ({ onFilled }: Props) => {
       </div>
     </div>
   )
-}
+})
 
 export default MainVisual
