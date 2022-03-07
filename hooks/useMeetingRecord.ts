@@ -109,9 +109,7 @@ const useMeetingRecord = () => {
   })
 
   const { memberList } = useMemberList({ sharedBy: 0 })
-  const { meetingPlaceList } = useMeetingPlaceList({
-    paramId,
-  })
+  const { meetingPlaceList } = useMeetingPlaceList()
 
   const classes = useStyles()
 
