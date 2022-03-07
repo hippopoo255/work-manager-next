@@ -5,22 +5,18 @@ import { requestUri } from '@/api'
 
 type Props = {
   handleSuccess?: () => void
-  paramId: string | number | string[]
   path?: string
 }
 
 const useMeetingPlaceList = ({
   handleSuccess,
-  paramId,
   path = requestUri.meetingPlace.list,
-}: Props) => {
+}: Props = {}) => {
   const [meetingPlaceList, setMeetingPlaceList] = useState<MeetingPlace[]>([])
   useInitialConnector({
     path,
-    condition: !!paramId,
-    depend: paramId,
     onSuccess: (meetingPlaceList: MeetingPlace[]) => {
-      setMeetingPlaceList(meetingPlaceList)
+      setMeetingPlaceList([...meetingPlaceList])
       if (handleSuccess !== undefined) {
         handleSuccess()
       }

@@ -1,11 +1,9 @@
-import { GetStaticProps } from 'next'
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { MypageLayout } from '@/layouts'
 import { MypageTitle } from '@/components/atoms'
-import { FormTitle } from '@/components/molecules'
+import { FormTitle, CustomLoader } from '@/components/molecules'
 import { Box } from '@material-ui/core'
 import { MeetingRecordIcon } from '@/components/atoms/icons'
-import { getRequest, requestUri } from '@/api'
 import { MeetingRecordForm } from '@/components/template'
 import { MeetingPlace } from '@/interfaces/models'
 import { MemberInputs } from '@/interfaces/form/inputs'
@@ -13,14 +11,18 @@ import { Breadcrumbs } from '@/components/molecules'
 import { BreadcrumbItem } from '@/interfaces/common'
 import { useMeetingRecord } from '@/hooks'
 
-export type Props = {
-  meetingPlaceList: MeetingPlace[]
-}
-
-const MeetingRecordCreate = ({ meetingPlaceList }: Props) => {
-  const { auth, save, classes, defaultValues, setDefaultValues, memberList } =
-    useMeetingRecord()
+const MeetingRecordCreate = () => {
+  const {
+    auth,
+    save,
+    classes,
+    defaultValues,
+    meetingPlaceList,
+    setDefaultValues,
+    memberList,
+  } = useMeetingRecord()
   const fixedMember: MemberInputs[] = []
+
   useEffect(() => {
     if (auth.isLogin) {
       setDefaultValues((prev) => ({
@@ -35,6 +37,11 @@ const MeetingRecordCreate = ({ meetingPlaceList }: Props) => {
       }))
     }
   }, [auth])
+
+  const loading = useMemo(
+    () => meetingPlaceList.length === 0,
+    [meetingPlaceList]
+  )
 
   const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -56,29 +63,22 @@ const MeetingRecordCreate = ({ meetingPlaceList }: Props) => {
         <Box className={classes.wrap}>
           <FormTitle title={'新規追加フォーム'} icon={<MeetingRecordIcon />} />
         </Box>
-        <MeetingRecordForm
-          memberList={memberList}
-          fixedMember={fixedMember}
-          defaultValues={defaultValues}
-          req={save}
-          classes={classes}
-          meetingPlaceList={meetingPlaceList}
-          saveAction="create"
-        />
+        {loading ? (
+          <CustomLoader />
+        ) : (
+          <MeetingRecordForm
+            memberList={memberList}
+            fixedMember={fixedMember}
+            defaultValues={defaultValues}
+            req={save}
+            classes={classes}
+            meetingPlaceList={meetingPlaceList}
+            saveAction="create"
+          />
+        )}
       </section>
     </MypageLayout>
   )
-}
-
-export const getStaticProps: GetStaticProps = async () => {
-  const meetingPlaceList = await getRequest<MeetingPlace[]>(
-    requestUri.meetingPlace.list
-  ).then((meetingPlaceList: MeetingPlace[]) => meetingPlaceList)
-  return {
-    props: {
-      meetingPlaceList,
-    },
-  }
 }
 
 export default MeetingRecordCreate
