@@ -5,6 +5,7 @@ import { Tooltip } from '@material-ui/core'
 import Link from 'next/link'
 import { toStrLabel } from '@/lib/util'
 import { BookmarkButton } from '@/components/atoms'
+import { MembersAvatar } from '@/components/molecules'
 
 export const headCells: HeadCell<MeetingTableRowData>[] = [
   {
@@ -38,6 +39,15 @@ export const headCells: HeadCell<MeetingTableRowData>[] = [
     label: '開催場所',
     size: 150,
     align: 'center',
+  },
+  {
+    id: 'members',
+    numeric: false,
+    disablePadding: false,
+    label: '参加者',
+    align: 'left',
+    size: 180,
+    long: true,
   },
   {
     id: 'summary',
@@ -95,6 +105,7 @@ export const createRows = (
       ),
       meeting_date: toStrLabel(new Date(meetingRecord.meeting_date)),
       place_id: meetingRecord.place.name,
+      members: <MembersAvatar members={meetingRecord.members} />,
       summary: meetingRecord.summary,
       created_at: toStrLabel(new Date(meetingRecord.created_at)),
       created_by: meetingRecord.created_by.full_name,

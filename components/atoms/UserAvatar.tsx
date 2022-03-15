@@ -22,6 +22,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export type Props = {
   user: User
 }
+
 export type Letter = () => string
 
 const UserAvatar = ({ user }: Props) => {

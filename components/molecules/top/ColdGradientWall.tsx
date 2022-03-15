@@ -37,9 +37,9 @@ const ColdGradientWall = ({ active = true }: Props) => {
       <div className={styles.bg}></div>
       <div className="u-container">
         <div className="u-px-5">
-          <h1 className={styles.catchCopy}>
-            {'support your Job.'.toUpperCase()}
-          </h1>
+          <h2 className={styles['catch-copy']}>
+            {'support your job'.toUpperCase()}
+          </h2>
           <div className={styles.sub}>
             <div className={styles.description}>
               <ul>
