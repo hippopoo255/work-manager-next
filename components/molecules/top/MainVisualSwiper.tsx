@@ -31,7 +31,6 @@ const MainVisualSwiper = ({ isShow = true }: Props) => {
     [activeIndex]
   )
   const handleChange = (swiper: SwiperCore) => {
-    // console.log(swiper.activeIndex)
     setActiveIndex(swiper.activeIndex)
   }
 
@@ -54,10 +53,10 @@ const MainVisualSwiper = ({ isShow = true }: Props) => {
         <Recommend active={actives[0]} />
       </SwiperSlide>
       <SwiperSlide className={styles.item} virtualIndex={101}>
-        <ColdGradientWall active={actives[1]} />
+        <NotificationPanel active={actives[1]} />
       </SwiperSlide>
       <SwiperSlide className={styles.item} virtualIndex={102}>
-        <NotificationPanel active={actives[2]} />
+        <ColdGradientWall active={actives[2]} />
       </SwiperSlide>
     </Swiper>
   )

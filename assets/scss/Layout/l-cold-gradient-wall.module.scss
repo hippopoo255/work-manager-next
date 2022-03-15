@@ -25,7 +25,7 @@ $assetPath: 'https://asset.job-support.site/assets';
   z-index: -1;
   opacity: $opacityImcompletion;
 }
-.catchCopy {
+.catch-copy {
   letter-spacing: 0.1em;
   text-align: center;
   font-size: $titleSizeMax;
@@ -60,7 +60,7 @@ $assetPath: 'https://asset.job-support.site/assets';
 }
 
 @include media() {
-  .catchCopy {
+  .catch-copy {
     font-size: $titleSizeKing;
   }
 }

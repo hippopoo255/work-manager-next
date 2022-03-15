@@ -1,3 +1,5 @@
+$orange: #f07837;
+$yellow: #f9e426;
 $blue: #3490dc;
 $darkBlue: #416178;
 $green: #089934;
@@ -12,23 +14,24 @@ $lightGrey: #f5f5f5;
 $lightGrey2: #f1f5f4;
 $white: #fafafa;
 $pink: #eb6d8e;
-$orange: #f07837;
 // semantic color
 $fontColorBasis: $black;
 $fontColorPrimary: $darkGreen;
 
 // font-family
 $fontFamilyBasis: 'Noto Sans JP', Roboto, sans-serif;
+$fontFamilyRound: 'M PLUS Rounded 1c', $fontFamilyBasis;
+
 $fontFamilyTitle: 'Teko', $fontFamilyBasis;
-$fontFamilyTitleSimple: 'Oswald', $fontFamilyBasis;
 
 // font-size
 $titleSizeMax: 72px;
 $titleSizeKing: 48px;
 $titleSizeXl: 36px;
 $titleSizeLg: 28px;
+$titleSizeMd: 24px;
 $titleSizeBasis: 20px;
-$fontSizeLg: 16px;
+$fontSizeLg: 18px;
 $fontSizeBasis: 16px;
 $fontSizeSm: 14px;
 $fontSizeXs: 12px;

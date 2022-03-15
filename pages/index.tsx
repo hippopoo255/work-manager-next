@@ -38,7 +38,7 @@ const Home = () => {
           rel="stylesheet"
         />
         <link
-          href="https://fonts.googleapis.com/css?family=Oswald:700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500&display=swap"
           rel="stylesheet"
         />
         <title>{t.siteTitle}</title>

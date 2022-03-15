@@ -59,14 +59,17 @@ $assetPath: 'https://asset.job-support.site/assets';
 
 .point-title {
   margin: 0;
-  line-height: 1.5;
-  font-size: $fontSizeLg;
-  font-family: $fontFamilyTitleSimple;
+  line-height: 1;
+  font-size: $titleSizeBasis;
+  font-family: $fontFamilyTitle;
   letter-spacing: 0.05em;
   display: flex;
   align-items: center;
   color: lighten($darkGreen, 10%);
   margin: 0 -4px 8px;
+  > span {
+    margin-top: 4px;
+  }
 }
 
 .arrow {

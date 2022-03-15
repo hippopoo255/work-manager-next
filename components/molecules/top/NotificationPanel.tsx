@@ -1,24 +1,17 @@
 import React from 'react'
 import { useLocale } from '@/hooks'
-import styles from '@/assets/scss/Object/Project/p-panel.module.scss'
+import styles from '@/assets/scss/Object/Project/p-notification-panel.module.scss'
 import clsx from 'clsx'
 
 // mui
-import { Box } from '@material-ui/core'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Product } from '@/interfaces/common'
-import { Hidden } from '@material-ui/core'
 
-import { PaperLabel } from '@/components/molecules'
-import { FullPhotoPaper } from '@/components/atoms'
 import {
   MeetingRecordIcon,
   ScheduleIcon,
   ChatIcon,
-  TaskIcon,
 } from '@/components/atoms/icons'
-
-import { RoundedIcon } from '@/components/molecules/top'
 
 const useStyles = makeStyles((theme: Theme) => ({
   item: {
@@ -91,66 +84,80 @@ const NotificationPanel = ({ active = true }: Props) => {
   ]
 
   return (
-    <div className={clsx([styles.root, styles['--notification']])}>
-      <div className={clsx([styles.bg, styles['--notification']])}></div>
-      <div className={clsx(['u-container', styles.content])}>
-        <div className={styles.items}>
-          <div className={clsx([styles.item, styles.first])}>
-            <div className="u-my-6">
-              <h3 className={styles.title}>{'Notification'.toUpperCase()}</h3>
-              <div className={clsx([styles['sub-title'], 'u-text-center'])}>
-                <span className={styles.description}>メール通知</span>
+    <div className={styles.root}>
+      <div className={styles.inner}>
+        <h2 className={styles['catch-copy']}>{'Notification'.toUpperCase()}</h2>
+        <div className={styles.main}>
+          <div className={styles.image}>
+            <div
+              className={clsx([
+                styles['notification-icon'],
+                styles['--schedule'],
+              ])}
+            ></div>
+            <div
+              className={clsx([styles['notification-icon'], styles['--task']])}
+            ></div>
+            <div
+              className={clsx([styles['notification-icon'], styles['--chat']])}
+            ></div>
+          </div>
+          <h4>
+            メール通知で当日のスケジュールや
+            <br />
+            締切間近のタスクも手軽に管理できます
+          </h4>
+        </div>
+        <ul className={styles.points}>
+          <li className={styles.point}>
+            <div className={styles.item}>
+              <div
+                className={clsx([styles['item__icon'], styles['--time']])}
+              ></div>
+              <div className={styles['item__text']}>
+                <span>{'当日の予定を\n毎朝お届け'}</span>
               </div>
             </div>
-          </div>
-          <div className={clsx([styles.item, styles.second])}>
-            <ul className={styles.cards}>
-              {notificationList.length > 0 &&
-                notificationList.map((itm: Product) => (
-                  <li key={itm.id} className={styles.cards__item}>
-                    <Hidden xsDown implementation="css">
-                      <Box className={classes.inner}>
-                        <FullPhotoPaper src={itm.bgImage} />
-                        <Box className={classes.paperLabel}>
-                          <PaperLabel item={itm} />
-                        </Box>
-                      </Box>
-                    </Hidden>
-                    <Hidden smUp implementation="css">
-                      <div className={'u-flex__align-center gap-2'}>
-                        <div className="u-flex__static">
-                          <RoundedIcon
-                            sizes={{ width: 40, height: 40 }}
-                            icon={itm.icon}
-                            id={itm.id}
-                          />
-                        </div>
-                        <span className={clsx([styles['timing'], 'u-ml-2'])}>
-                          {itm.description}
-                        </span>
-                      </div>
-                    </Hidden>
-                  </li>
-                ))}
-              <Hidden smUp implementation="css">
-                <li className={styles.cards__item}>
-                  <div className={'u-flex__align-center'}>
-                    <div className="u-flex__static">
-                      <RoundedIcon
-                        sizes={{ width: 40, height: 40 }}
-                        icon={<TaskIcon />}
-                        id={'task'}
-                      />
-                    </div>
-                    <span className={clsx([styles['timing'], 'u-ml-2'])}>
-                      翌日に迫ったタスクを夕方にお届け
-                    </span>
-                  </div>
-                </li>
-              </Hidden>
-            </ul>
-          </div>
-        </div>
+          </li>
+          <li className={styles.point}>
+            <div className={styles.item}>
+              <div
+                className={clsx([styles['item__icon'], styles['--task']])}
+              ></div>
+              <div className={styles['item__text']}>
+                <span>{'締切前のタスクを\n毎夕お届け'}</span>
+              </div>
+            </div>
+          </li>
+          <li className={styles.point}>
+            <div className={styles.item}>
+              <div
+                className={clsx([styles['item__icon'], styles['--chat']])}
+              ></div>
+              <div className={styles['item__text']}>
+                <span>{'チャットの\n新着投稿時'}</span>
+              </div>
+            </div>
+          </li>
+          <li className={styles.point}>
+            <div className={styles.item}>
+              <div className={clsx([styles['item__icon']])}></div>
+              <div className={styles['item__text']}>
+                <span>{'他のユーザーとスケジュール共有時'}</span>
+              </div>
+            </div>
+          </li>
+          <li className={styles.point}>
+            <div className={styles.item}>
+              <div
+                className={clsx([styles['item__icon'], styles['--minutes']])}
+              ></div>
+              <div className={styles['item__text']}>
+                <span>{'参加した会議の議事録がアップされた時'}</span>
+              </div>
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
   )
