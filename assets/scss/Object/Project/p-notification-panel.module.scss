@@ -196,7 +196,7 @@ $assetPath: 'https://asset.job-support.site/assets';
     text-align: center;
     color: $green;
     font-family: $fontFamilyRound;
-    font-size: $fontSizeSm;
+    font-size: $fontSizeXs;
     line-height: 1.25;
     height: 32px;
     white-space: pre-line;
@@ -313,6 +313,7 @@ $assetPath: 'https://asset.job-support.site/assets';
       white-space: inherit;
       text-align: left;
       height: initial;
+      font-size: $fontSizeSm;
     }
   }
 }
