@@ -1,12 +1,12 @@
 import { User } from '@/interfaces/models'
 import router from 'next/router'
-import handleRedirectByOrgData from './handleRedirectByOrgData'
+import redirectByOrgData from './redirectByOrgData'
 
-export default function handleRedirectByAuth(loggedInUser: User | '') {
+export default function redirectByAuth(loggedInUser: User | '') {
   if (router.pathname === '/login') {
     router.push('/')
   } else if (loggedInUser) {
-    handleRedirectByOrgData(loggedInUser.is_initialized)
+    redirectByOrgData(loggedInUser.is_initialized)
   } else {
     router.push('/login')
   }

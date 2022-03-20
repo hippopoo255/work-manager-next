@@ -1,2 +1,3 @@
-export { default as handleRedirectByAuth } from './handleRedirectByAuth'
-export { default as handleRedirectByOrgData } from './handleRedirectByOrgData'
+export { default as redirectByAuth } from './redirectByAuth'
+export { default as redirectByOrgData } from './redirectByOrgData'
+export { default as redirectIfAuthenticationDeny } from './redirectIfAuthenticationDeny'

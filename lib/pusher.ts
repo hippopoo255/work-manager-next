@@ -11,7 +11,7 @@ declare global {
 
 type Callback<T> = (d: T) => void
 type SentData = { message: ChatMessage; flag: string }
-type ReadData = { readUser: User; chatRoomId: number }
+export type ReadData = { readUser: User; chatRoomId: number }
 type DeleteData = { message: ChatMessage }
 
 export const listenMessageSent = (callback: Callback<SentData>) => {

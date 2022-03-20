@@ -18,8 +18,7 @@ import { MemberExtInputs } from '@/interfaces/form/inputs'
 import { ChatRoomSubmit } from '@/interfaces/form/submit'
 import { SITE_TITLE, chatMainWidth } from '@/lib/util'
 import { listenMessageSent, listenMessageRead } from '@/lib/pusher'
-import { useInitialAuthenticationOnChat, useRestApi } from '@/hooks'
-import { currentUserAction } from '@/globalState/user/action'
+import { useChatRoom, useInitialAuthentication } from '@/hooks'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -146,26 +145,11 @@ const ChatLayout = React.memo(
   }: Props) => {
     const classes = useStyles()
     const router = useRouter()
-    const { auth, dispatch } = useInitialAuthenticationOnChat()
-    const { postMethod } = useRestApi()
-    const userId = auth.user.id
+    const { chatRooms, setChatRooms } = useChatRoom()
     const [open, setOpen] = useState<boolean>(false)
     const fixedMember: MemberExtInputs[] = []
 
-    const chatRooms = useMemo(
-      (): ChatRoom[] =>
-        auth.isLogin && auth.user.chat_rooms ? auth.user.chat_rooms : [],
-      [auth]
-    )
-
-    const defaultValues = useMemo(
-      () => ({
-        created_by: userId,
-        name: '',
-        members: [],
-      }),
-      [auth]
-    )
+    const { auth } = useInitialAuthentication()
 
     const [mobileOpen, setMobileOpen] = useState(false)
     const [tabletOpen, setTabletOpen] = useState(false)
@@ -203,52 +187,28 @@ const ChatLayout = React.memo(
       }
     }
 
-    const saveReq = async (submitData: ChatRoomSubmit) =>
-      await postMethod<ChatRoom, ChatRoomSubmit>(
-        requestUri.chatRoom.post,
-        submitData,
-        (err) => {
-          console.error(err)
-          throw err
-        }
-      )
+    const handleSuccess = (newChatRoom: ChatRoom) => {
+      setChatRooms((prev) => {
+        const rooms = prev
+        rooms.unshift(newChatRoom)
+        return [...rooms]
+      })
+    }
 
     const handleAddIcon = () => {
       setOpen(true)
     }
 
-    const handleSuccess = (chatRoom: ChatRoom) => {
-      const updatedUser = (): User | '' => {
-        if (auth.isLogin) {
-          return {
-            ...auth.user,
-            chat_rooms: auth.user.chat_rooms.concat([chatRoom]),
-          }
-        }
-        return ''
-      }
-      dispatch(currentUserAction(updatedUser()))
-    }
-
     useEffect(() => {
       if (activeRoom !== null) {
-        const updatedUser = (): User | '' => {
-          if (auth.isLogin) {
-            const rooms: ChatRoom[] = !!auth.user.chat_rooms
-              ? auth.user.chat_rooms
-              : []
-            const index = rooms.findIndex((room) => room.id === activeRoom.id)
-            if (index !== 0) {
-              rooms.splice(index, 1, activeRoom)
-            }
-            return {
-              ...auth.user,
-              chat_rooms: rooms,
-            }
-          }
-          return ''
+        const index = chatRooms.findIndex((room) => room.id === activeRoom.id)
+        if (index !== -1) {
+          setChatRooms((prev) => {
+            const newRooms = prev
+            newRooms.splice(index, 1, activeRoom)
+            return [...newRooms]
+          })
         }
-        dispatch(currentUserAction(updatedUser()))
       }
     }, [activeRoom])
 
@@ -264,15 +224,11 @@ const ChatLayout = React.memo(
                 (chatRoom) => chatRoom.id === message.chat_room_id
               )
               if (index !== -1) {
-                const updatedUser = (): User => {
-                  const newRooms = [...chatRooms]
+                setChatRooms((prev) => {
+                  const newRooms = prev
                   newRooms[index].unread_count++
-                  return {
-                    ...auth.user,
-                    chat_rooms: [...newRooms],
-                  }
-                }
-                dispatch(currentUserAction(updatedUser()))
+                  return [...newRooms]
+                })
               }
             }
           }
@@ -281,22 +237,16 @@ const ChatLayout = React.memo(
           if (!auth.isLogin || readUser.id !== auth.user.id) {
             return true
           }
+
           const index = chatRooms.findIndex(
             (chatRoom) => chatRoom.id === chatRoomId
           )
           if (index !== -1) {
-            const updatedUser = (): User | '' => {
-              if (auth.isLogin) {
-                const newRooms = chatRooms
-                newRooms[index].unread_count = 0
-                return {
-                  ...auth.user,
-                  chat_rooms: newRooms,
-                }
-              }
-              return ''
-            }
-            dispatch(currentUserAction(updatedUser()))
+            setChatRooms((prev) => {
+              const newRooms = prev
+              newRooms[index].unread_count = 0
+              return [...newRooms]
+            })
           }
         })
       }
@@ -361,14 +311,10 @@ const ChatLayout = React.memo(
                     </Tooltip>
 
                     <ChatRoomForm
-                      defaultValues={defaultValues}
                       fixedMember={fixedMember}
-                      sharedBy={userId}
                       open={open}
                       setOpen={setOpen}
-                      req={saveReq}
                       onSuccess={handleSuccess}
-                      saveAction={'create'}
                     />
                   </Box>
                   {!!chatRooms && (

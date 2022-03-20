@@ -85,6 +85,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   msgMenu: {
     position: 'absolute',
     top: 0,
+    right: 0,
+    transform: 'translate3d(100%, -10px, 0)',
+  },
+  msgMyMenu: {
+    right: 'initial',
     left: 0,
     transform: 'translate3d(-100%, -10px, 0)',
   },
@@ -133,31 +138,47 @@ export type Props = {
   mine: boolean
   onEdit: (id?: number | string, index?: number) => void
   onDelete: (id?: number | string) => void
+  onReport: (id?: number | string, index?: number) => void
   index: number
 }
 
-const ChatMessageRow = ({ message, mine, onEdit, onDelete, index }: Props) => {
+const ChatMessageRow = ({
+  message,
+  mine,
+  onEdit,
+  onDelete,
+  onReport,
+  index,
+}: Props) => {
   const classes = useStyles()
 
   const readText: string = !!message.chat_message_reads.length
     ? '既読' + message.chat_message_reads.length
     : ''
-  const msgMenuOptions = useMemo(
-    () => [
-      {
-        text: '編集',
-        onClick: (id?: number | string, index?: number) => {
-          onEdit(id, index)
-        },
+  const myMenuOptions = [
+    {
+      text: '編集',
+      onClick: (id?: number | string, index?: number) => {
+        onEdit(id, index)
       },
-      {
-        text: '削除',
-        onClick: (id?: number | string) => onDelete(id),
-        danger: true,
+    },
+    {
+      text: '削除',
+      onClick: (id?: number | string) => onDelete(id),
+      danger: true,
+    },
+  ]
+
+  const menuOptions = [
+    {
+      text: '報告',
+      onClick: (id?: number | string, index?: number) => {
+        onReport(id, index)
       },
-    ],
-    []
-  )
+    },
+  ]
+
+  const customMenuOptions = mine ? myMenuOptions : menuOptions
 
   const Point = () => {
     return (
@@ -223,11 +244,12 @@ const ChatMessageRow = ({ message, mine, onEdit, onDelete, index }: Props) => {
         <div className={classes.msgBody}>
           <span
             className={clsx(classes.msgMenu, {
-              [classes.none]: !(mine && !message.isDelete),
+              [classes.msgMyMenu]: mine,
+              [classes.none]: message.isDelete,
             })}
           >
             <CustomMenuBox
-              options={msgMenuOptions}
+              options={customMenuOptions}
               small
               horizon
               id={message.id}

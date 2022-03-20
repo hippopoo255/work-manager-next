@@ -1,7 +1,7 @@
 import { useContext, useEffect } from 'react'
 import { AuthContext } from '@/provider/AuthProvider'
 import { authOperation } from '@/globalState/user/operation'
-import { handleRedirectByAuth } from '@/lib/route'
+import { redirectByAuth, redirectIfAuthenticationDeny } from '@/lib/route'
 import router from 'next/router'
 
 const useInitialAuthentication = (canGuest: boolean = false) => {
@@ -13,7 +13,9 @@ const useInitialAuthentication = (canGuest: boolean = false) => {
       const init = async () => {
         const loggedInUser = await authOperation.currentUser(dispatch)
         if (!canGuest) {
-          handleRedirectByAuth(loggedInUser)
+          redirectByAuth(loggedInUser)
+        } else {
+          redirectIfAuthenticationDeny(loggedInUser)
         }
       }
       init()
