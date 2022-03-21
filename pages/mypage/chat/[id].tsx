@@ -1,12 +1,5 @@
 import clsx from 'clsx'
-import React, {
-  useState,
-  useMemo,
-  useCallback,
-  useEffect,
-  useRef,
-  useContext,
-} from 'react'
+import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react'
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
 import {
   Divider,
@@ -21,20 +14,18 @@ import MeetingRoomIcon from '@material-ui/icons/MeetingRoom'
 import SendIcon from '@material-ui/icons/Send'
 import PanoramaOutlinedIcon from '@material-ui/icons/PanoramaOutlined'
 import { useRouter } from 'next/router'
-import { requestUri } from '@/api'
-import { ChatRoom, ChatMessage, LastRead, ChatImage } from '@/interfaces/models'
-import {
-  MemberExtInputs,
-  ChatRoomInputs,
-  ChatMessageInputs,
-} from '@/interfaces/form/inputs'
-import { ChatRoomSubmit, ChatMessageSubmit } from '@/interfaces/form/submit'
+import { ChatRoom, ChatMessage, ChatImage } from '@/interfaces/models'
+import { MemberExtInputs, ChatMessageInputs } from '@/interfaces/form/inputs'
 import { ChatLayout } from '@/layouts'
 import Custom403Page from '@/pages/403'
 import Custom404Page from '@/pages/404'
 import { ChatDetailTitle, SilentBar } from '@/components/molecules'
-import { ChatMessageRow, ConfirmDialog } from '@/components/organisms'
-import { ChatMessageForm, ChatRoomForm } from '@/components/template'
+import { ChatMessageRow } from '@/components/organisms'
+import {
+  ChatMessageForm,
+  ChatRoomForm,
+  ChatReportForm,
+} from '@/components/template'
 import { useForm, Controller } from 'react-hook-form'
 import {
   drawerWidth,
@@ -43,15 +34,13 @@ import {
   chatMainWidth,
   mine,
   STORAGE_URL,
-  API_DIRECT_URL,
 } from '@/lib/util'
 import {
   listenMessageSent,
   listenMessageRead,
   listenMessageDelete,
 } from '@/lib/pusher'
-import { deletedMessage } from '@/lib/initialData'
-import { useAuth, useRestApi } from '@/hooks'
+import { useAuth, useChatMessage } from '@/hooks'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -205,25 +194,46 @@ const useStyles = makeStyles((theme: Theme) =>
 const ChatDetail = () => {
   const classes = useStyles()
   const router = useRouter()
-  const { auth, config } = useAuth()
+  const { auth } = useAuth()
   const userId = auth.user.id
-  const [chatRoom, setChatRoom] = useState<ChatRoom | null>(null)
-  const [activeRoom, setActiveRoom] = useState<ChatRoom | null>(null)
   const [responseError, setResponseError] = useState<any | null>(null)
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false)
-  const [confirmOpen, setConfirmOpen] = useState<boolean>(false)
   const [formOpen, setFormOpen] = useState<boolean>(false)
   const [silentMessage, setSilentMessage] = useState<ChatMessage | null>(null)
-  const [confirmLoading, setConfirmLoading] = useState<boolean>(false)
   const fixedMember: MemberExtInputs[] = []
   const scrollRef = useRef<HTMLElement>(null)
-  const { getMethod, postMethod, putMethod, deleteMethod } = useRestApi()
+
+  const chatRoomId = useMemo(() => {
+    return router.query.id !== undefined ? Number(router.query.id) : undefined
+  }, [router])
+
+  const handleSentMsg = async () => {
+    scrollToLatest()
+    await read()
+  }
   const scrollToLatest = () => {
     if (!!scrollRef) {
       scrollRef!.current!.scrollTop = scrollRef!.current!.scrollHeight
       setSilentMessage(null)
     }
   }
+
+  const {
+    chatRoom,
+    setChatRoom,
+    updateLastReads,
+    save,
+    deleteMessage,
+    deleteChatRoom,
+    replaceUpdateMessage,
+    replaceDeleteMessage,
+    addNewMessage,
+    read,
+  } = useChatMessage({
+    chatRoomId,
+    init: handleSentMsg,
+  })
+
   const cantScroll = useCallback(() => {
     if (scrollRef === null || scrollRef === undefined) {
       return false
@@ -237,45 +247,16 @@ const ChatDetail = () => {
     }
   }, [scrollRef])
 
-  const getChatRoomId = useCallback(
-    () => (router.query.id !== undefined ? Number(router.query.id) : undefined),
-    [router]
-  )
-
   useEffect(() => {
-    const fetchChatRoom = async () => {
-      if (router.query.id !== undefined && userId) {
-        await getMethod<ChatRoom>(
-          requestUri.chatRoom.id + router.query.id,
-          (err) => {
-            setResponseError(err)
-            throw err
-          }
-        )
-          .then((data) => {
-            setChatRoom(data)
-            handleSentMsg()
-          })
-          .catch((err) => {
-            if (err.status === 401) {
-              router.push('/login')
-            }
-          })
-      }
-    }
-    fetchChatRoom()
-  }, [router, userId])
-
-  useEffect(() => {
-    if (userId > 0) {
+    if (auth.isLogin) {
       listenMessageSent(
         ({ message, flag }: { message: ChatMessage; flag: string }) => {
           if (
-            message.chat_room_id === getChatRoomId() &&
+            message.chat_room_id === chatRoomId &&
             !mine(message.created_by.id, userId)
           ) {
             if (flag === 'update') {
-              addUpdateMessage(message)
+              replaceUpdateMessage(message)
             } else {
               const isBottom = cantScroll()
               addNewMessage(message)
@@ -286,182 +267,38 @@ const ChatDetail = () => {
       )
       listenMessageDelete((message: ChatMessage) => {
         if (
-          message.chat_room_id === getChatRoomId() &&
+          message.chat_room_id === chatRoomId &&
           !mine(message.created_by.id, userId)
         ) {
           replaceDeleteMessage(message.id)
         }
       })
     }
-  }, [userId, router])
+  }, [auth, router])
 
   useEffect(() => {
     let isMounted = true
-    listenMessageRead(({ readUser, chatRoomId }) => {
-      if (isMounted) {
-        setChatRoom((prev: any) => {
-          if (prev === null) {
-            return null
-          }
-          const i = prev.last_reads.findIndex((lastRead: LastRead | null) => {
-            return lastRead === null
-              ? false
-              : lastRead.member_id === readUser.id
-          })
-          if (i !== -1) {
-            // 既読したユーザが最後に読んだメッセージのメッセージID
-            const lastMessageId = prev.last_reads[i].last_message_id
-            const newMessages = prev.messages.map((message: ChatMessage) => {
-              if (message.id <= lastMessageId) {
-              } else if (!mine(readUser.id, message!.created_by.id)) {
-                message!.chat_message_reads.push(readUser)
-              } else {
-              }
-              return message
-            })
-            // 最後に読んだメッセージIDを更新して、同一ユーザの既読表記重複を避ける
-            prev.last_reads[i].last_message_id = prev.messages.slice(-1)[0].id
-            return {
-              ...prev,
-              messages: newMessages,
-            }
-          } else {
-            const newMessages = prev.messages.map((message: ChatMessage) => {
-              if (!mine(readUser.id, message.created_by.id)) {
-                message.chat_message_reads.push(readUser)
-              }
-              return message
-            })
-            return {
-              ...prev,
-              messages: newMessages,
-            }
-          }
-        })
-      }
-    })
+    if (isMounted) {
+      listenMessageRead(({ readUser, chatRoomId }) => {
+        if (isMounted) {
+          updateLastReads({ readUser, chatRoomId })
+        }
+      })
+    }
+
     return () => {
       isMounted = false
     }
   }, [])
 
-  const handleSentMsg = async () => {
-    scrollToLatest()
-    await read()
-  }
-
-  const read = useCallback(async () => {
-    const chatRoomId = getChatRoomId()
-    await postMethod<ChatRoom, {}>(
-      requestUri.chatRoom.read + `${chatRoomId}/read`,
-      {}
-    )
-  }, [getChatRoomId, router, auth])
-
-  const title = useMemo(
-    () => (chatRoom !== null ? chatRoom.name : ''),
-    [chatRoom]
-  )
-
-  const addNewMessage = (targetMessage: ChatMessage) => {
-    setChatRoom((prev) => {
-      if (prev !== null) {
-        return {
-          ...prev,
-          messages: prev.messages.concat([targetMessage]),
-        }
-      } else {
-        return null
-      }
-    })
-  }
-
-  const addUpdateMessage = (targetMessage: ChatMessage) => {
-    setChatRoom((prev) => {
-      if (prev !== null) {
-        const newMessages = [...prev.messages]
-        const index = newMessages.findIndex(
-          (msg) => msg !== null && msg.id === targetMessage.id
-        )
-        newMessages.splice(index, 1, targetMessage)
-        return {
-          ...prev,
-          messages: newMessages,
-        }
-      } else {
-        return null
-      }
-    })
-  }
-
-  const replaceDeleteMessage = (id?: number | string) => {
-    setChatRoom((prev) => {
-      if (prev !== null) {
-        const newMessages = [...prev.messages]
-        const index = newMessages.findIndex(
-          (msg) => msg !== null && msg.id === id
-        )
-        const targetMessage = newMessages[index]
-        if (targetMessage !== null) {
-          newMessages.splice(index, 1, deletedMessage(targetMessage))
-        }
-        return {
-          ...prev,
-          messages: newMessages,
-        }
-      } else {
-        return null
-      }
-    })
-  }
-
   // チャットルーム更新
-  const saveReq = async (submitData: ChatRoomSubmit) =>
-    await putMethod<ChatRoom, ChatRoomSubmit>(
-      `${requestUri.chatRoom.put}${getChatRoomId()}`,
-      submitData
-    )
-
   const handleEdit = () => {
     setFormOpen(true)
   }
 
   const handleSuccess = (updateChatRoom: ChatRoom) => {
     setChatRoom(updateChatRoom)
-    setActiveRoom(updateChatRoom)
   }
-
-  const handleConfirm = () => {
-    setConfirmOpen(true)
-  }
-  // チャットルーム削除
-  const handleDelete = async () => {
-    setConfirmLoading(true)
-    await deleteMethod(requestUri.chatRoom.delete + getChatRoomId()).then(
-      () => {
-        setConfirmLoading(false)
-        setConfirmOpen(false)
-        router.push('/mypage/chat')
-      }
-    )
-  }
-
-  const defaultValues: ChatRoomInputs = useMemo(
-    () => ({
-      created_by: chatRoom !== null ? chatRoom.created_by.id : userId,
-      name: chatRoom !== null ? chatRoom.name : '',
-      members:
-        chatRoom !== null
-          ? chatRoom.members.map((member) => ({
-              id: member.id,
-              full_name: member.full_name,
-              is_editable: member.option.is_editable,
-              shared_by: member.option.shared_by,
-            }))
-          : [],
-    }),
-    [chatRoom]
-  )
 
   // チャットメッセージの新規投稿
   const {
@@ -483,15 +320,6 @@ const ChatDetail = () => {
     },
   })
 
-  const saveSimpleMessage = async (data: ChatMessageInputs) => {
-    const messageSubmitData = new FormData()
-    messageSubmitData.append('body', data.body)
-    messageSubmitData.append('created_by', String(userId))
-    await storeMessage(messageSubmitData).then((newMessage: ChatMessage) => {
-      handleAfterStore(newMessage)
-    })
-  }
-
   // チャットメッセージ操作（更新・削除）
   const [updateMsgInput, setUpdateMsgInput] = useState<ChatMessageInputs>({
     body: '',
@@ -511,30 +339,24 @@ const ChatDetail = () => {
     const updateMsg = index !== undefined ? chatMessages[index] : null
     if (updateMsg !== null) {
       setUpdateMsgInput({
-        id: updateMsg!.id!,
-        body: updateMsg!.body!,
-        created_by: updateMsg!.created_by.id,
-        previews:
-          updateMsg !== undefined
-            ? updateMsg.images.map((image: ChatImage | null) =>
-                image === null ? null : `${STORAGE_URL}/` + image.file_path
-              )
-            : [],
+        id: updateMsg.id,
+        body: updateMsg.body,
+        created_by: updateMsg.created_by.id,
+        previews: updateMsg.images.map((image: ChatImage | null) =>
+          image === null ? null : `${STORAGE_URL}/` + image.file_path
+        ),
         delete_flags: [],
-        image_ids:
-          updateMsg !== undefined
-            ? updateMsg.images.map((image: ChatImage | null) =>
-                image === null ? null : image.id
-              )
-            : [],
+        image_ids: updateMsg.images.map((image: ChatImage | null) =>
+          image === null ? null : image.id
+        ),
       })
       setMsgFormOpen(true)
     }
   }
 
-  const handleImageForm = () => {
+  const handleModalForm = () => {
     setUpdateMsgInput({
-      id: 0,
+      id: undefined,
       body: getValues('body'),
       created_by: userId,
       previews: [],
@@ -544,82 +366,45 @@ const ChatDetail = () => {
     setMsgFormOpen(true)
   }
 
-  const storeMessage = async (messageSubmitData: FormData, id: number = 0) =>
-    await postMethod<ChatMessage, ChatMessageSubmit>(
-      `/chat_room/${getChatRoomId()}/message`,
-      messageSubmitData,
-      undefined,
-      undefined,
-      API_DIRECT_URL
-    )
-
-  const handleAfterStore = (responseMessage: ChatMessage) => {
-    reset()
-    addNewMessage(responseMessage)
-    scrollToLatest()
-  }
-
-  const updateMessage = async (submitData: ChatMessageSubmit, id: number) =>
-    await putMethod<ChatMessage, ChatMessageSubmit>(
-      `/chat_room/${getChatRoomId()}/message/${id}`,
-      submitData,
-      undefined,
-      undefined,
-      API_DIRECT_URL
-    )
-
-  const handleAfterUpdate = (responseMessage: ChatMessage) => {
-    setChatRoom((prev) => {
-      if (prev !== null) {
-        const index = prev.messages.findIndex(
-          (msg) => msg!.id! === responseMessage.id
-        )
-        prev.messages.splice(index, 1, responseMessage)
-        return {
-          ...prev,
-          messages: prev.messages,
-        }
-      } else {
-        return null
-      }
+  const saveSimpleMessage = async (data: ChatMessageInputs) => {
+    const messageSubmitData = new FormData()
+    messageSubmitData.append('body', data.body)
+    messageSubmitData.append('created_by', String(userId))
+    await save(messageSubmitData).then(() => {
+      handleMsgSuccess()
     })
   }
 
-  const msgReq = useCallback(
-    async (submitData: ChatMessageSubmit, id: number) => {
-      if (updateMsgInput.id! > 0) {
-        return await updateMessage(submitData, id)
-      } else {
-        return await storeMessage(submitData, id)
-      }
-    },
-    [updateMsgInput, getChatRoomId]
-  )
-
-  const handleMsgSuccess = useCallback(
-    (responseMessage: ChatMessage) => {
-      if (updateMsgInput.id! > 0) {
-        return handleAfterUpdate(responseMessage)
-      } else {
-        return handleAfterStore(responseMessage)
-      }
-    },
-    [updateMsgInput]
-  )
-
-  const deleteMessage = async (id?: number | string) => {
-    await deleteMethod(`/chat_room/${getChatRoomId()}/message/${id}`).then(
-      () => {
-        replaceDeleteMessage(id)
-      }
-    )
+  const handleAfterStore = () => {
+    reset()
+    scrollToLatest()
   }
+
+  const handleMsgSuccess = useCallback(() => {
+    if (!updateMsgInput.id) {
+      return handleAfterStore()
+    }
+  }, [updateMsgInput])
+
+  // チャット報告
+  const [reportFormOpen, setReportFormOpen] = useState<boolean>(false)
+  const [chatMessageId, setChatMessageId] = useState<number>(0)
+  const handleReportForm = (id?: number | string, index?: number) => {
+    if (typeof id === 'number') {
+      setChatMessageId(id)
+    }
+    setReportFormOpen(true)
+  }
+  const handleAfterReport = () => {
+    setChatMessageId(0)
+  }
+
   return (
     <ChatLayout
       title={!!chatRoom ? chatRoom.name : ''}
       sideNone
       mainNone={false}
-      activeRoom={activeRoom}
+      activeRoom={chatRoom}
       onToggle={setSidebarOpen}
     >
       {responseError !== null && responseError.status === 403 && (
@@ -637,38 +422,35 @@ const ChatDetail = () => {
             })}
           >
             <ChatDetailTitle
-              title={title}
+              chatRoom={chatRoom}
               icon={<MeetingRoomIcon />}
               classes={classes}
+              deleteChatRoom={deleteChatRoom}
               onEdit={handleEdit}
-              onTrash={handleConfirm}
               editable={chatRoom !== null ? chatRoom.can_edit : false}
             />
           </div>
-          <ConfirmDialog
-            open={confirmOpen}
-            setOpen={setConfirmOpen}
-            onExec={handleDelete}
-            loading={confirmLoading}
-            isCircular
-          />
           <ChatRoomForm
-            defaultValues={defaultValues}
-            fixedMember={fixedMember}
-            sharedBy={userId}
-            open={formOpen}
-            setOpen={setFormOpen}
-            req={saveReq}
-            onSuccess={handleSuccess}
+            chatRoom={chatRoom}
             dialogTitle={
               chatRoom !== null ? chatRoom.name : 'チャットルームの編集'
             }
+            fixedMember={fixedMember}
+            open={formOpen}
+            setOpen={setFormOpen}
+            onSuccess={handleSuccess}
+          />
+          <ChatReportForm
+            open={reportFormOpen}
+            setOpen={setReportFormOpen}
+            id={chatMessageId}
+            onSuccess={handleAfterReport}
           />
           <ChatMessageForm
             defaultValues={updateMsgInput}
             open={msgFormOpen}
             setOpen={setMsgFormOpen}
-            req={msgReq}
+            req={save}
             onSuccess={handleMsgSuccess}
             dialogTitle={'チャットメッセージの投稿'}
           />
@@ -684,6 +466,7 @@ const ChatDetail = () => {
                         mine={mine(message!.created_by.id, userId)}
                         onEdit={handleMsgUpdateForm}
                         onDelete={deleteMessage}
+                        onReport={handleReportForm}
                         index={index}
                       />
                     )}
@@ -711,15 +494,12 @@ const ChatDetail = () => {
               <IconButton
                 color={'inherit'}
                 className={classes.panoramaIcon}
-                onClick={handleImageForm}
+                onClick={handleModalForm}
               >
                 <PanoramaOutlinedIcon />
               </IconButton>
             </Tooltip>
-            <div
-              style={{ width: '100%', height: '100%' }}
-              className={classes.msgForm}
-            >
+            <div className={classes.msgForm}>
               <Controller
                 name="body"
                 control={control}

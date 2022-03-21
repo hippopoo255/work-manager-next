@@ -1,6 +1,6 @@
 import router from 'next/router'
 
-export default function handleRedirectByOrgData(hasOrgData: boolean = false) {
+export default function redirectByOrgData(hasOrgData: boolean = false) {
   if (router.pathname === '/organization/create' && hasOrgData) {
     router.push('/mypage')
   }

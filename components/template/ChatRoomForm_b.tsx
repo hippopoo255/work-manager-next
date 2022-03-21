@@ -14,28 +14,35 @@ import { ChatRoomSubmit } from '@/interfaces/form/submit'
 import { ChatRoom } from '@/interfaces/models'
 import { FormErrorMessage } from '@/components/atoms'
 import PropTypes from 'prop-types'
-import { useMemberList, useChatRoom } from '@/hooks'
+import { useMemberList } from '@/hooks'
 
 export type Props = {
-  chatRoom?: ChatRoom | null
-  dialogTitle: string
+  defaultValues: ChatRoomInputs
   fixedMember: MemberExtInputs[]
+  sharedBy: number
   open: boolean
   setOpen: (isOpen: boolean) => void
+  req: (submitData: ChatRoomSubmit) => Promise<ChatRoom>
   onSuccess: (response: ChatRoom) => void
+  saveAction: 'create' | 'update'
+  dialogTitle: string
 }
 
 const ChatRoomForm = ({
-  chatRoom,
-  dialogTitle,
+  defaultValues,
   fixedMember,
+  sharedBy,
   open,
   setOpen,
+  req,
   onSuccess,
+  saveAction,
+  dialogTitle,
 }: Props) => {
+  // const [open, setOpen] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
-  const { save, auth } = useChatRoom()
-  const { memberList } = useMemberList({ sharedBy: auth.user.id })
+  const { memberList } = useMemberList({ sharedBy })
+
   const {
     handleSubmit,
     control,
@@ -47,33 +54,15 @@ const ChatRoomForm = ({
     reset,
     formState: { errors },
   } = useForm<ChatRoomInputs>({
-    defaultValues: {
-      name: '',
-      created_by: 0,
-      members: [],
-    },
+    defaultValues,
   })
   const selectedMembers = watch('members', fixedMember)
 
   useEffect(() => {
-    if (auth.isLogin) {
-      setValue('created_by', auth.user.id)
-      setValue('members', [])
-    }
-    if (!!chatRoom) {
-      setValue('name', chatRoom.name)
-      setValue('created_by', chatRoom.created_by.id)
-      setValue(
-        'members',
-        chatRoom.members.map((member) => ({
-          id: member.id,
-          full_name: member.full_name,
-          is_editable: member.option.is_editable,
-          shared_by: member.option.shared_by,
-        }))
-      )
-    }
-  }, [auth, chatRoom])
+    setValue('name', defaultValues.name)
+    setValue('created_by', defaultValues.created_by)
+    setValue('members', defaultValues.members)
+  }, [setValue, defaultValues])
 
   const handleMembers = (
     event: React.ChangeEvent<{}>,
@@ -91,13 +80,13 @@ const ChatRoomForm = ({
   }
 
   const handleCheck = (
-    checkedMemberId: number,
+    id: number,
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setValue(
       'members',
       selectedMembers.map((member: MemberExtInputs) => {
-        if (member.id === checkedMemberId) {
+        if (member.id === id) {
           member.is_editable = !member.is_editable
         }
         return member
@@ -111,7 +100,7 @@ const ChatRoomForm = ({
     data.members.forEach((member) => {
       submitMember[member.id] = {
         is_editable: !!member.is_editable,
-        shared_by: member.shared_by,
+        shared_by: sharedBy,
       }
     })
     const submitData = {
@@ -119,7 +108,7 @@ const ChatRoomForm = ({
       name: data.name,
       members: submitMember,
     }
-    await save(submitData, chatRoom?.id || undefined)
+    await req(submitData)
       .then((newChatRoom) => {
         setOpen(false)
         reset()

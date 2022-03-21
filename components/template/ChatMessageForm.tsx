@@ -109,7 +109,7 @@ export type Props = {
   defaultValues: ChatMessageInputs
   open: boolean
   setOpen: (isOpen: boolean) => void
-  req: (submitData: ChatMessageSubmit, id: number) => Promise<ChatMessage>
+  req: (submitData: ChatMessageSubmit, id?: number) => Promise<ChatMessage>
   onSuccess: (response: ChatMessage) => void
   saveAction: 'create' | 'update'
   dialogTitle: string

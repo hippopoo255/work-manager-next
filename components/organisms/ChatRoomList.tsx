@@ -10,8 +10,9 @@ import {
   ListItemAvatar,
   ListItemText,
   Badge,
-  Link,
+  // Link,
 } from '@material-ui/core'
+import Link from 'next/link'
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom'
 import { ChatRoom } from '@/interfaces/models'
 import router, { useRouter } from 'next/router'
@@ -68,11 +69,7 @@ const ChatRoomList = ({ chatRooms }: Props) => {
         chatRooms.map((chatRoom: ChatRoom) => (
           <li key={chatRoom.id}>
             <Box component={'h6'} className={classes.item}>
-              <Link
-                href={`/mypage/chat/${chatRoom.id}`}
-                color={'inherit'}
-                underline={'none'}
-              >
+              <Link href={`/mypage/chat/${chatRoom.id}`} passHref>
                 <ListItem
                   button
                   alignItems={'flex-start'}

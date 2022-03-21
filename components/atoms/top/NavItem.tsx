@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import clsx from 'clsx'
 import cNavItem from '@/assets/scss/Object/Project/p-nav-item.module.scss'
+import Link from 'next/link'
+
 type Props = {
   item: {
     to: string
@@ -30,7 +32,13 @@ const NavItem = ({ item, setOpen }: Props) => {
     }
   }
 
-  return (
+  const isOtherPage = useMemo(() => item.to.match(/^\/.+/), [])
+
+  return !!isOtherPage ? (
+    <Link href={item.to}>
+      <a className={clsx([cNavItem.root])}>{item.text}</a>
+    </Link>
+  ) : (
     <a onClick={handleLink} className={clsx([cNavItem.root])}>
       {item.text}
     </a>

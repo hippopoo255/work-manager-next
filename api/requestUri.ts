@@ -26,21 +26,22 @@ const requestUri = {
   },
   user: {
     list: '/user',
+    chatRoom: '/user/{id}/chat_room',
   },
   chatRoom: {
-    list: '/author/chat_room',
     post: '/chat_room',
-    put: '/chat_room/',
-    delete: '/chat_room/',
-    id: '/chat_room/',
-    read: '/chat_room/',
+    put: '/chat_room/{id}',
+    delete: '/chat_room/{id}',
+    id: '/chat_room/{id}',
+    read: '/chat_room/{id}/read',
     unreadRecently: '/author/chat_message/unread/recently',
+    findByOwner: '/author/chat_room',
   },
   chatMessage: {
-    list: '/author/chat_room',
     post: '/chat_room/{chat_room_id}/message',
     put: '/chat_room/{chat_room_id}/message/{id}',
     delete: '/chat_room/{chat_room_id}/message/{id}',
+    report: '/chat_message/{id}/report',
   },
   task: {
     post: '/task',
@@ -66,6 +67,9 @@ const requestUri = {
     myDaily: '/author/schedule/daily',
   },
   notifyStatus: '/user/',
+  reportCategories: {
+    index: '/report_category',
+  },
   activity: {
     myRecently: '/user/:id/activity',
     read: '/user/:id/activity/read',

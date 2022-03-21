@@ -27,6 +27,9 @@ export default {
     descriptionOmit:
       ':site_titleは、「議事録の作成」「スケジュール管理」「タスク管理」「チャット」といった機能を提供する業務支援サービスです。',
   },
+  chat: {
+    report: 'このチャットを報告',
+  },
   authMenu: {
     mypage: 'マイページ',
     profile: 'プロフィール',

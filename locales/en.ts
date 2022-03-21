@@ -26,6 +26,9 @@ export default {
     descriptionOmit:
       ':site_title is a business support service that provides functions such as "minutes creation," "schedule management," "task management," and "chat."',
   },
+  chat: {
+    report: 'Report this chat',
+  },
   authMenu: {
     mypage: 'My Page',
     profile: 'Profile',
@@ -171,7 +174,7 @@ export default {
     post: 'post',
     preSave: 'pre save',
     save: 'save',
-    store: '登録',
+    store: 'register',
     testLogin: 'Try as a demo user',
     send: 'send',
     login: 'Log in',

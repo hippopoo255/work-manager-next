@@ -1,44 +1,61 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   List,
-  ListItem,
   IconButton,
   Typography,
   Avatar,
   Tooltip,
 } from '@material-ui/core'
 import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined'
-import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined'
 import Router from 'next/router'
 import { CustomMenuBox } from '@/components/organisms'
 import PropTypes from 'prop-types'
+import { ChatRoom } from '@/interfaces/models'
+import { ConfirmDialog } from '@/components/organisms'
+import router from 'next/router'
 
 export type Props = {
-  title: string
+  chatRoom: ChatRoom | null
+  onEdit: Function
   icon: React.ReactNode
   classes: any
-  onEdit: any
-  onTrash: any
   editable: boolean
+  deleteChatRoom: () => Promise<null>
 }
 
 const ChatDetailTitle = ({
-  title,
+  chatRoom,
+  onEdit,
   icon,
   classes,
-  onEdit,
-  onTrash,
   editable,
+  deleteChatRoom,
 }: Props) => {
+  const [confirmOpen, setConfirmOpen] = useState<boolean>(false)
+  const [confirmLoading, setConfirmLoading] = useState<boolean>(false)
+
+  // チャットルーム削除
+  const handleConfirm = () => {
+    setConfirmOpen(true)
+  }
+  const handleDelete = async () => {
+    setConfirmLoading(true)
+    await deleteChatRoom().then(() => {
+      setConfirmLoading(false)
+      setConfirmOpen(false)
+      router.push('/mypage/chat')
+    })
+  }
+
   const menuList = [
     {
       text: 'チャットルームを編集',
-      onClick: (id?: number | string) => onEdit(id),
+      onClick: (id?: number | string) => onEdit(),
       disabled: !editable,
     },
     {
       text: 'チャットルームを削除',
-      onClick: (id?: number | string) => onTrash(id),
+      onClick: (id?: number | string) => handleConfirm(),
       disabled: !editable,
       danger: true,
     },
@@ -58,10 +75,17 @@ const ChatDetailTitle = ({
         </Tooltip>
         <Typography component={'h2'} className={classes.titleMain}>
           <Avatar>{icon}</Avatar>
-          <span>{title}</span>
+          <span>{!!chatRoom ? chatRoom.name : ''}</span>
         </Typography>
         <CustomMenuBox options={menuList} id={1} small />
       </List>
+      <ConfirmDialog
+        open={confirmOpen}
+        setOpen={setConfirmOpen}
+        onExec={handleDelete}
+        loading={confirmLoading}
+        isCircular
+      />
     </div>
   )
 }
