@@ -12,7 +12,7 @@ import { initialAlertStatus } from '@/lib/initialData'
 type Props = {
   duplicateValidationKey?: 'email' | 'login_id'
 }
-const useAccountSetup = ({ duplicateValidationKey = 'email' }: Props) => {
+const useAccountSetup = ({ duplicateValidationKey = 'email' }: Props = {}) => {
   const {
     handleSubmit,
     control,
@@ -30,24 +30,6 @@ const useAccountSetup = ({ duplicateValidationKey = 'email' }: Props) => {
   const [alertStatus, setAlertStatus] = useState<AlertStatus>({
     ...initialAlertStatus,
   })
-
-  const onAlertClose = () => {
-    setAlertStatus((prev) => ({
-      ...prev,
-      show: false,
-    }))
-  }
-
-  const calc = alertStatus.show
-
-  useEffect(() => {
-    setTimeout(() => {
-      setAlertStatus((prev) => ({
-        ...prev,
-        show: false,
-      }))
-    }, 5000)
-  }, [calc])
 
   const { signup, duplicateEmailCount } = useAuth()
 
@@ -107,12 +89,12 @@ const useAccountSetup = ({ duplicateValidationKey = 'email' }: Props) => {
 
   return {
     alertStatus,
+    setAlertStatus,
     control,
     errors,
     handleSubmit,
     loading,
     onSubmit,
-    onAlertClose,
   }
 }
 

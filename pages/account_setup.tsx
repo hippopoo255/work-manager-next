@@ -72,12 +72,12 @@ const AccountSetup = () => {
 
   const {
     alertStatus,
+    setAlertStatus,
     control,
     errors,
     handleSubmit,
     loading,
     onSubmit,
-    onAlertClose,
   } = useAccountSetup({ duplicateValidationKey: 'login_id' })
 
   return (
@@ -188,7 +188,10 @@ const AccountSetup = () => {
             </Grid>
           </form>
         </div>
-        <CustomAlert alertStatus={alertStatus} onClose={onAlertClose} />
+        <CustomAlert
+          alertStatus={alertStatus}
+          setAlertStatus={setAlertStatus}
+        />
       </Container>
     </Layout>
   )

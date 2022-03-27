@@ -122,13 +122,6 @@ const PasswordReset = () => {
 
   const paramToken = router.query.token
 
-  const handleAlertClose = () => {
-    setAlertStatus((prev) => ({
-      ...prev,
-      show: false,
-    }))
-  }
-
   useEffect(() => {
     if (router.query !== undefined) {
       setValue('email', String(router.query.email))
@@ -266,7 +259,7 @@ const PasswordReset = () => {
           </form>
         </div>
       </Container>
-      <CustomAlert alertStatus={alertStatus} onClose={handleAlertClose} />
+      <CustomAlert alertStatus={alertStatus} setAlertStatus={setAlertStatus} />
     </Layout>
   )
 }

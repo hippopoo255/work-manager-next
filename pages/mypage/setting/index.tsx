@@ -136,13 +136,6 @@ const Index = () => {
 
   const comparePassword = watch('change_password.password', '')
 
-  const handleAlertClose = () => {
-    setAlertStatus((prev) => ({
-      ...prev,
-      show: false,
-    }))
-  }
-
   const handleUpdate = async (data: SettingInputs) => {
     setFormLoading(true)
 
@@ -430,7 +423,7 @@ const Index = () => {
           </div>
         </Card>
       </section>
-      <CustomAlert alertStatus={alertStatus} onClose={handleAlertClose} />
+      <CustomAlert alertStatus={alertStatus} setAlertStatus={setAlertStatus} />
     </MypageLayout>
   )
 }

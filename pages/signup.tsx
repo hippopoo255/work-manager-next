@@ -82,8 +82,8 @@ const Signup = () => {
     handleSubmit,
     loading,
     onSubmit,
-    onAlertClose,
-  } = useAccountSetup({})
+    setAlertStatus,
+  } = useAccountSetup()
 
   return (
     <Layout title={t.head.title.signup}>
@@ -383,7 +383,10 @@ const Signup = () => {
             </Grid>
           </form>
         </div>
-        <CustomAlert alertStatus={alertStatus} onClose={onAlertClose} />
+        <CustomAlert
+          alertStatus={alertStatus}
+          setAlertStatus={setAlertStatus}
+        />
       </Container>
     </Layout>
   )

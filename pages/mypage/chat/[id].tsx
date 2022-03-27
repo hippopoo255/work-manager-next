@@ -16,9 +16,11 @@ import PanoramaOutlinedIcon from '@material-ui/icons/PanoramaOutlined'
 import { useRouter } from 'next/router'
 import { ChatRoom, ChatMessage, ChatImage } from '@/interfaces/models'
 import { MemberExtInputs, ChatMessageInputs } from '@/interfaces/form/inputs'
+import { AlertStatus } from '@/interfaces/common'
 import { ChatLayout } from '@/layouts'
 import Custom403Page from '@/pages/403'
 import Custom404Page from '@/pages/404'
+import { CustomAlert } from '@/components/atoms'
 import { ChatDetailTitle, SilentBar } from '@/components/molecules'
 import { ChatMessageRow } from '@/components/organisms'
 import {
@@ -26,6 +28,7 @@ import {
   ChatRoomForm,
   ChatReportForm,
 } from '@/components/template'
+import { initialAlertStatus } from '@/lib/initialData'
 import { useForm, Controller } from 'react-hook-form'
 import {
   drawerWidth,
@@ -397,7 +400,17 @@ const ChatDetail = () => {
   }
   const handleAfterReport = () => {
     setChatMessageId(0)
+    setAlertStatus((prev) => ({
+      ...prev,
+      msg: '報告しました',
+      severity: 'success',
+      show: true,
+    }))
   }
+
+  const [alertStatus, setAlertStatus] = useState<AlertStatus>({
+    ...initialAlertStatus,
+  })
 
   return (
     <ChatLayout
@@ -544,6 +557,7 @@ const ChatDetail = () => {
           )}
         </div>
       )}
+      <CustomAlert alertStatus={alertStatus} setAlertStatus={setAlertStatus} />
     </ChatLayout>
   )
 }

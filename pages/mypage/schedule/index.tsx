@@ -120,13 +120,6 @@ const Index = () => {
       }),
   })
 
-  const onAlertClose = () => {
-    setAlertStatus((prev) => ({
-      ...prev,
-      show: false,
-    }))
-  }
-
   const handleTarget = async (
     event: React.ChangeEvent<{}>,
     targetMember: MemberInputs | null
@@ -224,7 +217,7 @@ const Index = () => {
           loading={formLoading}
         />
       </section>
-      <CustomAlert alertStatus={alertStatus} onClose={onAlertClose} />
+      <CustomAlert alertStatus={alertStatus} setAlertStatus={setAlertStatus} />
     </MypageLayout>
   )
 }
