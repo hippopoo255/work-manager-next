@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import { MenuToggler, NavItem } from '@/components/atoms/top'
-import { useLocale } from '@/hooks'
+import { useInitialAuthentication, useLocale } from '@/hooks'
 import router from 'next/router'
-import pGlobalNav from '@/assets/scss/Object/Project/p-global-nav.module.scss'
+import pGlobalNav from '@/assets/scss/Module/global-nav.module.scss'
 import clsx from 'clsx'
 import Features from '@/lib/features'
 import { LoginIcon, SignupIcon } from '@/components/atoms/icons'
@@ -12,9 +12,9 @@ const GlobalNav = () => {
   const { t } = useLocale()
 
   const [open, setOpen] = useState(false)
+  const { auth } = useInitialAuthentication(true)
   const features = Features()
-
-  const headerLinks = [
+  const guestHeader = [
     {
       id: 'login',
       to: '/login',
@@ -36,8 +36,35 @@ const GlobalNav = () => {
       icon: <SignupIcon fontSize={'28px'} />,
     },
   ]
+  const authHeader = [
+    {
+      id: 'mypage',
+      to: '/mypage',
+      name: t.authMenu.mypage,
+      text: t.authMenu.mypage,
+      handleClick: (item: FeatureItem) => {
+        router.push(item.to)
+      },
+      icon: <LoginIcon fontSize={'28px'} />,
+    },
+    // {
+    //   id: 'signup',
+    //   to: '/signup',
+    //   name: t.head.title.signup,
+    //   text: t.head.title.signup,
+    //   handleClick: (item: FeatureItem) => {
+    //     router.push(item.to)
+    //   },
+    //   icon: <SignupIcon fontSize={'28px'} />,
+    // },
+  ]
 
-  const navMenus = [...features, ...headerLinks]
+  const headerLinks = useMemo(
+    () => (auth.isLogin ? authHeader : guestHeader),
+    [auth]
+  )
+
+  const navMenus = useMemo(() => [...features, ...headerLinks], [auth])
 
   return (
     <nav className={pGlobalNav.root}>

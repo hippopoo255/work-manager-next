@@ -73,13 +73,6 @@ const Index = () => {
     }
   }
 
-  const handleAlertClose = () => {
-    setAlertStatus((prev) => ({
-      ...prev,
-      show: false,
-    }))
-  }
-
   const handleSuccess = (task: Task) => {
     if (!!updateFlag) {
       if (tasks !== null) {
@@ -199,7 +192,7 @@ const Index = () => {
       setAlertStatus((prev) => ({
         ...prev,
         msg: '削除しました',
-        severity: 'error',
+        severity: 'success',
         show: true,
       }))
       setRows(createRows(res.data))
@@ -232,17 +225,6 @@ const Index = () => {
     }
     init()
   }, [router, auth])
-
-  const calc = alertStatus.show
-
-  useEffect(() => {
-    setTimeout(() => {
-      setAlertStatus((prev) => ({
-        ...prev,
-        show: false,
-      }))
-    }, 5000)
-  }, [calc])
 
   return (
     <MypageLayout title="タスク">
@@ -295,7 +277,7 @@ const Index = () => {
         </CommonTable>
       </section>
       <AddButton onClick={add} title="タスクを追加する" />
-      <CustomAlert alertStatus={alertStatus} onClose={handleAlertClose} />
+      <CustomAlert alertStatus={alertStatus} setAlertStatus={setAlertStatus} />
     </MypageLayout>
   )
 }

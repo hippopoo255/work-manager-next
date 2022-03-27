@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from '@/assets/scss/Object/Project/p-feature-name-title.module.scss'
+import styles from '@/assets/scss/Module/feature-name-title.module.scss'
 import clsx from 'clsx'
 
 type Props = {

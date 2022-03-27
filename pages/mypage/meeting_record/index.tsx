@@ -8,7 +8,7 @@ import {
 } from '@/components/organisms'
 import { useRouter } from 'next/router'
 import { AddButton } from '@/components/molecules'
-import { Pager } from '@/interfaces/common'
+import { Pager, AlertStatus } from '@/interfaces/common'
 import { SortParam } from '@/interfaces/table'
 import { MeetingRecord } from '@/interfaces/models'
 import { MeetingTableRowData } from '@/interfaces/table/rowData'
@@ -16,8 +16,9 @@ import { SearchMeetingRecordInputs } from '@/interfaces/form/inputs'
 import { requestUri } from '@/api'
 import { getSortParams, handlePageUri } from '@/lib/util'
 import { headCells, createRows } from '@/lib/table/meetingRecord'
-import { BookmarkButton } from '@/components/atoms'
+import { BookmarkButton, CustomAlert } from '@/components/atoms'
 import { useAuth, useRestApi } from '@/hooks'
+import { initialAlertStatus } from '@/lib/initialData'
 
 const Index = () => {
   const router = useRouter()
@@ -28,6 +29,9 @@ const Index = () => {
   const [latestUri, setLatestUri] = useState<string>(
     requestUri.meetingRecord.list
   )
+  const [alertStatus, setAlertStatus] = useState<AlertStatus>({
+    ...initialAlertStatus,
+  })
   const { getMethod, deleteMethod } = useRestApi()
   const { auth, config } = useAuth()
   const slicedSortKeys = () => {
@@ -121,6 +125,12 @@ const Index = () => {
       `${requestUri.meetingRecord.delete}/${ids[0]}${queryParams || ''}`
     ).then((res) => {
       setMeetingRecords(res)
+      setAlertStatus((prev) => ({
+        ...prev,
+        msg: '削除しました',
+        severity: 'success',
+        show: true,
+      }))
       setRows(createRows(res.data, afterBookmark))
     })
   }
@@ -202,6 +212,10 @@ const Index = () => {
           />
         </CommonTable>
         <AddButton onClick={handleAdd} title="議事録を追加する" />
+        <CustomAlert
+          alertStatus={alertStatus}
+          setAlertStatus={setAlertStatus}
+        />
       </section>
     </MypageLayout>
   )

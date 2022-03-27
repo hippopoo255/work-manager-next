@@ -66,23 +66,6 @@ const Login = () => {
   const { t } = useLocale()
   const { login } = useAuth()
 
-  const onAlertClose = () => {
-    setAlertStatus((prev) => ({
-      ...prev,
-      show: false,
-    }))
-  }
-
-  const calc = alertStatus.show
-
-  useEffect(() => {
-    setTimeout(() => {
-      setAlertStatus((prev) => ({
-        ...prev,
-        show: false,
-      }))
-    }, 5000)
-  }, [calc])
   const {
     handleSubmit,
     control,
@@ -199,7 +182,7 @@ const Login = () => {
                 options={{ fullWidth: true }}
               />
             </Box>
-            <Grid container spacing={3}>
+            <Grid container spacing={3} style={{ marginTop: 24 }}>
               <Grid item xs>
                 <Link
                   href="/password/forgot_password"
@@ -221,7 +204,10 @@ const Login = () => {
             </Grid>
           </form>
         </div>
-        <CustomAlert alertStatus={alertStatus} onClose={onAlertClose} />
+        <CustomAlert
+          alertStatus={alertStatus}
+          setAlertStatus={setAlertStatus}
+        />
       </Container>
     </Layout>
   )

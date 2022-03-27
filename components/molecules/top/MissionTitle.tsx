@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from '@/assets/scss/Object/Project/p-mission-title.module.scss'
+import styles from '@/assets/scss/Module/mission-title.module.scss'
 
 type Props = {
   index: string

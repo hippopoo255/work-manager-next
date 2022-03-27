@@ -1,6 +1,6 @@
 import React, { useRef, useCallback } from 'react'
 import { FeatGreenIcon } from '@/components/atoms/top'
-import styles from '@/assets/scss/Object/Project/p-vertical-point-box.module.scss'
+import styles from '@/assets/scss/Module/vertical-point-box.module.scss'
 import { useAnimationByScroll } from '@/hooks'
 import clsx from 'clsx'
 

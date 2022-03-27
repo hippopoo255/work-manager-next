@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
+import Link from 'next/link'
 import clsx from 'clsx'
 import { MypageLayout } from '@/layouts'
 import { MypageTitle, FormErrorMessage } from '@/components/atoms'
@@ -27,11 +28,11 @@ import {
 } from '@material-ui/core'
 import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined'
 import { useForm, Controller } from 'react-hook-form'
-import { strPatterns } from '@/lib/util'
+import { strPatterns, ADMIN_URL } from '@/lib/util'
 import { NotifyStatus, AlertStatus, TabItem } from '@/interfaces/common'
 import { SettingInputs, PasswordResetInputs } from '@/interfaces/form/inputs'
 import { CustomAlert } from '@/components/atoms'
-import { useChangePassword, useNotifyValidation } from '@/hooks'
+import { useAuth, useChangePassword, useNotifyValidation } from '@/hooks'
 import { initialAlertStatus } from '@/lib/initialData'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -40,7 +41,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   top: {
     paddingTop: theme.spacing(4),
-    // paddingBottom: theme.spacing(4),
+    [theme.breakpoints.down('xs')]: {
+      paddingTop: theme.spacing(2),
+    },
   },
   wrap: {
     width: 500,
@@ -67,7 +70,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   subtitle: {
     fontWeight: theme.typography.fontWeightBold,
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(4),
   },
 }))
 
@@ -78,8 +81,8 @@ type SaveProfileMethod<K extends InputKey> = (
 ) => Promise<void>
 
 interface SettingTabItem<K extends InputKey> extends TabItem {
-  inputKey: keyof SettingInputs
-  method: SaveProfileMethod<K>
+  inputKey?: keyof SettingInputs
+  method?: SaveProfileMethod<K>
 }
 
 const Index = () => {
@@ -119,41 +122,44 @@ const Index = () => {
     setAlertStatus,
   })
 
+  const { auth } = useAuth()
+
   const { changePassword } = useChangePassword({ setError, setAlertStatus })
 
-  const tabList = [
-    {
-      label: '通知設定',
-      inputKey: 'notify_validation',
-      method: updateNotifyValidation,
-    } as SettingTabItem<'notify_validation'>,
-    {
-      label: 'パスワード変更',
-      inputKey: 'change_password',
-      method: changePassword,
-    } as SettingTabItem<'change_password'>,
-  ]
+  const tabList = useMemo(() => {
+    const list = [
+      {
+        label: '通知設定',
+        inputKey: 'notify_validation',
+        method: updateNotifyValidation,
+      } as SettingTabItem<'notify_validation'>,
+      {
+        label: 'パスワード変更',
+        inputKey: 'change_password',
+        method: changePassword,
+      } as SettingTabItem<'change_password'>,
+    ]
+    if (auth.user && auth.user.is_invited) {
+      list.push({ label: 'その他' })
+    }
+    return list
+  }, [auth])
 
   const comparePassword = watch('change_password.password', '')
-
-  const handleAlertClose = () => {
-    setAlertStatus((prev) => ({
-      ...prev,
-      show: false,
-    }))
-  }
 
   const handleUpdate = async (data: SettingInputs) => {
     setFormLoading(true)
 
     const dataKey = tabList[currentTab].inputKey
     const save = tabList[currentTab].method
-    const inputs = data[dataKey] as {
-      [k: string]: boolean
-    } & PasswordResetInputs
-    await save(inputs).finally(() => {
-      setFormLoading(false)
-    })
+    if (!!dataKey && !!save) {
+      const inputs = data![dataKey] as {
+        [k: string]: boolean
+      } & PasswordResetInputs
+      await save(inputs).finally(() => {
+        setFormLoading(false)
+      })
+    }
   }
 
   return (
@@ -169,7 +175,7 @@ const Index = () => {
             </div>
             <form onSubmit={handleSubmit(handleUpdate)}>
               <CardContent className={classes.wrap}>
-                <Box mb={3}>
+                <Box mb={5} px={1}>
                   <CustomTabs
                     tabList={tabList}
                     value={currentTab}
@@ -180,16 +186,16 @@ const Index = () => {
                 <Grid container spacing={2} className={classes.wrap}>
                   {currentTab === 0 && (
                     <Grid item xs={12}>
-                      <Typography component={'h4'} variant={'h4'} gutterBottom>
+                      <Typography component={'h4'} variant={'h4'}>
                         メール配信設定
                       </Typography>
-                      <Divider style={{ marginTop: 12 }} />
+                      <Divider style={{ marginTop: 8, marginBottom: 12 }} />
                       <List>
                         {loading ? (
                           <CustomLoader />
                         ) : (
                           notifyValidation.map((sts: NotifyStatus, index) => (
-                            <ListItem key={sts.key} dense>
+                            <ListItem key={sts.key} dense disableGutters>
                               <Controller
                                 name={`notify_validation.${sts.id}`}
                                 defaultValue={!!sts.is_valid}
@@ -218,7 +224,7 @@ const Index = () => {
                             </ListItem>
                           ))
                         )}
-                        <ListItem dense>
+                        <ListItem dense disableGutters>
                           <ListItemText
                             primaryTypographyProps={{
                               color: 'primary',
@@ -234,7 +240,7 @@ const Index = () => {
                         </ListItem>
                         {dailyNotifyValidation.map(
                           (sts: NotifyStatus, index) => (
-                            <ListItem key={sts.key} dense>
+                            <ListItem key={sts.key} dense disableGutters>
                               <Controller
                                 name={`notify_validation.${sts.id}`}
                                 defaultValue={!!sts.is_valid}
@@ -275,7 +281,7 @@ const Index = () => {
                           </Typography>
                           <HelpBox />
                         </Box>
-                        <Divider style={{ margin: `12px 0 24px` }} />
+                        <Divider style={{ margin: `8px 0 12px` }} />
                       </Grid>
 
                       <Grid item xs={12}>
@@ -415,6 +421,29 @@ const Index = () => {
                       </Grid>
                     </>
                   )}
+                  {currentTab === 2 && (
+                    <>
+                      <Grid item xs={12}>
+                        <Box
+                          display={'flex'}
+                          justifyContent="center"
+                          alignItems={'center'}
+                          gridGap={8}
+                        >
+                          <Link href={ADMIN_URL} passHref>
+                            <Typography
+                              component={'a'}
+                              variant={'body2'}
+                              color="primary"
+                              target={'_blank'}
+                            >
+                              {'管理システムはこちら'}
+                            </Typography>
+                          </Link>
+                        </Box>
+                      </Grid>
+                    </>
+                  )}
                 </Grid>
               </CardContent>
               <Divider />
@@ -430,7 +459,7 @@ const Index = () => {
           </div>
         </Card>
       </section>
-      <CustomAlert alertStatus={alertStatus} onClose={handleAlertClose} />
+      <CustomAlert alertStatus={alertStatus} setAlertStatus={setAlertStatus} />
     </MypageLayout>
   )
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import lSection from '@/assets/scss/Layout/l-section.module.scss'
+import lSection from '@/assets/scss/Module/section.module.scss'
 
 type Props = {
   children: React.ReactNode

@@ -13,14 +13,10 @@ import {
 import { Layout } from '@/layouts'
 import { FormErrorMessage } from '@/components/atoms'
 import { CircularButton, PasswordTextField } from '@/components/molecules'
-import { strPatterns } from '@/lib/util'
 import { HelpBox } from '@/components/molecules'
 import { CustomAlert } from '@/components/atoms'
 import { AlertStatus } from '@/interfaces/common'
-import {
-  ForgotPasswordResetInputs,
-  PasswordResetInputs,
-} from '@/interfaces/form/inputs'
+import { ForgotPasswordResetInputs } from '@/interfaces/form/inputs'
 import { initialAlertStatus } from '@/lib/initialData'
 import { useLocale, usePasswordReset } from '@/hooks'
 
@@ -81,13 +77,6 @@ const PasswordReset = () => {
       .finally(() => {
         setLoading(false)
       })
-  }
-
-  const handleAlertClose = () => {
-    setAlertStatus((prev) => ({
-      ...prev,
-      show: false,
-    }))
   }
 
   useEffect(() => {
@@ -195,7 +184,7 @@ const PasswordReset = () => {
           </form>
         </div>
       </Container>
-      <CustomAlert alertStatus={alertStatus} onClose={handleAlertClose} />
+      <CustomAlert alertStatus={alertStatus} setAlertStatus={setAlertStatus} />
     </Layout>
   )
 }

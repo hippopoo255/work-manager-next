@@ -1,5 +1,5 @@
 import React from 'react'
-import cMenuToggler from '@/assets/scss/Object/Component/c-menu-toggler.module.scss'
+import cMenuToggler from '@/assets/scss/Module/menu-toggler.module.scss'
 import clsx from 'clsx'
 
 type Props = {

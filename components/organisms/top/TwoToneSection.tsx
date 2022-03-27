@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import styles from '@/assets/scss/Layout/l-two-tone-section.module.scss'
+import styles from '@/assets/scss/Module/two-tone-section.module.scss'
 import clsx from 'clsx'
 import Features from '@/lib/features'
 import {

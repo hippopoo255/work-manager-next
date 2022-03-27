@@ -1,6 +1,6 @@
 import React from 'react'
 import { TestLoginButton } from '@/components/molecules'
-import styles from '@/assets/scss/Layout/l-cold-gradient-wall.module.scss'
+import styles from '@/assets/scss/Module/cold-gradient-wall.module.scss'
 import clsx from 'clsx'
 import { Theme, makeStyles } from '@material-ui/core/styles'
 import LiveHelpOutlinedIcon from '@material-ui/icons/LiveHelpOutlined'

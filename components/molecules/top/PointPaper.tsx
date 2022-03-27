@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 import { TopLinedPaper } from '@/components/molecules/top'
 import { useAnimationByScroll } from '@/hooks'
-import styles from '@/assets/scss/Object/Project/p-point-paper.module.scss'
+import styles from '@/assets/scss/Module/point-paper.module.scss'
 import clsx from 'clsx'
 type Props = {
   id: string

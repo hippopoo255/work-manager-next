@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import lMainVisual from '@/assets/scss/Layout/l-main-visual.module.scss'
+import lMainVisual from '@/assets/scss/Module/main-visual.module.scss'
 import { useFillHeight } from '@/hooks'
 import { MainVisualSwiper } from '@/components/molecules/top'
 

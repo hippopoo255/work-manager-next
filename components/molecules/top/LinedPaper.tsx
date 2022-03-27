@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from '@/assets/scss/Object/Project/p-lined-paper.module.scss'
+import styles from '@/assets/scss/Module/lined-paper.module.scss'
 import clsx from 'clsx'
 type Props = {
   text: string

@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from '@/assets/scss/Object/Project/p-panel.module.scss'
+import styles from '@/assets/scss/Module/panel.module.scss'
 import Features from '@/lib/features'
 import { RoundedIcon } from '@/components/molecules/top'
 import { useLocale } from '@/hooks'

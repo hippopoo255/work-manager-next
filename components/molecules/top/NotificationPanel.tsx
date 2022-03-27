@@ -1,6 +1,6 @@
 import React from 'react'
 import { useLocale } from '@/hooks'
-import styles from '@/assets/scss/Object/Project/p-notification-panel.module.scss'
+import styles from '@/assets/scss/Module/notification-panel.module.scss'
 import clsx from 'clsx'
 
 // mui

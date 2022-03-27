@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react'
 import clsx from 'clsx'
 import { footerHeight } from '@/lib/util'
-import lMain from '@/assets/scss/Layout/l-main.module.scss'
+import lMain from '@/assets/scss/Module/main.module.scss'
 import { useFillHeight } from '@/hooks'
 
 type Props = {

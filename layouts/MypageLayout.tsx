@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { MypageHeader as Header, Footer, Sidebar } from '@/components/organisms'
-import layout from '@/assets/scss/Layout/l-mypage-layout.module.scss'
+import layout from '@/assets/scss/Module/mypage-layout.module.scss'
 import Head from 'next/head'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
@@ -25,6 +25,9 @@ const useStyles = makeStyles((theme: Theme) =>
     main: {
       padding: theme.spacing(3),
       flexGrow: 1,
+      [theme.breakpoints.down('xs')]: {
+        padding: theme.spacing(3, 2),
+      },
     },
   })
 )

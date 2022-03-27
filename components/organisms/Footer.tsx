@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from '@/assets/scss/Layout/l-footer.module.scss'
+import styles from '@/assets/scss/Module/footer.module.scss'
 import { Box, Typography } from '@material-ui/core'
 import Link from '@material-ui/core/Link'
 import { BIRTH_DAY, APP_URL } from '@/lib/util'

@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import styles from '@/assets/scss/Layout/l-minutes-section.module.scss'
+import styles from '@/assets/scss/Module/minutes-section.module.scss'
 import clsx from 'clsx'
 import Features from '@/lib/features'
 import { FeatureNameTitle, MissionTitle } from '@/components/molecules/top'

@@ -232,13 +232,6 @@ const Profile = () => {
     }
   }
 
-  const onAlertClose = () => {
-    setAlertStatus((prev) => ({
-      ...prev,
-      show: false,
-    }))
-  }
-
   const handlePreview = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files!.length === 0) {
       return false
@@ -495,7 +488,7 @@ const Profile = () => {
           </form>
         </Card>
       </section>
-      <CustomAlert alertStatus={alertStatus} onClose={onAlertClose} />
+      <CustomAlert alertStatus={alertStatus} setAlertStatus={setAlertStatus} />
     </MypageLayout>
   )
 }

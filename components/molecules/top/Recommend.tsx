@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from '@/assets/scss/Layout/l-recommend.module.scss'
+import styles from '@/assets/scss/Module/recommend.module.scss'
 import { LinedPaper } from '@/components/molecules/top'
 import TouchAppOutlinedIcon from '@material-ui/icons/TouchAppOutlined'
 import clsx from 'clsx'

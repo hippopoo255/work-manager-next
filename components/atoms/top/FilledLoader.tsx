@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from '@/assets/scss/Object/Component/c-filled-loader.module.scss'
+import styles from '@/assets/scss/Module/filled-loader.module.scss'
 import clsx from 'clsx'
 
 type Props = {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import styles from '@/assets/scss/Object/Project/p-test-login-suggestion.module.scss'
+import styles from '@/assets/scss/Module/test-login-suggestion.module.scss'
 import CancelIcon from '@material-ui/icons/Cancel'
 import clsx from 'clsx'
 import { TestLoginButton } from '@/components/molecules'

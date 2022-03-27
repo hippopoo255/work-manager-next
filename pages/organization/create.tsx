@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import Head from 'next/head'
 import { Layout } from '@/layouts'
 import { makeStyles, Theme } from '@material-ui/core/styles'
@@ -11,21 +11,17 @@ import {
   Grid,
   Typography,
   MenuItem,
-  IconButton,
 } from '@material-ui/core'
-import { InputAdornment, TextField } from '@material-ui/core'
-import VisibilityIcon from '@material-ui/icons/Visibility'
-import VisibilityOffIcon from '@material-ui/icons/VisibilityOff'
+import { TextField } from '@material-ui/core'
 import BusinessOutlinedIcon from '@material-ui/icons/BusinessOutlined'
 import { Controller, SubmitHandler } from 'react-hook-form'
 import { CustomAlert, FormErrorMessage } from '@/components/atoms'
-import { CircularButton, CustomLoader, HelpBox } from '@/components/molecules'
+import { CircularButton, CustomLoader } from '@/components/molecules'
 import { AlertStatus } from '@/interfaces/common'
 import { OrganizationInputs } from '@/interfaces/form/inputs'
 import { initialAlertStatus } from '@/lib/initialData'
 import { strPatterns } from '@/lib/util'
 import { useLocale, useOrganization } from '@/hooks'
-import { useRouter } from 'next/router'
 import { PasswordTextField } from '@/components/molecules'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -77,7 +73,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const OrganizationCreate = () => {
   const classes = useStyles()
-  const router = useRouter()
   const {
     auth,
     control,
@@ -98,24 +93,6 @@ const OrganizationCreate = () => {
     fullWidth: true,
     className: classes.submit,
   }
-
-  const onAlertClose = () => {
-    setAlertStatus((prev) => ({
-      ...prev,
-      show: false,
-    }))
-  }
-
-  const calc = alertStatus.show
-
-  useEffect(() => {
-    setTimeout(() => {
-      setAlertStatus((prev) => ({
-        ...prev,
-        show: false,
-      }))
-    }, 5000)
-  }, [calc])
 
   const onSubmit: SubmitHandler<OrganizationInputs> = async (
     data: OrganizationInputs
@@ -449,7 +426,10 @@ const OrganizationCreate = () => {
             </form>
           )}
         </div>
-        <CustomAlert alertStatus={alertStatus} onClose={onAlertClose} />
+        <CustomAlert
+          alertStatus={alertStatus}
+          setAlertStatus={setAlertStatus}
+        />
       </Container>
     </Layout>
   )

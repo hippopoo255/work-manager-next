@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import SwiperCore, { Pagination, Autoplay } from 'swiper'
 SwiperCore.use([Autoplay, Pagination])
 
-import styles from '@/assets/scss/Object/Project/p-swiper.module.scss'
+import styles from '@/assets/scss/Module/swiper.module.scss'
 import {
   Recommend,
   ColdGradientWall,

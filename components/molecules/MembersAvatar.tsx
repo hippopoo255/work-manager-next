@@ -24,11 +24,13 @@ const MembersAvatar = ({ members }: Props) => {
           <Tooltip title={member.full_name} key={`member_${member.id}`}>
             <Avatar
               alt={member.family_name}
-              src={`${STORAGE_URL}/${member.file_path}`}
+              src={member.file_path ? `${STORAGE_URL}/${member.file_path}` : ''}
               classes={{
                 colorDefault: classes.colorDefault,
               }}
-            />
+            >
+              {member.family_name ? member.family_name.slice(0, 1) : ''}
+            </Avatar>
           </Tooltip>
         ))}
     </AvatarGroup>

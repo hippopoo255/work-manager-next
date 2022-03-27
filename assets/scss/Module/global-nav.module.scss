@@ -1,8 +1,5 @@
-@import '../../Foundation/variable';
-@import '../../Foundation/mixin';
-
-.root {
-}
+@import '../Foundation/variable';
+@import '../Foundation/mixin';
 
 .list {
   height: 100%;
@@ -15,8 +12,6 @@
 }
 
 @include media() {
-  .root {
-  }
   .list {
     padding-top: $headerHeight + $spaceBasis * 4;
     position: fixed;

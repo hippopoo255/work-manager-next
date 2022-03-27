@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import header from '@/assets/scss/Layout/l-header.module.scss'
+import header from '@/assets/scss/Module/header.module.scss'
 import clsx from 'clsx'
 import { headerHeight } from '@/lib/util'
 import { GlobalNav, Logo } from '@/components/molecules/top'

@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import clsx from 'clsx'
-import cNavItem from '@/assets/scss/Object/Project/p-nav-item.module.scss'
+import cNavItem from '@/assets/scss/Module/nav-item.module.scss'
 import Link from 'next/link'
 
 type Props = {

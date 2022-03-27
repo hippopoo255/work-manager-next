@@ -6,7 +6,7 @@ import { CustomMenuBox } from '.'
 import { HelpBox } from '@/components/molecules'
 import { ChatMessage, User } from '@/interfaces/models'
 import { UserAvatar } from '@/components/atoms'
-import styles from '@/assets/scss/Layout/l-chat-detail.module.scss'
+import styles from '@/assets/scss/Module/chat-detail.module.scss'
 import { postTiming, STORAGE_URL } from '@/lib/util'
 
 const useStyles = makeStyles((theme: Theme) => ({

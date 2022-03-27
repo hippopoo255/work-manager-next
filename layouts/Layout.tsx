@@ -1,6 +1,6 @@
 import React from 'react'
 import { Header, Footer } from '@/components/organisms'
-import layout from '@/assets/scss/Layout/l-layout.module.scss'
+import layout from '@/assets/scss/Module/layout.module.scss'
 import Head from 'next/head'
 import { useInitialAuthentication, useLocale } from '@/hooks'
 

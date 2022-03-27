@@ -2,7 +2,7 @@ import React from 'react'
 import Logo from '@/assets/images/site_logo.svg'
 import Link from 'next/link'
 import clsx from 'clsx'
-import headerStyle from '@/assets/scss/Layout/l-header.module.scss'
+import headerStyle from '@/assets/scss/Module/header.module.scss'
 
 type Props = {
   white?: boolean

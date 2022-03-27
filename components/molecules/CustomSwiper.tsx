@@ -2,7 +2,7 @@ import React from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 // 使いたい機能をインポート
 import SwiperCore, { Pagination, Autoplay } from 'swiper'
-import styles from '@/assets/scss/Object/Project/p-swiper.module.scss'
+import styles from '@/assets/scss/Module/swiper.module.scss'
 
 SwiperCore.use([Autoplay, Pagination])
 

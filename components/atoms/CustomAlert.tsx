@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import clsx from 'clsx'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import Alert from '@material-ui/lab/Alert'
@@ -41,14 +42,33 @@ const useStyles = makeStyles((theme: Theme) =>
 
 type Props = {
   alertStatus: AlertStatus
-  onClose: () => void
+  setAlertStatus: React.Dispatch<React.SetStateAction<AlertStatus>>
+  onClose?: () => void
 }
-const CustomAlert = ({ alertStatus, onClose }: Props) => {
+const CustomAlert = ({ alertStatus, setAlertStatus, onClose }: Props) => {
   const classes = useStyles()
 
+  useEffect(() => {
+    if (alertStatus.show) {
+      setTimeout(() => {
+        setAlertStatus((prev) => ({
+          ...prev,
+          show: false,
+        }))
+      }, 5000)
+    }
+  }, [alertStatus])
+
   const handleClose = () => {
-    onClose()
+    setAlertStatus((prev) => ({
+      ...prev,
+      show: false,
+    }))
+    if (!!onClose) {
+      onClose()
+    }
   }
+
   return (
     <Box
       className={clsx(classes.top, {

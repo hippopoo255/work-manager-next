@@ -2,7 +2,7 @@ import React from 'react'
 import { Avatar, makeStyles, Theme } from '@material-ui/core'
 import { linerGradient } from '@/assets/color/gradient'
 import clsx from 'clsx'
-import styles from '@/assets/scss/Object/Component/c-rounded-icon.module.scss'
+import styles from '@/assets/scss/Module/rounded-icon.module.scss'
 import { id } from 'date-fns/locale'
 
 type Props = {
