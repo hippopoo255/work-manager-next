@@ -24,7 +24,7 @@ export default class MyDocument extends Document {
           />
           <meta name="twitter:card" content="summary_large_image" />
           <meta name="twitter:site" content="@kaba_farm" />
-          <meta property="og:url" content="https://www.job-support.site" />
+          <meta property="og:url" content="https://www.work-manager.site" />
           <meta property="og:title" content="ポートフォリオ『ジョブサポ』" />
           <meta
             property="og:description"
@@ -32,7 +32,7 @@ export default class MyDocument extends Document {
           />
           <meta
             property="og:image"
-            content="https://asset.job-support.site/assets/no-image.jpg"
+            content="https://asset.work-manager.site/assets/no-image.jpg"
           />
           <link rel="icon" href="/favicon.png" type="image/svg+xml"></link>
         </Head>
