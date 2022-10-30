@@ -1,4 +1,4 @@
-**[プロジェクトの概要はコチラ](https://github.com/kabatech255/job-support)**
+**[プロジェクトの概要はコチラ](https://github.com/hippopoo255/work-manager-api)**
 
 ## Getting Started
 
