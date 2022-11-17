@@ -53,7 +53,7 @@ const Home = () => {
         <ChatSection />
       </Main>
       <TestLoginSuggestion />
-      <Footer />
+      {/* <Footer /> */}
     </div>
   )
 }
