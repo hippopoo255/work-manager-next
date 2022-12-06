@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     headerColor: {
       borderImage: linerGradient.secondary,
-      borderBottom: '4px solid',
+      borderBottom: '2px solid',
       borderImageSlice: 1,
     },
     subHeaderColor: {

@@ -26,7 +26,7 @@ const TriggerIcon = () => {
       aria-label="show detail"
       component="span"
       size="small"
-      style={{ color: 'white' }}
+      style={{ color: 'rgba(0, 0, 0, 0.38)' }}
     >
       <HelpOutlineOutlinedIcon />
     </IconButton>
