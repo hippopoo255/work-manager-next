@@ -7,6 +7,7 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  Avatar,
 } from '@material-ui/core'
 import { MeetingRecord } from '@/interfaces/models'
 import { DashboardBaseCard } from '@/components/organisms'
@@ -15,11 +16,15 @@ import { MeetingRecordIcon } from '@/components/atoms/icons'
 import { requestUri } from '@/api'
 import { headCells, createRows } from '@/lib/table/meetingRecord'
 import { useLocale, useInitialConnector } from '@/hooks'
+import { linerGradient } from '@/assets/color/gradient'
 
 const useStyles = makeStyles((theme: Theme) => ({
   seeMore: {
     marginTop: theme.spacing(3),
     paddingLeft: theme.spacing(2),
+  },
+  avatar: {
+    background: linerGradient.primary,
   },
   td: {
     whiteSpace: 'nowrap',
@@ -46,7 +51,11 @@ const LatestMeetingRecord = React.memo(({ wrapClasses }: Props) => {
     },
   })
   const header: Header = {
-    avatar: <MeetingRecordIcon />,
+    avatar: (
+      <Avatar className={classes.avatar}>
+        <MeetingRecordIcon />
+      </Avatar>
+    ),
     title: t.mypage.minutes,
     subTitle: '',
   }
