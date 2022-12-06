@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     headerColor: {
       borderImage: linerGradient.secondary,
-      borderBottom: '4px solid',
+      borderBottom: '2px solid',
       borderImageSlice: 1,
     },
     headerTitle: {

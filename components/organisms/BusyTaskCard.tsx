@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     headerDanger: {
       borderImage: linerGradient.red,
-      borderBottom: '4px solid',
+      borderBottom: '2px solid',
       borderImageSlice: 1,
     },
     headerTitleDanger: {
@@ -77,7 +77,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     headerWarning: {
       borderImage: linerGradient.orange,
-      borderBottom: '4px solid',
+      borderBottom: '2px solid',
       borderImageSlice: 1,
     },
     headerTitleWarning: {
