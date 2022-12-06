@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles'
 import { Schedule } from '@/interfaces/models'
-import { List, ListItem } from '@material-ui/core'
+import { List, ListItem, Avatar } from '@material-ui/core'
 import { ScheduleIcon } from '@/components/atoms/icons'
 import { toStrLabel, scheduleLabel } from '@/lib/util'
 import { DashboardBaseCard } from '@/components/organisms'
@@ -14,8 +14,23 @@ import { useLocale, useInitialConnector } from '@/hooks'
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     headerColor: {
+      borderImage: linerGradient.secondary,
+      borderBottom: '4px solid',
+      borderImageSlice: 1,
+    },
+    headerTitle: {
+      fontWeight: theme.typography.fontWeightBold,
       background: linerGradient.secondary,
-      color: theme.palette.common.white,
+      WebkitTextFillColor: 'transparent',
+      WebkitBackgroundClip: 'text',
+    },
+    subHeaderColor: {
+      background: linerGradient.secondary,
+      WebkitTextFillColor: 'transparent',
+      WebkitBackgroundClip: 'text',
+    },
+    avatar: {
+      background: linerGradient.secondary,
     },
     loaderColor: {
       color: theme.palette.secondary.main,
@@ -38,7 +53,11 @@ const DailyScheduleCard = React.memo(({ wrapClasses }: Props) => {
   })
 
   const header: Header = {
-    avatar: <ScheduleIcon />,
+    avatar: (
+      <Avatar className={classes.avatar}>
+        <ScheduleIcon />
+      </Avatar>
+    ),
     title: t.mypage.dailySchedule,
     subTitle: toStrLabel(new Date(), true, t),
   }
@@ -56,6 +75,8 @@ const DailyScheduleCard = React.memo(({ wrapClasses }: Props) => {
       classes={{
         headerColor: classes.headerColor,
         loaderColor: classes.loaderColor,
+        headerTitle: classes.headerTitle,
+        subHeaderColor: classes.subHeaderColor,
       }}
       loading={loading}
     >

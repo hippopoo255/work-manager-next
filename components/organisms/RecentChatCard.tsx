@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles'
-import { List, ListItem } from '@material-ui/core'
+import { List, ListItem, Avatar } from '@material-ui/core'
 import { ChatIcon } from '@/components/atoms/icons'
 import { DashboardBaseCard } from '@/components/organisms'
 import { CardItemBar } from '@/components/molecules'
@@ -39,9 +39,24 @@ const MessageList = ({ unreadMessages, classes }: ListProps) => {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    headerColor: {
+    headerTitle: {
+      fontWeight: theme.typography.fontWeightBold,
       background: linerGradient.secondary,
-      color: theme.palette.common.white,
+      WebkitTextFillColor: 'transparent',
+      WebkitBackgroundClip: 'text',
+    },
+    headerColor: {
+      borderImage: linerGradient.secondary,
+      borderBottom: '4px solid',
+      borderImageSlice: 1,
+    },
+    subHeaderColor: {
+      background: linerGradient.secondary,
+      WebkitTextFillColor: 'transparent',
+      WebkitBackgroundClip: 'text',
+    },
+    avatar: {
+      background: linerGradient.secondary,
     },
     loaderColor: {
       color: theme.palette.secondary.main,
@@ -67,7 +82,11 @@ const RecentChatCard = React.memo(({ wrapClasses }: Props) => {
   })
 
   const header: Header = {
-    avatar: <ChatIcon />,
+    avatar: (
+      <Avatar className={classes.avatar}>
+        <ChatIcon />
+      </Avatar>
+    ),
     title: t.mypage.unreadChat,
     subTitle: `${t.status.recent}10${t.unit.item}(${t.status.max})`,
   }
@@ -89,6 +108,8 @@ const RecentChatCard = React.memo(({ wrapClasses }: Props) => {
       classes={{
         headerColor: classes.headerColor,
         loaderColor: classes.loaderColor,
+        headerTitle: classes.headerTitle,
+        subHeaderColor: classes.subHeaderColor,
       }}
     >
       {!!collapse ? (

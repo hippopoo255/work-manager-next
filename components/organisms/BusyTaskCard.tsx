@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react'
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles'
-import { List, ListItem, Typography, IconButton } from '@material-ui/core'
+import { List, ListItem, Typography, Avatar } from '@material-ui/core'
 import { DashboardBaseCard } from '@/components/organisms'
 import {
   CardHeaderTitle,
@@ -51,8 +51,20 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.text.secondary,
     },
     headerDanger: {
+      borderImage: linerGradient.red,
+      borderBottom: '4px solid',
+      borderImageSlice: 1,
+    },
+    headerTitleDanger: {
+      fontWeight: theme.typography.fontWeightBold,
       background: linerGradient.red,
-      color: theme.palette.common.white,
+      WebkitTextFillColor: 'transparent',
+      WebkitBackgroundClip: 'text',
+    },
+    subHeaderColorDanger: {
+      background: linerGradient.red,
+      WebkitTextFillColor: 'transparent',
+      WebkitBackgroundClip: 'text',
     },
     linkDanger: {
       color: customColor.red,
@@ -60,16 +72,33 @@ const useStyles = makeStyles((theme: Theme) =>
     loaderDanger: {
       color: customColor.red,
     },
+    avatarDanger: {
+      background: linerGradient.red,
+    },
     headerWarning: {
+      borderImage: linerGradient.orange,
+      borderBottom: '4px solid',
+      borderImageSlice: 1,
+    },
+    headerTitleWarning: {
+      fontWeight: theme.typography.fontWeightBold,
       background: linerGradient.orange,
-      // background: theme.palette.warning.main,
-      color: theme.palette.common.white,
+      WebkitTextFillColor: 'transparent',
+      WebkitBackgroundClip: 'text',
+    },
+    subHeaderColorWarning: {
+      background: linerGradient.orange,
+      WebkitTextFillColor: 'transparent',
+      WebkitBackgroundClip: 'text',
     },
     linkWarning: {
       color: theme.palette.warning.main,
     },
     loaderWarning: {
       color: theme.palette.warning.main,
+    },
+    avatarWarning: {
+      background: linerGradient.orange,
     },
     loaderBasis: {
       color: theme.palette.secondary.main,
@@ -98,17 +127,22 @@ const BusyTaskCard = ({
     [k in TaskStatusFlag]: {
       linkColor: any
       headerColor: any
+      headerTitle: any
+      subHeaderColor: any
       loaderColor?: any
       adjective: string
       helpText?: React.ReactNode
       tooltip?: string
       footerLink?: string
+      avatar?: string
     }
   } = useMemo(() => {
     return {
       over: {
         linkColor: classes.linkDanger,
         headerColor: classes.headerDanger,
+        headerTitle: classes.headerTitleDanger,
+        subHeaderColor: classes.subHeaderColorDanger,
         loaderColor: classes.loaderDanger,
         adjective: t.mypage.expiredTasks,
         helpText: (
@@ -122,10 +156,13 @@ const BusyTaskCard = ({
         ),
         tooltip: t.tooltip.qa(t.mypage.expiredTasks),
         footerLink: t.common.showExpiredTasks,
+        avatar: classes.avatarDanger,
       },
       warning: {
         linkColor: classes.linkWarning,
         headerColor: classes.headerWarning,
+        headerTitle: classes.headerTitleWarning,
+        subHeaderColor: classes.subHeaderColorWarning,
         loaderColor: classes.loaderWarning,
         adjective: t.mypage.approachedTasks,
         helpText: (
@@ -139,17 +176,25 @@ const BusyTaskCard = ({
         ),
         tooltip: t.tooltip.qa(t.mypage.approachedTasks),
         footerLink: t.common.showApproachedTasks,
+        avatar: classes.avatarWarning,
       },
       safe: {
         linkColor: classes.linkWarning,
         headerColor: classes.headerWarning,
+        headerTitle: classes.headerTitleWarning,
+        subHeaderColor: classes.subHeaderColorWarning,
         adjective: '',
+        avatar: classes.avatarWarning,
       },
     }
   }, [classes])
 
   const header: Header = {
-    avatar: <TaskIcon />,
+    avatar: (
+      <Avatar className={classOfStatus[flag].avatar}>
+        <TaskIcon />
+      </Avatar>
+    ),
     title: (
       <CardHeaderTitle
         title={classOfStatus[flag].adjective}
@@ -165,19 +210,23 @@ const BusyTaskCard = ({
     text: classOfStatus[flag].footerLink || 'タスク一覧を見る',
   }
   const headerColor = classOfStatus[flag].headerColor
+  const headerTitle = classOfStatus[flag].headerTitle
+  const subHeaderColor = classOfStatus[flag].subHeaderColor
   const loaderColor = classOfStatus[flag].loaderColor || classes.loaderBasis
   const linkColor = classOfStatus[flag].linkColor
 
   return (
     <DashboardBaseCard
-      wrapClasses={wrapClasses}
       header={header}
       footerLink={footerLink}
+      wrapClasses={wrapClasses}
       loading={!!loading}
       classes={{
-        headerColor: headerColor,
-        loaderColor: loaderColor,
-        linkColor: linkColor,
+        headerColor,
+        loaderColor,
+        linkColor,
+        headerTitle,
+        subHeaderColor,
       }}
     >
       {!!collapse ? (
