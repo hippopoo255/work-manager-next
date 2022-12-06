@@ -24,12 +24,21 @@ const useStyles = makeStyles((theme: Theme) =>
       left: 0,
       width: '100%',
     },
-    headerColor: {
+    headerTitle: {
+      fontWeight: theme.typography.fontWeightBold,
       background: linerGradient.primary,
-      color: theme.palette.common.white,
+      WebkitTextFillColor: 'transparent',
+      WebkitBackgroundClip: 'text',
+    },
+    headerColor: {
+      borderImage: linerGradient.primary,
+      borderBottom: '4px solid',
+      borderImageSlice: 1,
     },
     subHeaderColor: {
-      color: theme.palette.common.white,
+      background: linerGradient.primary,
+      WebkitTextFillColor: 'transparent',
+      WebkitBackgroundClip: 'text',
     },
     content: {
       marginTop: theme.spacing(8),
@@ -82,6 +91,7 @@ const DashboardBaseCard = ({
         classes={{
           root: defaultClasses.headerRoot,
           subheader: defaultClasses.subHeaderColor,
+          title: defaultClasses.headerTitle,
         }}
         className={defaultClasses.headerColor}
       />
