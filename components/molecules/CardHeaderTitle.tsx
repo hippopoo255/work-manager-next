@@ -2,7 +2,6 @@ import React from 'react'
 import { Typography, IconButton } from '@material-ui/core'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import { HelpBox } from '@/components/molecules'
-import { linerGradient } from '@/assets/color/gradient'
 import HelpOutlineOutlinedIcon from '@material-ui/icons/HelpOutlineOutlined'
 
 const useStyles = makeStyles((theme: Theme) =>
