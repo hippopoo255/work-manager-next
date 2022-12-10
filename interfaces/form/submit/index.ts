@@ -1,6 +1,0 @@
-export type { ChatMessageSubmit } from './ChatMessageSubmit'
-export type { ChatRoomSubmit } from './ChatRoomSubmit'
-export type { MeetingRecordSubmit } from './MeetingRecordSubmit'
-export type { ProfileSubmit } from './ProfileSubmit'
-export type { ScheduleSubmit } from './ScheduleSubmit'
-export type { SettingSubmit } from './SettingSubmit'

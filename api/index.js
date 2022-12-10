@@ -1,7 +1,0 @@
-export { default as deleteRequest } from './deleteRequest'
-export { default as getRequest } from './getRequest'
-export { default as graphqlRequest } from './graphqlRequest'
-export { default as postRequest } from './postRequest'
-export { default as putRequest } from './putRequest'
-export { default as requestUri } from './requestUri'
-export { defaultErrorHandler } from './util'
