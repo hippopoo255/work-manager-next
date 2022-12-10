@@ -1,13 +1,13 @@
 .c-button {
-  border: none;
-  background: white;
-
   color: green;
+  background: white;
+  border: none;
+
   &.--danger {
     color: tomato;
   }
 
   .c-button__icon {
-    fill: currentColor;
+    fill: currentcolor;
   }
 }

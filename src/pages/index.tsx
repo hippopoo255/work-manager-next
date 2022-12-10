@@ -1,3 +1,4 @@
+import clsx from 'clsx'
 import Head from 'next/head'
 import Image from 'next/image'
 import EyeIcon from '~/assets/img/icon/eye.svg'
@@ -13,7 +14,7 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
+        <h1 className={clsx([styles.title, 'font-thin'])}>
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
 
