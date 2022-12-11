@@ -1,8 +1,8 @@
 import clsx from 'clsx'
 import Head from 'next/head'
 import Image from 'next/image'
+import styles from './Home.module.css'
 import EyeIcon from '~/assets/img/icon/eye.svg'
-import styles from '~/assets/scss/Home.module.css'
 
 export default function Home() {
   return (
