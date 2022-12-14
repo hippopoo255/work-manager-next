@@ -11,23 +11,29 @@
     "stylelint": "stylelint src/**/*.{css,scss} --fix",
     "prepare": "husky install",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "aspida": "npx openapi2aspida"
   },
   "lint-staged": {
     "src/**/*.{js,ts}": "yarn lint-fix",
     "src/**/*.{css,scss}": "yarn stylelint"
   },
   "dependencies": {
+    "@aspida/fetch": "^1.11.0",
+    "@aspida/swr": "^1.11.0",
     "@svgr/webpack": "^6.5.1",
     "@types/node": "18.11.12",
     "@types/react": "18.0.26",
     "@types/react-dom": "18.0.9",
+    "amazon-cognito-identity-js": "^6.0.1",
+    "aws-amplify": "^5.0.5",
     "clsx": "^1.2.1",
     "eslint": "8.29.0",
     "eslint-config-next": "13.0.6",
     "next": "13.0.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "swr": "^2.0.0",
     "typescript": "4.9.4"
   },
   "devDependencies": {

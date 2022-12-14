@@ -1,5 +1,6 @@
 build/
 public/
+src/schema/
 **/coverage/
 **/node_modules/
 **/*.min.js

@@ -1,6 +1,6 @@
 import { ComponentMeta, ComponentStoryObj } from '@storybook/react'
 
-import { Button } from '@/components/atoms'
+import { Button } from '~/components/atoms'
 
 export default { component: Button } as ComponentMeta<typeof Button>
 
