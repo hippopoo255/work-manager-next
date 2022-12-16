@@ -7,9 +7,6 @@ import { GlobalNav } from '~/components/molecules'
 import { useUserList } from '~/services/user'
 
 const Index = () => {
-  const { data: users } = useUserList()
-  console.log('users:', users)
-
   return (
     <div className={styles.container}>
       <Head>

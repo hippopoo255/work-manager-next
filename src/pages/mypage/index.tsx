@@ -16,7 +16,7 @@ const MyPage = ({ user }: Props) => {
   useEffect(() => {
     dispatch(currentUserAction(user))
   }, [])
-  return <div>{auth.user.full_name}さん、こんにちは</div>
+  return <div>Hello, {auth.user.full_name}!!</div>
 }
 
 export default MyPage

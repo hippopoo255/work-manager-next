@@ -42,6 +42,7 @@ const currentUser = async (
   if (!jwt) {
     return ''
   }
+
   const config: AxiosRequestConfig = {
     headers: {
       Authorization: jwt || '',
