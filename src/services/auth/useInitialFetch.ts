@@ -1,8 +1,12 @@
 import { useEffect } from 'react'
 import { useAuthContext } from '~/services/auth'
 import { authOperation } from '~/stores/auth'
+import { AuthState } from '~/stores/auth/types'
 
-const useInitialFetch = () => {
+type Props = {
+  user?: AuthState['user']
+}
+const useInitialFetch = ({ user }: Props = {}) => {
   const { auth, dispatch } = useAuthContext()
 
   useEffect(() => {
@@ -10,7 +14,7 @@ const useInitialFetch = () => {
 
     if (isMounted) {
       const init = async () => {
-        await authOperation.currentUser(dispatch)
+        await authOperation.currentUser(dispatch, user)
       }
       init()
     }

@@ -22,10 +22,8 @@ import { encode64, decode64 } from '~/utils'
 amplifyConfigure()
 
 const getJwt = async (authWithSSR: any = undefined): Promise<string> => {
-  const authClass = authWithSSR ?? Auth
-  const cognitoSession: '' | CognitoUserSession = await authClass
-    .currentSession()
-    .catch((err: any) => {
+  const cognitoSession: '' | CognitoUserSession =
+    await Auth.currentSession().catch((err: any) => {
       return ''
     })
   if (cognitoSession) {
@@ -34,11 +32,8 @@ const getJwt = async (authWithSSR: any = undefined): Promise<string> => {
   return cognitoSession
 }
 
-const currentUser = async (
-  authWithSSR: any = undefined,
-  currentAuthorPath: string = '/user/current'
-) => {
-  const jwt = await getJwt(authWithSSR)
+const currentUser = async (currentAuthorPath: string = '/user/current') => {
+  const jwt = await getJwt()
   if (!jwt) {
     return ''
   }
@@ -49,18 +44,13 @@ const currentUser = async (
     },
   }
 
-  const data = await fetch<User | null>(currentAuthorPath, config)
-    .then(({ data }) => data)
-    .catch((err) => console.log('err:', err))
-
-  const user = !data
+  const { data: user } = await fetch<User | null>(currentAuthorPath, config)
+  return !user
     ? ''
     : {
-        ...data,
+        ...user,
         jwt,
       }
-
-  return user
 }
 
 const forgotPassword = async ({ user_id }: ForgotPasswordInputs) => {

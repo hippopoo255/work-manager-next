@@ -3,10 +3,8 @@ import Head from 'next/head'
 import Image from 'next/image'
 import styles from './Home.module.css'
 import EyeIcon from '~/assets/img/icon/eye.svg'
-import { GlobalNav } from '~/components/molecules'
-import { useUserList } from '~/services/user'
 
-const Index = () => {
+const Home = () => {
   return (
     <div className={styles.container}>
       <Head>
@@ -16,7 +14,6 @@ const Index = () => {
       </Head>
 
       <main className={styles.main}>
-        <GlobalNav />
         <h1 className={clsx([styles.title, 'font-thin'])}>
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
@@ -80,4 +77,4 @@ const Index = () => {
   )
 }
 
-export default Index
+export default Home

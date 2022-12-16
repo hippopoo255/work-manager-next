@@ -1,3 +1,4 @@
+import { IncomingMessage } from 'http'
 export const TokenType = {
   IdToken: 'idToken',
   AccessToken: 'accessToken',
@@ -17,4 +18,10 @@ export type CognitoRefreshTokenResult = {
   access_token: string
   token_type: string
   expires_in: number
+}
+
+export type Req = IncomingMessage & {
+  cookies: Partial<{
+    [key: string]: string
+  }>
 }

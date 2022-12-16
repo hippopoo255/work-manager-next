@@ -1,5 +1,5 @@
 import { signInAction, signOutAction, currentUserAction } from './action'
-import { AuthAction } from './types'
+import { AuthAction, AuthState } from './types'
 import { cognitoUser } from '~/libs/auth'
 import {
   User,
@@ -9,10 +9,10 @@ import {
 } from '~/schema/@types'
 
 const currentUser = async (
-  dispatch: React.Dispatch<AuthAction>
+  dispatch: React.Dispatch<AuthAction>,
+  user?: AuthState['user']
 ): Promise<User | ''> => {
-  const signedInUser = (await cognitoUser.currentUser()) as User | ''
-
+  const signedInUser = user ?? (await cognitoUser.currentUser())
   if (signedInUser === '') {
     dispatch(currentUserAction(signedInUser))
   } else {

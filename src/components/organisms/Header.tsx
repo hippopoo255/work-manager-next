@@ -2,16 +2,18 @@
 
 import Link from 'next/link'
 import React from 'react'
+import { useAuthContext } from '~/services/auth'
 
-const header = () => {
-  const handleClick = () => {
-    const accessToken = 'next/headers cannnot use in client component'
-    console.log(accessToken)
-  }
-
+const Header = () => {
+  const handleClick = () => {}
+  const { auth } = useAuthContext()
   return (
     <header>
-      <div></div>
+      <div>
+        <div>
+          <Link href={'/'}>Top</Link>
+        </div>
+      </div>
       <div>
         <nav>
           <ul>
@@ -19,8 +21,11 @@ const header = () => {
               <Link href={{ pathname: 'signin' }}>Sign In</Link>
             </li>
             <li>
+              <Link href={{ pathname: 'mypage' }}>My Page</Link>
+            </li>
+            <li>
               <button className={'c-button'} onClick={handleClick}>
-                show Token
+                {auth.isSignedIn ? auth.user.full_name : 'ゲスト'}
               </button>
             </li>
           </ul>
@@ -30,4 +35,4 @@ const header = () => {
   )
 }
 
-export default header
+export default Header

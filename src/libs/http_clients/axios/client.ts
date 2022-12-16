@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios'
 import { defaultSuccessHandler, defaultErrorHandler } from './handler'
 import { API_STAGE_URL } from '~/config'
-import { cognitoUser } from '~/libs/auth'
+// import { cognitoUser } from '~/libs/auth'
 
 export const client = (baseURL: string = API_STAGE_URL) =>
   axios.create({
@@ -18,8 +18,8 @@ defaultClient.interceptors.request.use(async (config) => {
     config.headers !== undefined &&
     config.headers.Authorization === undefined
   ) {
-    const jwt = await cognitoUser.getJwt()
-    config.headers.Authorization = jwt
+    // const jwt = await cognitoUser.getJwt()
+    // config.headers.Authorization = jwt
   }
   return config
 })

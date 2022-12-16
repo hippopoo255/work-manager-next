@@ -1,4 +1,3 @@
-import { AxiosRequestConfig } from 'axios'
 import { NextURL } from 'next/dist/server/web/next-url'
 import { NextRequest, NextResponse } from 'next/server'
 import {
