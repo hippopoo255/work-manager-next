@@ -3,22 +3,14 @@
 import Link from 'next/link'
 import DemoUserSuggestion from './DemoUserSuggestion'
 import { SignInFields } from './SignInFields'
-import { useSignIn } from '~/services/auth'
 
 const SignInForm = () => {
-  const { loading, onSubmit, FormProvider, methods } = useSignIn()
-
   return (
     <div className="p-card --space-lg">
       <div className="p-form">
         <h3 className="p-form__head">サインイン</h3>
         <div className="p-form__body">
-          <FormProvider {...methods}>
-            <SignInFields
-              loading={loading}
-              onSubmit={methods.handleSubmit(onSubmit)}
-            />
-          </FormProvider>
+          <SignInFields />
           <div className="mt-16">
             <div className="grid sm:grid-flow-col place-content-between">
               {/* サポート...パスワードをお忘れですか？ 新規登録がお済みでない方はこちら */}

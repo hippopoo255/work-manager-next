@@ -3,15 +3,17 @@
 import { Button } from '~/components/elements/Button'
 import { TextField } from '~/components/elements/Field'
 import { SignInFormType } from '~/schema/auth/signInValidator'
+import { useSignIn } from '~/services/auth'
 
 type Props = {
   loading: boolean
   onSubmit: React.MouseEventHandler<HTMLButtonElement>
 }
 
-export const SignInFields = ({ loading, onSubmit }: Props) => {
+export const SignInFields = () => {
+  const { loading, onSubmit, FormProvider, methods } = useSignIn()
   return (
-    <>
+    <FormProvider {...methods}>
       <form>
         <div className="mt-8">
           <TextField<SignInFormType>
@@ -28,10 +30,14 @@ export const SignInFields = ({ loading, onSubmit }: Props) => {
           />
         </div>
         <div className="mt-8 grid">
-          <Button text="サインイン" loading={loading} onClick={onSubmit} />
+          <Button
+            text="サインイン"
+            loading={loading}
+            onClick={methods.handleSubmit(onSubmit)}
+          />
         </div>
       </form>
-    </>
+    </FormProvider>
   )
 }
 

@@ -21,7 +21,7 @@ export const authReducer = (
   }
 }
 
-const userOrEmpty = (currentUser: User | ''): AuthState =>
-  currentUser === ''
+const userOrEmpty = (currentUser: User | null): AuthState =>
+  currentUser === null
     ? { ...initialState.auth }
     : { user: { ...currentUser }, isSignedIn: true }

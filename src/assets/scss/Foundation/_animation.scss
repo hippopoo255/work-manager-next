@@ -1,11 +1,19 @@
 @keyframes spin {
   transform-origin: center;
 
-  from {
-    transform: translate3d(-50%, -50%, 0) rotate3d(0, 0, 1, 0deg);
+  25% {
+    transform: translate3d(-50%, -50%, 0) rotate3d(0, 0, 1, 90deg);
   }
 
-  to {
+  50% {
+    transform: translate3d(-50%, -50%, 0) rotate3d(0, 0, 1, 180deg);
+  }
+
+  75% {
+    transform: translate3d(-50%, -50%, 0) rotate3d(0, 0, 1, 270deg);
+  }
+
+  100% {
     transform: translate3d(-50%, -50%, 0) rotate3d(0, 0, 1, 360deg);
   }
 }

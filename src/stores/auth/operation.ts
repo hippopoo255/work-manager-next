@@ -11,9 +11,9 @@ import {
 const currentUser = async (
   dispatch: React.Dispatch<AuthAction>,
   user?: AuthState['user']
-): Promise<User | ''> => {
+): Promise<User | null> => {
   const signedInUser = user ?? (await cognitoUser.currentUser())
-  if (signedInUser === '') {
+  if (signedInUser === null) {
     dispatch(currentUserAction(signedInUser))
   } else {
     dispatch(currentUserAction({ ...signedInUser }))
@@ -29,12 +29,12 @@ const currentUser = async (
 const signIn = async (
   { user_id, password }: SignInInputs,
   dispatch: React.Dispatch<AuthAction>
-): Promise<User | ''> => {
+): Promise<User | null> => {
   const signedInUser = await cognitoUser.signIn({
     user_id,
     password,
   })
-  if (signedInUser !== '') {
+  if (signedInUser !== null) {
     dispatch(signInAction({ ...signedInUser }))
   }
   return signedInUser
@@ -66,7 +66,7 @@ const signUp = async (data: SignUpInputs) => {
 
 const testSignIn = async (
   dispatch: React.Dispatch<AuthAction>
-): Promise<User | ''> => {
+): Promise<User | null> => {
   const signedInUser = await cognitoUser.testSignIn()
   if (!!signedInUser) {
     dispatch(signInAction(signedInUser))

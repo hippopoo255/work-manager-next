@@ -19,7 +19,7 @@ interface SignOut {
 
 interface CurrentUser {
   type: Extract<ActionType, 'CURRENT_USER'>
-  payload: User | ''
+  payload: User | null
 }
 
 export type AuthAction = SignIn | SignOut | CurrentUser

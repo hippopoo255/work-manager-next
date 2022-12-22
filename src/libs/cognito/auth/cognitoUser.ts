@@ -35,7 +35,7 @@ const getJwt = async (authWithSSR: any = undefined): Promise<string> => {
 const currentUser = async (currentAuthorPath: string = '/user/current') => {
   const jwt = await getJwt()
   if (!jwt) {
-    return ''
+    return null
   }
 
   const config: AxiosRequestConfig = {
@@ -46,7 +46,7 @@ const currentUser = async (currentAuthorPath: string = '/user/current') => {
 
   const { data: user } = await fetch<User | null>(currentAuthorPath, config)
   return !user
-    ? ''
+    ? null
     : {
         ...user,
         jwt,
@@ -125,10 +125,10 @@ const signIn = async ({ user_id, password }: SignInInputs) => {
     handleError<SignInInputs>(error)
   })
   if (!!cognitoUser) {
-    return (await currentUser()) as User | ''
+    return (await currentUser()) as User | null
   }
 
-  return ''
+  return null
 }
 
 const signOut = async () => {

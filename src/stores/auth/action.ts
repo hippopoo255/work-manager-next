@@ -10,7 +10,7 @@ export const signOutAction = (): AuthAction => ({
   type: ACTION_TYPE.SIGN_OUT,
 })
 
-export const currentUserAction = (currentUser: User | ''): AuthAction => ({
+export const currentUserAction = (currentUser: User | null): AuthAction => ({
   type: ACTION_TYPE.CURRENT_USER,
   payload: currentUser,
 })
