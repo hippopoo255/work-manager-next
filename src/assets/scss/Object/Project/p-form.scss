@@ -1,0 +1,12 @@
+.p-form {
+  width: 30rem;
+  max-width: 100%;
+
+  .p-form__head {
+    @apply font-bold text-xl text-fc-primary text-center mb-4;
+  }
+
+  .p-form__body {
+
+  }
+}

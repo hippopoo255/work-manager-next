@@ -1,0 +1,64 @@
+@use "../../Foundation/variable" as *;
+@use "../../Foundation/mixin/modifier" as *;
+@use "../../Foundation/mixin/accessibility" as *;
+@use "c-button" as *;
+
+.c-border-button {
+  @apply text-primary bg-white border border-primary py-1.5 px-5 rounded shadow-md
+    relative duration-basis overflow-hidden;
+
+  min-width: 8rem;
+  -webkit-tap-highlight-color: transparent;
+
+  .c-border-button__icon {
+    fill: currentcolor;
+  }
+
+  // ====================
+  // リップル
+  // ====================
+  .c-border-button__effect {
+    @apply block absolute pointer-events-none bg-primary;
+
+    top: -140px;
+    left: -140px;
+    width: 280px;
+    height: 280px;
+    border-radius: 140px;
+  }
+
+  @each $p in $semanticPalette {
+    @each $t in $theme {
+      &.--#{$p},
+      &.--#{$p}-#{$t} {
+        .c-border-button__effect {
+          @apply bg-#{$p};
+        }
+      }
+    }
+  }
+
+  // ====================
+  // ローダー
+  // ====================
+  .c-border-button__loader {
+    @extend .loader-icon-style;
+  }
+
+  // ====================
+  // Modifier
+  // ====================
+  @include onHover {
+    @apply bg-opacity-80;
+  }
+
+  @include colorModifierByPaletteName(("text", "border"), (
+    "disabledNone"
+  ));
+  @include roundFullModifier;
+  @include sizeModifier;
+
+  @include loadingModifier {
+    @apply bg-disabled-light border-disabled-light text-disabled pointer-events-none;
+  }
+}

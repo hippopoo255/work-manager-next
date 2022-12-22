@@ -1,0 +1,18 @@
+@use "../Foundation/mixin/accessibility" as *;
+
+.l-footer {
+  @apply h-full;
+
+  .l-footer__body {
+    @apply h-full;
+    @apply p-4 grid place-content-center;
+  }
+
+  .l-footer__link {
+    @apply text-inherit;
+
+    @include onHover {
+      @apply underline;
+    }
+  }
+}

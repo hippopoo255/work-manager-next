@@ -1,0 +1,21 @@
+@use "../variable" as *;
+
+@mixin onHover() {
+  @media (hover: hover) {
+    &:hover,
+    &:focus-visible { @content; }
+  }
+
+  // スマホ、タブレットなど
+  @media (hover: none) {
+    &:active {
+      @content;
+    }
+  }
+}
+
+@mixin breakPoint($breakPoint: "sm") {
+  @media #{map-get($breakPoints, $breakPoint)} {
+    @content;
+  }
+}

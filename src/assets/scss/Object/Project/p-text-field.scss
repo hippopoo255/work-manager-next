@@ -1,0 +1,42 @@
+.p-text-field {
+  @apply block relative border-b-fc-hint;
+
+  .p-text-field__label {
+    @apply absolute pointer-events-none top-1/2 -translate-y-1/2 text-fc-hint transition-all duration-basis;
+
+    .p-text-field & {
+      @apply top-2 -translate-y-full text-primary text-xs;
+    }
+  }
+
+  .p-text-field__body {
+    @apply block w-full border-b-inherit border-b rounded-none py-2;
+  }
+
+  &:focus-within,
+  &.--visible {
+    .p-text-field__label {
+      @apply top-2 -translate-y-full text-xs;
+    }
+  }
+
+  &:focus-within {
+    .p-text-field__body {
+      @apply border-b-primary outline-none;
+    }
+
+    .p-text-field__label {
+      @apply text-primary;
+    }
+  }
+
+  &.--error {
+    .p-text-field__body {
+      @apply border-b-danger;
+    }
+
+    .p-text-field__label {
+      @apply text-danger;
+    }
+  }
+}

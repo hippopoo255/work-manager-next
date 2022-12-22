@@ -7,6 +7,10 @@ const nextConfig = {
     appDir: true,
   },
   webpack(config) {
+    config.externals.push({
+      encoding: 'encoding',
+      'aws-crt': 'aws-crt',
+    })
     config.module.rules.push({
       test: /\.svg$/,
       use: ['@svgr/webpack'],

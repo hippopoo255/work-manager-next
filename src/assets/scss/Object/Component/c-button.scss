@@ -1,13 +1,65 @@
-.c-button {
-  color: green;
-  background: white;
-  border: none;
+@use "../../Foundation/mixin/accessibility" as *;
+@use "../../Foundation/mixin/modifier" as *;
 
-  &.--danger {
-    color: tomato;
-  }
+.loader-icon-style {
+  @apply absolute block top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-primary font-bold;
+
+  animation: spin 800ms linear infinite;
+
+  @include colorModifierByPaletteName(("text"));
+  @include sizeModifier;
+}
+
+.c-button {
+  @apply text-white bg-primary border border-primary py-1.5 px-5 rounded shadow-md
+    relative duration-basis overflow-hidden;
+
+  min-width: 8rem;
+  -webkit-tap-highlight-color: transparent;
 
   .c-button__icon {
     fill: currentcolor;
+  }
+
+  // ====================
+  // リップル
+  // ====================
+  .c-button__effect {
+    @apply block absolute pointer-events-none bg-white;
+
+    top: -140px;
+    left: -140px;
+    width: 280px;
+    height: 280px;
+    border-radius: 140px;
+  }
+
+  // ====================
+  // ローダー
+  // ====================
+  .c-button__loader {
+    @extend .loader-icon-style;
+  }
+
+  // ====================
+  // Modifier
+  // ====================
+  @include onHover {
+    @apply bg-opacity-80;
+  }
+
+  @include colorModifierByPaletteName(("bg", "border"), (
+    "usingText", "disabledNone"
+  ));
+
+  &.--disabled {
+    @apply text-disabled-dark;
+  }
+
+  @include roundFullModifier;
+  @include sizeModifier;
+
+  @include loadingModifier {
+    @apply bg-disabled-light border-disabled-light text-disabled pointer-events-none;
   }
 }

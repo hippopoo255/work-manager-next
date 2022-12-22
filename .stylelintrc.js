@@ -12,6 +12,7 @@ module.exports = {
     'scss/dollar-variable-pattern': /^[a-zA-Z0-9]+$/,
     // mixin: camelCase
     'scss/at-mixin-pattern': /^[a-z][a-zA-Z0-9]+$/,
+    'scss/at-extend-no-missing-placeholder': null,
     // @
     'at-rule-no-unknown': [
       true,
@@ -20,6 +21,7 @@ module.exports = {
           'tailwind',
           'apply',
           'responsive',
+          'extend',
           'media',
           'screen',
           'mixin',
@@ -29,6 +31,9 @@ module.exports = {
           'use',
           'each',
           'for',
+          'if',
+          'else',
+          'else if',
         ],
       },
     ],
@@ -38,6 +43,7 @@ module.exports = {
         ignoreAtRules: [
           'tailwind',
           'apply',
+          'extend',
           'responsive',
           'media',
           'screen',
@@ -48,6 +54,9 @@ module.exports = {
           'use',
           'each',
           'for',
+          'if',
+          'else',
+          'else if',
         ],
       },
     ],

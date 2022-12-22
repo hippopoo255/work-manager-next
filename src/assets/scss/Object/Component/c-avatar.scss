@@ -1,0 +1,12 @@
+.c-avatar {
+  @apply rounded-full w-9 h-9 grid place-content-center bg-primary text-white;
+
+  .c-avatar__src {
+    @apply w-9 h-9;
+    @apply object-cover;
+  }
+
+  .c-avatar__initial {
+    @apply leading-none;
+  }
+}

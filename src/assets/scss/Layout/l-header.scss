@@ -1,0 +1,5 @@
+.l-header {
+  background: var(--bg-color-header);
+
+  @apply px-3 grid place-content-between grid-flow-col;
+}

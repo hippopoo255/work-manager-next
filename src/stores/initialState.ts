@@ -1,7 +1,9 @@
 import { AuthState } from './auth/types'
+import { StatusState } from './status/types'
 
 export interface GlobalState {
   auth: AuthState
+  status: StatusState
 }
 
 const initialState: GlobalState = {
@@ -16,6 +18,10 @@ const initialState: GlobalState = {
       given_name_kana: '',
     },
     isSignedIn: false,
+  },
+  status: {
+    message: undefined,
+    statusCode: undefined,
   },
 }
 

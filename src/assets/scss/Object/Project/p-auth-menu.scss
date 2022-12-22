@@ -1,0 +1,36 @@
+@use "../../Foundation/variable" as *;
+@use "../../Foundation/mixin/accessibility" as *;
+
+.p-auth-menu {
+  @apply relative rounded bg-accent text-white min-w-fit;
+
+  min-width: 14rem;
+
+  &::after {
+    @apply absolute -top-4 w-0 h-0 translate-x-2;
+
+    right: 1.125rem;
+    content: "";
+    border-color: transparent transparent $accent;
+    border-style: solid;
+    border-width: 0 0.5rem 1rem;
+  }
+
+  .p-auth-menu__head {
+    @apply py-4 px-4 border-b border-b-white;
+
+    min-height: 3.6rem;
+  }
+
+  .p-auth-menu__body {
+    @apply py-2;
+  }
+
+  .p-auth-menu__link {
+    @apply block text-white py-2 px-4 duration-basis transition-all;
+
+    @include onHover {
+      @apply text-fc-link;
+    }
+  }
+}

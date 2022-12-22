@@ -1,0 +1,12 @@
+@use "../../Foundation/variable" as *;
+
+.u-static-200 {
+  width: 200px;
+  padding: 1rem;
+  background: var(--bg-color-sheet);
+  border-width: 0.25rem;
+}
+
+.u-width-8 {
+  min-width: 8rem;
+}

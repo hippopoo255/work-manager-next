@@ -1,6 +1,6 @@
 import aspida, { HTTPError } from '@aspida/fetch'
 import { API_STAGE_URL } from '~/config'
-import api from '~/schema/$api'
+import api from '~/schema/generated/$api'
 
 export const initialConfig = {
   baseURL: API_STAGE_URL,

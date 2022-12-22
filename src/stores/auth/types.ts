@@ -1,4 +1,4 @@
-import { User } from '~/schema/@types'
+import { User } from '~/schema/generated/@types'
 
 export const ACTION_TYPE = {
   SIGN_IN: 'SIGN_IN',

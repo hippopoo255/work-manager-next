@@ -1,5 +1,5 @@
 import { AuthAction, ACTION_TYPE, AuthState } from './types'
-import { User } from '~/schema/@types'
+import { User } from '~/schema/generated/@types'
 import initialState from '~/stores/initialState'
 
 export const authReducer = (

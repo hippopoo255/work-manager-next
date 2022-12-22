@@ -1,0 +1,17 @@
+@use "../../Foundation/mixin/accessibility" as *;
+
+.u-text {
+
+}
+
+.u-text-link {
+  @apply text-fc-link text-sm duration-basis ;
+
+  &.--secondary {
+    @apply text-secondary;
+  }
+
+  @include onHover {
+    @apply underline;
+  }
+}

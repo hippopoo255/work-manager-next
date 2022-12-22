@@ -1,0 +1,59 @@
+// テーマに関連する変数
+:root {
+  --color-primary: #1a2b55;
+
+  // Light
+  --font-color-primary: var(--color-primary);
+  --font-color-basis: #393939;
+  --font-color-secondary: #5a5a5a;
+  --font-color-link: #8e8e8e;
+  --font-color-hint: #bebebe;
+  --bg-color-basis: #f3f4f6;
+  --bg-color-sheet: #fefefe;
+  --bg-color-header: #fefefe;
+
+  @media (prefers-color-scheme: dark) {
+    // Dark
+    --font-color-primary: #fefefe;
+    --font-color-basis: #f3f4f6;
+    --font-color-secondary: #ddd;
+    --font-color-link: #c0c0c0;
+    --bg-color-basis: var(--color-primary);
+    --bg-color-sheet: #5a5a5a;
+    --bg-color-header: #5a5a5a;
+
+    // --bg-color-header: #1f2937;
+  }
+}
+
+$fontFamilyBasis: "Helvetica Neue",
+  arial,
+  "Hiragino Kaku Gothic ProN",
+  "Hiragino Sans",
+  meiryo,
+  sans-serif;
+$fontSizeBasis: 0.875rem;
+
+// size
+$spaceBasis: 0.25rem;
+$headerHeight: 4rem;
+
+// colors
+$semanticPalette: "primary", "secondary", "danger", "success", "warning",
+  "minutes", "task", "schedule", "chat", "disabled";
+$theme: "natural", "light", "dark";
+$size: (
+  "larger": ("lg", "xl"),
+  "smaller": ("sm", "xs")
+);
+$accent: #1a2b55;
+
+// responsive
+$breakPoints: (
+  "sm": "screen and (min-width: 640px)",
+  "md": "screen and (min-width: 768px)",
+  "lg": "screen and (min-width: 1024px)",
+  "xl": "screen and (min-width: 1280px)",
+  "2xl": "screen and (min-width: 1536px)",
+) !default;
+$debugPalette: #1f2937;

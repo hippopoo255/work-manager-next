@@ -1,0 +1,20 @@
+@use "../Foundation/variable" as *;
+
+.l-main {
+  @apply h-full grid;
+
+  grid-template:
+    "head"
+    "body";
+
+  .l-main__head {
+    grid-area: head;
+  }
+
+  grid-template-rows: $headerHeight 1fr;
+  grid-template-columns: 1fr;
+
+  .l-main__body {
+    grid-area: body;
+  }
+}

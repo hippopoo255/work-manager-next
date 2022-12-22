@@ -1,6 +1,6 @@
 import useSWR from 'swr'
 import { fetch } from '~/libs/http_clients/axios'
-import { User } from '~/schema/@types'
+import { User } from '~/schema/generated/@types'
 
 export const duplicateEmailCount = async (email: string): Promise<number> => {
   return await fetch<User[]>(`/user?email=${email}&likely=0&slim=1`)

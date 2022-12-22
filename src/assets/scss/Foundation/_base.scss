@@ -1,19 +1,16 @@
+@use "variable" as *;
+
+:root {
+  font-size: $fontSizeBasis;
+  scroll-behavior: smooth;
+}
+
 html,
 body {
-  padding: 0;
-  margin: 0;
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    Oxygen,
-    Ubuntu,
-    Cantarell,
-    "Fira Sans",
-    "Droid Sans",
-    "Helvetica Neue",
-    sans-serif;
+  color: var(--font-color-basis);
+  background: var(--bg-color-basis);
+
+  // font-family: $fontFamilyBasis;
 }
 
 a {
@@ -21,17 +18,8 @@ a {
   text-decoration: none;
 }
 
-* {
-  box-sizing: border-box;
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-
-  body {
-    color: white;
-    background: black;
+@media (prefers-reduced-motion: no-preference) {
+  :root {
+    scroll-behavior: smooth;
   }
 }

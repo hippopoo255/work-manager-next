@@ -1,7 +1,7 @@
 'use client'
 
 import '~/assets/scss/app.scss'
-import { Header, Footer, Main } from '~/components/organisms'
+import { Header, Footer, Main } from '~/components/layouts'
 import { AuthProvider } from '~/stores/auth'
 
 export default function RootLayout({
@@ -13,11 +13,19 @@ export default function RootLayout({
     <html>
       <head />
       <body>
-        <AuthProvider>
-          <Header />
-          <Main>{children}</Main>
-          <Footer />
-        </AuthProvider>
+        <div className="l-app">
+          <AuthProvider>
+            <header className="l-app__header">
+              <Header />
+            </header>
+            <main className="l-app__main">
+              <Main title={''}>{children}</Main>
+            </main>
+            <footer className="l-app__footer">
+              <Footer />
+            </footer>
+          </AuthProvider>
+        </div>
       </body>
     </html>
   )

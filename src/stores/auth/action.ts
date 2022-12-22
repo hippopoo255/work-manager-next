@@ -1,5 +1,5 @@
 import { AuthAction, ACTION_TYPE } from './types'
-import { User } from '~/schema/@types'
+import { User } from '~/schema/generated/@types'
 
 export const signInAction = (signedInUser: User): AuthAction => ({
   type: ACTION_TYPE.SIGN_IN,

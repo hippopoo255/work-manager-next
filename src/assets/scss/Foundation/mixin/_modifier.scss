@@ -1,0 +1,87 @@
+@use "../variable" as *;
+@use "sass:list";
+@use "sass:math";
+
+@mixin colorModifierByPaletteName(
+  $props: (
+    "bg",
+    "border",
+    "text",
+  ),
+  $options: ()
+) {
+  // primary, secondary, danger...
+  @each $p in $semanticPalette {
+    &.--#{$p} {
+      // bg, text, border...
+      @each $prop in $props {
+        @apply #{$prop}-#{$p};
+
+        @if $p == "disabled" and list.index($options, "disabledNone") {
+          @apply pointer-events-none;
+        }
+
+        // natural, light, dark...
+        @each $t in $theme {
+          &-#{$t} {
+            @apply #{$prop}-#{$p}-#{$t};
+
+            @if $t == natural and list.index($options, "usingText") {
+              @apply text-#{$p}-dark;
+            }
+
+            @if $t == light and list.index($options, "usingText") {
+              @apply text-black;
+            }
+
+            @if $p == "disabled" and list.index($options, "disabledNone") {
+              @apply pointer-events-none;
+            }
+          }
+        }
+      }
+    }
+  }
+  @content;
+}
+
+@mixin roundFullModifier() {
+  &.--round {
+    @apply rounded-full;
+  }
+}
+
+@mixin sizeModifier() {
+  @each $key, $list in $size {
+    @if $key == "larger" {
+      @for $i from 1 through length($list) {
+        /* stylelint-disable-next-line scss/no-global-function-names */
+        $s: nth($list, $i);
+
+        &.--#{$s} {
+          padding:
+            #{0.375 / math.pow(0.875, $i) + 0.125 * $i} + "rem"
+            #{0.375 / math.pow(0.875, $i) + 0.125 * $i + 2} + "rem";
+          font-size: #{0.875 / math.pow(0.875, $i + 1) * 100} + "%";
+        }
+      }
+    }
+
+    @if $key == "smaller" {
+      @for $i from 1 through length($list) {
+        /* stylelint-disable-next-line scss/no-global-function-names */
+        $s: nth($list, $i);
+        &.--#{$s} {
+          padding: #{math.pow(0.875, $i) * 0.375 } + "rem";
+          font-size: #{math.pow(0.875, $i) * 100} + "%";
+        }
+      }
+    }
+  }
+}
+
+@mixin loadingModifier {
+  &.--loading {
+    @content;
+  }
+}

@@ -1,12 +1,12 @@
 import { signInAction, signOutAction, currentUserAction } from './action'
 import { AuthAction, AuthState } from './types'
-import { cognitoUser } from '~/libs/auth'
+import { cognitoUser } from '~/libs/cognito/auth'
 import {
   User,
   SignInInputs,
   SignUpInputs,
   AccountVerificationInputs,
-} from '~/schema/@types'
+} from '~/schema/generated/@types'
 
 const currentUser = async (
   dispatch: React.Dispatch<AuthAction>,
@@ -35,7 +35,7 @@ const signIn = async (
     password,
   })
   if (signedInUser !== '') {
-    dispatch(signInAction(signedInUser))
+    dispatch(signInAction({ ...signedInUser }))
   }
   return signedInUser
   // =====================
