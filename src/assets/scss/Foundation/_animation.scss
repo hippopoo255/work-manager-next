@@ -1,6 +1,10 @@
 @keyframes spin {
   transform-origin: center;
 
+  0% {
+    transform: translate3d(-50%, -50%, 0) rotate3d(0, 0, 1, 0deg);
+  }
+
   25% {
     transform: translate3d(-50%, -50%, 0) rotate3d(0, 0, 1, 90deg);
   }
