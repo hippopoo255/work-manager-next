@@ -14,7 +14,7 @@ const clear = (dispatch: React.Dispatch<StatusAction>): null => {
   return null
 }
 
-export const authOperation = {
+export const statusOperation = {
   set,
   clear,
 }

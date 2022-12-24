@@ -1,0 +1,16 @@
+@use "../../Foundation/mixin/accessibility" as *;
+
+.p-tooltip {
+  @apply inline-block relative;
+
+  @include onHover {
+    .p-tooltip__body {
+      @apply opacity-100;
+    }
+  }
+
+  .p-tooltip__body {
+    @apply absolute block whitespace-pre bg-accent text-white text-sm rounded p-2
+      opacity-0 duration-basis delay-500 transition-opacity;
+  }
+}

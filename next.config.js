@@ -5,6 +5,7 @@ const nextConfig = {
   experimental: {
     allowMiddlewareResponseBody: true,
     appDir: true,
+    scrollRestoration: true,
   },
   webpack(config) {
     config.externals.push({

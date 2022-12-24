@@ -85,3 +85,13 @@
     @content;
   }
 }
+
+@mixin statusStyle() {
+  @each $s in $status {
+    $modifier: $s;
+
+    &.--#{$s} {
+      @apply opacity-100 text-#{$s} border-l-#{$s};
+    }
+  }
+}

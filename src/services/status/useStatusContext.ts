@@ -1,4 +1,6 @@
 import { useContext } from 'react'
 import { StatusContext } from '~/stores/status'
 
-export const useStatusContext = () => useContext(StatusContext)
+const useStatusContext = () => useContext(StatusContext)
+
+export default useStatusContext
