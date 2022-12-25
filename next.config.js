@@ -1,5 +1,11 @@
 /** @type {import('next').NextConfig} */
+
+const assetUrl = process.env.NEXT_PUBLIC_STORAGE_URL ?? 'http://localhost:3000'
+
 const nextConfig = {
+  images: {
+    domains: [assetUrl.replace(/^https?:\/\//g, '')],
+  },
   reactStrictMode: true,
   swcMinify: true,
   experimental: {

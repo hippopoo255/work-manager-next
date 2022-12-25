@@ -1,15 +1,13 @@
 @use "../../Foundation/mixin/accessibility" as *;
+@use "../../Foundation/mixin/modifier" as *;
 
 .u-text {
 
 }
 
 .u-text-link {
-  @apply text-fc-link text-sm duration-basis ;
-
-  &.--secondary {
-    @apply text-secondary;
-  }
+  @apply text-fc-link text-sm duration-basis;
+  @include colorModifierByPaletteName(("text"));
 
   @include onHover {
     @apply underline;

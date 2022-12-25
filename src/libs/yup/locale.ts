@@ -2,14 +2,13 @@ import * as yup from 'yup'
 import { MessageParams } from 'yup/lib/types'
 
 const labelText = ({ label }: Pick<MessageParams, 'label'>) => {
-  return label ? `${label}は` : ''
+  return label ? `${label}` : ''
 }
 
 const jpConfig = {
   mixed: {
-    default: (params: MessageParams) => `${labelText(params)}無効です`,
-    required: (params: MessageParams) =>
-      `${labelText(params)}必須の入力項目です`,
+    default: (params: MessageParams) => `${labelText(params)}の値が無効です`,
+    required: (params: MessageParams) => `必須項目です`,
     oneOf: (params: MessageParams & { values: any }) =>
       `${labelText(params)}次の値のいずれかでなければなりません:${
         params.values
@@ -23,64 +22,60 @@ const jpConfig = {
   },
   string: {
     length: ({ label, length }: MessageParams & { length: number }) =>
-      `${labelText({ label })}${length}文字でなければなりません`,
+      `${labelText({ label })}${length}文字で入力してください`,
     min: (params: MessageParams & { min: number }) =>
-      `${labelText(params)}少なくとも${params.min}文字でなければなりません`,
+      // `${labelText(params)}少なくとも${params.min}文字でなければなりません`,
+      `${params.min}文字以上で入力してください`,
     max: (params: MessageParams & { max: number }) =>
-      `${labelText(params)}最大${params.max}文字でなければなりません`,
+      `${params.max}文字以下で入力してください`,
     matches: (params: MessageParams & { regex: RegExp }) =>
-      `${labelText(params)}次の形式と一致する必要があります: "${params.regex}"`,
+      `形式が正しくありません`,
     email: (params: MessageParams & { regex: RegExp }) =>
-      `${labelText(params)}メールアドレス形式である必要があります`,
+      `メールアドレスの形式が正しくありません`,
     url: (params: MessageParams & { regex: RegExp }) =>
-      `${labelText(params)}有効なURLでなければなりません`,
+      `URLの形式が正しくありません`,
     uuid: (params: MessageParams & { regex: RegExp }) =>
-      `${labelText(params)}有効なUUIDでなければなりません`,
-    trim: (params: MessageParams) =>
-      `${labelText(params)}前後にスペースを入れてはいけません`,
-    lowercase: (params: MessageParams) =>
-      `${labelText(params)}小文字でなければなりません`,
-    uppercase: (params: MessageParams) =>
-      `${labelText(params)}大文字でなければなりません`,
+      `UUIDの形式が正しくありません`,
+    trim: (params: MessageParams) => `前後のスペースを削除してください`,
+    lowercase: (params: MessageParams) => `小文字で入力してください`,
+    uppercase: (params: MessageParams) => `大文字で入力してください`,
   },
   number: {
     min: (params: MessageParams & { min: number }) =>
-      `${labelText(params)}${params.min}以上である必要があります`,
+      `${params.min}以上で入力してください`,
     max: (params: MessageParams & { max: number }) =>
-      `${labelText(params)}${params.max}以下でなければなりません`,
+      `${params.max}以下で入力してください`,
     lessThan: (params: MessageParams & { less: number }) =>
-      `${labelText(params)}${params.less}より小さくなければなりません`,
+      `${params.less}より小さい値を入力してください`,
     moreThan: (params: MessageParams & { more: number }) =>
-      `${labelText(params)}${params.more}より大きくなければなりません`,
+      `${params.more}より大きい値を入力してください`,
     positive: (params: MessageParams & { more: number }) =>
-      `${labelText(params)}正の数でなければなりません`,
+      `正の数を入力してください`,
     negative: (params: MessageParams & { less: number }) =>
-      `${labelText(params)}負の数でなければなりません`,
-    integer: (params: MessageParams) =>
-      `${labelText(params)}整数でなければなりません`,
+      `負の数を入力してください`,
+    integer: (params: MessageParams) => `整数を入力してください`,
   },
   date: {
     min: (params: MessageParams & { min: Date | string }) =>
-      `${labelText(params)}${params.min}より後でなければなりません`,
+      `${params.min}より後の日付を入力してください`,
     max: (params: MessageParams & { max: Date | string }) =>
-      `${labelText(params)}${params.max}より前でなければなりません`,
+      `${params.max}より前の日付を入力してください`,
   },
   boolean: {
-    isValue: (params: MessageParams) => `${labelText(params)}値が必要です`,
+    // isValue: (params: MessageParams) => `${labelText(params)}値が必要です`,
+    isValue: (params: MessageParams) => `値が必要です`,
   },
   object: {
     noUnknown: (params: MessageParams) =>
-      `${labelText(
-        params
-      )}オブジェクトシェイプで指定されていないキーを含めることはできません`,
+      `指定されていない項目を含めることはできません`,
   },
   array: {
     length: (params: MessageParams & { length: number }) =>
-      `${labelText(params)}${params.length}個が必要です`,
+      `${params.length}個が必要です`,
     min: (params: MessageParams & { min: number }) =>
-      `${labelText(params)}${params.min}個以上の項目が必要です`,
+      `${params.min}個以上の項目が必要です`,
     max: (params: MessageParams & { max: number }) =>
-      `${labelText(params)}${params.max}個以下の項目が必要です`,
+      `${params.max}個以下の項目が必要です`,
   },
 }
 

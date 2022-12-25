@@ -4,17 +4,15 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useRouter } from 'next/navigation'
 import { useCallback, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { schema, SignInFormType } from '~/schema/auth/signInValidator'
-import { useAuthContext } from '~/services/auth'
+import { schema, SignUpFormType } from '~/schema/auth/signUpValidator'
 import { useStatus } from '~/services/status'
 import { authOperation } from '~/stores/auth'
 
 const useSignIn = () => {
   const [loading, setLoading] = useState<boolean>(false)
-  const { dispatch } = useAuthContext()
-  const { update: updateStatus, clear } = useStatus()
+  const { update: updateStatus } = useStatus()
   const router = useRouter()
-  const methods = useForm<SignInFormType>({
+  const methods = useForm<SignUpFormType>({
     mode: 'onBlur',
     defaultValues: {
       user_id: '',
@@ -24,18 +22,18 @@ const useSignIn = () => {
     resolver: yupResolver(schema),
   })
 
-  const onSubmit = useCallback(async (data: SignInFormType) => {
+  const onSubmit = useCallback(async (data: SignUpFormType) => {
     setLoading(true)
     await authOperation
-      .signIn(data, dispatch)
-      .then(() => {
+      .signUp(data)
+      .then((encodedUserName) => {
         updateStatus({
-          message: 'ログインに成功しました',
+          message: '検証コードを送信しました。',
           statusCode: 200,
           category: 'success',
         })
-        router.prefetch('/mypage')
-        router.push('/mypage')
+        router.prefetch('/account-verification')
+        router.push(`/account-verification?code=${encodedUserName}`)
       })
       .catch((err) => {
         updateStatus({

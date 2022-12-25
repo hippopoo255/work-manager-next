@@ -1,7 +1,6 @@
 import { ISignUpResult, CognitoUserSession } from 'amazon-cognito-identity-js'
 import { Auth } from 'aws-amplify'
 import { AxiosRequestConfig } from 'axios'
-import router from 'next/router'
 
 import { handleError } from './handleError'
 import { amplifyConfigure } from './init'
@@ -53,30 +52,16 @@ const currentUser = async (currentAuthorPath: string = '/user/current') => {
       }
 }
 
-const forgotPassword = async ({ user_id }: ForgotPasswordInputs) => {
+const sendPasswordForgotten = async ({ user_id }: ForgotPasswordInputs) => {
   const response = await Auth.forgotPassword(user_id).catch((error) => {
     handleError<ForgotPasswordInputs>(error, 'reset password error')
-    return {}
+    return null
   })
-
-  if (!!response) {
-    setTimeout(() => {
-      router.push({
-        pathname: '/password/reset',
-        query: {
-          n: encode64(user_id),
-        },
-      })
-    }, 4000)
-  }
-  return {
-    message:
-      'ご登録いただいているメールアドレスに検証用コードを送信しました。\n数秒後に画面が切り替わりますので、検証コードと新しいパスワードを入力してください。',
-    data: 'SENDED',
-  }
+  console.log(response)
+  return encode64(user_id)
 }
 
-const resetForgottenPassword = async ({
+const resetPassword = async ({
   user_id,
   verification_code,
   password,
@@ -89,16 +74,9 @@ const resetForgottenPassword = async ({
   ).catch((error) => {
     handleError<ForgotPasswordResetInputs>(error, 'reset password error')
   })
-  if (result === 'SUCCESS') {
-    // console.log('confirmation success:', result)
-    alert(
-      '再設定に成功しました。数秒後ログイン画面に移動しますので、ログインをお試しください'
-    )
-    router.push('/signin')
-  }
 }
 
-const resetPassword = async ({
+const changePassword = async ({
   old_password,
   password,
 }: PasswordResetInputs) => {
@@ -167,15 +145,9 @@ const signUp = async ({
         // 'custom:department_code': '5',
       },
     })
-    // console.log('signUp succeeded')
-    router.push({
-      pathname: '/account_verification',
-      query: {
-        n: encode64(user_id),
-      },
-    })
-    return user
+    return encode64(user_id)
   } catch (error) {
+    console.log('ERR:', error)
     handleError<SignUpInputs>(error, 'sign up failed')
   }
 }
@@ -192,26 +164,19 @@ const verifyUser = async ({
   user_id,
   verification_code,
 }: AccountVerificationInputs) => {
-  const result = await Auth.confirmSignUp(user_id, verification_code).catch(
+  await Auth.confirmSignUp(decode64(user_id), verification_code).catch(
     (error) => {
       handleError<AccountVerificationInputs>(error, 'confirmation error')
     }
   )
-  if (result === 'SUCCESS') {
-    // console.log('confirmation success:', result)
-    alert(
-      '検証に成功しました。数秒後ログイン画面に移動しますので、ログインをお試しください'
-    )
-    router.push('/signin')
-  }
 }
 
 const cognitoUser = {
+  changePassword,
   currentUser,
-  forgotPassword,
   getJwt,
-  resetForgottenPassword,
   resetPassword,
+  sendPasswordForgotten,
   signIn,
   signOut,
   signUp,

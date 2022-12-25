@@ -1,7 +1,7 @@
 @use "../../Foundation/variable" as *;
 
 .p-card {
-  @apply rounded shadow-md p-4;
+  @apply rounded shadow p-4;
 
   min-width: 10rem;
   max-width: 100%;

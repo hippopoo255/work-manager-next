@@ -3,7 +3,7 @@
 .p-tooltip {
   @apply inline-block relative;
 
-  @include onHover {
+  @include onAllHover {
     .p-tooltip__body {
       @apply opacity-100;
     }

@@ -7,8 +7,9 @@ import { useSignOut } from '~/services/auth'
 type Props = {
   user: User
   onLink?: React.MouseEventHandler<HTMLLIElement>
+  className?: string
 }
-const AuthMenu = ({ user, onLink }: Props) => {
+const AuthMenu = ({ user, onLink, className }: Props) => {
   const { signOut } = useSignOut()
 
   const handleSignOut = async () => {
@@ -16,7 +17,7 @@ const AuthMenu = ({ user, onLink }: Props) => {
   }
 
   return (
-    <div className="p-auth-menu">
+    <div className={`p-auth-menu${className ?? ''}`}>
       <p className="p-auth-menu__head">{user.full_name}</p>
       <div className="p-auth-menu__body">
         <ul className="p-auth-menu__list">
@@ -37,10 +38,7 @@ const AuthMenu = ({ user, onLink }: Props) => {
             </Link>
           </li>
           <li className="p-global-nav__item">
-            <button
-              onClick={handleSignOut}
-              className={clsx('p-auth-menu__link')}
-            >
+            <button onClick={handleSignOut} className={'p-auth-menu__link'}>
               サインアウト
             </button>
           </li>

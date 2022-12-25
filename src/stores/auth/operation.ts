@@ -60,8 +60,8 @@ const signOut = async (dispatch: React.Dispatch<AuthAction>): Promise<null> => {
 }
 
 const signUp = async (data: SignUpInputs) => {
-  const newAccount = await cognitoUser.signUp(data)
-  return newAccount
+  const encodedUserName = await cognitoUser.signUp(data)
+  return encodedUserName
 }
 
 const testSignIn = async (

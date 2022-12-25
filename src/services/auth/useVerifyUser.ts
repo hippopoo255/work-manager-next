@@ -1,41 +1,45 @@
 'use client'
 
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
+
 import { useCallback, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { schema, SignInFormType } from '~/schema/auth/signInValidator'
-import { useAuthContext } from '~/services/auth'
+import {
+  schema,
+  AccountVerificationFormType,
+} from '~/schema/auth/verifyUserValidator'
 import { useStatus } from '~/services/status'
 import { authOperation } from '~/stores/auth'
+import { decode64 } from '~/utils'
 
-const useSignIn = () => {
+const useVerifyUser = () => {
   const [loading, setLoading] = useState<boolean>(false)
-  const { dispatch } = useAuthContext()
-  const { update: updateStatus, clear } = useStatus()
+  const { update: updateStatus } = useStatus()
   const router = useRouter()
-  const methods = useForm<SignInFormType>({
+  const params = useSearchParams()
+  const methods = useForm<AccountVerificationFormType>({
     mode: 'onBlur',
     defaultValues: {
-      user_id: '',
-      password: '',
+      user_id: params.get('code') ?? '',
+      verification_code: '',
     },
 
     resolver: yupResolver(schema),
   })
 
-  const onSubmit = useCallback(async (data: SignInFormType) => {
+  const onSubmit = useCallback(async (data: AccountVerificationFormType) => {
     setLoading(true)
     await authOperation
-      .signIn(data, dispatch)
+      .verifyUser(data)
       .then(() => {
         updateStatus({
-          message: 'ログインに成功しました',
+          message: '検証に成功しました',
           statusCode: 200,
           category: 'success',
         })
-        router.prefetch('/mypage')
-        router.push('/mypage')
+        router.prefetch('/signin')
+        router.push('/signin')
       })
       .catch((err) => {
         updateStatus({
@@ -54,4 +58,4 @@ const useSignIn = () => {
   }
 }
 
-export default useSignIn
+export default useVerifyUser

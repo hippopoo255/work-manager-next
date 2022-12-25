@@ -1,2 +1,6 @@
-export { default as SignInForm } from './SignInForm'
+export { default as AccountVerificationForm } from './AccountVerificationForm'
 export { default as DemoUserSuggestion } from './DemoUserSuggestion'
+export { default as SignInForm } from './SignInForm'
+export { default as SignUpForm } from './SignUpForm'
+export { default as SendPasswordForgottenForm } from './SendPasswordForgottenForm'
+export { default as ResetPasswordForm } from './ResetPasswordForm'

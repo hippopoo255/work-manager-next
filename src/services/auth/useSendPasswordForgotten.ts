@@ -1,41 +1,40 @@
-'use client'
-
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useRouter } from 'next/navigation'
 import { useCallback, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { schema, SignInFormType } from '~/schema/auth/signInValidator'
-import { useAuthContext } from '~/services/auth'
+import { cognitoUser } from '~/libs/cognito/auth'
+import {
+  schema,
+  SendPasswordForgottenFormType as FormType,
+} from '~/schema/auth/sendPasswordForgottenValidation'
 import { useStatus } from '~/services/status'
-import { authOperation } from '~/stores/auth'
 
-const useSignIn = () => {
+const useSendPasswordForgotten = () => {
   const [loading, setLoading] = useState<boolean>(false)
-  const { dispatch } = useAuthContext()
+
   const { update: updateStatus, clear } = useStatus()
   const router = useRouter()
-  const methods = useForm<SignInFormType>({
+  const methods = useForm<FormType>({
     mode: 'onBlur',
     defaultValues: {
       user_id: '',
-      password: '',
     },
 
     resolver: yupResolver(schema),
   })
 
-  const onSubmit = useCallback(async (data: SignInFormType) => {
+  const onSubmit = useCallback(async (data: FormType) => {
     setLoading(true)
-    await authOperation
-      .signIn(data, dispatch)
-      .then(() => {
+    await cognitoUser
+      .sendPasswordForgotten(data)
+      .then((encodedUserName) => {
         updateStatus({
-          message: 'ログインに成功しました',
+          message: '検証コードを送信しました。',
           statusCode: 200,
           category: 'success',
         })
-        router.prefetch('/mypage')
-        router.push('/mypage')
+        router.prefetch('/password-reset')
+        router.push(`/password-reset?code=${encodedUserName}`)
       })
       .catch((err) => {
         updateStatus({
@@ -54,4 +53,4 @@ const useSignIn = () => {
   }
 }
 
-export default useSignIn
+export default useSendPasswordForgotten

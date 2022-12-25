@@ -10,6 +10,11 @@ export const GuestNav = () => {
           Sign In
         </Link>
       </li>
+      <li className="p-global-nav__item">
+        <Link href={{ pathname: 'signup' }} className={clsx('c-header-link')}>
+          Sign Up
+        </Link>
+      </li>
     </>
   )
 }
