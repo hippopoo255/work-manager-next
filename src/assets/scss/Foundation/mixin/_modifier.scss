@@ -1,4 +1,5 @@
 @use "../variable" as *;
+@use "accessibility" as *;
 @use "sass:list";
 @use "sass:math";
 
@@ -21,6 +22,12 @@
           @apply pointer-events-none;
         }
 
+        @if list.index($options, "accessHover") {
+          @include onHover {
+            @apply opacity-80;
+          }
+        }
+
         // natural, light, dark...
         @each $t in $theme {
           &-#{$t} {
@@ -36,6 +43,12 @@
 
             @if $p == "disabled" and list.index($options, "disabledNone") {
               @apply pointer-events-none;
+            }
+
+            @if list.index($options, "accessHover") {
+              @include onHover {
+                @apply opacity-80;
+              }
             }
           }
         }
@@ -83,5 +96,15 @@
 @mixin loadingModifier {
   &.--loading {
     @content;
+  }
+}
+
+@mixin statusStyle() {
+  @each $s in $status {
+    $modifier: $s;
+
+    &.--#{$s} {
+      @apply opacity-100 text-#{$s} border-l-#{$s};
+    }
   }
 }

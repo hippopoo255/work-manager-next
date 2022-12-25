@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import AuthMenu from './AuthMenu'
 import { Avatar } from '~/components/elements/Avatar'
+import { STORAGE_URL } from '~/config'
 import { User } from '~/schema/generated/@types'
+
 type Props = {
   user: User
 }
@@ -9,6 +11,13 @@ type Props = {
 const AuthAvatar = ({ user }: Props) => {
   const [open, setOpen] = useState(false)
 
+  const iconPath = useMemo(
+    () =>
+      (user.file_path ?? '') === ''
+        ? undefined
+        : `${STORAGE_URL}/${user.file_path}`,
+    [user]
+  )
   const handleClick = () => {
     setOpen((prev) => !prev)
   }
@@ -19,13 +28,13 @@ const AuthAvatar = ({ user }: Props) => {
 
   return (
     <div className={`p-auth-avatar`}>
-      <Avatar
-        onClick={handleClick}
-        filePath={user.file_path}
-        name={user.full_name}
-      />
+      <Avatar onClick={handleClick} filePath={iconPath} name={user.full_name} />
       <div className="p-auth-avatar__menu">
-        {open && <AuthMenu user={user} onLink={handleLink} />}
+        <AuthMenu
+          user={user}
+          onLink={handleLink}
+          className={open ? ' --open' : ''}
+        />
       </div>
     </div>
   )

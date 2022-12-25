@@ -14,6 +14,11 @@
   }
 }
 
+@mixin onAllHover() {
+  &:hover,
+  &:focus-visible { @content; }
+}
+
 @mixin breakPoint($breakPoint: "sm") {
   @media #{map-get($breakPoints, $breakPoint)} {
     @content;

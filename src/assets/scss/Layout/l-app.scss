@@ -27,4 +27,8 @@
 
     grid-area: footer;
   }
+
+  .l-app__snackbar {
+    @apply fixed bottom-4 right-4;
+  }
 }

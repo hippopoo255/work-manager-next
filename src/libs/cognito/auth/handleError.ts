@@ -52,7 +52,6 @@ export const handleError = <T = SignInInputs>(
   if (error.code !== undefined) {
     const errCode = error.code as CognitoErrorMessageType
     const { key, message } = getErrorBody<T>(errCode, specifiedKey)
-    console.log(`key:${key}`)
     throw { key, message }
   }
   throw error

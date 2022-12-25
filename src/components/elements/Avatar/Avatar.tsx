@@ -1,7 +1,4 @@
-import { spawn } from 'child_process'
 import Image from 'next/image'
-import React from 'react'
-// import noPicture from '~/assets/me.png'
 
 type Props = {
   name: string
@@ -11,19 +8,21 @@ type Props = {
 
 const Avatar = ({ name, filePath, onClick }: Props) => {
   return (
-    <button className="c-avatar" onClick={onClick}>
-      <span className="c-avatar__initial">{name.slice(0, 1)}</span>
-      {/* {filePath !== undefined ? (
+    <button
+      className={`c-avatar${filePath ? ' --has-path' : ''}`}
+      onClick={onClick}
+    >
+      {filePath !== undefined ? (
         <Image
           src={filePath}
-          alt={`${name}`}
+          width={256}
+          height={256}
+          alt={`icon_${name}`}
           className={'c-avatar__src'}
-          width={32}
-          height={32}
         />
       ) : (
-        <span>{name.slice(0, 1)}</span>
-      )} */}
+        <span className="c-avatar__initial">{name.slice(0, 1)}</span>
+      )}
     </button>
   )
 }

@@ -10,7 +10,7 @@ import ErrorMessage from './ErrorMessage'
 
 type Props = {
   label: string
-  type?: 'text' | 'tel' | 'password' | 'number' // ...and more
+  type?: 'email' | 'text' | 'tel' | 'password' | 'number' // ...and more
   placeholder?: string
   autoFocus?: boolean
   errorMessage?: string
@@ -25,7 +25,7 @@ const Input = React.forwardRef<HTMLInputElement, Props>(
           htmlFor={props.name}
           className={clsx('p-text-field', {
             '--error': errorMessage !== undefined,
-            '--visible': props.value !== '',
+            '--visible': (props.value ?? '') !== '',
           })}
         >
           <span className="p-text-field__label">{props.label}</span>

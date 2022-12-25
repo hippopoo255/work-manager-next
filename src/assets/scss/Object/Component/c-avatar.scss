@@ -1,8 +1,11 @@
 .c-avatar {
-  @apply rounded-full w-9 h-9 grid place-content-center bg-primary text-white;
+  @apply rounded-full w-9 h-9 grid place-content-center bg-primary text-white overflow-hidden;
+
+  &.--has-path {
+    @apply bg-gray-300;
+  }
 
   .c-avatar__src {
-    @apply w-9 h-9;
     @apply object-cover;
   }
 

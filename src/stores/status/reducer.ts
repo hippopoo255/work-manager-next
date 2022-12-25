@@ -11,8 +11,8 @@ export const statusReducer = (
         ...action.payload,
       }
     case ACTION_TYPE.CLEAR:
-      return { ...state }
+      return { ...initialState.status }
     default:
-      return { ...state }
+      return { ...initialState.status }
   }
 }

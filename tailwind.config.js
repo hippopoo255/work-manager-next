@@ -48,6 +48,12 @@ const extendColors = {
     DEFAULT: '#00a241',
     dark: '#008A00',
   },
+  error: {
+    natural: '#FFEFF2',
+    light: '#FF7670',
+    DEFAULT: '#FD444A',
+    dark: '#eb272e',
+  },
   danger: {
     natural: '#FFEFF2',
     light: '#FF7670',
@@ -119,6 +125,9 @@ module.exports = {
         header: '4rem',
       },
       transitionDuration: {
+        basis: '200ms',
+      },
+      transitionDelay: {
         basis: '200ms',
       },
     },

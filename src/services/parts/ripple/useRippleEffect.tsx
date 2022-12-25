@@ -10,7 +10,7 @@ const defaultState: State = {
   effectDuration: 1000,
 }
 
-const useEventEffect = (props: Props) => {
+const useRippleEffect = (props: Props) => {
   const [state, setState] = useState<State>({
     ...defaultState,
     ...props,
@@ -31,7 +31,7 @@ const useEventEffect = (props: Props) => {
     [state.transformScale]
   )
 
-  const effectSytle = useMemo(
+  const effectStyle = useMemo(
     () => ({
       opacity: state.opacity,
       transform: `${tx} ${ty} ${ts}`,
@@ -73,10 +73,10 @@ const useEventEffect = (props: Props) => {
   }, [])
 
   return {
-    effectSytle,
+    effectStyle,
     handleMouseDown,
     handleMouseUp,
   }
 }
 
-export default useEventEffect
+export default useRippleEffect

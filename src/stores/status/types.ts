@@ -4,9 +4,9 @@ export const ACTION_TYPE = {
 } as const
 
 export const STATUS_CATEGORY = {
-  ERROR: 'ERROR',
-  SUCCESS: 'SUCCESS',
-  WARNING: 'WARNING',
+  ERROR: 'error',
+  SUCCESS: 'success',
+  WARNING: 'warning',
 } as const
 
 export type ActionType = typeof ACTION_TYPE[keyof typeof ACTION_TYPE]
@@ -24,7 +24,7 @@ interface Clear {
 export type StatusAction = Set | Clear
 
 export interface StatusState {
-  message?: string | { [key: string]: string[] }
+  message?: string
   statusCode?: number
   category?: StatusCategoryType
 }

@@ -1,5 +1,6 @@
 @use "../../Foundation/mixin/accessibility" as *;
 @use "../../Foundation/mixin/modifier" as *;
+@use "../../Foundation/mixin/gradient" as *;
 
 .loader-icon-style {
   @apply absolute block top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-primary font-bold;
@@ -16,6 +17,7 @@
 
   min-width: 8rem;
   -webkit-tap-highlight-color: transparent;
+  user-select: none;
 
   .c-button__icon {
     fill: currentcolor;
@@ -49,7 +51,7 @@
   }
 
   @include colorModifierByPaletteName(("bg", "border"), (
-    "usingText", "disabledNone"
+    "usingText", "disabledNone", "accessHover"
   ));
 
   &.--disabled {
@@ -61,5 +63,23 @@
 
   @include loadingModifier {
     @apply bg-disabled-light border-disabled-light text-disabled pointer-events-none;
+  }
+
+  &.--signup {
+    @apply border-transparent;
+    @include gradient("secondary");
+
+    @include onHover {
+      @apply opacity-80;
+    }
+  }
+
+  &.--signin {
+    @apply border-transparent;
+    @include gradient;
+
+    @include onHover {
+      @apply opacity-80;
+    }
   }
 }

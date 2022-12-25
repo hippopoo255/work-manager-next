@@ -1,0 +1,19 @@
+.gradient-primary {
+  @apply bg-gradient-to-r from-primary to-cyan-400;
+}
+
+.gradient-secondary {
+  @apply bg-gradient-to-r from-secondary to-purple-400;
+}
+
+.apply-text {
+  @apply bg-clip-text text-transparent;
+}
+
+@mixin gradient($color: "primary", $prop: "bg") {
+  @extend .gradient-#{$color};
+
+  @if $prop == "text" {
+    @extend .apply-text;
+  }
+}

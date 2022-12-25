@@ -39,14 +39,15 @@ $spaceBasis: 0.25rem;
 $headerHeight: 4rem;
 
 // colors
+$accent: #1a2b55;
 $semanticPalette: "primary", "secondary", "danger", "success", "warning",
   "minutes", "task", "schedule", "chat", "disabled";
 $theme: "natural", "light", "dark";
+$status: "error", "warning", "success";
 $size: (
   "larger": ("lg", "xl"),
   "smaller": ("sm", "xs")
 );
-$accent: #1a2b55;
 
 // responsive
 $breakPoints: (

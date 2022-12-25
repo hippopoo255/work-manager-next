@@ -2,11 +2,19 @@
 
 import React from 'react'
 import { BorderButton, Button } from '~/components/elements/Button'
+import { Tooltip } from '~/components/elements/Tooltip'
 
-const page = () => {
+const Home = () => {
   return (
     <div className="p-page">
       <div className="p-card mx-4">
+        <div className="flex justify-center">
+          <Tooltip text="この操作は無効です">
+            <span className="text-disabled">Tooltip</span>
+          </Tooltip>
+        </div>
+      </div>
+      <div className="p-card mx-4 mt-4">
         <h3>Button</h3>
         <div className="p-card__grid">
           <div className=""></div>
@@ -78,6 +86,13 @@ const page = () => {
         </div>
       </div>
       <div className="p-card mx-4 mt-4">
+        <div className="flex justify-center">
+          <Tooltip text="この操作は無効です">
+            <span className="text-disabled">Tooltip</span>
+          </Tooltip>
+        </div>
+      </div>
+      <div className="p-card mx-4 mt-4">
         <h3>BorderButton</h3>
         <div className="grid grid-cols-5 gap-x-2 gap-y-4">
           <div className=""></div>
@@ -143,4 +158,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Home
