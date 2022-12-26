@@ -35,15 +35,17 @@ const Button = (props: Props) => {
     >
       <span className="c-button__effect" style={effectStyle} />
       <span className={'c-button__text'}>{props.text}</span>
-      {(props.loading ?? false) && (
-        <span className="c-button__loader">
-          <span
-            className={clsx(`c-button__loader-icon ${props.className}`, {
-              [`--${props.size}`]: props.size ?? false,
-            })}
-          ></span>
-        </span>
-      )}
+      <span
+        className={clsx('c-button__loader', {
+          '--active': props.loading ?? false,
+        })}
+      >
+        <span
+          className={clsx(`c-button__loader-icon ${props.className}`, {
+            [`--${props.size}`]: props.size ?? false,
+          })}
+        ></span>
+      </span>
     </button>
   )
 }

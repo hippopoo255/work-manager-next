@@ -36,15 +36,17 @@ const BorderButton = (props: Props) => {
     >
       <span className="c-border-button__effect" style={effectStyle} />
       <span className={'c-border-button__text'}>{props.text}</span>
-      {(props.loading ?? false) && (
-        <span className="c-border-button__loader">
-          <span
-            className={clsx(`c-border-button__loader-icon ${props.className}`, {
-              [`--${props.size}`]: props.size ?? false,
-            })}
-          ></span>
-        </span>
-      )}
+      <span
+        className={clsx('c-border-button__loader', {
+          '--active': props.loading ?? false,
+        })}
+      >
+        <span
+          className={clsx(`c-border-button__loader-icon ${props.className}`, {
+            [`--${props.size}`]: props.size ?? false,
+          })}
+        ></span>
+      </span>
     </button>
   )
 }

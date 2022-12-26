@@ -16,6 +16,7 @@ const extendColors = {
     hint: 'var(--font-color-hint)',
   },
   bc: {
+    accent: 'var(--bg-color-accent)',
     basis: 'var(--bg-color-basis)',
     sheet: 'var(--bg-color-sheet)',
     header: 'var(--bg-color-header)',

@@ -10,6 +10,7 @@
   --font-color-hint: #bebebe;
   --color-disabled: #e5e7eb;
   --color-disabled-dark: #c0c0c0;
+  --bg-color-accent: #fefefe;
   --bg-color-basis: #f3f4f6;
   --bg-color-sheet: #fefefe;
   --bg-color-header: #fefefe;
@@ -26,6 +27,7 @@
     --font-color-hint: #aaa;
     --color-disabled: #9ca3af;
     --color-disabled-dark: #c0c0c0;
+    --bg-color-accent: var(--color-accent);
     --bg-color-basis: #1b212b;
     --bg-color-sheet: #5a5a5a;
     --bg-color-header: #5a5a5a;

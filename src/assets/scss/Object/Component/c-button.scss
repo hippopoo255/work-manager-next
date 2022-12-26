@@ -3,14 +3,10 @@
 @use "../../Foundation/mixin/gradient" as *;
 
 .loader-icon-style {
-  @apply origin-center
-    w-6 h-6 rounded-full border-2 border-t-transparent border-r-primary border-b-primary border-l-primary;
+  @apply origin-center delay-100 w-6 h-6 rounded-full
+    border-2 border-t-transparent border-r-primary border-b-primary border-l-primary;
 
-  // perspective: 1000;
-  // transform-style: flat;
-  animation: spin 800ms ease infinite;
-
-  // backface-visibility: hidden;
+  animation: spin 800ms ease 100ms infinite;
 
   @include colorModifierByPaletteName(("border-r", "border-b", "border-l"));
 
@@ -21,9 +17,8 @@
 // リップル
 // ====================
 .effect-style {
-  @apply block absolute pointer-events-none bg-white;
+  @apply block absolute pointer-events-none bg-white delay-100;
 
-  will-change: transform;
   top: -140px;
   left: -140px;
   width: 280px;
@@ -44,7 +39,14 @@
   }
 
   .c-button__effect {
-    @extend .effect-style;
+    // @extend .effect-style;
+    @apply block absolute pointer-events-none bg-white delay-100;
+
+    top: -140px;
+    left: -140px;
+    width: 280px;
+    height: 280px;
+    border-radius: 140px;
   }
 
   // ====================
@@ -52,11 +54,21 @@
   // ====================
   .c-button__loader {
     @apply flex justify-center items-center
-      absolute top-0 left-0 w-full h-full;
+      absolute top-0 left-0 w-full h-full pointer-events-none opacity-0;
+
+    &.--active {
+      @apply opacity-100;
+    }
   }
 
   .c-button__loader-icon {
-    @extend .loader-icon-style;
+    // @extend .loader-icon-style;
+    @apply origin-center delay-100 w-6 h-6 rounded-full
+      border-2 border-t-transparent border-r-primary border-b-primary border-l-primary;
+
+    animation: spin 800ms ease 100ms infinite;
+
+    @include colorModifierByPaletteName(("border-r", "border-b", "border-l"));
   }
 
   // ====================
@@ -64,6 +76,8 @@
   // ====================
   @include onHover {
     @apply opacity-70;
+
+    will-change: transform, animation;
   }
 
   @include colorModifierByPaletteName(("bg", "border"), (

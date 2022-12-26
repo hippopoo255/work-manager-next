@@ -36,6 +36,7 @@ const useRippleEffect = (props: Props) => {
       opacity: state.opacity,
       transform: `${tx} ${ty} ${ts}`,
       transitionDuration: `${state.transitionDuration / 1000}s`,
+      // transitionDelay: `100ms`,
     }),
     [state.opacity, tx, ty, ts, state.transitionDuration]
   )
