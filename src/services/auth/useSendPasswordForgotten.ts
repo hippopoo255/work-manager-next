@@ -1,3 +1,5 @@
+'use client'
+
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useRouter } from 'next/navigation'
 import { useCallback, useState } from 'react'

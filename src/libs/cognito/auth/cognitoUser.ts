@@ -57,7 +57,6 @@ const sendPasswordForgotten = async ({ user_id }: ForgotPasswordInputs) => {
     handleError<ForgotPasswordInputs>(error, 'reset password error')
     return null
   })
-  console.log(response)
   return encode64(user_id)
 }
 

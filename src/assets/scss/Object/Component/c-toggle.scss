@@ -1,0 +1,18 @@
+.c-toggle {
+  @apply flex items-center bg-disabled rounded-full w-10 h-4 relative shadow-md;
+
+  .c-toggle__ball {
+    will-change: transform;
+
+    @apply inline-block scale-125 origin-center
+      w-4 h-4 rounded-full bg-white duration-basis transition-transform;
+  }
+
+  &.--on {
+    @apply bg-primary border-primary;
+
+    .c-toggle__ball {
+      @apply translate-x-6;
+    }
+  }
+}

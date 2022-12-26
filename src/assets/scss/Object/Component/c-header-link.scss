@@ -1,7 +1,7 @@
 @use "../../Foundation/mixin/accessibility" as *;
 
 .c-header-link {
-  @apply block text-fc-primary py-2 px-4 duration-basis transition-all;
+  @apply block text-fc-accent py-2 px-4 duration-basis transition-all;
 
   @include onHover {
     @apply text-fc-link;

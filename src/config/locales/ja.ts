@@ -1,4 +1,4 @@
-import { CognitoErrorMessageType } from '~/libs/cognito/auth/handleError'
+import { CognitoErrorMessageType } from '~/libs/cognito/types'
 
 export default {
   siteTitle: 'ジョブサポ',

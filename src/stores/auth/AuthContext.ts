@@ -1,3 +1,5 @@
+'use client'
+
 import { createContext } from 'react'
 import { AuthAction, AuthState } from './types'
 import initialState from '~/stores/initialState'

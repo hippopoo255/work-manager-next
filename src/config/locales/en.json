@@ -1,0 +1,36 @@
+{
+  "siteTitle": "Job Support",
+  "head": {
+    "title": {
+      "login": "Log in",
+      "signup": "Sign Up",
+      "organizationStore": "Organization register",
+      "mypage": {
+        "index": "Dashboard",
+        "blog": {
+          "index": "Blog",
+          "create": "New Blog"
+        }
+      },
+      "accountVerification": "Account verification",
+      "accountSetup": "Account setup",
+      "forgot_password": "Forgot Password",
+      "reset_password": "Reset Password"
+    }
+  },
+  "main": {
+    "title": "What is :site_title？"
+  },
+  "cognitoError": {
+    "UserNotFoundException": "User does not exist.",
+    "NotAuthorizedException": "Incorrect username or password",
+    "UserNotConfirmedException": "Account verification is not yet completed",
+    "UsernameExistsException": "User already exists",
+    "CodeMismatchException": "Invalid verification code",
+    "InvalidParameterException": "Invalid attribute",
+    "InvalidPasswordException": "Invalid password format",
+    "LimitExceededException": "Attempt limit exceeded, please try after some time.",
+    "ExpiredCodeException": "Invalid code provided, please request a code again.",
+    "default": "Verification failed"
+  }
+}

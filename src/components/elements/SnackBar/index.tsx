@@ -1,3 +1,5 @@
+'use client'
+
 import clsx from 'clsx'
 import React, { useEffect } from 'react'
 import { useStatus } from '~/services/status'

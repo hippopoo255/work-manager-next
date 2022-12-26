@@ -1,4 +1,3 @@
-import clsx from 'clsx'
 import Link from 'next/link'
 import React from 'react'
 import { User } from '~/schema/generated/@types'
@@ -24,7 +23,7 @@ const AuthMenu = ({ user, onLink, className }: Props) => {
           <li className="p-auth-menu__item" onClick={onLink}>
             <Link
               href={{ pathname: '/mypage' }}
-              className={clsx('p-auth-menu__link')}
+              className={'p-auth-menu__link'}
             >
               My Page
             </Link>
@@ -32,7 +31,7 @@ const AuthMenu = ({ user, onLink, className }: Props) => {
           <li className="p-global-nav__item" onClick={onLink}>
             <Link
               href={{ pathname: '/mypage/minutes' }}
-              className={clsx('p-auth-menu__link')}
+              className={'p-auth-menu__link'}
             >
               議事録
             </Link>

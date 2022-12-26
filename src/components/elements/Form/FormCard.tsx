@@ -1,5 +1,4 @@
 import React from 'react'
-import { Button } from '~/components/elements/Button'
 
 type Props = {
   children: React.ReactNode

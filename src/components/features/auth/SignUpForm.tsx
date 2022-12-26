@@ -7,7 +7,7 @@ const Suggestion = () => {
   return (
     <>
       <div className="grid sm:grid-flow-col place-content-between">
-        <Link href="/signin" className="u-text-link --primary">
+        <Link href="/signin" className="u-link --primary">
           {'既にアカウントをお持ちの方'}
         </Link>
       </div>

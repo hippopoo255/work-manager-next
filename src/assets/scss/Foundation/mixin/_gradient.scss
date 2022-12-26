@@ -6,6 +6,38 @@
   @apply bg-gradient-to-r from-secondary to-purple-400;
 }
 
+.gradient-danger {
+  @apply bg-gradient-to-r from-danger to-red-600;
+}
+
+.gradient-success {
+  @apply bg-gradient-to-r to-success from-lime-600;
+}
+
+.gradient-warning {
+  @apply bg-gradient-to-r from-warning to-orange-300;
+}
+
+.gradient-minutes {
+  @apply bg-gradient-to-r from-minutes to-teal-500;
+}
+
+.gradient-task {
+  @apply bg-gradient-to-r from-task to-indigo-600;
+}
+
+.gradient-schedule {
+  @apply bg-gradient-to-r from-schedule to-amber-400;
+}
+
+.gradient-chat {
+  @apply bg-gradient-to-r from-chat to-pink-500;
+}
+
+.gradient-disabled {
+  @apply bg-gradient-to-r from-chat to-purple-400;
+}
+
 .apply-text {
   @apply bg-clip-text text-transparent;
 }

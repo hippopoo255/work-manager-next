@@ -1,3 +1,5 @@
+'use client'
+
 import { useCallback, RefObject, useState } from 'react'
 import * as Type from './types'
 type Props = {
@@ -24,20 +26,6 @@ const useTooltip = ({ ref }: Props) => {
 
   const decidePosition = (current: HTMLElement): Type.PositionType => {
     const clientRect = current.getBoundingClientRect()
-    // console.log('width:', current.clientWidth)
-    // console.log('height:', current.clientHeight)
-    // console.log('top:', clientRect.top)
-    // console.log('left:', clientRect.left)
-    // console.log(
-    //   'right:',
-    //   window.innerWidth - current.clientWidth - clientRect.left
-    // )
-    // console.log(
-    //   'bottom:',
-    //   window.innerHeight - current.clientHeight - clientRect.top
-    // )
-    // console.log('x:', window.innerWidth)
-    // console.log('y:', window.innerHeight)
     const top = clientRect.top
     const right = window.innerWidth - current.clientWidth - clientRect.left
     const bottom = window.innerHeight - current.clientHeight - clientRect.top
@@ -65,17 +53,6 @@ const useTooltip = ({ ref }: Props) => {
       transform: `translate${direction}(${amount})`,
     }
   }
-  // top
-  // top: 0;
-  // transform: translates3d(0, -100%, 0);
-
-  // right
-  // top: 0;
-  // transform: translates3d(100%, 0, 0);
-  // bottom: bottom: 0; left: 50%;
-  // transform: translates3d(0, 100%, 0);
-  // left: top: 0; left: 0;
-  // transform: translates3d(-100%, 0, 0);
   return {
     ref,
     handleMouseOver,

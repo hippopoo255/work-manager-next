@@ -125,6 +125,23 @@ export const getCognitoTokenFromClient = (): CognitoToken | null => {
     : null
 }
 
+/**
+ * client componentから呼び出す
+ * @returns
+ */
+export const getCookieValueFromDocumentByName = (
+  key: string
+): string | null => {
+  const cookies = getCookiesFromDocument()
+  const regexp = new RegExp(`${key}`)
+  // Cookieに保存されたCognitoの Token(JWT) を取得
+  // Amplify.configure({ ...awsExports, ssr: true }); で ssr: true を設定している為JWTの保存先がCookieとなる
+  const target = cookies.find((cookie: Partial<RequestCookie>) =>
+    regexp.test(cookie.name ?? '')
+  )
+  return target?.value ?? null
+}
+
 /*----------------------- */
 // リクエスト(NextRequest | Req)からCookieを取得する{name: string; value?: string}[]
 // 1.getCookiesFromRequest
