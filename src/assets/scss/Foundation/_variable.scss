@@ -1,28 +1,34 @@
 // テーマに関連する変数
 :root {
-  --color-primary: #1a2b55;
+  --color-accent: #1a2b55;
 
   // Light
-  --font-color-primary: var(--color-primary);
+  --font-color-accent: var(--color-accent);
   --font-color-basis: #393939;
-  --font-color-secondary: #5a5a5a;
-  --font-color-link: #8e8e8e;
+  --font-color-secondary: #8a8a8a;
+  --font-color-link: #aaa;
   --font-color-hint: #bebebe;
+  --color-disabled: #e5e7eb;
+  --color-disabled-dark: #c0c0c0;
   --bg-color-basis: #f3f4f6;
   --bg-color-sheet: #fefefe;
   --bg-color-header: #fefefe;
 
   @media (prefers-color-scheme: dark) {
+  }
+
+  body[data-mode="dark"] {
     // Dark
-    --font-color-primary: #fefefe;
+    --font-color-accent: #fefefe;
     --font-color-basis: #f3f4f6;
-    --font-color-secondary: #ddd;
-    --font-color-link: #c0c0c0;
-    --bg-color-basis: var(--color-primary);
+    --font-color-secondary: #e0e0e0;
+    --font-color-link: #c8c8c8;
+    --font-color-hint: #aaa;
+    --color-disabled: #9ca3af;
+    --color-disabled-dark: #c0c0c0;
+    --bg-color-basis: #1b212b;
     --bg-color-sheet: #5a5a5a;
     --bg-color-header: #5a5a5a;
-
-    // --bg-color-header: #1f2937;
   }
 }
 

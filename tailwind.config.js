@@ -9,7 +9,7 @@ const extendColors = {
   // darkMode:classにはしない
   // テーマによって動的変わる色の定義は、CSS変数で決める
   fc: {
-    primary: 'var(--font-color-primary)',
+    accent: 'var(--font-color-accent)',
     basis: 'var(--font-color-basis)',
     secondary: 'var(--font-color-secondary)',
     link: 'var(--font-color-link)',
@@ -23,6 +23,7 @@ const extendColors = {
   accent: {
     DEFAULT: '#1a2b55',
     blind: '#445061',
+    dark: '#1b212b',
   },
   primary: {
     natural: colors.emerald[100],
@@ -37,10 +38,10 @@ const extendColors = {
     dark: colors.pink[500],
   },
   disabled: {
-    natural: colors.gray[200],
-    light: colors.gray[200],
-    DEFAULT: colors.gray[300],
-    dark: colors.gray[400],
+    natural: 'var(--color-disabled)',
+    light: 'var(--color-disabled)',
+    DEFAULT: 'var(--color-disabled)',
+    dark: 'var(--color-disabled-dark)',
   },
   success: {
     natural: '#e6f4d5',
@@ -77,11 +78,11 @@ const extendColors = {
     dark: '#1f2937',
   },
   task: {
-    // オレンジ
-    natural: colors.orange['100'],
-    light: colors.orange['400'],
-    DEFAULT: '#FF7800',
-    dark: colors.orange['600'],
+    // 青
+    natural: colors.blue['100'],
+    light: colors.blue['400'],
+    DEFAULT: colors.blue['500'],
+    dark: colors.blue['600'],
   },
   minutes: {
     // 緑
@@ -91,11 +92,11 @@ const extendColors = {
     dark: colors.green['600'],
   },
   schedule: {
-    // 青
-    natural: colors.blue['100'],
-    light: colors.blue['400'],
-    DEFAULT: colors.blue['500'],
-    dark: colors.blue['600'],
+    // オレンジ
+    natural: colors.orange['100'],
+    light: colors.orange['400'],
+    DEFAULT: '#FF7800',
+    dark: colors.orange['600'],
   },
   chat: {
     // 紫

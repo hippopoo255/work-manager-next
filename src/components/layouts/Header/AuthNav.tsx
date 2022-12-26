@@ -1,4 +1,3 @@
-import clsx from 'clsx'
 import Link from 'next/link'
 import React from 'react'
 import AuthAvatar from './AuthAvatar'
@@ -9,7 +8,7 @@ export const AuthNav = () => {
   return (
     <>
       <li className="p-global-nav__item">
-        <Link href={{ pathname: '/help' }} className={clsx('c-header-link')}>
+        <Link href={{ pathname: '/help' }} className={'c-header-link'}>
           ヘルプ
         </Link>
       </li>

@@ -3,12 +3,32 @@
 @use "../../Foundation/mixin/gradient" as *;
 
 .loader-icon-style {
-  @apply absolute block top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-primary font-bold;
+  @apply origin-center
+    w-6 h-6 rounded-full border-2 border-t-transparent border-r-primary border-b-primary border-l-primary;
 
-  animation: spin 800ms linear infinite;
+  // perspective: 1000;
+  // transform-style: flat;
+  animation: spin 800ms ease infinite;
 
-  @include colorModifierByPaletteName(("text"));
-  @include sizeModifier;
+  // backface-visibility: hidden;
+
+  @include colorModifierByPaletteName(("border-r", "border-b", "border-l"));
+
+  // @include sizeModifier;
+}
+
+// ====================
+// リップル
+// ====================
+.effect-style {
+  @apply block absolute pointer-events-none bg-white;
+
+  will-change: transform;
+  top: -140px;
+  left: -140px;
+  width: 280px;
+  height: 280px;
+  border-radius: 140px;
 }
 
 .c-button {
@@ -23,23 +43,19 @@
     fill: currentcolor;
   }
 
-  // ====================
-  // リップル
-  // ====================
   .c-button__effect {
-    @apply block absolute pointer-events-none bg-white;
-
-    top: -140px;
-    left: -140px;
-    width: 280px;
-    height: 280px;
-    border-radius: 140px;
+    @extend .effect-style;
   }
 
   // ====================
   // ローダー
   // ====================
   .c-button__loader {
+    @apply flex justify-center items-center
+      absolute top-0 left-0 w-full h-full;
+  }
+
+  .c-button__loader-icon {
     @extend .loader-icon-style;
   }
 
@@ -47,22 +63,20 @@
   // Modifier
   // ====================
   @include onHover {
-    @apply bg-opacity-80;
+    @apply opacity-70;
   }
 
   @include colorModifierByPaletteName(("bg", "border"), (
-    "usingText", "disabledNone", "accessHover"
+    "usingText",
+    "disabledNone"
   ));
-
-  &.--disabled {
-    @apply text-disabled-dark;
-  }
-
   @include roundFullModifier;
   @include sizeModifier;
 
   @include loadingModifier {
-    @apply bg-disabled-light border-disabled-light text-disabled pointer-events-none;
+    @apply bg-disabled border-disabled text-disabled-dark pointer-events-none;
+
+    background-image: none !important;
   }
 
   &.--signup {

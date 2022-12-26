@@ -1,0 +1,25 @@
+@use "../../Foundation/mixin/accessibility" as *;
+@use "../../Foundation/mixin/modifier" as *;
+@use "../../Foundation/mixin/gradient" as *;
+@use "../../Foundation//variable" as *;
+
+.u-link {
+  @apply text-fc-link text-sm duration-basis;
+
+  &.--fc-secondary {
+    @apply text-fc-secondary;
+  }
+
+  @include onHover {
+    @apply underline;
+  }
+
+  @include colorModifierByPaletteName(("text"));
+}
+
+@each $p in $semanticPalette {
+  .u-text-gradient-#{$p} {
+    @apply inline-block;
+    @include gradient($p, "text");
+  }
+}

@@ -1,4 +1,5 @@
-import clsx from 'clsx'
+'use client'
+
 import React from 'react'
 import {
   Controller,
@@ -23,10 +24,9 @@ const Input = React.forwardRef<HTMLInputElement, Props>(
       <>
         <label
           htmlFor={props.name}
-          className={clsx('p-text-field', {
-            '--error': errorMessage !== undefined,
-            '--visible': (props.value ?? '') !== '',
-          })}
+          className={`p-text-field${
+            errorMessage !== undefined ? ' --error' : ''
+          }${(props.value ?? '') !== '' ? ' --visible' : ''}`}
         >
           <span className="p-text-field__label">{props.label}</span>
           <input

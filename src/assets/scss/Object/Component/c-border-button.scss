@@ -1,10 +1,10 @@
 @use "../../Foundation/variable" as *;
 @use "../../Foundation/mixin/modifier" as *;
 @use "../../Foundation/mixin/accessibility" as *;
-@use "c-button" as *;
+@use "c-button";
 
 .c-border-button {
-  @apply text-primary bg-white border border-primary py-1.5 px-5 rounded shadow-md
+  @apply text-primary bg-bc-sheet border border-primary py-1.5 px-5 rounded shadow-md
     relative duration-basis overflow-hidden;
 
   min-width: 8rem;
@@ -15,44 +15,25 @@
     fill: currentcolor;
   }
 
-  // ====================
-  // リップル
-  // ====================
   .c-border-button__effect {
-    @apply block absolute pointer-events-none bg-primary;
-
-    top: -140px;
-    left: -140px;
-    width: 280px;
-    height: 280px;
-    border-radius: 140px;
-  }
-
-  @each $p in $semanticPalette {
-    @each $t in $theme {
-      &.--#{$p},
-      &.--#{$p}-#{$t} {
-        .c-border-button__effect {
-          @apply bg-#{$p};
-        }
-      }
-    }
+    @extend .effect-style;
   }
 
   // ====================
   // ローダー
   // ====================
   .c-border-button__loader {
+    @apply flex justify-center items-center
+      absolute top-0 left-0 w-full h-full;
+  }
+
+  .c-border-button__loader-icon {
     @extend .loader-icon-style;
   }
 
   // ====================
   // Modifier
   // ====================
-  @include onHover {
-    @apply bg-opacity-80;
-  }
-
   @include colorModifierByPaletteName(("text", "border"), (
     "disabledNone"
   ));
@@ -60,6 +41,15 @@
   @include sizeModifier;
 
   @include loadingModifier {
-    @apply bg-disabled-light border-disabled-light text-disabled pointer-events-none;
+    @apply bg-disabled border-disabled text-disabled-dark pointer-events-none;
+
+    background-image: none !important;
+  }
+
+  @include onHover {
+    @apply text-white bg-primary border-primary;
+    @include colorModifierByPaletteName(("bg", "border"), (
+      "usingText"
+    ));
   }
 }

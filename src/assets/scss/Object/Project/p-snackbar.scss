@@ -1,6 +1,6 @@
 @use "../../Foundation/mixin/modifier" as *;
 
 .p-snackbar {
-  @apply block bg-bc-basis border-l-success border-l-4 text-success rounded p-4 shadow-lg z-40 opacity-0 duration-basis;
+  @apply block bg-accent border-l-success border-l-4 text-success rounded p-4 shadow-lg z-40 opacity-0 duration-basis;
   @include statusStyle;
 }

@@ -3,6 +3,10 @@
 @use "sass:list";
 @use "sass:math";
 
+.disabled-style {
+  @apply bg-disabled border-disabled text-disabled-dark;
+}
+
 @mixin colorModifierByPaletteName(
   $props: (
     "bg",
@@ -16,23 +20,21 @@
     &.--#{$p} {
       // bg, text, border...
       @each $prop in $props {
-        @apply #{$prop}-#{$p};
+        @if $p == "disabled" {
+          @apply bg-disabled border-disabled text-disabled-dark;
 
-        @if $p == "disabled" and list.index($options, "disabledNone") {
-          @apply pointer-events-none;
-        }
+          background-image: none !important;
 
-        @if list.index($options, "accessHover") {
-          @include onHover {
-            @apply opacity-80;
+          @if list.index($options, "disabledNone") {
+            @apply pointer-events-none;
           }
+        } @else {
+          @apply #{$prop}-#{$p};
         }
 
         // natural, light, dark...
         @each $t in $theme {
           &-#{$t} {
-            @apply #{$prop}-#{$p}-#{$t};
-
             @if $t == natural and list.index($options, "usingText") {
               @apply text-#{$p}-dark;
             }
@@ -41,14 +43,16 @@
               @apply text-black;
             }
 
-            @if $p == "disabled" and list.index($options, "disabledNone") {
-              @apply pointer-events-none;
-            }
+            @if $p == "disabled" {
+              @apply bg-disabled border-disabled text-disabled-dark;
 
-            @if list.index($options, "accessHover") {
-              @include onHover {
-                @apply opacity-80;
+              background-image: none !important;
+
+              @if list.index($options, "disabledNone") {
+                @apply pointer-events-none;
               }
+            } @else {
+              @apply #{$prop}-#{$p}-#{$t};
             }
           }
         }

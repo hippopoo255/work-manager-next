@@ -8,10 +8,10 @@ const Suggestion = () => {
     <>
       <div className="grid place-content-between">
         {/* サポート...パスワードをお忘れですか？ 新規登録がお済みでない方はこちら */}
-        <Link href="/password-forgotten" className="u-text-link mb-4">
+        <Link href="/password-forgotten" className="u-link mb-4">
           {'パスワードをお忘れの方'}
         </Link>
-        <Link href="/signup" className="u-text-link --secondary">
+        <Link href="/signup" className="u-link --secondary">
           {'アカウント登録がまだの方'}
         </Link>
       </div>

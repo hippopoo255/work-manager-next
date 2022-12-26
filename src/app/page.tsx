@@ -1,7 +1,5 @@
-'use client'
-
-import React from 'react'
 import { BorderButton, Button } from '~/components/elements/Button'
+import { ThemeToggle } from '~/components/elements/Toggle'
 import { Tooltip } from '~/components/elements/Tooltip'
 
 const Home = () => {
@@ -26,7 +24,11 @@ const Home = () => {
           <Button text="サインイン" className={'--primary-natural'} />
           <Button text="サインイン" className={'--primary-light'} />
           <Button text="サインイン" />
-          <Button text="サインイン" className={'--primary-dark'} />
+          <Button
+            text="サインイン"
+            className={'--primary-dark --signin'}
+            loading={true}
+          />
           <div>Secondary</div>
           <Button text="サインイン" className={'--secondary-natural'} />
           <Button text="サインイン" className={'--secondary-light'} />
@@ -74,13 +76,14 @@ const Home = () => {
           <Button text="サインイン" className={'--chat-dark'} />
           <div>Size</div>
           <Button text="エックスエス" className={'--chat-dark --xs'} />
-          <Button text="エスエム" className={'--chat-dark --sm'} />
+          <Button text="エスエム" className={'--chat-dark'} size="sm" />
           <Button text="デフォルト" className={'--chat-dark'} />
-          <Button text="ラージ" className={'--chat-dark --lg'} />
-          <Button text="エックスラージ" className={'--chat-dark --xl'} />
+          <Button text="ラージ" className={'--chat-dark'} size="lg" loading />
+          <Button text="エックスラージ" className={'--chat-dark'} size={'xl'} />
           <Button
             text="エックスラージ"
-            className={'--chat-dark --xl'}
+            className={'--chat-dark'}
+            size={'xl'}
             loading
           />
         </div>
@@ -105,7 +108,6 @@ const Home = () => {
           <BorderButton text="サインイン" className={'--primary-light'} />
           <BorderButton text="サインイン" />
           <BorderButton text="サインイン" className={'--primary-dark'} />
-          {/* <BorderButton text="サインイン" className={'--primary-dark --round'} /> */}
           <div>Secondary</div>
           <BorderButton text="サインイン" className={'--secondary-natural'} />
           <BorderButton text="サインイン" className={'--secondary-light'} />
@@ -152,6 +154,28 @@ const Home = () => {
           <BorderButton text="サインイン" className={'--chat'} />
           <BorderButton text="サインイン" className={'--chat-dark'} />
           <BorderButton text="サインイン" className={'--chat'} loading />
+        </div>
+      </div>
+      <div className="p-card mx-4 mt-4">
+        <div className="flex align-center flex-wrap gap-2">
+          <p className="u-text-gradient-primary text-2xl font-bold">Primary</p>
+          <p className="u-text-gradient-secondary text-2xl font-bold">
+            Secondary
+          </p>
+          <p className="u-text-gradient-danger text-2xl font-bold">Danger</p>
+          <p className="u-text-gradient-success text-2xl font-bold">Success</p>
+          <p className="u-text-gradient-warning text-2xl font-bold">Warning</p>
+          <p className="u-text-gradient-minutes text-2xl font-bold">Minutes</p>
+          <p className="u-text-gradient-task text-2xl font-bold">Task</p>
+          <p className="u-text-gradient-schedule text-2xl font-bold">
+            Schedule
+          </p>
+          <p className="u-text-gradient-chat text-2xl font-bold">Chat</p>
+        </div>
+      </div>
+      <div className="p-card mx-4 mt-4">
+        <div className="flex">
+          <ThemeToggle />
         </div>
       </div>
     </div>

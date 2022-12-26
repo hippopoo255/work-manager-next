@@ -1,3 +1,5 @@
+'use client'
+
 import { useReducer } from 'react'
 import { StatusContext } from './StatusContext'
 import { statusReducer } from './reducer'

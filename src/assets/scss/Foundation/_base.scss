@@ -3,6 +3,7 @@
 :root {
   font-size: $fontSizeBasis;
   scroll-behavior: smooth;
+  text-size-adjust: 100%;
 }
 
 html,
@@ -18,6 +19,11 @@ a {
   padding: 0.25rem;
   color: inherit;
   text-decoration: none;
+}
+
+input,
+textarea {
+  @apply bg-transparent;
 }
 
 @media (prefers-reduced-motion: no-preference) {

@@ -1,9 +1,11 @@
 import { AuthState } from './auth/types'
 import { StatusState } from './status/types'
+import { ThemeState } from './theme/types'
 
 export interface GlobalState {
   auth: AuthState
   status: StatusState
+  theme: ThemeState
 }
 
 const initialState: GlobalState = {
@@ -22,6 +24,9 @@ const initialState: GlobalState = {
   status: {
     message: undefined,
     statusCode: undefined,
+  },
+  theme: {
+    mode: 'light',
   },
 }
 
