@@ -1,0 +1,7 @@
+@use "../../Foundation/mixin/modifier" as *;
+
+.c-loader-icon {
+  @apply origin-center animate-spin delay-100 w-6 h-6 rounded-full
+    border-2 border-t-transparent border-r-primary border-b-primary border-l-primary;
+  @include colorModifierByPaletteName(("border-r", "border-b", "border-l"));
+}

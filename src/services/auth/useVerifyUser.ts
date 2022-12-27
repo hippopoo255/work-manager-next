@@ -28,10 +28,10 @@ const useVerifyUser = () => {
     resolver: yupResolver(schema),
   })
 
-  const onSubmit = useCallback(async (data: AccountVerificationFormType) => {
+  const onSubmit = useCallback(async (inputs: AccountVerificationFormType) => {
     setLoading(true)
     await authOperation
-      .verifyUser(data)
+      .verifyUser(inputs)
       .then(() => {
         updateStatus({
           message: '検証に成功しました',
@@ -42,6 +42,7 @@ const useVerifyUser = () => {
         router.push('/signin')
       })
       .catch((err) => {
+        setLoading(false)
         updateStatus({
           message: err.message,
           statusCode: 400,

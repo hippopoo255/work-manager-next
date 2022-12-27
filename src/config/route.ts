@@ -5,3 +5,6 @@ export const requireGuestPaths: string[] = [
   'forgot_password',
 ]
 export const requiredAuthenticatedPaths: RegExp[] = [/^\/mypage(\/.*)?$/]
+export const requiredUnOrganizedPaths: RegExp[] = [
+  /^\/mypage\/organization\/register$/,
+]

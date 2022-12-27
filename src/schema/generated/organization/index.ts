@@ -35,6 +35,6 @@ export type Methods = {
       'Access-Control-Allow-Origin': string
     }
 
-    reqBody: Types.OrganizationForm
+    reqBody: Types.RegisterOrganizationForm
   }
 }

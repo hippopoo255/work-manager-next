@@ -420,7 +420,7 @@ export type MemberForm = {
 }
 
 /** 組織情報登録時のフォーム */
-export type OrganizationForm = {
+export type RegisterOrganizationForm = {
   name: string
   name_kana: string
   postal_code: string

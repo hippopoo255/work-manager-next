@@ -1,12 +1,20 @@
 import { NextURL } from 'next/dist/server/web/next-url'
 import { NextRequest, NextResponse } from 'next/server'
-import { refreshCognitoTokenThenSetCookie } from './refreshToken'
-import { requireGuestPaths } from '~/config'
-import { verifyCognitoToken } from '~/libs/cognito/handleCognitoToken'
-import { CognitoToken } from '~/libs/cognito/types'
+import { setRefreshedCognitoTokenToCookie } from './refreshToken'
+import {
+  requireGuestPaths,
+  requiredUnOrganizedPaths,
+  API_STAGE_URL,
+} from '~/config'
+import {
+  verifyCognitoToken,
+  refreshCognitoToken,
+} from '~/libs/cognito/handleCognitoToken'
+import { CognitoToken, CognitoRefreshTokenResult } from '~/libs/cognito/types'
 import {
   getCognitoTokenFromCookie,
   isRequiredAuthenticatedPaths,
+  isRequiredUnOrganizedPaths,
 } from '~/utils'
 
 const handleRouteWithoutToken = (url: NextURL, signin: string) => {
@@ -23,7 +31,9 @@ export async function authMiddleware(
   const url: NextURL = request.nextUrl.clone()
   const signin = `${url.origin}/signin`
   const mypage = `${url.origin}/mypage`
-  const cognitoToken: CognitoToken | null = getCognitoTokenFromCookie(request)
+  const orgRegister = `${url.origin}/mypage/organization/register`
+
+  let cognitoToken: CognitoToken | null = getCognitoTokenFromCookie(request)
   // Cookieからtokenが取得できない
   if (!cognitoToken) {
     // 認証が必須の画面 -> signinへリダイレクト
@@ -41,22 +51,47 @@ export async function authMiddleware(
       return false
     })
 
-  if (tokenVerification && requireGuestPaths.includes(url.pathname)) {
-    // 未認証が必須の画面 -> mypageへリダイレクト
-    return NextResponse.redirect(mypage)
-  } else if (tokenVerification) {
-    return NextResponse.next()
-  } else {
-    let response: NextResponse = NextResponse.next()
-    response = await refreshCognitoTokenThenSetCookie(
-      cognitoToken.refreshToken,
+  let response: NextResponse = NextResponse.next()
+
+  if (!tokenVerification) {
+    const newTokens: CognitoRefreshTokenResult | null =
+      await refreshCognitoToken(cognitoToken.refreshToken).catch((error) => {
+        console.error('failed to the refresh token', error)
+        return null
+      })
+
+    // トークンリフレッシュに失敗したら、サインインからやり直し
+    if (newTokens === null) {
+      return NextResponse.redirect(signin)
+    }
+
+    response = await setRefreshedCognitoTokenToCookie(
+      newTokens,
       request,
       response
-    ).catch((error) => {
-      console.error('failed to the refresh token', error)
-      // idToken検証がエラーだった場合ログイン画面へ
-      return NextResponse.redirect(signin)
-    })
+    )
+
+    cognitoToken = {
+      ...cognitoToken,
+      idToken: newTokens.id_token,
+      accessToken: newTokens.access_token,
+    }
+  }
+
+  if (requireGuestPaths.includes(url.pathname)) {
+    // 未認証が必須の画面 -> mypageへリダイレクト
+    return NextResponse.redirect(mypage)
+  }
+
+  const user = await fetch(`${API_STAGE_URL}/user/current`, {
+    headers: { Authorization: cognitoToken.accessToken },
+  }).then((res) => res.json())
+
+  if (!(isRequiredUnOrganizedPaths(url.pathname) || user.organization_id)) {
+    return NextResponse.redirect(orgRegister)
+  } else if (isRequiredUnOrganizedPaths(url.pathname) && user.organization_id) {
+    return NextResponse.redirect(mypage)
+  } else {
     return response
   }
 }

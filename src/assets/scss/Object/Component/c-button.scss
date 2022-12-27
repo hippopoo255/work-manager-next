@@ -2,28 +2,12 @@
 @use "../../Foundation/mixin/modifier" as *;
 @use "../../Foundation/mixin/gradient" as *;
 
-.loader-icon-style {
-  @apply origin-center
-    w-6 h-6 rounded-full border-2 border-t-transparent border-r-primary border-b-primary border-l-primary;
-
-  // perspective: 1000;
-  // transform-style: flat;
-  animation: spin 800ms ease infinite;
-
-  // backface-visibility: hidden;
-
-  @include colorModifierByPaletteName(("border-r", "border-b", "border-l"));
-
-  // @include sizeModifier;
-}
-
 // ====================
 // リップル
 // ====================
 .effect-style {
   @apply block absolute pointer-events-none bg-white;
 
-  will-change: transform;
   top: -140px;
   left: -140px;
   width: 280px;
@@ -52,11 +36,11 @@
   // ====================
   .c-button__loader {
     @apply flex justify-center items-center
-      absolute top-0 left-0 w-full h-full;
-  }
+      absolute top-0 left-0 w-full h-full pointer-events-none opacity-0;
 
-  .c-button__loader-icon {
-    @extend .loader-icon-style;
+    &.--active {
+      @apply opacity-100;
+    }
   }
 
   // ====================
@@ -64,6 +48,8 @@
   // ====================
   @include onHover {
     @apply opacity-70;
+
+    will-change: transform, animation;
   }
 
   @include colorModifierByPaletteName(("bg", "border"), (
@@ -95,5 +81,9 @@
     @include onHover {
       @apply opacity-80;
     }
+  }
+
+  &.--flat {
+    @apply shadow-none;
   }
 }

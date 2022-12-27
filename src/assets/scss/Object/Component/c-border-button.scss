@@ -17,6 +17,18 @@
 
   .c-border-button__effect {
     @extend .effect-style;
+    @apply bg-primary;
+  }
+
+  @each $p in $semanticPalette {
+    @each $t in $theme {
+      &.--#{$p},
+      &.--#{$p}-#{$t} {
+        .c-border-button__effect {
+          @apply bg-#{$p};
+        }
+      }
+    }
   }
 
   // ====================
@@ -24,11 +36,11 @@
   // ====================
   .c-border-button__loader {
     @apply flex justify-center items-center
-      absolute top-0 left-0 w-full h-full;
-  }
+      absolute top-0 left-0 w-full h-full pointer-events-none opacity-0;
 
-  .c-border-button__loader-icon {
-    @extend .loader-icon-style;
+    &.--active {
+      @apply opacity-100;
+    }
   }
 
   // ====================
@@ -47,9 +59,12 @@
   }
 
   @include onHover {
-    @apply text-white bg-primary border-primary;
-    @include colorModifierByPaletteName(("bg", "border"), (
-      "usingText"
-    ));
+    @apply opacity-70;
+
+    will-change: transform, animation;
+  }
+
+  &.--flat {
+    @apply shadow-none;
   }
 }
