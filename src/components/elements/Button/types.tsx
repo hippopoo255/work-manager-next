@@ -1,6 +1,8 @@
 export type ButtonProps = {
   text: string
   size?: 'xs' | 'sm' | 'lg' | 'xl'
+  color?: string
+  flat?: boolean
   loading?: boolean
   onClick?: React.MouseEventHandler<HTMLButtonElement> | undefined
   className?: string

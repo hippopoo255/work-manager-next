@@ -2,22 +2,11 @@
 @use "../../Foundation/mixin/modifier" as *;
 @use "../../Foundation/mixin/gradient" as *;
 
-.loader-icon-style {
-  @apply origin-center delay-100 w-6 h-6 rounded-full
-    border-2 border-t-transparent border-r-primary border-b-primary border-l-primary;
-
-  animation: spin 800ms ease 100ms infinite;
-
-  @include colorModifierByPaletteName(("border-r", "border-b", "border-l"));
-
-  // @include sizeModifier;
-}
-
 // ====================
 // リップル
 // ====================
 .effect-style {
-  @apply block absolute pointer-events-none bg-white delay-100;
+  @apply block absolute pointer-events-none bg-white;
 
   top: -140px;
   left: -140px;
@@ -39,14 +28,7 @@
   }
 
   .c-button__effect {
-    // @extend .effect-style;
-    @apply block absolute pointer-events-none bg-white delay-100;
-
-    top: -140px;
-    left: -140px;
-    width: 280px;
-    height: 280px;
-    border-radius: 140px;
+    @extend .effect-style;
   }
 
   // ====================
@@ -59,16 +41,6 @@
     &.--active {
       @apply opacity-100;
     }
-  }
-
-  .c-button__loader-icon {
-    // @extend .loader-icon-style;
-    @apply origin-center delay-100 w-6 h-6 rounded-full
-      border-2 border-t-transparent border-r-primary border-b-primary border-l-primary;
-
-    animation: spin 800ms ease 100ms infinite;
-
-    @include colorModifierByPaletteName(("border-r", "border-b", "border-l"));
   }
 
   // ====================
@@ -109,5 +81,9 @@
     @include onHover {
       @apply opacity-80;
     }
+  }
+
+  &.--flat {
+    @apply shadow-none;
   }
 }

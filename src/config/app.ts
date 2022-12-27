@@ -17,6 +17,7 @@ export const ADMIN_URL =
 export const SITE_TITLE: string =
   process.env.NEXT_PUBLIC_SITE_NAME || 'Next App'
 export const BIRTH_DAY = '2021-11-30'
+export const ZIP_ADDRESS_API_URL = 'https://api.zipaddress.net'
 
 export const headerHeight: number = 64
 export const footerHeight: number = 100

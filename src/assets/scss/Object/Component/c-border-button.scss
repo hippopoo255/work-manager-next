@@ -16,14 +16,19 @@
   }
 
   .c-border-button__effect {
-    // @extend .effect-style;
-    @apply block absolute pointer-events-none bg-white delay-100;
+    @extend .effect-style;
+    @apply bg-primary;
+  }
 
-    top: -140px;
-    left: -140px;
-    width: 280px;
-    height: 280px;
-    border-radius: 140px;
+  @each $p in $semanticPalette {
+    @each $t in $theme {
+      &.--#{$p},
+      &.--#{$p}-#{$t} {
+        .c-border-button__effect {
+          @apply bg-#{$p};
+        }
+      }
+    }
   }
 
   // ====================
@@ -36,15 +41,6 @@
     &.--active {
       @apply opacity-100;
     }
-  }
-
-  .c-border-button__loader-icon {
-    @apply origin-center delay-100 w-6 h-6 rounded-full
-      border-2 border-t-transparent border-r-primary border-b-primary border-l-primary;
-
-    animation: spin 800ms ease 100ms infinite;
-
-    @include colorModifierByPaletteName(("border-r", "border-b", "border-l"));
   }
 
   // ====================
@@ -63,11 +59,12 @@
   }
 
   @include onHover {
-    @apply text-white bg-primary border-primary;
-    @include colorModifierByPaletteName(("bg", "border"), (
-      "usingText"
-    ));
+    @apply opacity-70;
 
     will-change: transform, animation;
+  }
+
+  &.--flat {
+    @apply shadow-none;
   }
 }

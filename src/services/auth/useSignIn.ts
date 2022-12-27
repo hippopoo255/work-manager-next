@@ -12,7 +12,7 @@ import { authOperation } from '~/stores/auth'
 const useSignIn = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const { dispatch } = useAuthContext()
-  const { update: updateStatus, clear } = useStatus()
+  const { update: updateStatus } = useStatus()
   const router = useRouter()
   const methods = useForm<SignInFormType>({
     mode: 'onBlur',
@@ -24,11 +24,10 @@ const useSignIn = () => {
     resolver: yupResolver(schema),
   })
 
-  const onSubmit = useCallback(async (data: SignInFormType) => {
+  const onSubmit = useCallback(async (inputs: SignInFormType) => {
     setLoading(true)
-    return false
     await authOperation
-      .signIn(data, dispatch)
+      .signIn(inputs, dispatch)
       .then(() => {
         updateStatus({
           message: 'ログインに成功しました',
@@ -44,6 +43,7 @@ const useSignIn = () => {
           statusCode: 400,
           category: 'error',
         })
+        setLoading(false)
       })
   }, [])
 

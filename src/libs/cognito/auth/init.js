@@ -1,5 +1,5 @@
 import { Amplify } from 'aws-amplify'
-import { AWS_COGNITO_CONFIG } from '~/config/auth'
+import { AWS_COGNITO_CONFIG, AWS_ADMIN_COGNITO_CONFIG } from '~/config/auth'
 
 export const amplifyConfigure = () => {
   Amplify.configure({

@@ -25,10 +25,10 @@ const useSendPasswordForgotten = () => {
     resolver: yupResolver(schema),
   })
 
-  const onSubmit = useCallback(async (data: FormType) => {
+  const onSubmit = useCallback(async (inputs: FormType) => {
     setLoading(true)
     await cognitoUser
-      .sendPasswordForgotten(data)
+      .sendPasswordForgotten(inputs)
       .then((encodedUserName) => {
         updateStatus({
           message: '検証コードを送信しました。',
@@ -39,6 +39,7 @@ const useSendPasswordForgotten = () => {
         router.push(`/password-reset?code=${encodedUserName}`)
       })
       .catch((err) => {
+        setLoading(false)
         updateStatus({
           message: err.message,
           statusCode: 400,

@@ -5,7 +5,7 @@ import { amplifyAdminConfigure, amplifyConfigure } from './init'
 
 import { SignUpInputs } from '~/schema/generated/@types'
 
-const signup = async ({
+const signUp = async ({
   email,
   user_id,
   password,
@@ -38,12 +38,12 @@ const signup = async ({
   } catch (error) {
     amplifyConfigure()
     handleError<SignUpInputs>(error, 'admin sign up failed')
-    return ''
+    return null
   }
 }
 
 const cognitoAdmin = {
-  signup,
+  signUp,
 }
 
 export default cognitoAdmin

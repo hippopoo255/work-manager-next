@@ -25,6 +25,8 @@ interface CurrentUser {
 export type AuthAction = SignIn | SignOut | CurrentUser
 
 export interface AuthState {
-  user: User
+  user: User & {
+    jwt?: string
+  }
   isSignedIn: boolean
 }

@@ -22,10 +22,10 @@ const useSignIn = () => {
     resolver: yupResolver(schema),
   })
 
-  const onSubmit = useCallback(async (data: SignUpFormType) => {
+  const onSubmit = useCallback(async (inputs: SignUpFormType) => {
     setLoading(true)
     await authOperation
-      .signUp(data)
+      .signUp(inputs)
       .then((encodedUserName) => {
         updateStatus({
           message: '検証コードを送信しました。',
@@ -36,6 +36,7 @@ const useSignIn = () => {
         router.push(`/account-verification?code=${encodedUserName}`)
       })
       .catch((err) => {
+        setLoading(false)
         updateStatus({
           message: err.message,
           statusCode: 400,

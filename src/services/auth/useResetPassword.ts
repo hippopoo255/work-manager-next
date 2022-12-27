@@ -28,10 +28,10 @@ const useResetPassword = () => {
     resolver: yupResolver(schema),
   })
 
-  const onSubmit = useCallback(async (data: ResetPasswordFormType) => {
+  const onSubmit = useCallback(async (inputs: ResetPasswordFormType) => {
     setLoading(true)
     await cognitoUser
-      .resetPassword(data)
+      .resetPassword(inputs)
       .then(() => {
         updateStatus({
           message:
@@ -43,6 +43,7 @@ const useResetPassword = () => {
         router.push('/signin')
       })
       .catch((err) => {
+        setLoading(false)
         updateStatus({
           message: err.message,
           statusCode: 400,

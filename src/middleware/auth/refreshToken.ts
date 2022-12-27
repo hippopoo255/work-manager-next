@@ -3,15 +3,11 @@ import { refreshCognitoToken } from '~/libs/cognito/handleCognitoToken'
 import { TokenType, CognitoRefreshTokenResult } from '~/libs/cognito/types'
 import { setTokenIntoCookie } from '~/utils'
 
-export const refreshCognitoTokenThenSetCookie = async (
-  refreshToken: string,
+export const setRefreshedCognitoTokenToCookie = async (
+  newTokens: CognitoRefreshTokenResult,
   request: NextRequest,
   response: NextResponse
 ): Promise<NextResponse> => {
-  // RefreshTokenでIdToken/AccessTokenを再生成
-  const newTokens: CognitoRefreshTokenResult = await refreshCognitoToken(
-    refreshToken
-  )
   // IdToken/AccessTokenの有効期限更新成功時次の処理へパス
   // 再生成したIdToken/AccessTokenをCookieにセット
   response = setTokenIntoCookie(

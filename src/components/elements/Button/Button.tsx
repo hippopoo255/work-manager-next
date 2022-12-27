@@ -1,17 +1,10 @@
 'use client'
 
 import clsx from 'clsx'
-import { useRef, useMemo } from 'react'
+import { useRef } from 'react'
 import { ButtonProps as Props } from './types'
+import { LoaderIcon } from '~/components/elements/Icon'
 import { useRippleEffect } from '~/services/parts/ripple'
-
-const sizes = {
-  xs: '0.75rem',
-  sm: '0.875rem',
-  default: '1rem',
-  lg: '1.125rem',
-  xl: '1.5rem',
-}
 
 const Button = (props: Props) => {
   const ref = useRef({} as HTMLButtonElement)
@@ -19,7 +12,6 @@ const Button = (props: Props) => {
     ref,
     effectDuration: props.effectDuration ?? 1000,
   })
-  const iconSize = useMemo(() => sizes[props.size ?? 'default'], [props.size])
 
   return (
     <button
@@ -27,6 +19,8 @@ const Button = (props: Props) => {
       className={clsx(`c-button ${props.className ?? ''}`, {
         '--loading': props.loading ?? false,
         [`--${props.size}`]: props.size ?? false,
+        [`--${props.color}`]: props.color ?? false,
+        [`--flat`]: props.flat ?? false,
       })}
       onClick={props.onClick}
       onMouseDown={handleMouseDown}
@@ -40,11 +34,12 @@ const Button = (props: Props) => {
           '--active': props.loading ?? false,
         })}
       >
-        <span
+        {/* <span
           className={clsx(`c-button__loader-icon ${props.className}`, {
             [`--${props.size}`]: props.size ?? false,
           })}
-        ></span>
+        ></span> */}
+        <LoaderIcon size={props.size} className={props.className} />
       </span>
     </button>
   )

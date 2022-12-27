@@ -22,8 +22,11 @@ a {
 }
 
 input,
-textarea {
+textarea,
+select {
   @apply bg-transparent;
+
+  height: 2.25rem;
 }
 
 @media (prefers-reduced-motion: no-preference) {

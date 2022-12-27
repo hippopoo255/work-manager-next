@@ -1,0 +1,46 @@
+.p-select-field {
+  @apply block relative border-b-fc-hint;
+
+  .p-select-field__label {
+    @apply absolute pointer-events-none top-1/2 -translate-y-1/2 text-fc-hint transition-all duration-basis;
+
+    .p-select-field & {
+      @apply top-2 -translate-y-full text-primary text-xs;
+    }
+  }
+
+  .p-select-field__body {
+    @apply block w-full border-b-inherit border-b rounded-none py-2;
+
+    &.--init {
+      @apply text-fc-hint;
+    }
+  }
+
+  &:focus-within,
+  &.--visible {
+    .p-select-field__label {
+      @apply top-2 -translate-y-full text-xs;
+    }
+  }
+
+  &:focus-within {
+    .p-select-field__body {
+      @apply border-b-primary outline-none;
+    }
+
+    .p-select-field__label {
+      @apply text-primary;
+    }
+  }
+
+  &.--error {
+    .p-select-field__body {
+      @apply border-b-danger;
+    }
+
+    .p-select-field__label {
+      @apply text-danger;
+    }
+  }
+}
