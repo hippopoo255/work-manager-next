@@ -84,7 +84,10 @@ export async function authMiddleware(
   }
 
   const user = await fetch(`${API_STAGE_URL}/user/current`, {
-    headers: { Authorization: cognitoToken.accessToken },
+    headers: {
+      Authorization: cognitoToken.accessToken,
+      origin: url.origin,
+    },
   }).then((res) => res.json())
 
   if (!(isRequiredUnOrganizedPaths(url.pathname) || user.organization_id)) {
