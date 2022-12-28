@@ -1,9 +1,9 @@
-'use client'
-
+import type { NextPageWithLayout } from 'next'
 import React from 'react'
 import { AccountVerificationForm } from '~/components/features/auth'
+import Layout from '~/components/layouts/Default'
 
-const AccountVerification = () => {
+const AccountVerification: NextPageWithLayout = () => {
   return (
     <div className="u-position-center h-full px-4">
       <AccountVerificationForm />
@@ -12,3 +12,5 @@ const AccountVerification = () => {
 }
 
 export default AccountVerification
+
+AccountVerification.getLayout = (page) => <Layout>{page}</Layout>

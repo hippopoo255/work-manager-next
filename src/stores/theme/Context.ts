@@ -1,5 +1,3 @@
-'use client'
-
 import { createContext } from 'react'
 import { ThemeAction, ThemeState } from './types'
 import initialState from '~/stores/initialState'

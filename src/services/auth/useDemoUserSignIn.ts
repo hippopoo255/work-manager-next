@@ -1,6 +1,4 @@
-'use client'
-
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { useAuthContext } from '~/services/auth'
 import { useStatus } from '~/services/status'
@@ -16,7 +14,6 @@ const useDemoUserSignIn = () => {
     await authOperation
       .testSignIn(dispatch)
       .then(() => {
-        router.prefetch('/mypage')
         router.push('/mypage')
       })
       .catch((err) => {

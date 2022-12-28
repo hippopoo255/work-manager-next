@@ -1,4 +1,4 @@
-// import router from 'next/navigation'
+// import router from 'next/router'
 import { Path } from 'react-hook-form'
 import { CognitoErrorMessageType } from '../types'
 import { amplifyConfigure } from './init'

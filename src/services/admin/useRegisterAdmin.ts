@@ -1,5 +1,3 @@
-'use client'
-
 import { cognitoAdmin } from '~/libs/cognito/auth'
 import { SignUpInputs } from '~/schema/generated/@types'
 import { useStatus } from '~/services/status'

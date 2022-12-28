@@ -1,8 +1,10 @@
+import type { NextPageWithLayout } from 'next'
 import { BorderButton, Button } from '~/components/elements/Button'
 import { ThemeToggle } from '~/components/elements/Toggle'
 import { Tooltip } from '~/components/elements/Tooltip'
+import Layout from '~/components/layouts/Default'
 
-const Home = () => {
+const Home: NextPageWithLayout = () => {
   return (
     <div className="p-page">
       <div className="p-card mx-4">
@@ -183,3 +185,5 @@ const Home = () => {
 }
 
 export default Home
+
+Home.getLayout = (page) => <Layout>{page}</Layout>

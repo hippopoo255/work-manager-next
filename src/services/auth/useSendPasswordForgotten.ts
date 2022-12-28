@@ -1,7 +1,5 @@
-'use client'
-
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/router'
 import { useCallback, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { cognitoUser } from '~/libs/cognito/auth'
@@ -35,7 +33,6 @@ const useSendPasswordForgotten = () => {
           statusCode: 200,
           category: 'success',
         })
-        router.prefetch('/password-reset')
         router.push(`/password-reset?code=${encodedUserName}`)
       })
       .catch((err) => {

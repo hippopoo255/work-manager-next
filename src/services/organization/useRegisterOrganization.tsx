@@ -1,7 +1,5 @@
-'use client'
-
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { User, SignUpInputs } from '~/schema/generated/@types'

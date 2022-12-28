@@ -1,5 +1,3 @@
-'use client'
-
 import { useCallback, RefObject, useState } from 'react'
 import * as Type from './types'
 type Props = {

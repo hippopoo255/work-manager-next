@@ -1,6 +1,4 @@
-'use client'
-
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/router'
 import { useCallback, useState } from 'react'
 import { useAuthContext } from './useAuthContext'
 import { authOperation } from '~/stores/auth'
@@ -15,7 +13,6 @@ const useSignOut = () => {
     await authOperation
       .signOut(dispatch)
       .then(() => {
-        router.prefetch('/signin')
         router.push('/signin')
       })
       .finally(() => {

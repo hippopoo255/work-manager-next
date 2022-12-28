@@ -10,7 +10,7 @@ const nextConfig = {
   swcMinify: true,
   experimental: {
     allowMiddlewareResponseBody: true,
-    appDir: true,
+    // appDir: true,
     scrollRestoration: true,
   },
   webpack(config) {
