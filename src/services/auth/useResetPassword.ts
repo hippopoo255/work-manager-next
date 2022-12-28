@@ -1,7 +1,5 @@
-'use client'
-
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/router'
 import { useCallback, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { cognitoUser } from '~/libs/cognito/auth'
@@ -10,17 +8,15 @@ import {
   ResetPasswordFormType,
 } from '~/schema/auth/resetPasswordValidator'
 import { useStatus } from '~/services/status'
-import { decode64 } from '~/utils'
 
 const useResetPassword = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const { update: updateStatus } = useStatus()
   const router = useRouter()
-  const params = useSearchParams()
   const methods = useForm<ResetPasswordFormType>({
     mode: 'onBlur',
     defaultValues: {
-      user_id: params.get('code') ?? '',
+      user_id: router.isReady ? (router.query.code as string) : '',
       password: '',
       verification_code: '',
     },
@@ -39,7 +35,6 @@ const useResetPassword = () => {
           statusCode: 200,
           category: 'success',
         })
-        router.prefetch('/signin')
         router.push('/signin')
       })
       .catch((err) => {

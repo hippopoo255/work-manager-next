@@ -1,5 +1,3 @@
-'use client'
-
 import { useCallback } from 'react'
 import useThemeContext from './useThemeContext'
 import { themeOperation } from '~/stores/theme'

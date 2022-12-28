@@ -1,5 +1,3 @@
-'use client'
-
 import React, { useCallback, useMemo } from 'react'
 import Toggle from './Toggle'
 import { useTheme } from '~/services/theme'

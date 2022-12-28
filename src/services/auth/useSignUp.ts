@@ -1,7 +1,5 @@
-'use client'
-
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/router'
 import { useCallback, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { schema, SignUpFormType } from '~/schema/auth/signUpValidator'
@@ -32,7 +30,6 @@ const useSignIn = () => {
           statusCode: 200,
           category: 'success',
         })
-        router.prefetch('/account-verification')
         router.push(`/account-verification?code=${encodedUserName}`)
       })
       .catch((err) => {

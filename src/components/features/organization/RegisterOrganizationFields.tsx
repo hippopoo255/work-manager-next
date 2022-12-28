@@ -1,5 +1,3 @@
-'use client'
-
 import { BorderButton, Button } from '~/components/elements/Button'
 import { TextField, SelectField, FormRow } from '~/components/elements/Form'
 import { RegisterOrganizationForm } from '~/schema/organization/registerOrganizationValidator'

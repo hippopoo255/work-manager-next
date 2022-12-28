@@ -18,7 +18,7 @@
   @media (prefers-color-scheme: dark) {
   }
 
-  body[data-mode="dark"] {
+  .l-app[data-mode="dark"] {
     // Dark
     --font-color-accent: #fefefe;
     --font-color-basis: #f3f4f6;

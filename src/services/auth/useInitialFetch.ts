@@ -1,5 +1,3 @@
-'use client'
-
 import { useEffect } from 'react'
 import { useAuthContext } from '~/services/auth'
 import { authOperation } from '~/stores/auth'
@@ -25,7 +23,6 @@ const useInitialFetch = ({ user }: Props = {}) => {
       isMounted = false
     }
   }, [])
-
   return { auth }
 }
 

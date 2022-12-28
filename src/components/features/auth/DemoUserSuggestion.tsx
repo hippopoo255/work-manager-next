@@ -1,5 +1,3 @@
-'use client'
-
 import React from 'react'
 import { BorderButton } from '~/components/elements/Button'
 import { useDemoUserSignIn } from '~/services/auth'
