@@ -1,30 +1,51 @@
 import { SignUpInputs } from '~/schema/generated/@types'
-import { yup } from '~/libs/yup'
+import { Yup, yup } from '~/libs/yup'
 import { strPatterns } from '~/utils'
+import { TFunction } from 'i18next'
 
-export const schema: yup.SchemaOf<SignUpInputs> = yup.object().shape({
-  user_id: yup.string().required().min(8).max(64).label('ユーザID'),
-  password: yup
-    .string()
-    .required()
-    .min(8)
-    .max(64)
-    .matches(strPatterns.password)
-    .label('パスワード'),
-  email: yup.string().required().email().label('メールアドレス'),
-  family_name: yup.string().required().max(255).label('姓'),
-  given_name: yup.string().required().max(255).label('名'),
-  family_name_kana: yup
-    .string()
-    .required()
-    .matches(strPatterns.katakana)
-    .label('セイ'),
-  given_name_kana: yup
-    .string()
-    .required()
-    .matches(strPatterns.katakana)
-    .label('メイ'),
-  address: yup.string().label('住所'),
-})
+export const schema: ({
+  t,
+}: {
+  t: TFunction<'translation', undefined, 'translation'>
+}) => Yup.SchemaOf<SignUpInputs> = ({ t }) => {
+  const y = yup()
+  return y.object().shape({
+    user_id: y
+      .string()
+      .required()
+      .min(8)
+      .max(64)
+      .label(t('signUp.attributes.user_id')),
+    password: y
+      .string()
+      .required()
+      .min(8)
+      .max(64)
+      .matches(strPatterns.password)
+      .label(t('signUp.attributes.pasword')),
+    email: y.string().required().email().label(t('signUp.attributes.email')),
+    family_name: y
+      .string()
+      .required()
+      .max(255)
+      .label(t('signUp.attributes.family_name')),
+    given_name: y
+      .string()
+      .required()
+      .max(255)
+      .label(t('signUp.attributes.given_name')),
+    family_name_kana: y
+      .string()
+      .required()
+      .matches(strPatterns.katakana)
+      .label(t('signUp.attributes.family_name_kana')),
+    given_name_kana: y
+      .string()
+      .required()
+      .matches(strPatterns.katakana)
+      .label(t('signUp.attributes.given_name_kana')),
+    address: y.string().label(t('signUp.attributes.address')),
+  })
+}
 
-export type SignUpFormType = yup.InferType<typeof schema>
+export type SignUpFormType = Yup.InferType<ReturnType<typeof schema>>

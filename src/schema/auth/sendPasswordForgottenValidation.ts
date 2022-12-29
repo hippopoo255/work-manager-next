@@ -1,8 +1,21 @@
 import { ForgotPasswordInputs } from '~/schema/generated/@types'
-import { yup } from '~/libs/yup'
+import { TFunction } from 'i18next'
+import { Yup, yup } from '~/libs/yup'
 
-export const schema: yup.SchemaOf<ForgotPasswordInputs> = yup.object().shape({
-  user_id: yup.string().required().label('ログインIDまたはメールアドレス'),
-})
+export const schema: ({
+  t,
+}: {
+  t: TFunction<'translation', undefined, 'translation'>
+}) => Yup.SchemaOf<ForgotPasswordInputs> = ({ t }) => {
+  const y = yup()
+  return y.object().shape({
+    user_id: y
+      .string()
+      .required()
+      .label(t('sendPasswordForgotten.attributes.user_id')),
+  })
+}
 
-export type SendPasswordForgottenFormType = yup.InferType<typeof schema>
+export type SendPasswordForgottenFormType = Yup.InferType<
+  ReturnType<typeof schema>
+>

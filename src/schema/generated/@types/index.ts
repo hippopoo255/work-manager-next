@@ -289,7 +289,7 @@ export type InvalidError = {
     | undefined
 }
 
-/** ログインIDとパスワードのフォーム */
+/** サインインIDとパスワードのフォーム */
 export type LoginBody = {
   login_id: string
   password: string

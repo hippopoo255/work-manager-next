@@ -1,9 +1,17 @@
 import { SignInInputs } from '~/schema/generated/@types'
-import { yup } from '~/libs/yup'
+import { Yup, yup } from '~/libs/yup'
+import { TFunction } from 'i18next'
 
-export const schema: yup.SchemaOf<SignInInputs> = yup.object().shape({
-  user_id: yup.string().required().label('ログインIDまたはメールアドレス'),
-  password: yup.string().required().label('パスワード'),
-})
+export const schema: ({
+  t,
+}: {
+  t: TFunction<'translation', undefined, 'translation'>
+}) => Yup.SchemaOf<SignInInputs> = ({ t }) => {
+  const y = yup()
+  return y.object().shape({
+    user_id: y.string().required().label(t('signIn.attributes.user_id')),
+    password: y.string().required().label(t('signIn.attributes.password')),
+  })
+}
 
-export type SignInFormType = yup.InferType<typeof schema>
+export type SignInFormType = Yup.InferType<ReturnType<typeof schema>>

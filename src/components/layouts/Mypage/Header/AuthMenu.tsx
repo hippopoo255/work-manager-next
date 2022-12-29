@@ -1,3 +1,4 @@
+import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
 import React from 'react'
 import { User } from '~/schema/generated/@types'
@@ -10,7 +11,7 @@ type Props = {
 }
 const AuthMenu = ({ user, onLink, className }: Props) => {
   const { signOut } = useSignOut()
-
+  const { t } = useTranslation()
   const handleSignOut = async () => {
     await signOut()
   }
@@ -25,20 +26,20 @@ const AuthMenu = ({ user, onLink, className }: Props) => {
               href={{ pathname: '/mypage' }}
               className={'p-auth-menu__link'}
             >
-              My Page
+              {t('header.authMenu.mypage')}
             </Link>
           </li>
-          <li className="p-global-nav__item" onClick={onLink}>
+          {/* <li className="p-global-nav__item" onClick={onLink}>
             <Link
               href={{ pathname: '/mypage/minutes' }}
               className={'p-auth-menu__link'}
             >
               議事録
             </Link>
-          </li>
+          </li> */}
           <li className="p-global-nav__item">
             <button onClick={handleSignOut} className={'p-auth-menu__link'}>
-              サインアウト
+              {t('header.authMenu.signOut')}
             </button>
           </li>
         </ul>

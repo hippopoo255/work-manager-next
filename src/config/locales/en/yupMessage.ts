@@ -1,14 +1,14 @@
-import * as yup from 'yup'
+/* eslint-disable import/no-anonymous-default-export */
 import { MessageParams } from 'yup/lib/types'
 
 const labelText = ({ label }: Pick<MessageParams, 'label'>) => {
   return label ? `${label}` : ''
 }
 
-const jpConfig = {
+export default {
   mixed: {
     default: (params: MessageParams) => `${labelText(params)}の値が無効です`,
-    required: (params: MessageParams) => `必須項目です`,
+    required: () => `必須項目です`,
     oneOf: (params: MessageParams & { values: any }) =>
       `${labelText(params)}次の値のいずれかでなければなりません:${
         params.values
@@ -28,8 +28,7 @@ const jpConfig = {
       `${params.min}文字以上で入力してください`,
     max: (params: MessageParams & { max: number }) =>
       `${params.max}文字以下で入力してください`,
-    matches: (params: MessageParams & { regex: RegExp }) =>
-      `形式が正しくありません`,
+    matches: () => `形式が正しくありません`,
     email: (params: MessageParams & { regex: RegExp }) =>
       `メールアドレスの形式が正しくありません`,
     url: (params: MessageParams & { regex: RegExp }) =>
@@ -78,7 +77,3 @@ const jpConfig = {
       `${params.max}個以下の項目が必要です`,
   },
 }
-
-yup.setLocale(jpConfig)
-
-export default yup

@@ -1,16 +1,19 @@
 import type { NextPageWithLayout } from 'next'
+import { useTranslation } from 'next-i18next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { BorderButton, Button } from '~/components/elements/Button'
 import { ThemeToggle } from '~/components/elements/Toggle'
 import { Tooltip } from '~/components/elements/Tooltip'
 import Layout from '~/components/layouts/Default'
 
 const Home: NextPageWithLayout = () => {
+  const { t, i18n } = useTranslation()
   return (
     <div className="p-page">
       <div className="p-card mx-4">
         <div className="flex justify-center">
           <Tooltip text="この操作は無効です">
-            <span className="text-disabled">Tooltip</span>
+            <span className="text-disabled">{t('siteTitle')}</span>
           </Tooltip>
         </div>
       </div>
@@ -187,3 +190,12 @@ const Home: NextPageWithLayout = () => {
 export default Home
 
 Home.getLayout = (page) => <Layout>{page}</Layout>
+
+export async function getStaticProps({ locale }: { locale: string }) {
+  const a = serverSideTranslations(locale, ['common'])
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common'])),
+    },
+  }
+}

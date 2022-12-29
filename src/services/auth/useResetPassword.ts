@@ -1,4 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
+import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 import { useCallback, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -13,6 +14,7 @@ const useResetPassword = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const { update: updateStatus } = useStatus()
   const router = useRouter()
+  const { t } = useTranslation()
   const methods = useForm<ResetPasswordFormType>({
     mode: 'onBlur',
     defaultValues: {
@@ -21,7 +23,7 @@ const useResetPassword = () => {
       verification_code: '',
     },
 
-    resolver: yupResolver(schema),
+    resolver: yupResolver(schema({ t })),
   })
 
   const onSubmit = useCallback(async (inputs: ResetPasswordFormType) => {
@@ -31,7 +33,7 @@ const useResetPassword = () => {
       .then(() => {
         updateStatus({
           message:
-            '再設定に成功しました。数秒後ログイン画面に移動しますので、ログインをお試しください',
+            '再設定に成功しました。数秒後サインイン画面に移動しますので、サインインをお試しください',
           statusCode: 200,
           category: 'success',
         })

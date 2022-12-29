@@ -1,7 +1,7 @@
 @use "../Foundation/variable" as *;
 
 .l-app {
-  @apply grid min-h-screen;
+  @apply grid min-h-screen text-fc-basis bg-bc-basis;
 
   grid-template: $headerHeight 1fr 8rem / 1fr;
   grid-template-areas:

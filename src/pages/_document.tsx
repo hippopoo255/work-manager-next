@@ -31,7 +31,7 @@ export default class MyDocument extends Document {
             content="https://asset.work-manager.site/assets/no-image.jpg"
           />
         </Head>
-        <body data-mode="dark">
+        <body>
           <Main />
           <NextScript />
         </body>

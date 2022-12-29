@@ -1,3 +1,4 @@
+import { useTranslation } from 'next-i18next'
 import { BorderButton, Button } from '~/components/elements/Button'
 import { TextField, SelectField, FormRow } from '~/components/elements/Form'
 import { RegisterOrganizationForm } from '~/schema/organization/registerOrganizationValidator'
@@ -6,6 +7,7 @@ import { useRegisterOrganization, useAddress } from '~/services/organization'
 export const RegisterOrganizationFields = () => {
   const { loading, onSubmit, FormProvider, methods } = useRegisterOrganization()
   const { exec, prefOptions } = useAddress()
+  const { t } = useTranslation('form')
 
   const handleAddress = async () => {
     await exec(methods.getValues('postal_code')).then((result) => {
@@ -21,7 +23,7 @@ export const RegisterOrganizationFields = () => {
     <FormProvider {...methods}>
       <FormRow>
         <TextField<RegisterOrganizationForm>
-          label={'組織名*'}
+          label={`${t('organization.register.attributes.name')}*`}
           fieldName="name"
           autoFocus
         />
@@ -29,19 +31,19 @@ export const RegisterOrganizationFields = () => {
       <FormRow>
         <TextField<RegisterOrganizationForm>
           fieldName="name_kana"
-          label={'組織名(カナ)*'}
+          label={`${t('organization.register.attributes.name_kana')}*`}
         />
       </FormRow>
       <FormRow className="flex gap-2">
         <div className="w-full flex-grow">
           <TextField<RegisterOrganizationForm>
             fieldName="postal_code"
-            label={'郵便番号*'}
+            label={`${t('organization.register.attributes.postal_code')}*`}
           />
         </div>
         <div className="shrink-0">
           <BorderButton
-            text="住所を自動入力する"
+            text={t('label.addressAuto')}
             color={'secondary'}
             onClick={handleAddress}
             flat
@@ -52,39 +54,39 @@ export const RegisterOrganizationFields = () => {
         <div className="w-full flex-grow">
           <SelectField<RegisterOrganizationForm>
             fieldName="pref_id"
-            label={'都道府県*'}
+            label={`${t('organization.register.attributes.pref_id')}*`}
             options={prefOptions}
           />
         </div>
         <div className="w-full flex-grow">
           <TextField<RegisterOrganizationForm>
             fieldName="city"
-            label={'市区町村*'}
+            label={`${t('organization.register.attributes.city')}*`}
           />
         </div>
       </FormRow>
       <FormRow>
         <TextField<RegisterOrganizationForm>
           fieldName="address"
-          label={'以降の住所*'}
+          label={`${t('organization.register.attributes.address')}*`}
         />
       </FormRow>
       <FormRow>
         <TextField<RegisterOrganizationForm>
           fieldName="tel"
-          label={'電話番号*'}
+          label={`${t('organization.register.attributes.tel')}*`}
         />
       </FormRow>
       <FormRow>
         <TextField<RegisterOrganizationForm>
           fieldName="password"
           type="password"
-          label={'管理システム用アカウントのパスワード*'}
+          label={`${t('organization.register.attributes.password')}*`}
         />
       </FormRow>
       <FormRow className="grid">
         <Button
-          text="登録"
+          text={`${t('organization.register.submit')}*`}
           loading={loading}
           onClick={methods.handleSubmit(onSubmit)}
           className={'--signup'}

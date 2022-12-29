@@ -1,9 +1,11 @@
+import { useTranslation } from 'next-i18next'
 import { RegisterOrganizationFields } from './RegisterOrganizationFields'
 import { FormCard } from '~/components/elements/Form'
 
 const RegisterOrganizationForm = () => {
+  const { t } = useTranslation('form')
   return (
-    <FormCard title="まずは組織情報の登録をお願いします">
+    <FormCard title={t('organization.register.title') ?? ''}>
       <RegisterOrganizationFields />
     </FormCard>
   )

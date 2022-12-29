@@ -1,11 +1,18 @@
+import AppLayout from '../AppLayout'
 import Footer from './Footer'
 import Header from './Header'
 import Main from './Main'
 import { SnackBar } from '~/components/elements/SnackBar'
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function Layout({
+  children,
+  title,
+}: {
+  children: React.ReactNode
+  title?: string
+}) {
   return (
-    <div className="l-app">
+    <AppLayout title={title}>
       <header className="l-app__header">
         <Header />
       </header>
@@ -18,6 +25,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <div className="l-app__snackbar">
         <SnackBar />
       </div>
-    </div>
+    </AppLayout>
   )
 }

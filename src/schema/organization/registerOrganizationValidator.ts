@@ -1,29 +1,57 @@
 import { RegisterOrganizationForm as GeneratedForm } from '~/schema/generated/@types'
-import { yup } from '~/libs/yup'
+import { Yup, yup } from '~/libs/yup'
 import { strPatterns } from '~/utils'
+import { TFunction } from 'i18next'
 
-export const schema: yup.SchemaOf<GeneratedForm> = yup.object().shape({
-  name: yup.string().required().max(255).label('組織名'),
-  name_kana: yup
-    .string()
-    .required()
-    .max(255)
-    .matches(strPatterns.katakana)
-    .label('組織名(カナ)'),
-  postal_code: yup
-    .string()
-    .required()
-    .matches(strPatterns.postal)
-    .label('郵便番号'),
-  pref_id: yup.number().required().integer().label('都道府県'),
-  city: yup.string().required().max(255).label('市区町村'),
-  address: yup.string().required().max(255).label('以降の住所'),
-  tel: yup.string().required().matches(strPatterns.tel).label('電話番号'),
-  password: yup
-    .string()
-    .required()
-    .matches(strPatterns.password)
-    .label('管理システム用アカウントのパスワード'),
-})
+export const schema: ({
+  t,
+}: {
+  t: TFunction<'translation', undefined, 'translation'>
+}) => Yup.SchemaOf<GeneratedForm> = ({ t }) => {
+  const y = yup()
+  return y.object().shape({
+    name: y
+      .string()
+      .required()
+      .max(255)
+      .label(t('organization.register.attributes.name')),
+    name_kana: y
+      .string()
+      .required()
+      .max(255)
+      .matches(strPatterns.katakana)
+      .label(t('organization.register.attributes.name_kana')),
+    postal_code: y
+      .string()
+      .required()
+      .matches(strPatterns.postal)
+      .label(t('organization.register.attributes.postal_code')),
+    pref_id: y
+      .number()
+      .required()
+      .integer()
+      .label(t('organization.register.attributes.pref_id')),
+    city: y
+      .string()
+      .required()
+      .max(255)
+      .label(t('organization.register.attributes.city')),
+    address: y
+      .string()
+      .required()
+      .max(255)
+      .label(t('organization.register.attributes.address')),
+    tel: y
+      .string()
+      .required()
+      .matches(strPatterns.tel)
+      .label(t('organization.register.attributes.tel')),
+    password: y
+      .string()
+      .required()
+      .matches(strPatterns.password)
+      .label(t('organization.register.attributes.password')),
+  })
+}
 
-export type RegisterOrganizationForm = yup.InferType<typeof schema>
+export type RegisterOrganizationForm = Yup.InferType<ReturnType<typeof schema>>

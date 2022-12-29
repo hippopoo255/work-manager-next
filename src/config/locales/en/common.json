@@ -2,24 +2,44 @@
   "siteTitle": "Job Support",
   "head": {
     "title": {
-      "login": "Log in",
-      "signup": "Sign Up",
-      "organizationStore": "Organization register",
+      "signIn": "Sign In",
+      "signUp": "Sign Up",
+      "passwordForgotten": "Send Forgotten mail",
+      "passwordReset": "Password reset",
       "mypage": {
         "index": "Dashboard",
         "blog": {
           "index": "Blog",
           "create": "New Blog"
+        },
+        "organization": {
+          "register": "Register Organization"
+        },
+        "minutes": {
+          "index": "Minutes"
         }
       },
       "accountVerification": "Account verification",
-      "accountSetup": "Account setup",
-      "forgot_password": "Forgot Password",
-      "reset_password": "Reset Password"
+      "accountSetup": "Account setup"
     }
   },
-  "main": {
-    "title": "What is :site_title？"
+  "header": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "help": "Help",
+    "authMenu": {
+      "mypage": "My Page",
+      "signOut": "Sign Out"
+    }
+  },
+  "footer": {},
+  "label": {
+    "darkMode": "Enable dark mode"
+  },
+  "link": {
+    "passwordForgotten": "I forgot my password",
+    "alreadyHaveAccount": "Sign in",
+    "dontHaveAccount": "Don't have an account yet?"
   },
   "cognitoError": {
     "UserNotFoundException": "User does not exist.",

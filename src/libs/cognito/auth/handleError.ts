@@ -2,7 +2,7 @@
 import { Path } from 'react-hook-form'
 import { CognitoErrorMessageType } from '../types'
 import { amplifyConfigure } from './init'
-import { ja, en } from '~/config/locales'
+// import { ja, en } from '~/config/locales'
 import { SignInInputs } from '~/schema/generated/@types'
 
 amplifyConfigure()
@@ -39,8 +39,8 @@ const getErrorBody = <T = Path<SignInInputs>>(
 ) => {
   const key = specifiedKey || errorKeys[errCode]
   // const t = router.locale === 'en' ? en : ja
-  const t = ja
-  const message =
-    t.message.cognitoError[errCode] || t.message.cognitoError.default
+  // const t = ja
+  const message = ''
+  // t.message.cognitoError[errCode] || t.message.cognitoError.default
   return { key, message }
 }

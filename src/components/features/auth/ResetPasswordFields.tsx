@@ -1,3 +1,4 @@
+import { useTranslation } from 'next-i18next'
 import React from 'react'
 import { Button } from '~/components/elements/Button'
 import { TextField, FormRow } from '~/components/elements/Form'
@@ -6,6 +7,7 @@ import { useResetPassword } from '~/services/auth'
 
 const ResetPasswordFields = () => {
   const { methods, FormProvider, onSubmit, loading } = useResetPassword()
+  const { t } = useTranslation('form')
   return (
     <FormProvider {...methods}>
       <FormRow>
@@ -24,7 +26,7 @@ const ResetPasswordFields = () => {
       </FormRow>
       <FormRow className="grid">
         <Button
-          text="送信してパスワードを再設定する"
+          text={t('resetPassword.submit')}
           loading={loading}
           onClick={methods.handleSubmit(onSubmit)}
         />

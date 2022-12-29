@@ -1,3 +1,4 @@
+import { useTranslation } from 'next-i18next'
 import { Button } from '~/components/elements/Button'
 import { TextField, FormRow } from '~/components/elements/Form'
 import { SignUpFormType } from '~/schema/auth/signUpValidator'
@@ -5,11 +6,12 @@ import { useSignUp } from '~/services/auth'
 
 export const SignUpFields = () => {
   const { loading, onSubmit, FormProvider, methods } = useSignUp()
+  const { t } = useTranslation('form')
   return (
     <FormProvider {...methods}>
       <FormRow>
         <TextField<SignUpFormType>
-          label={'ユーザID*'}
+          label={`${t('signUp.attributes.user_id')}*`}
           fieldName="user_id"
           autoFocus
         />
@@ -18,7 +20,7 @@ export const SignUpFields = () => {
         <TextField<SignUpFormType>
           fieldName="email"
           type="email"
-          label={'メールアドレス*'}
+          label={`${t('signUp.attributes.email')}*`}
         />
       </FormRow>
       <FormRow className="flex gap-2">
@@ -26,14 +28,14 @@ export const SignUpFields = () => {
           <TextField<SignUpFormType>
             fieldName="family_name"
             type="text"
-            label={'姓*'}
+            label={`${t('signUp.attributes.family_name')}*`}
           />
         </div>
         <div className="w-full flex-grow">
           <TextField<SignUpFormType>
             fieldName="given_name"
             type="text"
-            label={'名*'}
+            label={`${t('signUp.attributes.given_name')}*`}
           />
         </div>
       </FormRow>
@@ -42,14 +44,14 @@ export const SignUpFields = () => {
           <TextField<SignUpFormType>
             fieldName="family_name_kana"
             type="text"
-            label={'セイ*'}
+            label={`${t('signUp.attributes.family_name_kana')}*`}
           />
         </div>
         <div className="w-full flex-grow">
           <TextField<SignUpFormType>
             fieldName="given_name_kana"
             type="text"
-            label={'メイ*'}
+            label={`${t('signUp.attributes.given_name_kana')}*`}
           />
         </div>
       </FormRow>
@@ -57,12 +59,12 @@ export const SignUpFields = () => {
         <TextField<SignUpFormType>
           fieldName="password"
           type="password"
-          label={'パスワード*'}
+          label={`${t('signUp.attributes.password')}*`}
         />
       </FormRow>
       <FormRow className="grid">
         <Button
-          text="登録"
+          text={t('signUp.submit')}
           loading={loading}
           onClick={methods.handleSubmit(onSubmit)}
           className={'--signup'}

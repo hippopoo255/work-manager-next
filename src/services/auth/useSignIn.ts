@@ -1,4 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
+import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 import { useCallback, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -12,6 +13,8 @@ const useSignIn = () => {
   const { dispatch } = useAuthContext()
   const { update: updateStatus } = useStatus()
   const router = useRouter()
+  const { t } = useTranslation()
+
   const methods = useForm<SignInFormType>({
     mode: 'onBlur',
     defaultValues: {
@@ -19,7 +22,7 @@ const useSignIn = () => {
       password: '',
     },
 
-    resolver: yupResolver(schema),
+    resolver: yupResolver(schema({ t })),
   })
 
   const onSubmit = useCallback(async (inputs: SignInFormType) => {
@@ -28,7 +31,7 @@ const useSignIn = () => {
       .signIn(inputs, dispatch)
       .then(() => {
         updateStatus({
-          message: 'ログインに成功しました',
+          message: 'サインインに成功しました',
           statusCode: 200,
           category: 'success',
         })

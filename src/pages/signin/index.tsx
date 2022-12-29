@@ -1,4 +1,6 @@
 import type { NextPageWithLayout } from 'next'
+import { i18n } from 'next-i18next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import React from 'react'
 import { SignInForm } from '~/components/features/auth'
 import Layout from '~/components/layouts/Default'
@@ -13,4 +15,14 @@ const SignIn: NextPageWithLayout = () => {
 
 export default SignIn
 
-SignIn.getLayout = (page) => <Layout>{page}</Layout>
+SignIn.getLayout = (page) => (
+  <Layout title={i18n?.t('head.title.signIn')}>{page}</Layout>
+)
+
+export async function getStaticProps({ locale }: { locale: string }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common', 'form'])),
+    },
+  }
+}
