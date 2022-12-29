@@ -3,8 +3,10 @@ import { Button } from '~/components/elements/Button'
 import { TextField, FormRow } from '~/components/elements/Form'
 import { SendPasswordForgottenFormType as FormType } from '~/schema/auth/sendPasswordForgottenValidation'
 import { useSendPasswordForgotten } from '~/services/auth'
+import { useLocale } from '~/services/locale'
 
 export const SendPasswordForgottenFields = () => {
+  const { t } = useLocale()
   const { loading, onSubmit, FormProvider, methods } =
     useSendPasswordForgotten()
 
@@ -20,7 +22,7 @@ export const SendPasswordForgottenFields = () => {
         </FormRow>
         <FormRow className="grid">
           <Button
-            text="送信"
+            text={t.sendPasswordForgotten.submit}
             loading={loading}
             onClick={methods.handleSubmit(onSubmit)}
           />

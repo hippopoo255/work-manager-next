@@ -1,7 +1,7 @@
 @use "../Foundation/variable" as *;
 
 .l-app {
-  @apply grid min-h-screen;
+  @apply grid min-h-screen text-fc-basis bg-bc-basis;
 
   grid-template: $headerHeight 1fr 8rem / 1fr;
   grid-template-areas:
@@ -9,6 +9,9 @@
     "main"
     "footer";
   min-height: 100dvh;
+
+  // color: var(--font-color-basis);
+  // background: var(--bg-color-basis);
 
   .l-app__header {
     @apply shadow-xl fixed w-full h-header bg-bc-sheet grid content-center grid-flow-col z-50;

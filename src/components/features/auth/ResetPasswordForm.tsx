@@ -1,10 +1,12 @@
 import React from 'react'
 import ResetPasswordFields from './ResetPasswordFields'
 import { FormCard } from '~/components/elements/Form'
+import { useLocale } from '~/services/locale'
 
 const ResetPasswordForm = () => {
+  const { t } = useLocale()
   return (
-    <FormCard title="パスワード再設定フォーム">
+    <FormCard title={t.resetPassword.title}>
       <ResetPasswordFields />
     </FormCard>
   )

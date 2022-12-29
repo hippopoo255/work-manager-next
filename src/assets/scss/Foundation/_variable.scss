@@ -1,5 +1,5 @@
 // テーマに関連する変数
-:root {
+.l-app {
   --color-accent: #1a2b55;
 
   // Light
@@ -18,7 +18,7 @@
   @media (prefers-color-scheme: dark) {
   }
 
-  .l-app[data-mode="dark"] {
+  &[data-mode="dark"] {
     // Dark
     --font-color-accent: #fefefe;
     --font-color-basis: #f3f4f6;

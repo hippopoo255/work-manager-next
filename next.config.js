@@ -6,6 +6,10 @@ const nextConfig = {
   images: {
     domains: [assetUrl.replace(/^https?:\/\//g, '')],
   },
+  i18n: {
+    defaultLocale: 'ja',
+    locales: ['ja', 'en'],
+  },
   reactStrictMode: true,
   swcMinify: true,
   experimental: {

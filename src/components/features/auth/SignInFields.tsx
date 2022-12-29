@@ -2,9 +2,11 @@ import { Button } from '~/components/elements/Button'
 import { TextField, FormRow } from '~/components/elements/Form'
 import { SignInFormType } from '~/schema/auth/signInValidator'
 import { useSignIn } from '~/services/auth'
+import { useLocale } from '~/services/locale'
 
 export const SignInFields = () => {
   const { loading, onSubmit, FormProvider, methods } = useSignIn()
+  const { t } = useLocale()
   return (
     <FormProvider {...methods}>
       <FormRow>
@@ -23,7 +25,7 @@ export const SignInFields = () => {
       </FormRow>
       <FormRow className="grid">
         <Button
-          text="サインイン"
+          text={t.signIn.submit}
           loading={loading}
           onClick={methods.handleSubmit(onSubmit)}
           className="--signin"

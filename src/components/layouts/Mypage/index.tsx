@@ -1,4 +1,4 @@
-import Head from 'next/head'
+import AppLayout from '../AppLayout'
 import Footer from './Footer'
 import Header from './Header'
 import Main from './Main'
@@ -15,24 +15,19 @@ export default function Layout({
   useInitialFetch()
 
   return (
-    <>
-      <Head>
-        <title>{!!title ? `${title} | ${'ジョブサポ'}` : 'ジョブサポ'}</title>
-      </Head>
-      <div className="l-app">
-        <header className="l-app__header">
-          <Header />
-        </header>
-        <main className="l-app__main">
-          <Main title={''}>{children}</Main>
-        </main>
-        <footer className="l-app__footer">
-          <Footer />
-        </footer>
-        <div className="l-app__snackbar">
-          <SnackBar />
-        </div>
+    <AppLayout title={title}>
+      <header className="l-app__header">
+        <Header />
+      </header>
+      <main className="l-app__main">
+        <Main title={''}>{children}</Main>
+      </main>
+      <footer className="l-app__footer">
+        <Footer />
+      </footer>
+      <div className="l-app__snackbar">
+        <SnackBar />
       </div>
-    </>
+    </AppLayout>
   )
 }
