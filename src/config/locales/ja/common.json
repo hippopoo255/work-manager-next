@@ -1,0 +1,58 @@
+{
+  "siteTitle": "ジョブサポ",
+  "head": {
+    "title": {
+      "signIn": "サインイン",
+      "signUp": "アカウント登録",
+      "passwordForgotten": "パスワードをお忘れの方",
+      "passwordReset": "パスワードリセット",
+      "organizationStore": "組織情報登録",
+      "mypage": {
+        "index": "ダッシュボード",
+        "blog": {
+          "index": "ブログ",
+          "create": "ブログ新規投稿"
+        },
+        "organization": {
+          "register": "組織情報登録"
+        },
+        "minutes": {
+          "index": "議事録"
+        }
+      },
+      "accountVerification": "アカウント検証",
+      "accountSetup": "アカウント設定"
+    }
+  },
+  "header": {
+    "signIn": "サインイン",
+    "signUp": "アカウント登録",
+    "help": "ヘルプ",
+    "authMenu": {
+      "mypage": "マイページ",
+      "signOut": "サインアウト"
+    }
+  },
+  "footer": {},
+  "label": {
+    "darkMode": "ダークモードにする"
+  },
+  "link": {
+    "passwordForgotten": "パスワードをお忘れの方",
+    "alreadyHaveAccount": "既にアカウントをお持ちの方",
+    "dontHaveAccount": "アカウント登録がまだの方",
+    "addressAuto": "住所を自動入力する"
+  },
+  "cognitoError": {
+    "UserNotFoundException": "アカウントが存在しません",
+    "NotAuthorizedException": "ユーザー名またはパスワードが違います",
+    "UserNotConfirmedException": "アカウントの検証が完了していません",
+    "UsernameExistsException": "同じ名前のユーザーが既に登録されています",
+    "CodeMismatchException": "検証コードに誤りがあります",
+    "InvalidParameterException": "入力項目が正しくありません",
+    "InvalidPasswordException": "パスワードの形式が正しくありません",
+    "LimitExceededException": "パスワードが試行回数を超えました。しばらくしてからもう一度お試しください",
+    "ExpiredCodeException": "既に検証済みのアカウントか、有効期限切れの可能性があります",
+    "default": "検証に失敗しました"
+  }
+}

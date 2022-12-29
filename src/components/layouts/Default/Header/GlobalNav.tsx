@@ -1,8 +1,10 @@
+import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
 import React from 'react'
 import { ThemeToggle } from '~/components/elements/Toggle'
 
 const GlobalNav = () => {
+  const { t } = useTranslation()
   return (
     <nav className="p-global-nav">
       <ul className="p-global-nav__menu">
@@ -11,17 +13,17 @@ const GlobalNav = () => {
         </li>
         <li className="p-global-nav__item">
           <Link href={{ pathname: '/help' }} className={'c-header-link'}>
-            ヘルプ
+            {t('header.help')}
           </Link>
         </li>
         <li className="p-global-nav__item">
           <Link href={{ pathname: 'signin' }} className={'c-header-link'}>
-            Sign In
+            {t('header.signIn')}
           </Link>
         </li>
         <li className="p-global-nav__item">
           <Link href={{ pathname: 'signup' }} className={'c-header-link'}>
-            Sign Up
+            {t('header.signUp')}
           </Link>
         </li>
       </ul>

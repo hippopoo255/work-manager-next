@@ -1,13 +1,13 @@
+import { useTranslation } from 'next-i18next'
 import React from 'react'
 import { Button } from '~/components/elements/Button'
 import { TextField, FormRow } from '~/components/elements/Form'
 import { ResetPasswordFormType } from '~/schema/auth/resetPasswordValidator'
 import { useResetPassword } from '~/services/auth'
-import { useLocale } from '~/services/locale'
 
 const ResetPasswordFields = () => {
   const { methods, FormProvider, onSubmit, loading } = useResetPassword()
-  const { t } = useLocale()
+  const { t } = useTranslation('form')
   return (
     <FormProvider {...methods}>
       <FormRow>
@@ -26,7 +26,7 @@ const ResetPasswordFields = () => {
       </FormRow>
       <FormRow className="grid">
         <Button
-          text={t.resetPassword.submit}
+          text={t('resetPassword.submit')}
           loading={loading}
           onClick={methods.handleSubmit(onSubmit)}
         />

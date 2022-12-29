@@ -1,0 +1,64 @@
+{
+  "signIn": {
+    "title": "Sign In",
+    "submit": "Register",
+    "demoSignIn": "Attempt as a demo user",
+    "attributes": {
+      "user_id": "ID or Email",
+      "password": "Password"
+    }
+  },
+  "signUp": {
+    "title": "Create Account",
+    "submit": "Create Account",
+    "attributes": {
+      "user_id": "user ID",
+      "password": "Password",
+      "email": "Email",
+      "family_name": "Family name",
+      "given_name": "Given name",
+      "family_name_kana": "Family name kana",
+      "given_name_kana": "Given name kana",
+      "address": "Address"
+    }
+  },
+  "resetPassword": {
+    "title": "Reset password",
+    "submit": "Reset password",
+    "attributes": {
+      "user_id": "ID or Email",
+      "password": "Password",
+      "verification_code": "Verification code"
+    }
+  },
+  "sendPasswordForgotten": {
+    "title": "Send a password forgotten mail",
+    "submit": "Receive Verification Code",
+    "attributes": {
+      "user_id": "ID or Email"
+    }
+  },
+  "verifyAccount": {
+    "title": "Verify account",
+    "submit": "Send verification code",
+    "attributes": {
+      "verification_code": "Verification code"
+    }
+  },
+  "organization": {
+    "register": {
+      "title": "Register Organization",
+      "submit": "Create",
+      "attributes": {
+        "name": "Organization name",
+        "name_kana": "Organization name kana",
+        "postal_code": "Pref code",
+        "pref_id": "Prefecture",
+        "city": "City",
+        "address": "Address",
+        "tel": "Tel",
+        "password": "Password for administration system"
+      }
+    }
+  }
+}

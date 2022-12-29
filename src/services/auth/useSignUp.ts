@@ -1,4 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
+import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 import { useCallback, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -10,6 +11,7 @@ const useSignIn = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const { update: updateStatus } = useStatus()
   const router = useRouter()
+  const { t } = useTranslation()
   const methods = useForm<SignUpFormType>({
     mode: 'onBlur',
     defaultValues: {
@@ -17,7 +19,7 @@ const useSignIn = () => {
       password: '',
     },
 
-    resolver: yupResolver(schema),
+    resolver: yupResolver(schema({ t })),
   })
 
   const onSubmit = useCallback(async (inputs: SignUpFormType) => {

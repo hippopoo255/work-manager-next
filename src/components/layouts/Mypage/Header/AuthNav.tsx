@@ -1,3 +1,4 @@
+import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
 import React from 'react'
 import AuthAvatar from './AuthAvatar'
@@ -6,6 +7,7 @@ import { useAuthContext } from '~/services/auth'
 
 export const AuthNav = () => {
   const { auth } = useAuthContext()
+  const { t } = useTranslation()
   return (
     <nav className="p-auth-nav">
       <ul className="p-auth-nav__menu">
@@ -14,7 +16,7 @@ export const AuthNav = () => {
         </li>
         <li className="p-auth-nav__item">
           <Link href={{ pathname: '/help' }} className={'c-header-link'}>
-            ヘルプ
+            {t('header.help')}
           </Link>
         </li>
         <li className="p-auth-nav__item">

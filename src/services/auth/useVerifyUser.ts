@@ -1,4 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
+import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 
 import { useCallback, useState } from 'react'
@@ -14,6 +15,7 @@ const useVerifyUser = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const { update: updateStatus } = useStatus()
   const router = useRouter()
+  const { t } = useTranslation()
   const methods = useForm<AccountVerificationFormType>({
     mode: 'onBlur',
     defaultValues: {
@@ -21,7 +23,7 @@ const useVerifyUser = () => {
       verification_code: '',
     },
 
-    resolver: yupResolver(schema),
+    resolver: yupResolver(schema({ t })),
   })
 
   const onSubmit = useCallback(async (inputs: AccountVerificationFormType) => {

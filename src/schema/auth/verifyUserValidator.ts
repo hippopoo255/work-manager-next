@@ -1,11 +1,22 @@
 import { AccountVerificationInputs } from '~/schema/generated/@types'
-import { yup } from '~/libs/yup'
+import { Yup, yup } from '~/libs/yup'
+import { TFunction } from 'i18next'
 
-export const schema: yup.SchemaOf<AccountVerificationInputs> = yup
-  .object()
-  .shape({
-    user_id: yup.string().required(),
-    verification_code: yup.string().required().label('検証コード'),
+export const schema: ({
+  t,
+}: {
+  t: TFunction
+}) => Yup.SchemaOf<AccountVerificationInputs> = ({ t }) => {
+  const y = yup()
+  return y.object().shape({
+    user_id: y.string().required(),
+    verification_code: y
+      .string()
+      .required()
+      .label(t('verifyAccount.attributes.verification_code')),
   })
+}
 
-export type AccountVerificationFormType = yup.InferType<typeof schema>
+export type AccountVerificationFormType = Yup.InferType<
+  ReturnType<typeof schema>
+>

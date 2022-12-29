@@ -1,1 +1,2 @@
-export { default as yup } from './locale'
+export { default as Yup } from './init'
+export * from './init'

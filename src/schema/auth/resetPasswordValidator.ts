@@ -1,17 +1,26 @@
 import { ForgotPasswordResetInputs } from '~/schema/generated/@types'
-import { yup } from '~/libs/yup'
+import { Yup, yup } from '~/libs/yup'
 import { strPatterns } from '~/utils'
+import { TFunction } from 'i18next'
 
-export const schema: yup.SchemaOf<ForgotPasswordResetInputs> = yup
-  .object()
-  .shape({
-    user_id: yup.string().required(),
-    password: yup
+export const schema: ({
+  t,
+}: {
+  t: TFunction<'translation', undefined, 'translation'>
+}) => Yup.SchemaOf<ForgotPasswordResetInputs> = ({ t }) => {
+  const y = yup()
+  return y.object().shape({
+    user_id: y.string().required(),
+    password: y
       .string()
       .required()
       .matches(strPatterns.password)
-      .label('パスワード'),
-    verification_code: yup.string().required().label('検証コード'),
+      .label(t('resetPassword.attributes.password')),
+    verification_code: y
+      .string()
+      .required()
+      .label(t('resetPassword.attributes.verification_code')),
   })
+}
 
-export type ResetPasswordFormType = yup.InferType<typeof schema>
+export type ResetPasswordFormType = Yup.InferType<ReturnType<typeof schema>>

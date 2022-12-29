@@ -1,4 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
+import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -19,6 +20,7 @@ const useRegisterOrganization = () => {
   const { post } = useFetch()
   const { auth, dispatch } = useAuthContext()
   const { register } = useRegisterAdmin()
+  const { t } = useTranslation()
 
   const router = useRouter()
   const methods = useForm<RegisterOrganizationForm>({
@@ -34,7 +36,7 @@ const useRegisterOrganization = () => {
       password: '',
     },
 
-    resolver: yupResolver(schema),
+    resolver: yupResolver(schema({ t })),
   })
 
   const onSubmit = async (inputs: RegisterOrganizationForm) => {

@@ -10,9 +10,6 @@
     "footer";
   min-height: 100dvh;
 
-  // color: var(--font-color-basis);
-  // background: var(--bg-color-basis);
-
   .l-app__header {
     @apply shadow-xl fixed w-full h-header bg-bc-sheet grid content-center grid-flow-col z-50;
 

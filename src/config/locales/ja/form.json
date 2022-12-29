@@ -1,0 +1,64 @@
+{
+  "signIn": {
+    "title": "サインイン",
+    "submit": "サインイン",
+    "demoSignIn": "デモユーザとして試す",
+    "attributes": {
+      "user_id": "ユーザIDまたはメールアドレス",
+      "password": "パスワード"
+    }
+  },
+  "signUp": {
+    "title": "アカウント登録",
+    "submit": "アカウント登録",
+    "attributes": {
+      "user_id": "ユーザID",
+      "password": "パスワード",
+      "email": "メールアドレス",
+      "family_name": "姓",
+      "given_name": "名",
+      "family_name_kana": "セイ",
+      "given_name_kana": "メイ",
+      "address": "住所"
+    }
+  },
+  "verifyAccount": {
+    "title": "アカウント検証",
+    "submit": "検証コードを送信する",
+    "attributes": {
+      "verification_code": "検証コード"
+    }
+  },
+  "sendPasswordForgotten": {
+    "title": "パスワード再設定用フォーム",
+    "submit": "送信して再設定画面に進む",
+    "attributes": {
+      "user_id": "ユーザIDまたはメールアドレス"
+    }
+  },
+  "resetPassword": {
+    "title": "パスワード再設定フォーム",
+    "submit": "パスワードを再設定する",
+    "attributes": {
+      "user_id": "ユーザIDまたはメールアドレス",
+      "password": "パスワード",
+      "verification_code": "検証コード"
+    }
+  },
+  "organization": {
+    "register": {
+      "title": "まずは組織情報の登録をお願いします",
+      "submit": "登録",
+      "attributes": {
+        "name": "組織名",
+        "name_kana": "組織名(カナ)",
+        "postal_code": "郵便番号",
+        "pref_id": "都道府県",
+        "city": "市区町村",
+        "address": "以降の住所",
+        "tel": "電話番号",
+        "password": "管理システム用のパスワード"
+      }
+    }
+  }
+}

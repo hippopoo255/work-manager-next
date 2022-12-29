@@ -1,12 +1,12 @@
+import { useTranslation } from 'next-i18next'
 import React from 'react'
 import ResetPasswordFields from './ResetPasswordFields'
 import { FormCard } from '~/components/elements/Form'
-import { useLocale } from '~/services/locale'
 
 const ResetPasswordForm = () => {
-  const { t } = useLocale()
+  const { t } = useTranslation('form')
   return (
-    <FormCard title={t.resetPassword.title}>
+    <FormCard title={t('resetPassword.title') ?? ''}>
       <ResetPasswordFields />
     </FormCard>
   )
