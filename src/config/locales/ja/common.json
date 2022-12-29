@@ -35,7 +35,8 @@
   },
   "footer": {},
   "label": {
-    "darkMode": "ダークモードにする"
+    "darkMode": "ダークモードにする",
+    "demoSignIn": "デモユーザとして試す"
   },
   "link": {
     "passwordForgotten": "パスワードをお忘れの方",

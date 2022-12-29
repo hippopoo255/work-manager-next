@@ -2,7 +2,6 @@
   "signIn": {
     "title": "サインイン",
     "submit": "サインイン",
-    "demoSignIn": "デモユーザとして試す",
     "attributes": {
       "user_id": "ユーザIDまたはメールアドレス",
       "password": "パスワード"

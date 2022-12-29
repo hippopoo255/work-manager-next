@@ -34,7 +34,8 @@
   },
   "footer": {},
   "label": {
-    "darkMode": "Enable dark mode"
+    "darkMode": "Enable dark mode",
+    "demoSignIn": "Attempt as a demo user"
   },
   "link": {
     "passwordForgotten": "I forgot my password",

@@ -5,10 +5,10 @@ import { SignUpFields } from './SignUpFields'
 import { FormCard } from '~/components/elements/Form'
 
 const SignUpForm = () => {
-  const { t } = useTranslation('form')
+  const { t } = useTranslation()
 
   return (
-    <FormCard title={t('signUp.title') ?? ''}>
+    <FormCard title={t('signUp.title', { ns: 'form' }) ?? ''}>
       <SignUpFields />
       <div className="mt-16">
         <div className="grid sm:grid-flow-col place-content-between">
