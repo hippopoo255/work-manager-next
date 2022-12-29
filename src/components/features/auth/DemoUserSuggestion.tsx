@@ -8,7 +8,7 @@ const DemoUserSuggestion = () => {
   const { t } = useTranslation()
   return (
     <BorderButton
-      text={t('signIn.demoSignIn')}
+      text={t('label.demoSignIn')}
       loading={loading}
       onClick={onSubmit}
     />

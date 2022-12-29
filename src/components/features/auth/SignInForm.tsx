@@ -5,9 +5,9 @@ import { SignInFields } from './SignInFields'
 import { FormCard } from '~/components/elements/Form'
 
 const SignInForm = () => {
-  const { t } = useTranslation('form')
+  const { t } = useTranslation()
   return (
-    <FormCard title={t('signIn.title') ?? ''} size="sm">
+    <FormCard title={t('signIn.title', { ns: 'form' }) ?? ''} size="sm">
       <SignInFields />
       <div className="mt-16">
         <div className="grid place-content-between">

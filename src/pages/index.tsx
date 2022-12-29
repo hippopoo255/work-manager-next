@@ -1,4 +1,4 @@
-import type { NextPageWithLayout } from 'next'
+import type { NextPageWithLayout, GetStaticPropsContext } from 'next'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { BorderButton, Button } from '~/components/elements/Button'
@@ -191,7 +191,9 @@ export default Home
 
 Home.getLayout = (page) => <Layout>{page}</Layout>
 
-export async function getStaticProps({ locale }: { locale: string }) {
+export async function getStaticProps({
+  locale,
+}: Required<GetStaticPropsContext>) {
   const a = serverSideTranslations(locale, ['common'])
   return {
     props: {

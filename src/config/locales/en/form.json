@@ -2,7 +2,6 @@
   "signIn": {
     "title": "Sign In",
     "submit": "Register",
-    "demoSignIn": "Attempt as a demo user",
     "attributes": {
       "user_id": "ID or Email",
       "password": "Password"
