@@ -1,7 +1,7 @@
 {
   "signIn": {
-    "title": "サインイン",
-    "submit": "サインイン",
+    "title": "ログイン",
+    "submit": "ログイン",
     "attributes": {
       "user_id": "ユーザIDまたはメールアドレス",
       "password": "パスワード"

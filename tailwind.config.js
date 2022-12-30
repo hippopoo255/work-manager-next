@@ -22,7 +22,7 @@ const extendColors = {
     header: 'var(--bg-color-header)',
   },
   accent: {
-    DEFAULT: '#1a2b55',
+    DEFAULT: 'var(--color-accent)',
     blind: '#445061',
     dark: '#1b212b',
   },
@@ -131,6 +131,9 @@ module.exports = {
       },
       transitionDelay: {
         basis: '200ms',
+      },
+      boxShadow: {
+        xs: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
       },
     },
   },

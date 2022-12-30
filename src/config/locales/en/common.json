@@ -2,7 +2,7 @@
   "siteTitle": "Job Support",
   "head": {
     "title": {
-      "signIn": "Sign In",
+      "signIn": "Log In",
       "signUp": "Sign Up",
       "passwordForgotten": "Send Forgotten mail",
       "passwordReset": "Password reset",
@@ -24,7 +24,7 @@
     }
   },
   "header": {
-    "signIn": "Sign In",
+    "signIn": "Log In",
     "signUp": "Sign Up",
     "help": "Help",
     "authMenu": {
@@ -39,7 +39,7 @@
   },
   "link": {
     "passwordForgotten": "I forgot my password",
-    "alreadyHaveAccount": "Sign in",
+    "alreadyHaveAccount": "Log In",
     "dontHaveAccount": "Don't have an account yet?"
   },
   "cognitoError": {

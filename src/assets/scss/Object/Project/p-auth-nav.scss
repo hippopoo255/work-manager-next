@@ -1,5 +1,7 @@
 .p-auth-nav {
+  @apply flex items-center;
+
   .p-auth-nav__menu {
-    @apply grid place-items-center grid-flow-col;
+    @apply flex justify-end flex-grow items-center;
   }
 }

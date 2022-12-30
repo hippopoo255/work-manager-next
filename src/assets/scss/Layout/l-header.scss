@@ -1,5 +1,28 @@
+@use "../Object/Utility/u-container";
+@use "../Foundation/mixin/accessibility" as *;
+
 .l-header {
+  @extend .u-container;
+
   background: var(--bg-color-header);
 
-  @apply px-3 grid place-content-between grid-flow-col;
+  @apply flex items-center;
+
+  .l-header__logo {
+    @apply shrink-0;
+  }
+
+  .l-header__nav {
+    @apply flex-grow;
+  }
+
+  .l-header__center {
+    @apply shrink-0;
+  }
+
+  @include breakPoint("lg") {
+    .l-header__center {
+      @apply w-full shrink;
+    }
+  }
 }

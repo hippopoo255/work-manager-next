@@ -1,7 +1,7 @@
 {
   "signIn": {
-    "title": "Sign In",
-    "submit": "Sign In",
+    "title": "Log In",
+    "submit": "Log In",
     "attributes": {
       "user_id": "ID or Email",
       "password": "Password"

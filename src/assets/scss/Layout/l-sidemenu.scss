@@ -1,0 +1,18 @@
+.l-sidemenu {
+  @apply h-full;
+
+  color: #f3f4f6;
+  background: #222a40;
+
+  .l-sidemenu__head {
+    @apply text-center p-4;
+  }
+
+  .l-sidemenu__body {
+    @apply p-4;
+  }
+
+  .l-sidemenu__bottom {
+    @apply p-4;
+  }
+}

@@ -6,4 +6,8 @@
   @include onHover {
     @apply text-fc-link;
   }
+
+  @include breakPoint("lg") {
+    @apply py-4;
+  }
 }

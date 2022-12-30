@@ -1,0 +1,9 @@
+@use "../../Foundation/mixin/accessibility" as *;
+
+.p-theme-toggle {
+  @apply grid grid-flow-col place-items-center place-content-center duration-basis;
+
+  @include onVisible {
+    @apply opacity-60;
+  }
+}

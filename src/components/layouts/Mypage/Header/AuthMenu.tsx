@@ -29,14 +29,6 @@ const AuthMenu = ({ user, onLink, className }: Props) => {
               {t('header.authMenu.mypage')}
             </Link>
           </li>
-          {/* <li className="p-global-nav__item" onClick={onLink}>
-            <Link
-              href={{ pathname: '/mypage/minutes' }}
-              className={'p-auth-menu__link'}
-            >
-              議事録
-            </Link>
-          </li> */}
           <li className="p-global-nav__item">
             <button onClick={handleSignOut} className={'p-auth-menu__link'}>
               {t('header.authMenu.signOut')}

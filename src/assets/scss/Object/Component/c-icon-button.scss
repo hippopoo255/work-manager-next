@@ -1,0 +1,144 @@
+@use "../../Foundation/mixin/accessibility" as *;
+@use "../../Foundation/mixin/modifier" as *;
+@use "../../Foundation/mixin/gradient" as *;
+@use "../../Foundation/variable" as *;
+
+// ====================
+// リップル
+// ====================
+.effect-style {
+  @apply block absolute pointer-events-none bg-white;
+
+  top: -140px;
+  left: -140px;
+  width: 280px;
+  height: 280px;
+  border-radius: 140px;
+}
+
+.c-icon-button {
+  @apply text-white bg-primary border border-primary py-1.5 px-5 rounded shadow-md
+    relative duration-basis overflow-hidden;
+
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+
+  .c-icon-button__icon {
+    fill: currentcolor;
+  }
+
+  .c-icon-button__effect {
+    @extend .effect-style;
+  }
+
+  .c-icon-button__body {
+    font-size: 150%;
+  }
+
+  .c-icon-button__text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    clip-path: polygon(0 0, 0 0, 0 0, 0 0);
+    border: 0;
+  }
+
+  // ====================
+  // ローダー
+  // ====================
+  .c-icon-button__loader {
+    @apply flex justify-center items-center
+      absolute top-0 left-0 w-full h-full pointer-events-none opacity-0;
+
+    &.--active {
+      @apply opacity-100;
+    }
+  }
+
+  // ====================
+  // Modifier
+  // ====================
+  @include onHover {
+    @apply opacity-70;
+
+    will-change: transform, animation;
+  }
+
+  @include colorModifierByPaletteName(("bg", "border"), (
+    "usingText",
+    "disabledNone"
+  ));
+
+  @include roundFullModifier {
+    @apply py-2 px-2;
+  }
+
+  @each $key, $list in $size {
+    @if $key == "larger" {
+      @for $i from 1 through length($list) {
+        /* stylelint-disable-next-line scss/no-global-function-names */
+        $s: nth($list, $i);
+        $weight: $i + 2;
+
+        &.--#{$s} {
+          @apply py-#{$weight - 1} px-#{$weight + 2} shadow-#{$s};
+
+          .c-icon-button__body {
+            font-size: calc(125% * (1 + 0.125 * $weight));
+          }
+
+          &.--round {
+            @apply py-#{$weight} px-#{$weight} shadow-#{$s};
+          }
+        }
+      }
+    }
+
+    @if $key == "smaller" {
+      @for $i from 1 through length($list) {
+        /* stylelint-disable-next-line scss/no-global-function-names */
+        $s: nth($list, $i);
+        $weight: $i;
+        $space: 3 - $i;
+
+        &.--#{$s} {
+          @apply py-#{$space} px-#{$space} shadow-#{$s};
+
+          .c-icon-button__body {
+            font-size: calc(125% * (1 - 0.175 * $weight));
+          }
+        }
+      }
+    }
+  }
+
+  @include loadingModifier {
+    @apply bg-disabled border-disabled text-disabled-dark pointer-events-none;
+
+    background-image: none !important;
+  }
+
+  &.--signup {
+    @apply border-transparent;
+    @include gradient("secondary");
+
+    @include onHover {
+      @apply opacity-80;
+    }
+  }
+
+  &.--signin {
+    @apply border-transparent;
+    @include gradient;
+
+    @include onHover {
+      @apply opacity-80;
+    }
+  }
+
+  &.--flat {
+    @apply shadow-none;
+  }
+}

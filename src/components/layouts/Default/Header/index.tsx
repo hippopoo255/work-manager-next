@@ -4,12 +4,12 @@ import GlobalNav from './GlobalNav'
 const Header = () => {
   return (
     <div className="l-header">
-      <div>
+      <div className="l-header__logo">
         <div>
           <Link href={'/'}>Top</Link>
         </div>
       </div>
-      <div>
+      <div className="l-header__nav">
         <GlobalNav />
       </div>
     </div>

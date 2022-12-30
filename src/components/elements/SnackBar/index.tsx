@@ -23,5 +23,3 @@ export const SnackBar = () => {
     </div>
   )
 }
-
-export default SnackBar

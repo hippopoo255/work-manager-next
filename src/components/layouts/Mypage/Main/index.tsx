@@ -2,13 +2,13 @@ import React from 'react'
 
 type Props = {
   children: React.ReactNode
-  title: string
+  title?: string
 }
 const Main = ({ children, title }: Props) => {
   return (
     <div className="l-main">
       <h2 className="l-main__head">
-        <div className="p-page-title">{title}</div>
+        <div className="p-page-title">{title ?? ''}</div>
       </h2>
       <div className="l-main__body">{children}</div>
     </div>

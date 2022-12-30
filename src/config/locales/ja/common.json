@@ -2,7 +2,7 @@
   "siteTitle": "ジョブサポ",
   "head": {
     "title": {
-      "signIn": "サインイン",
+      "signIn": "ログイン",
       "signUp": "アカウント登録",
       "passwordForgotten": "パスワードをお忘れの方",
       "passwordReset": "パスワードリセット",
@@ -25,7 +25,7 @@
     }
   },
   "header": {
-    "signIn": "サインイン",
+    "signIn": "ログイン",
     "signUp": "アカウント登録",
     "help": "ヘルプ",
     "authMenu": {

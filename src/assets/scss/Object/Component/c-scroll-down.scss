@@ -1,0 +1,34 @@
+.c-scroll-down {
+  @apply block h-6 bg-no-repeat;
+
+  width: 0.1rem;
+  background-image:
+    linear-gradient(
+      -180deg,
+      transparent,
+      var(--font-color-basis) 50%,
+      transparent 50%,
+      transparent
+    );
+  background-size: 100% 200%;
+  animation-name: scroll-down;
+  animation-duration: 2s;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1); /* easeOutQuintのイージング */
+  animation-delay: 0.7s;
+  animation-iteration-count: infinite;
+  animation-fill-mode: backwards;
+}
+
+@keyframes scroll-down {
+  0% {
+    background-position: 0 100%;
+  }
+
+  50% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 0 -100%;
+  }
+}

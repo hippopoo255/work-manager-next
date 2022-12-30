@@ -65,6 +65,7 @@
 @mixin roundFullModifier() {
   &.--round {
     @apply rounded-full;
+    @content;
   }
 }
 
