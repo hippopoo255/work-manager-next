@@ -8,7 +8,13 @@ import { useAuthContext } from '~/services/auth'
 const MyPage: NextPageWithLayout = () => {
   const { auth } = useAuthContext()
 
-  return <div>Hi,{auth.user.full_name}!!</div>
+  return (
+    <div>
+      <ul>
+        <li></li>
+      </ul>
+    </div>
+  )
 }
 
 export default MyPage

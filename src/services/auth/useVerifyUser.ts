@@ -15,7 +15,7 @@ const useVerifyUser = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const { update: updateStatus } = useStatus()
   const router = useRouter()
-  const { t } = useTranslation()
+  const { t } = useTranslation('form')
   const methods = useForm<AccountVerificationFormType>({
     mode: 'onBlur',
     defaultValues: {

@@ -15,7 +15,7 @@ const useSendPasswordForgotten = () => {
 
   const { update: updateStatus, clear } = useStatus()
   const router = useRouter()
-  const { t } = useTranslation()
+  const { t } = useTranslation('form')
   const methods = useForm<FormType>({
     mode: 'onBlur',
     defaultValues: {

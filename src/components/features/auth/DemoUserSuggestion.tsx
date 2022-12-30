@@ -3,7 +3,11 @@ import React from 'react'
 import { BorderButton } from '~/components/elements/Button'
 import { useDemoUserSignIn } from '~/services/auth'
 
-const DemoUserSuggestion = () => {
+type Props = {
+  flat?: boolean
+}
+
+const DemoUserSuggestion = ({ flat }: Props) => {
   const { loading, onSubmit } = useDemoUserSignIn()
   const { t } = useTranslation()
   return (
@@ -11,6 +15,7 @@ const DemoUserSuggestion = () => {
       text={t('label.demoSignIn')}
       loading={loading}
       onClick={onSubmit}
+      flat={flat ?? false}
     />
   )
 }

@@ -13,7 +13,7 @@ const useSignIn = () => {
   const { dispatch } = useAuthContext()
   const { update: updateStatus } = useStatus()
   const router = useRouter()
-  const { t } = useTranslation()
+  const { t } = useTranslation('form')
 
   const methods = useForm<SignInFormType>({
     mode: 'onBlur',

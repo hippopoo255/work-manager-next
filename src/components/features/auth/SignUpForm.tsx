@@ -10,14 +10,15 @@ const SignUpForm = () => {
   return (
     <FormCard title={t('signUp.title', { ns: 'form' }) ?? ''}>
       <SignUpFields />
-      <div className="mt-16">
+      <div className="mt-8">
         <div className="grid sm:grid-flow-col place-content-between">
           <Link href="/signin" className="u-link --primary">
             {t('link.alreadyHaveAccount')}
           </Link>
         </div>
-        <div className="mt-6 grid">
-          <DemoUserSuggestion />
+        <hr className="my-6 -mx-6" />
+        <div className="grid">
+          <DemoUserSuggestion flat />
         </div>
       </div>
     </FormCard>

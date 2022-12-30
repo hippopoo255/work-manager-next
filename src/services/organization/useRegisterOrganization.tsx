@@ -20,7 +20,7 @@ const useRegisterOrganization = () => {
   const { post } = useFetch()
   const { auth, dispatch } = useAuthContext()
   const { register } = useRegisterAdmin()
-  const { t } = useTranslation()
+  const { t } = useTranslation('form')
 
   const router = useRouter()
   const methods = useForm<RegisterOrganizationForm>({

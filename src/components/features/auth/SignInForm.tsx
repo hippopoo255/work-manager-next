@@ -9,18 +9,19 @@ const SignInForm = () => {
   return (
     <FormCard title={t('signIn.title', { ns: 'form' }) ?? ''} size="sm">
       <SignInFields />
-      <div className="mt-16">
+      <div className="mt-8">
         <div className="grid place-content-between">
           {/* サポート...パスワードをお忘れですか？ 新規登録がお済みでない方はこちら */}
-          <Link href="/password-forgotten" className="u-link mb-4">
+          <Link href="/password-forgotten" className="u-link">
             {t('link.passwordForgotten')}
           </Link>
           <Link href="/signup" className="u-link --secondary">
             {t('link.dontHaveAccount')}
           </Link>
         </div>
-        <div className="mt-6 grid">
-          <DemoUserSuggestion />
+        <hr className="my-6 -mx-6" />
+        <div className="grid">
+          <DemoUserSuggestion flat />
         </div>
       </div>
     </FormCard>
