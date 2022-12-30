@@ -1,0 +1,7 @@
+@use "../../Foundation/variable" as *;
+
+.u-container {
+  @apply px-3 mx-auto w-full;
+
+  max-width: $width2Xl;
+}

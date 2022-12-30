@@ -6,9 +6,11 @@ import { useTheme } from '~/services/theme'
 export default function Layout({
   children,
   title,
+  className,
 }: {
   children: React.ReactNode
   title?: string
+  className?: string
 }) {
   const { t } = useTranslation()
 
@@ -24,7 +26,7 @@ export default function Layout({
           {!!title ? `${title} | ${t('siteTitle')}` : t('siteTitle')}
         </title>
       </Head>
-      <div className="l-app" data-mode={theme.mode}>
+      <div className={`l-app ${className}`} data-mode={theme.mode}>
         {children}
       </div>
     </>

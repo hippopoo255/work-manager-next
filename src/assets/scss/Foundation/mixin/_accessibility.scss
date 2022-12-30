@@ -19,7 +19,11 @@
   &:focus-visible { @content; }
 }
 
-@mixin breakPoint($breakPoint: "sm") {
+@mixin onVisible() {
+  &:focus-visible { @content; }
+}
+
+@mixin breakPoint($breakPoint: "md") {
   @media #{map-get($breakPoints, $breakPoint)} {
     @content;
   }

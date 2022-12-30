@@ -18,10 +18,7 @@ const ThemeToggle = ({ className, label }: Props) => {
   }, [on])
 
   return (
-    <button
-      onClick={handleClick}
-      className={'grid grid-flow-col place-items-center place-content-center'}
-    >
+    <button onClick={handleClick} className={'p-theme-toggle'}>
       <Toggle on={on} />
       <span className={className ?? 'text-fc-secondary text-sm ml-2'}>
         {label ?? t('label.darkMode')}

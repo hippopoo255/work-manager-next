@@ -29,6 +29,10 @@ const AuthAvatar = ({ user }: Props) => {
   return (
     <div className={`p-auth-avatar`}>
       <Avatar onClick={handleClick} filePath={iconPath} name={user.full_name} />
+      <div
+        className={`p-auth-avatar__overlay${open ? ' --open' : ''}`}
+        onClick={handleClick}
+      ></div>
       <div className="p-auth-avatar__menu">
         <AuthMenu
           user={user}

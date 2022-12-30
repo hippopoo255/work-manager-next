@@ -1,5 +1,9 @@
 .c-toggle {
-  @apply flex items-center bg-disabled rounded-full w-10 h-4 relative shadow-md;
+  @apply flex items-center bg-disabled rounded-full w-10 h-4 relative shadow-md cursor-pointer;
+
+  &:focus-visible {
+    @apply outline-2 outline-primary;
+  }
 
   .c-toggle__ball {
     will-change: transform;

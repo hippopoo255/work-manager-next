@@ -11,7 +11,9 @@ const MyPage: NextPageWithLayout = () => {
   return (
     <div>
       <ul>
-        <li></li>
+        {[...Array(500)].map((_, i) => (
+          <li key={i}>{i + 1}</li>
+        ))}
       </ul>
     </div>
   )

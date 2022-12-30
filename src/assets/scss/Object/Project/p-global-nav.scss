@@ -1,5 +1,25 @@
+@use "../../Foundation/mixin/accessibility" as *;
+
 .p-global-nav {
+  @apply flex items-center;
+
   .p-global-nav__menu {
-    @apply grid place-items-center grid-flow-col;
+    @apply flex justify-end flex-grow;
+  }
+
+  .p-global-nav__option {
+    @apply grid place-content-center shrink-0;
+  }
+
+  @include breakPoint("lg") {
+    @apply block bg-bc-basis h-full;
+
+    .p-global-nav__menu {
+      @apply block py-4;
+    }
+
+    .p-global-nav__option {
+      @apply border-t border-t-fc-hint p-4 justify-start;
+    }
   }
 }
