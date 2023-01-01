@@ -1,10 +1,11 @@
 @use "../Foundation/variable" as *;
 @use "../Foundation/mixin/accessibility" as *;
+@use "../Foundation/function/accessibility" as *;
 
 .l-app {
   @apply grid min-h-screen text-fc-basis bg-bc-basis;
 
-  grid-template: $headerHeight 1fr 8rem / 1fr;
+  grid-template: #{px($headerHeight)} 1fr #{px($footerHeight)} / 1fr;
   grid-template-areas:
     "header"
     "main"
@@ -12,15 +13,15 @@
   min-height: 100dvh;
 
   .l-app__header {
-    @apply shadow-xl fixed w-full h-header bg-bc-sheet grid content-center grid-flow-col z-40;
+    @apply shadow-xl fixed w-full bg-bc-sheet grid content-center grid-flow-col z-40;
 
     grid-area: header;
+    height: px($headerHeight);
   }
 
   .l-app__main {
-    @apply py-8;
-
     grid-area: main;
+    padding: px(28) 0;
   }
 
   .l-app__footer {
@@ -30,29 +31,32 @@
   }
 
   .l-app__snackbar {
-    @apply fixed bottom-4 right-4;
+    @apply fixed;
+
+    right: px(16);
+    bottom: px(16);
   }
 
   &.--mypage {
-    grid-template: $headerHeight 1fr 8rem / 20rem 1fr;
+    grid-template: #{px($headerHeight)} 1fr #{px($footerHeight)} / #{px($siteMenuWidth)} 1fr;
     grid-template-areas:
       "sidemenu header"
       "sidemenu main"
       "footer footer";
 
     .l-app__header {
-      padding-left: 20rem;
+      padding-left: px($siteMenuWidth);
     }
 
     .l-app__side {
       @apply fixed top-0 bottom-0 z-50;
 
       grid-area: sidemenu;
-      width: 20rem;
+      width: px($siteMenuWidth);
     }
 
     @include breakPoint("lg") {
-      grid-template: $headerHeight 1fr 8rem / 1fr;
+      grid-template: #{px($headerHeight)} 1fr #{px($footerHeight)} / 1fr;
       grid-template-areas:
         "header"
         "main"

@@ -1,5 +1,3 @@
-import React, { useState } from 'react'
-
 type Props = {
   children: React.ReactNode
   open: boolean

@@ -1,5 +1,9 @@
-.c-message-error {
-  @apply text-danger text-sm pt-1;
+@use "../../Foundation/function/accessibility" as *;
 
-  min-height: 1.5rem;
+.c-message-error {
+  @apply text-danger;
+
+  min-height: px(24);
+  padding: px(4) 0 0;
+  font-size: px(12);
 }

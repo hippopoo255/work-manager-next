@@ -19,3 +19,5 @@ declare module 'next/app' {
     Component: NextPageWithLayout<P>
   }
 }
+
+export * from './auth'

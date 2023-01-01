@@ -1,4 +1,6 @@
 @use "../../Foundation/mixin/accessibility" as *;
+@use "../../Foundation/function/accessibility" as *;
+@use "../../Foundation/variable" as *;
 
 .p-hamburger {
   z-index: 1;
@@ -12,26 +14,31 @@
   .p-hamburger__toggler-line {
     @apply w-full block bg-fc-basis duration-300;
 
-    height: 0.1rem;
+    height: px(1);
     transition-property: transform;
     transform-origin: center;
 
     &:not(:first-of-type) {
-      margin-top: 7px;
+      margin-top: px(7);
     }
   }
 
   @include breakPoint("lg") {
-    @apply flex items-center justify-end relative h-16;
+    @apply flex items-center justify-end relative;
+
+    height: px($headerHeight);
 
     .p-hamburger__toggler {
-      @apply block w-9;
+      @apply block;
+
+      width: px(32);
     }
 
     .p-hamburger__content {
-      @apply fixed top-0 left-0 bottom-0 w-full pt-16 transition-transform duration-300;
+      @apply fixed top-0 left-0 bottom-0 w-full transition-transform duration-300;
 
       z-index: -1;
+      margin-top: px($headerHeight);
       transform: translate3d(-100%, 0, 0);
     }
 
@@ -42,7 +49,7 @@
 
       .p-hamburger__toggler-line {
         &:nth-of-type(1) {
-          transform: translate3d(0, 0.6rem, 0) rotate3d(0, 0, 1, 225deg);
+          transform: translate3d(0, px(8), 0) rotate3d(0, 0, 1, 225deg);
         }
 
         &:nth-of-type(2) {
@@ -50,7 +57,7 @@
         }
 
         &:nth-of-type(3) {
-          transform: translate3d(0, -0.6rem, 0) rotate3d(0, 0, 1, 315deg);
+          transform: translate3d(0, px(- 8), 0) rotate3d(0, 0, 1, 315deg);
         }
       }
     }

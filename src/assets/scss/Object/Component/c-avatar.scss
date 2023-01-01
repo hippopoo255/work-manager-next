@@ -1,5 +1,10 @@
+@use "../../Foundation/function/accessibility" as *;
+
 .c-avatar {
-  @apply rounded-full w-9 h-9 grid place-content-center bg-primary text-white overflow-hidden;
+  @apply rounded-full grid place-content-center bg-primary text-white overflow-hidden;
+
+  width: px(32);
+  height: px(32);
 
   &.--has-path {
     @apply bg-gray-300;

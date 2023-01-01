@@ -35,7 +35,8 @@
   "footer": {},
   "label": {
     "darkMode": "Enable dark mode",
-    "demoSignIn": "Attempt as a demo user"
+    "demoSignIn": "Attempt as a demo user",
+    "addressAuto": "Enter address"
   },
   "link": {
     "passwordForgotten": "I forgot my password",

@@ -1,3 +1,6 @@
+@use "../Foundation/function/accessibility" as *;
+@use "../Foundation/variable" as *;
+
 .l-sidemenu {
   @apply h-full;
 
@@ -5,14 +8,20 @@
   background: #222a40;
 
   .l-sidemenu__head {
-    @apply text-center p-4;
+    @apply text-center;
+  }
+
+  .l-sidemenu__top-link {
+    @apply block;
+
+    padding: px(12);
   }
 
   .l-sidemenu__body {
-    @apply p-4;
+    padding: px($fontSizeBasis);
   }
 
   .l-sidemenu__bottom {
-    @apply p-4;
+    padding: px($fontSizeBasis);
   }
 }

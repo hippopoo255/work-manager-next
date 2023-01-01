@@ -1,15 +1,24 @@
 import type { NextPageWithLayout, GetStaticPropsContext } from 'next'
 import { i18n } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import Head from 'next/head'
 import React from 'react'
 import { ResetPasswordForm } from '~/components/features/auth'
 import Layout from '~/components/layouts/Default'
 
 const PasswordReset: NextPageWithLayout = () => {
   return (
-    <div className="u-position-center h-full px-4">
-      <ResetPasswordForm />
-    </div>
+    <>
+      <Head>
+        <meta
+          name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+        ></meta>
+      </Head>
+      <div className="u-position-center h-full px-4">
+        <ResetPasswordForm />
+      </div>
+    </>
   )
 }
 

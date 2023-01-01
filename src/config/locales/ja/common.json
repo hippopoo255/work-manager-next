@@ -36,13 +36,13 @@
   "footer": {},
   "label": {
     "darkMode": "ダークモードにする",
-    "demoSignIn": "デモユーザとして試す"
+    "demoSignIn": "デモユーザとして試す",
+    "addressAuto": "住所を自動入力"
   },
   "link": {
     "passwordForgotten": "パスワードをお忘れの方",
     "alreadyHaveAccount": "既にアカウントをお持ちの方",
-    "dontHaveAccount": "アカウント登録がまだの方",
-    "addressAuto": "住所を自動入力する"
+    "dontHaveAccount": "アカウント登録がまだの方"
   },
   "cognitoError": {
     "UserNotFoundException": "アカウントが存在しません",

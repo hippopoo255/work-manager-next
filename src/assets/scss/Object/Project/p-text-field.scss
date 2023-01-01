@@ -1,22 +1,27 @@
+@use "../../Foundation/function/accessibility" as *;
+
 .p-text-field {
   @apply block relative border-b-fc-hint;
 
   .p-text-field__label {
     @apply absolute pointer-events-none top-1/2 -translate-y-1/2 text-fc-hint transition-all duration-basis;
 
-    .p-text-field & {
-      @apply top-2 -translate-y-full text-primary text-xs;
-    }
+    font-size: px(14);
   }
 
   .p-text-field__body {
-    @apply block w-full border-b-inherit border-b rounded-none py-2;
+    @apply block w-full border-b-inherit border-b rounded-none;
+
+    padding: px(6) 0;
+    font-size: px(14);
   }
 
   &:focus-within,
   &.--visible {
     .p-text-field__label {
-      @apply top-2 -translate-y-full text-xs;
+      @apply top-2 -translate-y-full;
+
+      font-size: px(10);
     }
   }
 

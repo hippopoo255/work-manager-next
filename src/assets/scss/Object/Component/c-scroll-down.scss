@@ -1,7 +1,10 @@
-.c-scroll-down {
-  @apply block h-6 bg-no-repeat;
+@use "../../Foundation/function/accessibility" as *;
 
-  width: 0.1rem;
+.c-scroll-down {
+  @apply block bg-no-repeat;
+
+  width: px(1);
+  height: px(24);
   background-image:
     linear-gradient(
       -180deg,

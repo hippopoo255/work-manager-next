@@ -1,14 +1,15 @@
 @use "variable" as *;
+@use "function/accessibility" as *;
 
 :root {
-  font-size: $fontSizeBasis;
+  font-size: px($fontSizeBasis);
   scroll-behavior: smooth;
   text-size-adjust: 100%;
 }
 
 a {
   display: inline-block;
-  padding: 0.25rem;
+  padding: px(4);
   color: inherit;
   text-decoration: none;
 }
@@ -18,7 +19,7 @@ textarea,
 select {
   @apply bg-transparent;
 
-  height: 2.25rem;
+  height: px(32);
 }
 
 @media (prefers-reduced-motion: no-preference) {

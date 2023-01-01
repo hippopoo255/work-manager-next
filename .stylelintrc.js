@@ -20,8 +20,9 @@ module.exports = {
         ignoreAtRules: [
           'tailwind',
           'apply',
-          'responsive',
           'extend',
+          'responsive',
+          'debug',
           'media',
           'screen',
           'mixin',
@@ -43,6 +44,7 @@ module.exports = {
         ignoreAtRules: [
           'tailwind',
           'apply',
+          'debug',
           'extend',
           'responsive',
           'media',

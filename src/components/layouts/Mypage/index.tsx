@@ -16,7 +16,7 @@ export default function Layout({
   useInitialFetch()
 
   return (
-    <AppLayout title={title} className="--mypage">
+    <AppLayout title={title} className=" --mypage">
       <header className="l-app__header">
         <Header />
       </header>

@@ -11,7 +11,9 @@ const SideMenu = ({ user, className }: Props) => {
   return (
     <div className={`l-sidemenu ${className ?? ''}`}>
       <div className="l-sidemenu__head">
-        <Link href={'/'}>Top</Link>
+        <Link href={'/'} className="l-sidemenu__top-link">
+          Top Page
+        </Link>
       </div>
       <hr />
       <div className="l-sidemenu__body">

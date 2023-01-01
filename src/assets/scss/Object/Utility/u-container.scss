@@ -1,7 +1,9 @@
 @use "../../Foundation/variable" as *;
+@use "../../Foundation/function/accessibility" as *;
 
 .u-container {
-  @apply px-3 mx-auto w-full;
+  @apply mx-auto w-full;
 
-  max-width: $width2Xl;
+  max-width: $siteMaxWidth;
+  padding: 0 px(12);
 }

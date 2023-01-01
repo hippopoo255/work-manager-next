@@ -31,7 +31,7 @@ const useSignIn = () => {
       .signIn(inputs, dispatch)
       .then(() => {
         updateStatus({
-          message: 'サインインに成功しました',
+          message: 'ログインに成功しました',
           statusCode: 200,
           category: 'success',
         })

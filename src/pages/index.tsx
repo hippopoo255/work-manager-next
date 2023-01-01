@@ -21,10 +21,13 @@ const Home: NextPageWithLayout = () => {
           <div className="mx-4">
             <ScrollDown />
           </div>
+          <Tooltip text="この操作は無効です">
+            <span className="text-disabled self-end">{t('siteTitle')}</span>
+          </Tooltip>
         </div>
       </div>
-      <div className="p-card mx-4 mt-4">
-        <div className="flex justify-start items-center gap-4">
+      <div className="p-card mx-4 mt-4 overflow-x-hidden">
+        <div className="flex justify-start items-center gap-4 flex-wrap">
           <IconButton
             text={'検索する'}
             icon={<AiOutlineSearch />}
@@ -75,7 +78,7 @@ const Home: NextPageWithLayout = () => {
       </div>
       <div className="p-card mx-4 mt-4">
         <h3>Button</h3>
-        <div className="p-card__grid">
+        <div className="p-card__grid items-start">
           <div className=""></div>
           <div className="text-center">Natural</div>
           <div className="text-center">light</div>
@@ -158,7 +161,7 @@ const Home: NextPageWithLayout = () => {
       </div>
       <div className="p-card mx-4 mt-4">
         <h3>BorderButton</h3>
-        <div className="grid grid-cols-5 gap-x-2 gap-y-4">
+        <div className="p-card__grid">
           <div className=""></div>
           <div className="text-center">Natural</div>
           <div className="text-center">light</div>

@@ -1,4 +1,5 @@
 @use "../Foundation/variable" as *;
+@use "../Foundation/function/accessibility" as *;
 
 .l-main {
   @apply h-full grid;
@@ -11,7 +12,7 @@
     grid-area: head;
   }
 
-  grid-template-rows: $headerHeight 1fr;
+  grid-template-rows: px($headerHeight) 1fr;
   grid-template-columns: 1fr;
 
   .l-main__body {

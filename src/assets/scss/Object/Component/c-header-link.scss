@@ -1,13 +1,22 @@
 @use "../../Foundation/mixin/accessibility" as *;
+@use "../../Foundation/function/accessibility" as *;
+@use "../../Foundation/variable" as *;
 
 .c-header-link {
-  @apply block text-fc-accent py-2 px-4 duration-basis transition-all;
+  @apply block text-fc-accent duration-basis transition-all;
+
+  padding: px(6) px($fontSizeBasis);
+  font-size: px(14);
 
   @include onHover {
     @apply text-fc-link;
   }
 
   @include breakPoint("lg") {
-    @apply py-4;
+    padding: px(14);
+  }
+
+  &.--current {
+    @apply text-disabled font-bold pointer-events-none;
   }
 }

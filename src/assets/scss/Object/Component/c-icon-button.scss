@@ -1,4 +1,5 @@
 @use "../../Foundation/mixin/accessibility" as *;
+@use "../../Foundation/function/accessibility" as *;
 @use "../../Foundation/mixin/modifier" as *;
 @use "../../Foundation/mixin/gradient" as *;
 @use "../../Foundation/variable" as *;
@@ -17,9 +18,10 @@
 }
 
 .c-icon-button {
-  @apply text-white bg-primary border border-primary py-1.5 px-5 rounded shadow-md
+  @apply text-white bg-primary border border-primary rounded shadow-md
     relative duration-basis overflow-hidden;
 
+  padding: px(6);
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 
@@ -70,47 +72,18 @@
     "usingText",
     "disabledNone"
   ));
+  @include roundFullModifier;
 
-  @include roundFullModifier {
-    @apply py-2 px-2;
-  }
-
-  @each $key, $list in $size {
-    @if $key == "larger" {
-      @for $i from 1 through length($list) {
-        /* stylelint-disable-next-line scss/no-global-function-names */
-        $s: nth($list, $i);
-        $weight: $i + 2;
-
-        &.--#{$s} {
-          @apply py-#{$weight - 1} px-#{$weight + 2} shadow-#{$s};
-
-          .c-icon-button__body {
-            font-size: calc(125% * (1 + 0.125 * $weight));
-          }
-
-          &.--round {
-            @apply py-#{$weight} px-#{$weight} shadow-#{$s};
-          }
-        }
+  @each $key, $list in $sizes {
+    &.--#{$key} {
+      @if $key == xs {
+        @apply shadow-sm;
+      } @else {
+        @apply shadow-#{$key};
       }
-    }
 
-    @if $key == "smaller" {
-      @for $i from 1 through length($list) {
-        /* stylelint-disable-next-line scss/no-global-function-names */
-        $s: nth($list, $i);
-        $weight: $i;
-        $space: 3 - $i;
-
-        &.--#{$s} {
-          @apply py-#{$space} px-#{$space} shadow-#{$s};
-
-          .c-icon-button__body {
-            font-size: calc(125% * (1 - 0.175 * $weight));
-          }
-        }
-      }
+      padding: px($key, "space");
+      font-size: px($key, "font-size");
     }
   }
 

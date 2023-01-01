@@ -1,10 +1,12 @@
+@use "../../Foundation/function/accessibility" as *;
 @use "../../Foundation/variable" as *;
 
 .u-static-200 {
-  width: 200px;
+  width: px(200);
   padding: 1rem;
+  padding: px(16);
   background: var(--bg-color-sheet);
-  border-width: 0.25rem;
+  border-width: px(4);
 }
 
 .u-width-8 {

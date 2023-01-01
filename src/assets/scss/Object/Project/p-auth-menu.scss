@@ -1,33 +1,38 @@
 @use "../../Foundation/variable" as *;
 @use "../../Foundation/mixin/accessibility" as *;
+@use "../../Foundation/function/accessibility" as *;
 
 .p-auth-menu {
-  @apply relative rounded bg-accent text-white min-w-fit opacity-0 duration-basis pointer-events-none;
+  @apply relative rounded bg-accent text-white opacity-0 duration-basis;
 
-  min-width: 14rem;
+  min-width: px(200);
 
   &::after {
-    @apply absolute -top-3 w-0 h-0 translate-x-1.5;
+    @apply absolute w-0 h-0 translate-x-1.5;
 
-    right: 1.125rem;
+    top: px(- 12);
+    right: px(18);
     content: "";
     border-color: transparent transparent $accent;
     border-style: solid;
-    border-width: 0 0.375rem 0.875rem;
+    border-width: 0 px(4) px(12);
   }
 
   .p-auth-menu__head {
-    @apply py-4 px-4 border-b border-b-white;
+    @apply border-b border-b-white;
 
-    min-height: 3.6rem;
+    min-height: px(48);
+    padding: px(12);
   }
 
   .p-auth-menu__body {
-    @apply py-2;
+    padding: px(8) 0;
   }
 
   .p-auth-menu__link {
-    @apply w-full text-white py-2 px-4 duration-basis transition-all text-left;
+    @apply w-full text-white duration-basis transition-all text-left;
+
+    padding: px(6) px(12);
 
     @include onHover {
       @apply text-fc-link;
@@ -35,6 +40,6 @@
   }
 
   &.--open {
-    @apply opacity-100 pointer-events-none;
+    @apply opacity-100;
   }
 }

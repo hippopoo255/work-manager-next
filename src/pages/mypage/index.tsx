@@ -9,7 +9,7 @@ const MyPage: NextPageWithLayout = () => {
   const { auth } = useAuthContext()
 
   return (
-    <div>
+    <div className="u-container">
       <ul>
         {[...Array(500)].map((_, i) => (
           <li key={i}>{i + 1}</li>

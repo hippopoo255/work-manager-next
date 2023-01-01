@@ -19,7 +19,7 @@ const SignInForm = () => {
             {t('link.dontHaveAccount')}
           </Link>
         </div>
-        <hr className="my-6 -mx-6" />
+        <hr className="my-4 -mx-4" />
         <div className="grid">
           <DemoUserSuggestion flat />
         </div>

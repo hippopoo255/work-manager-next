@@ -1,21 +1,29 @@
 @use "../../Foundation/variable" as *;
+@use "../../Foundation/mixin/accessibility" as *;
+@use "../../Foundation/function/accessibility" as *;
 
 .p-card {
-  @apply rounded shadow p-4;
+  @apply rounded shadow;
 
-  min-width: 10rem;
+  min-width: px(140);
   max-width: 100%;
+  padding: px(12);
   background: var(--bg-color-sheet);
 
   &.--space-lg {
-    @apply p-6;
+    padding: px(16);
   }
 
   .p-card__grid {
-    @apply grid grid-cols-5 gap-x-2 gap-y-4;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(px(140), 1fr));
+    grid-gap: px(8);
+    grid-row-gap: px(8);
+  }
 
-    > * {
-      align-self: start;
+  @include breakPoint {
+    .p-card__grid {
+      grid-template-columns: repeat(auto-fill, minmax(px(140), 1fr));
     }
   }
 }

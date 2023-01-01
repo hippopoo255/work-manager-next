@@ -632,6 +632,7 @@ export type TaskPage = {
 /** ユーザーのデータ */
 export type User = {
   id: number
+  is_over?: boolean
   full_name: string
   given_name: string
   given_name_kana: string

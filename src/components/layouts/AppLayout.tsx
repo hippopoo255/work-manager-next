@@ -26,7 +26,7 @@ export default function Layout({
           {!!title ? `${title} | ${t('siteTitle')}` : t('siteTitle')}
         </title>
       </Head>
-      <div className={`l-app ${className}`} data-mode={theme.mode}>
+      <div className={`l-app${className ?? ''}`} data-mode={theme.mode}>
         {children}
       </div>
     </>

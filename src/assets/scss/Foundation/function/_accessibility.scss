@@ -1,0 +1,20 @@
+/* stylelint-disable scss/no-global-function-names */
+@use "../variable" as *;
+
+// :rootに62.5%を設定しない代替案として
+@function px($size, $props: "font-size") {
+  @if $size == "xs" or $size == "sm" or $size == "lg" or $size == "xl" {
+    $target: map-get($sizes, $size);
+    $px: map-get($target, $props);
+    $calc: $px / $fontSizeBasis * 1rem;
+
+    @debug $calc;
+    @return $calc;
+  } @else {
+    $px: $size;
+    $calc: $px / $fontSizeBasis * 1rem;
+
+    @debug $calc;
+    @return $calc;
+  }
+}

@@ -1,5 +1,11 @@
+@use "../../Foundation/variable" as *;
+@use "../../Foundation/function/accessibility" as *;
+
 .c-toggle {
-  @apply flex items-center bg-disabled rounded-full w-10 h-4 relative shadow-md cursor-pointer;
+  @apply flex items-center bg-disabled rounded-full relative shadow-md cursor-pointer;
+
+  width: px(36);
+  height: px($fontSizeBasis);
 
   &:focus-visible {
     @apply outline-2 outline-primary;
@@ -7,16 +13,18 @@
 
   .c-toggle__ball {
     will-change: transform;
+    width: px($fontSizeBasis);
+    height: px($fontSizeBasis);
 
     @apply inline-block scale-125 origin-center
-      w-4 h-4 rounded-full bg-white duration-basis transition-transform;
+      rounded-full bg-white duration-basis transition-transform;
   }
 
   &.--on {
     @apply bg-primary border-primary;
 
     .c-toggle__ball {
-      @apply translate-x-6;
+      transform: translate3d(px(20), 0, 0) scale3d(1.25, 1.25, 1.25);
     }
   }
 }

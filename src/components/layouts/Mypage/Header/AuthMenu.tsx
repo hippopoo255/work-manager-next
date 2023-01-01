@@ -6,13 +6,16 @@ import { useSignOut } from '~/services/auth'
 
 type Props = {
   user: User
-  onLink?: React.MouseEventHandler<HTMLLIElement>
+  onLink?: React.MouseEventHandler<HTMLLIElement | HTMLButtonElement>
   className?: string
 }
 const AuthMenu = ({ user, onLink, className }: Props) => {
   const { signOut } = useSignOut()
   const { t } = useTranslation()
-  const handleSignOut = async () => {
+  const handleSignOut = async (
+    e: React.MouseEvent<HTMLButtonElement | HTMLLIElement, MouseEvent>
+  ) => {
+    onLink && onLink(e)
     await signOut()
   }
 

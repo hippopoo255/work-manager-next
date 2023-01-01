@@ -1,4 +1,5 @@
 @use "../../Foundation/mixin/accessibility" as *;
+@use "../../Foundation/function/accessibility" as *;
 
 .p-global-nav {
   @apply flex items-center;
@@ -15,11 +16,15 @@
     @apply block bg-bc-basis h-full;
 
     .p-global-nav__menu {
-      @apply block py-4;
+      @apply block;
+
+      padding: px(14) 0;
     }
 
     .p-global-nav__option {
-      @apply border-t border-t-fc-hint p-4 justify-start;
+      @apply border-t border-t-fc-hint justify-start;
+
+      padding: px(14);
     }
   }
 }

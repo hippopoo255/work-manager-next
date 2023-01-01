@@ -3,6 +3,11 @@ import * as Type from './types'
 type Props = {
   ref: RefObject<HTMLElement>
 }
+const positionPropX: { [k: string]: string } = {
+  right: 'left',
+  left: 'right',
+}
+
 const useTooltip = ({ ref }: Props) => {
   const [style, setStyle] = useState({})
   const handleMouseOver = useCallback(() => {
@@ -13,7 +18,7 @@ const useTooltip = ({ ref }: Props) => {
     const position = decidePosition(ref.current) // right or left / top or bottom
     const [keyX, keyY] = Object.keys(position)
     // const transformStyle = decideTransform() // {transformX: '-100%'}
-    const positionStyle = { [keyX]: -8, [keyY]: -8 }
+    const positionStyle = { [positionPropX[keyX]]: -8, [keyY]: -8 }
     // ↓transformプロパティを決める
     const transformStyle = decideTransform(position)
     setStyle((prev) => ({

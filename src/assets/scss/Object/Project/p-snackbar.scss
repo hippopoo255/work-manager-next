@@ -1,7 +1,10 @@
 @use "../../Foundation/mixin/modifier" as *;
+@use "../../Foundation/function/accessibility" as *;
 
 .p-snackbar {
-  @apply block bg-bc-accent border-l-success border-l-4 text-success rounded p-4 shadow-lg z-50 opacity-0
+  @apply block bg-bc-accent border-l-success border-l-4 text-success rounded shadow-lg z-50 opacity-0
     duration-basis;
   @include statusStyle;
+
+  padding: px(16);
 }
