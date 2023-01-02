@@ -6,7 +6,7 @@ import { FormCard } from '~/components/elements/Form'
 const ResetPasswordForm = () => {
   const { t } = useTranslation('form')
   return (
-    <FormCard title={t('resetPassword.title') ?? ''}>
+    <FormCard title={t('resetPassword.title') ?? ''} size={'sm'}>
       <ResetPasswordFields />
     </FormCard>
   )

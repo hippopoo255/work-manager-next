@@ -39,6 +39,9 @@
     "demoSignIn": "デモユーザとして試す",
     "addressAuto": "住所を自動入力"
   },
+  "suggest": {
+    "disabled": "この操作は無効です"
+  },
   "link": {
     "passwordForgotten": "パスワードをお忘れの方",
     "alreadyHaveAccount": "既にアカウントをお持ちの方",

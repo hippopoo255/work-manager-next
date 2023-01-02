@@ -38,6 +38,9 @@
     "demoSignIn": "Attempt as a demo user",
     "addressAuto": "Enter address"
   },
+  "suggest": {
+    "disabled": "action is disabled"
+  },
   "link": {
     "passwordForgotten": "I forgot my password",
     "alreadyHaveAccount": "Log In",

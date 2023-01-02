@@ -8,7 +8,7 @@ type Props = {
 }
 const FormCard = ({ children, title, size }: Props) => {
   return (
-    <div className="p-card --space-lg">
+    <div className="p-card">
       <div className={`p-form${size !== undefined ? ' --' + size : ''}`}>
         <h3 className="p-form__head">{title ?? 'title'}</h3>
         <div className="p-form__body">{children}</div>
