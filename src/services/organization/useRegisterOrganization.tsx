@@ -81,7 +81,7 @@ const useRegisterOrganization = () => {
           statusCode: 201,
           category: 'success',
         })
-        router.push('/mypage')
+        router.reload()
       } else {
         setLoading(false)
         return admin // null

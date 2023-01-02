@@ -10,12 +10,12 @@ const useStatus = () => {
     (context: StatusState) => {
       statusOperation.set(dispatch, context)
     },
-    [status.message]
+    [dispatch]
   )
 
   const clear = useCallback(() => {
     statusOperation.clear(dispatch)
-  }, [])
+  }, [dispatch])
 
   return {
     status,

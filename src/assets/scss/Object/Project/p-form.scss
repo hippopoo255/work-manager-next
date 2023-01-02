@@ -1,12 +1,21 @@
 @use "../../Foundation/function/accessibility" as *;
+@use "../../Foundation/mixin/accessibility" as *;
 
 .p-form {
-  width: px(280);
+  width: px(360);
   max-width: 100%;
 
   .p-form__head {
     @apply font-bold text-xl text-fc-accent text-center;
 
     margin: px(8) 0 px(16);
+  }
+
+  &.--sm {
+    width: px(280);
+  }
+
+  @include breakPoint("sm") {
+    width: px(280);
   }
 }

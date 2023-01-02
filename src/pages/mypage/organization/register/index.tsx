@@ -3,10 +3,17 @@ import { GetServerSidePropsContext } from 'next'
 import { i18n } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 import { RegisterOrganizationForm } from '~/components/features/organization'
 import Layout from '~/components/layouts/Mypage'
 
 const OrganizationRegister: NextPageWithLayout = () => {
+  const router = useRouter()
+  useEffect(() => {
+    router.prefetch('/mypage')
+  }, [])
+
   return (
     <>
       <Head>
