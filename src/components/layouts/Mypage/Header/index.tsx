@@ -12,8 +12,8 @@ const Header = () => {
 
   return (
     <div className="l-header">
-      <Hamburger open={open} onToggle={handleToggle}>
-        <SideMenu className="lg:hidden" />
+      <Hamburger open={open} onToggle={handleToggle} under="lg">
+        <SideMenu className="lg:hidden" open={open} onToggle={handleToggle} />
       </Hamburger>
       <div className="l-header__nav">
         <AuthNav />

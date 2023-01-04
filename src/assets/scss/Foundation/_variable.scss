@@ -8,8 +8,9 @@
   --font-color-secondary: #8a8a8a;
   --font-color-link: #aaa;
   --font-color-hint: #bebebe;
-  --color-disabled: #d9dce3;
+  --color-disabled: #e5e5e5;
   --color-disabled-dark: #c0c0c0;
+  --color-line: #e6e7eb;
   --bg-color-accent: #fefefe;
   --bg-color-basis: #f3f4f6;
   --bg-color-sheet: #fefefe;
@@ -27,7 +28,7 @@
     --font-color-secondary: #e0e0e0;
     --font-color-link: #c8c8c8;
     --font-color-hint: #aaa;
-    --color-disabled: #9ca3af;
+    --color-disabled: #a8a8a8;
     --color-disabled-dark: #c0c0c0;
     --bg-color-accent: var(--color-accent);
     --bg-color-basis: #1b212b;
@@ -42,12 +43,14 @@ $fontFamilyBasis: "Helvetica Neue",
   "Hiragino Sans",
   meiryo,
   sans-serif;
+$assetPath: "https://asset.work-manager.site";
 
 // size
 $spaceBasis: 4;
 $headerHeight: 56;
 $footerHeight: 112;
-$siteMenuWidth: 280;
+$sideMenuWidth: 280;
+$sideMenuWidthSlim: 56;
 $siteMaxWidth: 1536px;
 $fontSizeBasis: 16;
 

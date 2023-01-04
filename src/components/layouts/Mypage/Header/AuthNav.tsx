@@ -10,19 +10,8 @@ export const AuthNav = () => {
 
   return (
     <>
-      {/* <Hamburger open={open} onToggle={handleToggle}>
-        <SideMenu />
-      </Hamburger> */}
       <nav className="p-auth-nav">
         <ul className="p-auth-nav__menu">
-          {/* <li className="p-auth-nav__item grid grid-flow-col place-content-center place-items-center">
-            <ThemeToggle />
-          </li>
-          <li className="p-auth-nav__item">
-            <Link href={{ pathname: '/help' }} className={'c-header-link'}>
-              {t('header.help')}
-            </Link>
-          </li> */}
           <li className="p-auth-nav__item">
             <AuthAvatar user={auth.user} />
           </li>

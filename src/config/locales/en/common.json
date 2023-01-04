@@ -33,6 +33,24 @@
     }
   },
   "footer": {},
+  "sideMenu": {
+    "minutes": {
+      "index": "Minutes",
+      "list": "List",
+      "create": "New"
+    },
+    "task": {
+      "index": "Task",
+      "list": "List",
+      "create": "New"
+    },
+    "schedule": {
+      "index": "Schedule"
+    },
+    "chat": {
+      "index": "Chat"
+    }
+  },
   "label": {
     "darkMode": "Enable dark mode",
     "demoSignIn": "Attempt as a demo user",

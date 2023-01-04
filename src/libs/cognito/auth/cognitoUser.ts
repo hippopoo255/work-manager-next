@@ -4,6 +4,7 @@ import { AxiosRequestConfig } from 'axios'
 
 import { handleError } from './handleError'
 import { amplifyConfigure } from './init'
+import { uri } from '~/config'
 import { COGNITO_TEST_USER } from '~/config/auth'
 import { fetch } from '~/libs/http_clients/axios'
 
@@ -31,7 +32,7 @@ const getJwt = async (authWithSSR: any = undefined): Promise<string> => {
   return cognitoSession
 }
 
-const currentUser = async (currentAuthorPath: string = '/user/current') => {
+const currentUser = async (currentAuthorPath: string = uri.auth.user) => {
   const jwt = await getJwt()
   if (!jwt) {
     return null
