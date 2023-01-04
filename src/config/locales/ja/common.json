@@ -33,6 +33,24 @@
       "signOut": "サインアウト"
     }
   },
+  "sideMenu": {
+    "minutes": {
+      "index": "議事録",
+      "list": "一覧",
+      "create": "作成"
+    },
+    "task": {
+      "index": "タスク",
+      "list": "一覧",
+      "create": "作成"
+    },
+    "schedule": {
+      "index": "スケジュール"
+    },
+    "chat": {
+      "index": "チャット"
+    }
+  },
   "footer": {},
   "label": {
     "darkMode": "ダークモードにする",

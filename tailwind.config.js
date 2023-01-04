@@ -21,6 +21,9 @@ const extendColors = {
     sheet: 'var(--bg-color-sheet)',
     header: 'var(--bg-color-header)',
   },
+  line: {
+    DEFAULT: 'var(--color-line)',
+  },
   accent: {
     DEFAULT: 'var(--color-accent)',
     blind: '#445061',

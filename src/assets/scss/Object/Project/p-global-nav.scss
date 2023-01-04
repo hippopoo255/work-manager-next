@@ -1,8 +1,13 @@
 @use "../../Foundation/mixin/accessibility" as *;
 @use "../../Foundation/function/accessibility" as *;
+@use "../../Foundation/variable" as *;
 
 .p-global-nav {
   @apply flex items-center;
+
+  .p-global-nav__top {
+    @apply hidden;
+  }
 
   .p-global-nav__menu {
     @apply flex justify-end flex-grow;
@@ -13,18 +18,28 @@
   }
 
   @include breakPoint("lg") {
-    @apply block bg-bc-basis h-full;
+    @apply block bg-bc-basis h-full border-r border-r-line shadow;
+
+    width: calc(100dvw - 56px);
+    max-width: px(480);
+
+    .p-global-nav__top {
+      @apply grid place-content-center border-b border-b-line;
+
+      display: grid;
+      height: px($headerHeight);
+    }
 
     .p-global-nav__menu {
       @apply block;
 
-      padding: px(14) 0;
+      padding: px(12) 0;
     }
 
     .p-global-nav__option {
-      @apply border-t border-t-fc-hint justify-start;
+      @apply border-t border-t-line justify-start;
 
-      padding: px(14);
+      padding: px(12);
     }
   }
 }

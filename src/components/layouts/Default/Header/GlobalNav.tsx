@@ -1,33 +1,30 @@
 import clsx from 'clsx'
 import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { Hamburger } from '../../Hamburger'
 import { ThemeToggle } from '~/components/elements/Toggle'
+import { useLink } from '~/services/common'
 
 const GlobalNav = () => {
   const [open, setOpen] = useState(false)
-
-  const { t } = useTranslation()
-  const router = useRouter()
-
   const handleToggle = () => {
     setOpen(!open)
   }
 
-  const handleLink = (
-    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
-    path: string
-  ) => {
-    e.preventDefault()
-    handleToggle()
-    router.push(path)
-  }
+  const { t } = useTranslation()
+  const { router, handleLink } = useLink({ onLink: handleToggle })
 
   return (
-    <Hamburger open={open} onToggle={handleToggle}>
+    <Hamburger open={open} onToggle={handleToggle} under="lg">
       <nav className="p-global-nav">
+        <Link
+          href={{ pathname: '/' }}
+          className={'p-global-nav__top'}
+          onClick={(e) => handleLink(e, '/')}
+        >
+          <h1>{t('siteTitle')}</h1>
+        </Link>
         <ul className="p-global-nav__menu">
           <li className="p-global-nav__item">
             <Link

@@ -2,17 +2,80 @@
 @use "../../Foundation/function/accessibility" as *;
 @use "../../Foundation/variable" as *;
 
-.p-hamburger {
-  z-index: 1;
+@mixin negativeStyle() {
+  height: 0;
 
   .p-hamburger__toggler {
     @apply hidden;
+  }
 
+  .p-hamburger__content {
+    position: static;
+    z-index: auto;
+    display: initial;
+    transform: none;
+  }
+
+  .p-hamburger__overlay {
+    @apply hidden;
+  }
+}
+
+@mixin closeStyle() {
+  @apply flex;
+
+  .p-hamburger__toggler {
+    @apply block;
+  }
+
+  .p-hamburger__content {
+    @apply fixed;
+
+    z-index: 41;
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+
+@mixin openStyle() {
+  &.--open {
+    .p-hamburger__content {
+      transform: none;
+    }
+
+    .p-hamburger__overlay {
+      @apply block;
+    }
+
+    .p-hamburger__toggler-line {
+      &:nth-of-type(1) {
+        transform: translate3d(0, px(8), 0) rotate3d(0, 0, 1, 225deg);
+      }
+
+      &:nth-of-type(2) {
+        opacity: 0;
+      }
+
+      &:nth-of-type(3) {
+        transform: translate3d(0, px(- 8), 0) rotate3d(0, 0, 1, 315deg);
+      }
+    }
+  }
+}
+
+.p-hamburger {
+  @apply flex items-center justify-end relative;
+
+  height: px($headerHeight);
+
+  .p-hamburger__toggler {
+    @apply block;
+
+    width: px(32);
     -webkit-tap-highlight-color: transparent;
   }
 
   .p-hamburger__toggler-line {
-    @apply w-full block bg-fc-basis duration-300;
+    @apply w-full block bg-fc-basis duration-basis;
 
     height: px(1);
     transition-property: transform;
@@ -23,43 +86,29 @@
     }
   }
 
-  @include breakPoint("lg") {
-    @apply flex items-center justify-end relative;
+  .p-hamburger__content {
+    @apply fixed top-0 left-0 bottom-0 transition-transform duration-basis;
 
-    height: px($headerHeight);
+    z-index: 41;
+    transform: translate3d(-100%, 0, 0);
+  }
 
-    .p-hamburger__toggler {
-      @apply block;
+  .p-hamburger__overlay {
+    top: px($headerHeight);
+    z-index: -2;
+    content: "";
 
-      width: px(32);
-    }
+    @apply fixed left-0 bottom-0 hidden bg-black w-full opacity-50 cursor-pointer;
+  }
 
-    .p-hamburger__content {
-      @apply fixed top-0 left-0 bottom-0 w-full transition-transform duration-300;
+  @include openStyle;
 
-      z-index: -1;
-      margin-top: px($headerHeight);
-      transform: translate3d(-100%, 0, 0);
-    }
+  &.--responsive {
+    @include negativeStyle;
 
-    &.--open {
-      .p-hamburger__content {
-        transform: none;
-      }
-
-      .p-hamburger__toggler-line {
-        &:nth-of-type(1) {
-          transform: translate3d(0, px(8), 0) rotate3d(0, 0, 1, 225deg);
-        }
-
-        &:nth-of-type(2) {
-          opacity: 0;
-        }
-
-        &:nth-of-type(3) {
-          transform: translate3d(0, px(- 8), 0) rotate3d(0, 0, 1, 315deg);
-        }
-      }
+    @include breakPoint("lg") {
+      @include closeStyle;
+      @include openStyle;
     }
   }
 }
