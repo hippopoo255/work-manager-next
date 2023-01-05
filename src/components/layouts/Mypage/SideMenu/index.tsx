@@ -3,7 +3,7 @@ import Link from 'next/link'
 import React from 'react'
 import MenuList from './MenuList'
 import { ThemeToggle } from '~/components/elements'
-import { sideMenus } from '~/config'
+import { sideMenus } from '~/config/sideMenu'
 import { User } from '~/schema/generated/@types'
 
 type Props = {

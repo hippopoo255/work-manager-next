@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import React from 'react'
-import { BIRTH_DAY } from '~/config'
+import { BIRTH_DAY } from '~/config/app'
 const Footer = () => {
   return (
     <div className="l-footer">

@@ -1,4 +1,7 @@
-import { requiredAuthenticatedPaths, requiredUnOrganizedPaths } from '~/config'
+import {
+  requiredAuthenticatedPaths,
+  requiredUnOrganizedPaths,
+} from '~/config/route'
 
 export const isRequiredAuthenticatedPaths = (pathname: string) => {
   const matchedAuthenticatedPaths = requiredAuthenticatedPaths.filter(

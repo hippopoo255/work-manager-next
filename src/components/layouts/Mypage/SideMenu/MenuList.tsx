@@ -1,7 +1,7 @@
 import React from 'react'
 import { IoIosArrowDown } from 'react-icons/io'
 import MenuRow from './MenuRow'
-import { SideMenu } from '~/config'
+import { SideMenu } from '~/config/sideMenu'
 
 type Props = {
   menu: SideMenu

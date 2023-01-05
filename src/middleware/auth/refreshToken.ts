@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { refreshCognitoToken } from '~/libs/cognito/handleCognitoToken'
 import { TokenType, CognitoRefreshTokenResult } from '~/libs/cognito/types'
 import { setTokenIntoCookie } from '~/utils'
 

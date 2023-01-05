@@ -4,8 +4,8 @@ import { AxiosRequestConfig } from 'axios'
 
 import { handleError } from './handleError'
 import { amplifyConfigure } from './init'
-import { uri } from '~/config'
 import { COGNITO_TEST_USER } from '~/config/auth'
+import { uri } from '~/config/endPoint'
 import { fetch } from '~/libs/http_clients/axios'
 
 import {

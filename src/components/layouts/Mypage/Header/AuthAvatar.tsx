@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react'
 import AuthMenu from './AuthMenu'
 import { Avatar } from '~/components/elements/Avatar'
-import { STORAGE_URL } from '~/config'
+import { STORAGE_URL } from '~/config/app'
 import { User } from '~/schema/generated/@types'
 
 type Props = {

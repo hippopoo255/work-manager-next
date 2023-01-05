@@ -1,6 +1,6 @@
 import { RequestCookie } from 'next/dist/server/web/spec-extension/cookies'
 import { NextRequest, NextResponse } from 'next/server'
-import { AWS_COGNITO_CLIENT_ID } from '~/config'
+import { AWS_COGNITO_CLIENT_ID } from '~/config/auth'
 import { TokenType, CognitoToken, Req } from '~/libs/cognito/types'
 
 export const setTokenIntoCookie = (

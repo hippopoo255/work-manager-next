@@ -4,7 +4,7 @@ import { i18n } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import Layout from '~/components/layouts/Mypage'
 import { TMainTitle } from '~/components/layouts/Mypage/types'
-import { icons } from '~/config'
+import { icons } from '~/config/icon'
 
 const Minutes: NextPageWithLayout = () => {
   return <div>Hello, {'議事録'} Page!!</div>

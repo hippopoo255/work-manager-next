@@ -8,7 +8,7 @@ import { useEffect } from 'react'
 import { RegisterOrganizationForm } from '~/components/features/organization'
 import Layout from '~/components/layouts/Mypage'
 import { TMainTitle } from '~/components/layouts/Mypage/types'
-import { icons } from '~/config'
+import { icons } from '~/config/icon'
 
 const OrganizationRegister: NextPageWithLayout = () => {
   const router = useRouter()

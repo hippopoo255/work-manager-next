@@ -1,5 +1,5 @@
-import aspida, { HTTPError } from '@aspida/fetch'
-import { API_STAGE_URL } from '~/config'
+import aspida from '@aspida/fetch'
+import { API_STAGE_URL } from '~/config/app'
 import api from '~/schema/generated/$api'
 
 export const initialConfig = {

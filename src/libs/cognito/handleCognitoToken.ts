@@ -5,7 +5,7 @@ import {
   AWS_COGNITO_REGION,
   AWS_COGNITO_USER_POOL_ID,
   AWS_COGNITO_URL,
-} from '~/config'
+} from '~/config/auth'
 
 const cognitoIdpUrl = `https://cognito-idp.${AWS_COGNITO_REGION}.amazonaws.com`
 const userPoolId: string = AWS_COGNITO_USER_POOL_ID

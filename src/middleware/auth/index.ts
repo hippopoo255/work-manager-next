@@ -1,7 +1,8 @@
 import { NextURL } from 'next/dist/server/web/next-url'
 import { NextRequest, NextResponse } from 'next/server'
 import { setRefreshedCognitoTokenToCookie } from './refreshToken'
-import { requireGuestPaths, API_STAGE_URL } from '~/config'
+import { API_STAGE_URL } from '~/config/app'
+import { requireGuestPaths } from '~/config/route'
 import {
   verifyCognitoToken,
   refreshCognitoToken,

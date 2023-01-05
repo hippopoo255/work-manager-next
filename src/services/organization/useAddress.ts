@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios'
 import { useEffect, useCallback, useState } from 'react'
 import { SelectOptionList } from '~/components/elements/Form/types'
-import { ZIP_ADDRESS_API_URL } from '~/config'
+import { ZIP_ADDRESS_API_URL } from '~/config/app'
 import { fetch } from '~/libs/http_clients/axios'
 import { RegisterOrganizationForm, Prefecture } from '~/schema/generated/@types'
 import { useFetch } from '~/services/common'

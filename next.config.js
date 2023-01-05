@@ -12,7 +12,7 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   experimental: {
-    allowMiddlewareResponseBody: true,
+    // allowMiddlewareResponseBody: true,
     // appDir: true,
     scrollRestoration: true,
   },

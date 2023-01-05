@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios'
 import { defaultSuccessHandler, defaultErrorHandler } from './handler'
-import { API_STAGE_URL } from '~/config'
+import { API_STAGE_URL } from '~/config/app'
 // import { cognitoUser } from '~/libs/auth'
 
 export const client = (baseURL: string = API_STAGE_URL) =>
