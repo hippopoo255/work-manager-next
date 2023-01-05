@@ -1,3 +1,31 @@
+.gradient-green {
+  background: linear-gradient(180deg, #1ae55d, #0c4);
+}
+
+.gradient-blue {
+  background: linear-gradient(to bottom right, #14a9ff, #0088f0);
+}
+
+.gradient-ocean {
+  background: linear-gradient(180deg, #09f, #06f);
+}
+
+.gradient-teal {
+  background: linear-gradient(180deg, #35e9e3, #09f);
+}
+
+.gradient-purple {
+  background: linear-gradient(to bottom right, #9d70ff, #7647eb);
+}
+
+.gradient-orange {
+  background: linear-gradient(180deg, #fb0, #ff8c00);
+}
+
+.gradient-red {
+  background: linear-gradient(180deg, #ff5283, #ea2a53);
+}
+
 .gradient-primary {
   @apply bg-gradient-to-r from-primary to-cyan-400;
 }
@@ -19,19 +47,23 @@
 }
 
 .gradient-minutes {
-  @apply bg-gradient-to-r from-minutes to-teal-500;
+  // @apply bg-gradient-to-r from-minutes to-teal-500;
+  @extend .gradient-green;
 }
 
 .gradient-task {
-  @apply bg-gradient-to-r from-task to-indigo-600;
+  // @apply bg-gradient-to-r from-task to-indigo-600;
+  @extend .gradient-teal;
 }
 
 .gradient-schedule {
-  @apply bg-gradient-to-r from-schedule to-amber-400;
+  // @apply bg-gradient-to-r from-schedule to-orange-600;
+  @extend .gradient-orange;
 }
 
 .gradient-chat {
-  @apply bg-gradient-to-r from-chat to-pink-500;
+  // @apply bg-gradient-to-r from-chat to-purple-600;
+  @extend .gradient-red;
 }
 
 .gradient-disabled {

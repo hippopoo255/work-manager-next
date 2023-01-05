@@ -1,0 +1,31 @@
+@use "../../Foundation/function/accessibility" as *;
+@use "../../Foundation/mixin/accessibility" as *;
+@use "../../Foundation/variable" as *;
+
+.p-menu-row {
+  @apply flex items-center gap-2 duration-basis text-fc-accent;
+
+  &.--linkable {
+    padding: px(12) px($fontSizeBasis);
+    border-color: transparent;
+    border-style: solid;
+    border-width: 0 4px;
+
+    @include onHover {
+      @apply border-fc-accent text-fc-accent bg-disabled;
+
+      border-color: transparent var(--font-color-accent) transparent var(--font-color-accent);
+    }
+  }
+
+  &.--current {
+    @apply border-fc-accent text-fc-accent bg-disabled pointer-events-none;
+
+    border-color: transparent var(--font-color-accent) transparent var(--font-color-accent);
+  }
+
+  &.--thin {
+    padding: px(8) px($fontSizeBasis) px(8) px($fontSizeBasis * 2);
+    font-size: px(14);
+  }
+}

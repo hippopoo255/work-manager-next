@@ -7,6 +7,8 @@ import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { RegisterOrganizationForm } from '~/components/features/organization'
 import Layout from '~/components/layouts/Mypage'
+import { TMainTitle } from '~/components/layouts/Mypage/types'
+import { icons } from '~/config'
 
 const OrganizationRegister: NextPageWithLayout = () => {
   const router = useRouter()
@@ -31,11 +33,15 @@ const OrganizationRegister: NextPageWithLayout = () => {
 
 export default OrganizationRegister
 
-OrganizationRegister.getLayout = (page) => (
-  <Layout title={i18n?.t('head.title.mypage.organization.register')}>
-    {page}
-  </Layout>
-)
+OrganizationRegister.getLayout = (page) => {
+  const title: TMainTitle = {
+    text: i18n?.t('head.title.mypage.organization.register'),
+    icon: icons.organization,
+    position: 'center',
+  }
+
+  return <Layout title={title}>{page}</Layout>
+}
 
 export const getServerSideProps = async ({
   locale,

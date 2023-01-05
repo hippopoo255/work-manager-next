@@ -23,7 +23,9 @@
   &:focus-within,
   &.--visible {
     .p-select-field__label {
-      @apply top-2 -translate-y-full text-xs;
+      @apply top-2 -translate-y-full;
+
+      font-size: px(10);
     }
   }
 

@@ -5,5 +5,9 @@
   @apply mx-auto w-full;
 
   max-width: $siteMaxWidth;
-  padding: 0 px(12);
+  padding: 0 px($spaceBasis);
+
+  &.--center {
+    @apply flex items-center justify-center gap-2;
+  }
 }

@@ -1,6 +1,8 @@
 // テーマに関連する変数
 .l-app {
   --color-accent: #1a2b55;
+  --color-light: #318bf7;
+  --color-natural: #ebf6ff;
 
   // Light
   --font-color-accent: var(--color-accent);
@@ -53,6 +55,8 @@ $sideMenuWidth: 280;
 $sideMenuWidthSlim: 56;
 $siteMaxWidth: 1536px;
 $fontSizeBasis: 16;
+$spaceUnit: 4;
+$spaceBasis: $spaceUnit * 4;
 
 // colors
 $accent: #1a2b55;
