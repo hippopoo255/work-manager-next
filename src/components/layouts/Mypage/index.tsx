@@ -3,6 +3,7 @@ import Footer from './Footer'
 import Header from './Header'
 import Main from './Main'
 import SideMenu from './SideMenu'
+import { TMainTitle } from './types'
 import { SnackBar } from '~/components/elements/SnackBar'
 import { useInitialFetch } from '~/services/auth'
 
@@ -11,12 +12,12 @@ export default function Layout({
   title,
 }: {
   children: React.ReactNode
-  title?: string
+  title?: TMainTitle
 }) {
   useInitialFetch()
 
   return (
-    <AppLayout title={title} className=" --mypage">
+    <AppLayout title={title?.text} className=" --mypage">
       <header className="l-app__header">
         <Header />
       </header>

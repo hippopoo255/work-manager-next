@@ -12,11 +12,15 @@
   }
 
   .l-sidemenu__body {
-    @apply border-r border-r-line grow shadow-lg;
+    @apply grow shadow-lg border-t border-t-line;
+
+    overflow-y: auto;
   }
 
   .l-sidemenu__section {
-    @apply border-t border-t-line;
+    &:not(:first-of-type) {
+      @apply border-t border-t-line;
+    }
 
     &.--bottom {
       padding: px($fontSizeBasis);
@@ -31,59 +35,6 @@
     @apply text-fc-secondary;
 
     padding: px(16) 0;
-  }
-
-  .l-sidemenu__item:not(:first-of-type) {
-    margin-top: px(8);
-  }
-
-  .l-sidemenu__link {
-    @apply flex items-center gap-2 duration-basis;
-
-    padding: px(10) px($fontSizeBasis);
-    border-color: transparent;
-    border-style: solid;
-    border-width: 0 4px;
-
-    @include onHover {
-      @apply border-fc-accent text-fc-accent bg-disabled;
-
-      border-color: transparent var(--font-color-accent) transparent var(--font-color-accent);
-    }
-
-    &.--current {
-      @apply border-fc-accent text-fc-accent bg-disabled pointer-events-none;
-
-      border-color: transparent var(--font-color-accent) transparent var(--font-color-accent);
-    }
-  }
-
-  .l-sidemenu__details {
-    transition-property: all;
-
-    .l-sidemenu__summary {
-      @apply relative flex justify-between items-center;
-
-      padding: px(10) px($fontSizeBasis) px(10);
-      border-color: transparent;
-      border-style: solid;
-      border-width: 0 4px;
-    }
-
-    &[open] {
-      .l-sidemenu__summary {
-        .l-sidemenu__summary-icon {
-          transform: rotate3d(0, 0, 1, 180deg);
-        }
-      }
-    }
-  }
-
-  .l-sidemenu__children {
-    .l-sidemenu__link {
-      padding: px(8) px($fontSizeBasis) px(8) px($fontSizeBasis * 2);
-      font-size: px(14);
-    }
   }
 
   @include breakPoint("lg") {

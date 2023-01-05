@@ -17,6 +17,6 @@
   }
 
   &.--current {
-    @apply text-disabled font-bold pointer-events-none;
+    @apply text-fc-link font-bold pointer-events-none;
   }
 }

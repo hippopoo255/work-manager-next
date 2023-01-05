@@ -25,6 +25,8 @@ const extendColors = {
     DEFAULT: 'var(--color-line)',
   },
   accent: {
+    natural: 'var(--color-accent-natural)',
+    light: 'var(--color-accent-light)',
     DEFAULT: 'var(--color-accent)',
     blind: '#445061',
     dark: '#1b212b',
@@ -81,19 +83,19 @@ const extendColors = {
     DEFAULT: '#393939',
     dark: '#1f2937',
   },
-  task: {
-    // 青
-    natural: colors.blue['100'],
-    light: colors.blue['400'],
-    DEFAULT: colors.blue['500'],
-    dark: colors.blue['600'],
-  },
   minutes: {
     // 緑
     natural: colors.green['100'],
     light: colors.green['400'],
     DEFAULT: '#00B901',
     dark: colors.green['600'],
+  },
+  task: {
+    // 青
+    natural: colors.blue['100'],
+    light: colors.blue['400'],
+    DEFAULT: colors.blue['500'],
+    dark: colors.blue['600'],
   },
   schedule: {
     // オレンジ
@@ -103,11 +105,11 @@ const extendColors = {
     dark: colors.orange['600'],
   },
   chat: {
-    // 紫
-    natural: colors.purple['100'],
-    light: colors.purple['400'],
-    DEFAULT: colors.purple['500'],
-    dark: colors.purple['600'],
+    // 赤
+    natural: '#ffeff2',
+    light: '#ff5283',
+    DEFAULT: colors.red[500],
+    dark: '#ea2a53',
   },
 }
 

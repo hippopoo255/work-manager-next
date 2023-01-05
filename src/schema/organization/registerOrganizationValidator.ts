@@ -30,6 +30,7 @@ export const schema: ({
       .number()
       .required()
       .integer()
+      .min(1, t('organization.register.requiredPrefId') ?? '')
       .label(t('organization.register.attributes.pref_id')),
     city: y
       .string()

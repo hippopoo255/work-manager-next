@@ -49,6 +49,9 @@
     },
     "chat": {
       "index": "Chat"
+    },
+    "setting": {
+      "index": "Setting"
     }
   },
   "label": {

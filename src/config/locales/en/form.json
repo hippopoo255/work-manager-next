@@ -57,7 +57,8 @@
         "address": "Address",
         "tel": "Tel",
         "password": "Password for administration system"
-      }
+      },
+      "requiredPrefId": "Prefecture is required."
     }
   }
 }

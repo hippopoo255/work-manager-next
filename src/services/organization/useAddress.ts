@@ -23,7 +23,7 @@ type AddressResponse = {
 const useAddress = () => {
   const [prefOptions, setPrefOptions] = useState<SelectOptionList>([
     {
-      label: '都道府県',
+      label: '選択してください',
       value: 0,
     },
   ])
@@ -39,7 +39,7 @@ const useAddress = () => {
               label: pref.name,
               value: pref.id,
             }))
-            setPrefOptions(() => [...options])
+            setPrefOptions((prev) => [...prev, ...options])
           })
           .catch(({ data: errData }: AxiosResponse) => {
             updateStatus({

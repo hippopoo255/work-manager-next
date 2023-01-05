@@ -44,7 +44,7 @@
     grid-template-areas:
       "sidemenu header"
       "sidemenu main"
-      "footer footer";
+      "sidemenu footer";
 
     .l-app__header {
       padding-left: px($sideMenuWidth);

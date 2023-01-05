@@ -49,6 +49,9 @@
     },
     "chat": {
       "index": "チャット"
+    },
+    "setting": {
+      "index": "設定"
     }
   },
   "footer": {},

@@ -7,11 +7,16 @@
 
   min-width: px(140);
   max-width: 100%;
-  padding: px(16);
   background: var(--bg-color-sheet);
 
+  .p-card__inner {
+    padding: px($spaceBasis);
+  }
+
   &.--space-lg {
-    padding: px(20);
+    .p-card__inner {
+      padding: px(20);
+    }
   }
 
   .p-card__grid {
