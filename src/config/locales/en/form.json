@@ -1,4 +1,10 @@
 {
+  "rule": {
+    "password": "①Required next char categories/　・Uppercase(A-Z)/　・Lowercase(a-z)/　・numeric(0-9)/②between 8 and 64 chars"
+  },
+  "select": {
+    "initial": "Select prefecture"
+  },
   "signIn": {
     "title": "Log In",
     "submit": "Log In",
@@ -19,6 +25,16 @@
       "family_name_kana": "Family name kana",
       "given_name_kana": "Given name kana",
       "address": "Address"
+    },
+    "placeholder": {
+      "user_id": "Between 8 and 64 chars, only alphanumeric",
+      "password": "",
+      "email": "",
+      "family_name": "Smith",
+      "given_name": "John",
+      "family_name_kana": "スミス",
+      "given_name_kana": "ジョン",
+      "address": "Chiyoda, Tokyo"
     }
   },
   "resetPassword": {
@@ -47,7 +63,7 @@
   "organization": {
     "register": {
       "title": "Register Organization",
-      "submit": "Create",
+      "submit": "Register",
       "attributes": {
         "name": "Organization name",
         "name_kana": "Organization name kana",
@@ -56,7 +72,17 @@
         "city": "City",
         "address": "Address",
         "tel": "Tel",
-        "password": "Password for administration system"
+        "password": "Password"
+      },
+      "placeholder": {
+        "name": "Job Support Co. Ltd.",
+        "name_kana": "カブシキガイシャジョブサポート",
+        "postal_code": "Can't use hyphen",
+        "pref_id": "",
+        "city": "",
+        "address": "",
+        "tel": "Can't use hyphen",
+        "password": "Password for Management System"
       },
       "requiredPrefId": "Prefecture is required."
     }

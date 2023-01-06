@@ -10,11 +10,22 @@
     }
   }
 
+  @include onVisible {
+    .p-tooltip__target {
+      @apply opacity-50;
+    }
+  }
+
+  .p-tooltip__target {
+    @apply duration-basis;
+  }
+
   .p-tooltip__body {
-    @apply absolute block whitespace-pre bg-accent text-white text-sm rounded
-      opacity-0 duration-basis delay-basis transition-opacity;
+    @apply absolute block whitespace-pre bg-accent text-white rounded
+      opacity-0 duration-basis delay-basis transition-opacity  pointer-events-none;
 
     z-index: 1;
     padding: px(8);
+    font-size: px(12);
   }
 }

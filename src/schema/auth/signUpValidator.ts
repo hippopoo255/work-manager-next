@@ -13,6 +13,7 @@ export const schema: ({
     user_id: y
       .string()
       .required()
+      .matches(strPatterns.userId)
       .min(8)
       .max(64)
       .label(t('signUp.attributes.user_id')),

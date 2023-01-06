@@ -1,7 +1,7 @@
 @use "../../Foundation/function/accessibility" as *;
 
 .p-text-field {
-  @apply block relative border-b-fc-hint;
+  @apply flex relative border-b-fc-hint items-center;
 
   .p-text-field__label {
     @apply absolute pointer-events-none top-1/2 -translate-y-1/2 text-fc-hint transition-all duration-basis;
@@ -9,15 +9,27 @@
     font-size: px(14);
   }
 
+  .p-text-field__suggestion {
+    @apply shrink-0 text-fc-hint;
+  }
+
   .p-text-field__body {
     @apply block w-full border-b-inherit border-b rounded-none;
 
     padding: px(6) 0;
     font-size: px(14);
+
+    &::placeholder {
+      @apply text-transparent;
+    }
   }
 
   &:focus-within,
   &.--visible {
+    .p-text-field__body::placeholder {
+      @apply text-fc-hint;
+    }
+
     .p-text-field__label {
       @apply top-2 -translate-y-full;
 
