@@ -4,7 +4,7 @@ type Props = {
   ref: RefObject<HTMLElement>
 }
 
-const useTooltip = ({ ref }: Props) => {
+const usePosition = ({ ref }: Props) => {
   const [position, setPosition] = useState({
     x: 'left', // left | right
     y: 'top', // top | bottom
@@ -69,4 +69,4 @@ const useTooltip = ({ ref }: Props) => {
   }
 }
 
-export default useTooltip
+export default usePosition

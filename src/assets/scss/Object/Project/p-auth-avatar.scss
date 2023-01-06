@@ -4,7 +4,7 @@
 .p-auth-avatar {
   @apply relative;
 
-  z-index: 1;
+  z-index: $zIndexSideMenu;
 
   .p-auth-avatar__menu {
     @apply block absolute translate-y-full pointer-events-none;

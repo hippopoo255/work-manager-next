@@ -13,7 +13,7 @@
   min-height: 100dvh;
 
   .l-app__header {
-    @apply shadow-md fixed w-full bg-bc-sheet grid content-center grid-flow-col z-40;
+    @apply shadow-md fixed w-full bg-bc-sheet grid content-center grid-flow-col z-#{$zIndexHeader};
 
     grid-area: header;
     height: px($headerHeight);
@@ -51,7 +51,7 @@
     }
 
     .l-app__side {
-      @apply fixed top-0 bottom-0 z-50;
+      @apply fixed top-0 bottom-0 z-#{$zIndexSideMenu};
 
       grid-area: sidemenu;
       width: px($sideMenuWidth);

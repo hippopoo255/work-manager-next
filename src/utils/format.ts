@@ -1,63 +1,5 @@
 import { Buffer } from 'buffer'
-// import { ja } from '~/config/locales'
-
-// export function toStrData(date: Date): string {
-//   const year = date.getFullYear()
-//   const month = `0${date.getMonth() + 1}`.slice(-2)
-//   const day = `0${date.getDate()}`.slice(-2)
-//   const hour = `0${date.getHours()}`.slice(-2)
-//   const minute = `0${date.getMinutes()}`.slice(-2)
-//   return `${year}/${month}/${day} ${hour}:${minute}`
-// }
-//
-// export function toStrLabel(
-//   date: Date,
-//   timeless: boolean = false,
-//   t: any = ja
-// ): string {
-//   let year: string = ''
-//   if (date.getFullYear() !== new Date().getFullYear()) {
-//     year = `${date.getFullYear()}/`.slice(-3)
-//   }
-//   const month = `${date.getMonth() + 1}/`
-//   const day = `${date.getDate()}`
-//   const dayOfWeek = date.getDay() // 曜日(数値)
-//   const dayOfWeekStr = t.date.dayOfStrList[dayOfWeek] // 曜日(日本語表記)
-//   if (timeless) {
-//     return t.date.short(year, month, day, dayOfWeekStr)
-//     // return `${year}${month}${day}(${dayOfWeekStr})`
-//   }
-//   const hour = `${date.getHours()}:`
-//   const minute = `0${date.getMinutes()}`.slice(-2)
-//   return t.date.simple(year, month, day, dayOfWeekStr, hour, minute)
-//   // `${year}${month}${day}(${dayOfWeekStr}) ${hour}${minute}`
-// }
-//
-// export function scheduleLabel(start: Date, end: Date): string {
-//   const now = new Date()
-//
-//   if (
-//     !(
-//       now.getFullYear() === start.getFullYear() &&
-//       now.getMonth() === start.getMonth() &&
-//       now.getDate() === start.getDate()
-//     )
-//   ) {
-//     return toStrLabel(start) + ' - ' + toStrLabel(end)
-//   }
-//   if (
-//     !(
-//       now.getFullYear() === end.getFullYear() &&
-//       now.getMonth() === end.getMonth() &&
-//       now.getDate() === end.getDate()
-//     )
-//   ) {
-//     return toStrLabel(start) + ' - ' + toStrLabel(end)
-//   }
-//   const hour = `${start.getHours()}:`
-//   const minute = `0${start.getMinutes()}`.slice(-2)
-//   return `${hour}${minute}`
-// }
+import { TFunction } from 'next-i18next'
 
 export function toStrFormalLabel(date: Date): string {
   const year = `${date.getFullYear()}年`
@@ -98,6 +40,7 @@ export function postTiming(createDate: Date) {
 }
 
 export const strPatterns = {
+  userId: /^\w{8,64}$/,
   password: /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)[=\w\-\?]{8,64}$/,
   email: /^[\w\-._]+@[\w\-._]+\.[A-Za-z]+$/,
   postal: /^[0-9]{5,7}$/,
@@ -105,6 +48,11 @@ export const strPatterns = {
   katakana: /^[ァ-ヴーｦ-ﾟ]+$/,
   confirm: (compare: string) =>
     new RegExp(`^${compare.replace(/\?/g, '\\?')}$`),
+}
+
+export const passwordRuleSuggestion = (t: TFunction) => {
+  const rule = t('rule.password', { ns: 'form' })
+  return rule.replace(/\//g, '\n')
 }
 
 // export const getSortParams = (data: SearchMeetingRecordInputs) => {

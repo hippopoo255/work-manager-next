@@ -1,4 +1,5 @@
 import { AxiosResponse } from 'axios'
+import { useTranslation } from 'next-i18next'
 import { useEffect, useCallback, useState } from 'react'
 import { SelectOptionList } from '~/components/elements/Form/types'
 import { ZIP_ADDRESS_API_URL } from '~/config/app'
@@ -21,9 +22,10 @@ type AddressResponse = {
 }
 
 const useAddress = () => {
+  const { t } = useTranslation('form')
   const [prefOptions, setPrefOptions] = useState<SelectOptionList>([
     {
-      label: '選択してください',
+      label: t('select.initial'),
       value: 0,
     },
   ])

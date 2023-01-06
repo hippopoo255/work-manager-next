@@ -23,10 +23,13 @@ export const RegisterOrganizationFields = () => {
     <FormProvider {...methods}>
       <FormRow>
         <TextField<RegisterOrganizationForm>
+          fieldName="name"
           label={`${t('organization.register.attributes.name', {
             ns: 'form',
           })}*`}
-          fieldName="name"
+          placeholder={`${t('organization.register.placeholder.name', {
+            ns: 'form',
+          })}`}
           autoFocus
         />
       </FormRow>
@@ -36,6 +39,9 @@ export const RegisterOrganizationFields = () => {
           label={`${t('organization.register.attributes.name_kana', {
             ns: 'form',
           })}*`}
+          placeholder={`${t('organization.register.placeholder.name_kana', {
+            ns: 'form',
+          })}`}
         />
       </FormRow>
       <FormRow className="flex gap-2">
@@ -45,6 +51,9 @@ export const RegisterOrganizationFields = () => {
             label={`${t('organization.register.attributes.postal_code', {
               ns: 'form',
             })}*`}
+            placeholder={`${t('organization.register.placeholder.postal_code', {
+              ns: 'form',
+            })}`}
           />
         </div>
         <div className="shrink-0">
@@ -73,6 +82,9 @@ export const RegisterOrganizationFields = () => {
             label={`${t('organization.register.attributes.city', {
               ns: 'form',
             })}*`}
+            placeholder={`${t('organization.register.placeholder.city', {
+              ns: 'form',
+            })}`}
           />
         </div>
       </FormRow>
@@ -82,6 +94,9 @@ export const RegisterOrganizationFields = () => {
           label={`${t('organization.register.attributes.address', {
             ns: 'form',
           })}*`}
+          placeholder={`${t('organization.register.placeholder.address', {
+            ns: 'form',
+          })}`}
         />
       </FormRow>
       <FormRow>
@@ -91,15 +106,22 @@ export const RegisterOrganizationFields = () => {
           label={`${t('organization.register.attributes.tel', {
             ns: 'form',
           })}*`}
+          placeholder={`${t('organization.register.placeholder.tel', {
+            ns: 'form',
+          })}`}
         />
       </FormRow>
       <FormRow>
         <TextField<RegisterOrganizationForm>
           fieldName="password"
-          type="password"
           label={`${t('organization.register.attributes.password', {
             ns: 'form',
           })}*`}
+          placeholder={`${t('organization.register.placeholder.password', {
+            ns: 'form',
+          })}`}
+          type="password"
+          suggest
         />
       </FormRow>
       <FormRow className="grid">

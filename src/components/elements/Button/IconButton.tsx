@@ -2,7 +2,7 @@ import clsx from 'clsx'
 import { useRef } from 'react'
 import { IconButtonProps as Props } from './types'
 import { LoaderIcon } from '~/components/elements/Icon'
-import { useRippleEffect } from '~/services/parts/ripple'
+import { useRippleEffect } from '~/services/events/ripple'
 
 const IconButton = (props: Props) => {
   const ref = useRef({} as HTMLButtonElement)
