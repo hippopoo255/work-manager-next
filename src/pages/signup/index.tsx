@@ -25,7 +25,7 @@ const SignUp: NextPageWithLayout = () => {
 export default SignUp
 
 SignUp.getLayout = (page) => (
-  <Layout title={i18n?.t('head.title.signUp')}>{page}</Layout>
+  <Layout title={i18n?.t('title.signUp')}>{page}</Layout>
 )
 
 export async function getStaticProps({

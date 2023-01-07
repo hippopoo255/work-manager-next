@@ -35,7 +35,7 @@ export default OrganizationRegister
 
 OrganizationRegister.getLayout = (page) => {
   const title: TMainTitle = {
-    text: i18n?.t('head.title.mypage.organization.register'),
+    text: i18n?.t('title.mypage.organization.register'),
     icon: icons.organization,
     position: 'center',
   }

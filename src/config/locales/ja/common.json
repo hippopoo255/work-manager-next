@@ -1,28 +1,29 @@
 {
   "siteTitle": "ジョブサポ",
-  "head": {
-    "title": {
-      "signIn": "ログイン",
-      "signUp": "アカウント登録",
-      "passwordForgotten": "パスワードをお忘れの方",
-      "passwordReset": "パスワードリセット",
-      "organizationStore": "組織情報登録",
-      "mypage": {
-        "index": "ダッシュボード",
-        "blog": {
-          "index": "ブログ",
-          "create": "ブログ新規投稿"
-        },
-        "organization": {
-          "register": "組織情報登録"
-        },
-        "minutes": {
-          "index": "議事録"
-        }
+  "title": {
+    "signIn": "ログイン",
+    "signUp": "アカウント登録",
+    "passwordForgotten": "パスワードをお忘れの方",
+    "passwordReset": "パスワードリセット",
+    "organizationStore": "組織情報登録",
+    "mypage": {
+      "index": "ダッシュボード",
+      "blog": {
+        "index": "ブログ",
+        "create": "ブログ新規投稿"
       },
-      "accountVerification": "アカウント検証",
-      "accountSetup": "アカウント設定"
-    }
+      "organization": {
+        "register": "組織情報登録"
+      },
+      "minutes": {
+        "index": "議事録"
+      },
+      "task": {
+        "index": "タスク一覧"
+      }
+    },
+    "accountVerification": "アカウント検証",
+    "accountSetup": "アカウント設定"
   },
   "header": {
     "signIn": "ログイン",
@@ -67,6 +68,13 @@
     "passwordForgotten": "パスワードをお忘れの方",
     "alreadyHaveAccount": "既にアカウントをお持ちの方",
     "dontHaveAccount": "アカウント登録がまだの方"
+  },
+  "error": {
+    "unAuthorized": "ログインしてください",
+    "forbidden": "操作権限がありません",
+    "notFound": "データが見つかりませんでした",
+    "invalid": "入力に誤りがあります",
+    "serverError": "サーバーエラーです"
   },
   "cognitoError": {
     "UserNotFoundException": "アカウントが存在しません",

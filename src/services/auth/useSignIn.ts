@@ -7,6 +7,7 @@ import { schema, SignInFormType } from '~/schema/auth/signInValidator'
 import { useAuthContext } from '~/services/auth'
 import { useStatus } from '~/services/status'
 import { authOperation } from '~/stores/auth'
+import { getCookieValueFromDocumentByName } from '~/utils/cookie'
 
 const useSignIn = () => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -35,7 +36,12 @@ const useSignIn = () => {
           statusCode: 200,
           category: 'success',
         })
-        router.push('/mypage')
+        let referrer = getCookieValueFromDocumentByName('referrer')
+        if (referrer) {
+          document.cookie = `referrer=; max-age=0`
+          referrer = decodeURIComponent(referrer)
+        }
+        router.push(referrer ?? '/mypage')
       })
       .catch((err) => {
         updateStatus({

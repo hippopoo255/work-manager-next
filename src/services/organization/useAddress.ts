@@ -53,7 +53,7 @@ const useAddress = () => {
       }
       init()
     }
-  }, [auth.isSignedIn])
+  }, [auth])
 
   const prefIdFromPref = useCallback(
     (pref: string) => {

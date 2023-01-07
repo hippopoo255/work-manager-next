@@ -2,29 +2,27 @@ import type { NextPageWithLayout } from 'next'
 import { GetServerSidePropsContext } from 'next'
 import { i18n } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { TaskPage } from '~/components/features/task'
 import Layout from '~/components/layouts/Mypage'
 import { TMainTitle } from '~/components/layouts/Mypage/types'
 import { icons } from '~/config/icon'
 
-const MyPage: NextPageWithLayout = () => {
+const TaskIndex: NextPageWithLayout = () => {
   return (
     <div className="u-container">
-      <ul>
-        {[...Array(500)].map((_, i) => (
-          <li key={i}>{i + 1}</li>
-        ))}
-      </ul>
+      <TaskPage />
     </div>
   )
 }
 
-export default MyPage
+export default TaskIndex
 
-MyPage.getLayout = (page) => {
+TaskIndex.getLayout = (page) => {
   const title: TMainTitle = {
-    text: i18n?.t('title.mypage.index'),
-    icon: icons.dashboard,
+    text: i18n?.t('title.mypage.task.index'),
+    icon: icons.task,
   }
+
   return <Layout title={title}>{page}</Layout>
 }
 

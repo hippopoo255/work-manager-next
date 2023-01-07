@@ -4,7 +4,7 @@ import Link from 'next/link'
 import React, { useState } from 'react'
 import { Hamburger } from '../../Hamburger'
 import { ThemeToggle } from '~/components/elements/Toggle'
-import { useLink } from '~/services/common'
+import { useLink } from '~/services/events/link'
 
 const GlobalNav = () => {
   const [open, setOpen] = useState(false)

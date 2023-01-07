@@ -1,26 +1,22 @@
-import axios, { AxiosResponse } from 'axios'
+import axios, { AxiosRequestConfig } from 'axios'
 import { defaultSuccessHandler, defaultErrorHandler } from './handler'
 import { API_STAGE_URL } from '~/config/app'
-// import { cognitoUser } from '~/libs/auth'
 
-export const client = (baseURL: string = API_STAGE_URL) =>
+export const client = (
+  baseURL: string = API_STAGE_URL,
+  config?: AxiosRequestConfig
+) =>
   axios.create({
     baseURL,
     headers: {
       'Content-Type': 'application/json',
+      ...config?.headers,
     },
   })
 
 const defaultClient = client()
 
-defaultClient.interceptors.request.use(async (config) => {
-  if (
-    config.headers !== undefined &&
-    config.headers.Authorization === undefined
-  ) {
-    // const jwt = await cognitoUser.getJwt()
-    // config.headers.Authorization = jwt
-  }
+defaultClient.interceptors.request.use((config?: AxiosRequestConfig) => {
   return config
 })
 

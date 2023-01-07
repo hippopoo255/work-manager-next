@@ -261,6 +261,7 @@ export type DocumentFolderForm = {
 
 /** データがないときの空配列 */
 export type EmptyItem = (string | null)[]
+export type Empty = {}
 
 /** FacialExpression */
 export type FacialExpression = {
@@ -289,7 +290,7 @@ export type InvalidError = {
     | undefined
 }
 
-/** サインインIDとパスワードのフォーム */
+/** ログインIDとパスワードのフォーム */
 export type LoginBody = {
   login_id: string
   password: string
@@ -323,31 +324,6 @@ export type MeetingDecisionForm = {
   body: string
   tasks?: TaskForm[] | undefined
   flag?: number | null | undefined
-}
-
-/** 議事録一覧のページ（ページャつき） */
-export type MeetingPage = {
-  data: MeetingRecord[]
-  /** 1ページ目のURL */
-  first_page_url: string
-  /** 現在のitemの開始位置 */
-  from: number | null
-  /** 最大ページ数 */
-  last_page: number
-  /** 最終ページのURL */
-  last_page_url: string
-  /** 次ページのURL */
-  next_page_url: string | null
-  /** 前ページのURL */
-  path: string
-  /** 1ページあたりのアイテム数 */
-  per_page: number
-  /** 前ページのURL */
-  prev_page_url: string | null
-  /** 現在のitemの終了位置 */
-  to: number | null
-  /** item総数 */
-  total: number
 }
 
 /** ミーティング開催場所 */
@@ -629,10 +605,35 @@ export type TaskPage = {
   total: number
 }
 
+/** リソースの一覧表示に使う　データ構造 */
+export type Pager<T> = {
+  /** データ */
+  data: T[]
+  /** 1ページ目のURL */
+  first_page_url: string
+  /** 現在のitemの開始位置 */
+  from: number | null
+  /** 最大ページ数 */
+  last_page: number
+  /** 最終ページのURL */
+  last_page_url: string
+  /** 次ページのURL */
+  next_page_url: string | null
+  /** 前ページのURL */
+  path: string
+  /** 1ページあたりのアイテム数 */
+  per_page: number
+  /** 前ページのURL */
+  prev_page_url: string | null
+  /** 現在のitemの終了位置 */
+  to: number | null
+  /** item総数 */
+  total: number
+}
+
 /** ユーザーのデータ */
 export type User = {
   id: number
-  is_over?: boolean
   full_name: string
   given_name: string
   given_name_kana: string
@@ -683,5 +684,3 @@ export type ForgotPasswordResetInputs = {
   user_id: string
   verification_code: string
 }
-
-export type Empty = {}

@@ -25,7 +25,7 @@ const PasswordForgotten: NextPageWithLayout = () => {
 export default PasswordForgotten
 
 PasswordForgotten.getLayout = (page) => (
-  <Layout title={i18n?.t('head.title.passwordForgotten')}>{page}</Layout>
+  <Layout title={i18n?.t('title.passwordForgotten')}>{page}</Layout>
 )
 
 export async function getStaticProps({
