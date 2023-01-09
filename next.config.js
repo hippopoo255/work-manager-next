@@ -7,7 +7,7 @@ const assetUrl = process.env.NEXT_PUBLIC_STORAGE_URL ?? 'http://localhost:3000'
 const nextConfig = {
   i18n,
   images: {
-    domains: ['asset.work-manager.site'],
+    domains: [assetUrl.replace(/^https?:\/\//g, '')],
   },
   reactStrictMode: true,
   swcMinify: true,
