@@ -25,7 +25,7 @@ const PasswordReset: NextPageWithLayout = () => {
 export default PasswordReset
 
 PasswordReset.getLayout = (page) => (
-  <Layout title={i18n?.t('head.title.passwordReset')}>{page}</Layout>
+  <Layout title={i18n?.t('title.passwordReset')}>{page}</Layout>
 )
 
 export async function getStaticProps({

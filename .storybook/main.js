@@ -15,6 +15,9 @@ module.exports = {
       options: {
         postcssLoaderOptions: {
           implementation: require('postcss'),
+          postcssOptions: {
+            config: path.resolve(__dirname, '..', 'postcss.config.js'),
+          },
         },
       },
     },
@@ -31,25 +34,21 @@ module.exports = {
     config.module.rules.push({
       test: /\.scss$/,
       use: [
-        // {
-        //   loader: 'postcss-loader',
-        //   options: {
-        //     postcssOptions: {
-        //       sourceMap: true,
-        //       config: path.resolve(__dirname, '..', 'postcss.config.js'),
-        //     },
-        //   },
-        // },
         'style-loader',
         'css-loader',
+        {
+          loader: 'postcss-loader',
+          options: {
+            postcssOptions: {
+              sourceMap: true,
+              config: path.resolve(__dirname, '..', 'postcss.config.js'),
+            },
+          },
+        },
         'sass-loader',
       ],
-      include: path.resolve(__dirname, '../src/assets/scss'),
+      include: path.resolve(__dirname, '..', 'src', 'assets', 'scss'),
     })
-    config.resolve.modules = [
-      ...(config.resolve.modules || []),
-      path.resolve(__dirname, '../src'),
-    ]
     config.resolve.plugins = [
       ...(config.resolve.plugins || []),
       new TsconfigPathsPlugin({

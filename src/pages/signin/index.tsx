@@ -25,11 +25,12 @@ const SignIn: NextPageWithLayout = () => {
 export default SignIn
 
 SignIn.getLayout = (page) => (
-  <Layout title={i18n?.t('head.title.signIn')}>{page}</Layout>
+  <Layout title={i18n?.t('title.signIn')}>{page}</Layout>
 )
 
 export async function getStaticProps({
   locale,
+  params,
 }: Required<GetStaticPropsContext>) {
   return {
     props: {

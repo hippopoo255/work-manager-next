@@ -18,7 +18,7 @@ const LoaderIcon = (props: Props) => {
   // const iconSize = useMemo(() => sizes[props.size ?? 'default'], [props.size])
   return (
     <span
-      className={clsx(`c-loader-icon ${props.className}`, {
+      className={clsx(`c-loader-icon ${props.className ?? ''}`, {
         [`--${props.size}`]: props.size ?? false,
       })}
     ></span>

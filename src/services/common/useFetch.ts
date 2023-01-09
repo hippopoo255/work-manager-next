@@ -1,5 +1,5 @@
 import { AxiosRequestConfig } from 'axios'
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useAuthContext } from '../auth'
 import { fetch } from '~/libs/http_clients/axios'
 
@@ -14,7 +14,7 @@ const useFetch = () => {
       },
     }
     return { ...c }
-  }, [auth.isSignedIn])
+  }, [auth])
 
   const get = async <T = any, D = any>(
     path: string,
@@ -63,7 +63,6 @@ const useFetch = () => {
         ...options,
       })
     },
-
     [config]
   )
 

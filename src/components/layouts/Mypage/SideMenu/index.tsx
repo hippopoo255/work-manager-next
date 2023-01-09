@@ -2,7 +2,7 @@ import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
 import React from 'react'
 import MenuList from './MenuList'
-import { ThemeToggle } from '~/components/elements'
+import { ThemeToggle } from '~/components/elements/Toggle'
 import { sideMenus } from '~/config/sideMenu'
 import { User } from '~/schema/generated/@types'
 

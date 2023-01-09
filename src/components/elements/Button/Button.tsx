@@ -15,10 +15,11 @@ const Button = (props: Props) => {
     <button
       type="button"
       className={clsx(`c-button ${props.className ?? ''}`, {
+        '--round': props.round ?? false,
         '--loading': props.loading ?? false,
-        [`--${props.size}`]: props.size ?? false,
-        [`--${props.color}`]: props.color ?? false,
         [`--flat`]: props.flat ?? false,
+        [`--${props.color}`]: props.color ?? false,
+        [`--${props.size}`]: props.size ?? false,
       })}
       onClick={props.onClick}
       onMouseDown={handleMouseDown}

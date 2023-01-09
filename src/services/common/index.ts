@@ -1,2 +1,2 @@
 export { default as useFetch } from './useFetch'
-export { default as useLink } from './useLink'
+export { default as useSwr } from './useSwr'

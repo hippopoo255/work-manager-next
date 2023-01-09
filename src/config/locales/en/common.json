@@ -1,27 +1,28 @@
 {
   "siteTitle": "Job Support",
-  "head": {
-    "title": {
-      "signIn": "Log In",
-      "signUp": "Sign Up",
-      "passwordForgotten": "Send Forgotten mail",
-      "passwordReset": "Password reset",
-      "mypage": {
-        "index": "Dashboard",
-        "blog": {
-          "index": "Blog",
-          "create": "New Blog"
-        },
-        "organization": {
-          "register": "Register Organization"
-        },
-        "minutes": {
-          "index": "Minutes"
-        }
+  "title": {
+    "signIn": "Log In",
+    "signUp": "Sign Up",
+    "passwordForgotten": "Send Forgotten mail",
+    "passwordReset": "Password reset",
+    "mypage": {
+      "index": "Dashboard",
+      "blog": {
+        "index": "Blog",
+        "create": "New Blog"
       },
-      "accountVerification": "Account verification",
-      "accountSetup": "Account setup"
-    }
+      "organization": {
+        "register": "Register Organization"
+      },
+      "minutes": {
+        "index": "Minutes"
+      },
+      "task": {
+        "index": "Tasks"
+      }
+    },
+    "accountVerification": "Account verification",
+    "accountSetup": "Account setup"
   },
   "header": {
     "signIn": "Log In",
@@ -66,6 +67,13 @@
     "passwordForgotten": "I forgot my password",
     "alreadyHaveAccount": "Log In",
     "dontHaveAccount": "Don't have an account yet?"
+  },
+  "error": {
+    "unAuthorized": "UnAuthorized",
+    "forbidden": "Forbidden",
+    "notFound": "Not found",
+    "invalid": "Invalid data",
+    "serverError": "Server error"
   },
   "cognitoError": {
     "UserNotFoundException": "User does not exist.",

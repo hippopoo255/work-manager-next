@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useAuthContext } from '~/services/auth'
 import { useStatus } from '~/services/status'
 import { authOperation } from '~/stores/auth'
+import { getCookieValueFromDocumentByName } from '~/utils/cookie'
 
 const useDemoUserSignIn = () => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -14,7 +15,12 @@ const useDemoUserSignIn = () => {
     await authOperation
       .testSignIn(dispatch)
       .then(() => {
-        router.push('/mypage')
+        let referrer = getCookieValueFromDocumentByName('referrer')
+        if (referrer) {
+          document.cookie = `referrer=; max-age=0`
+          referrer = decodeURIComponent(referrer)
+        }
+        router.push(referrer ?? '/mypage')
       })
       .catch((err) => {
         updateStatus({

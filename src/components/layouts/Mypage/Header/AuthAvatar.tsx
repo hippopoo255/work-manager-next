@@ -12,10 +12,7 @@ const AuthAvatar = ({ user }: Props) => {
   const [open, setOpen] = useState(false)
 
   const iconPath = useMemo(
-    () =>
-      (user.file_path ?? '') === ''
-        ? undefined
-        : `${STORAGE_URL}/${user.file_path}`,
+    () => `${STORAGE_URL}${user.file_path ?? '/assets/human.svg'}`,
     [user]
   )
   const handleClick = () => {

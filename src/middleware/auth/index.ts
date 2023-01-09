@@ -14,9 +14,18 @@ import {
   isRequiredUnOrganizedPaths,
 } from '~/utils'
 
+const redirectSignInPage = (referrerPath: string, signin: string) => {
+  const response = NextResponse.redirect(signin)
+  response.cookies.set({
+    name: 'referrer',
+    value: referrerPath,
+  })
+  return response
+}
+
 const handleRouteWithoutToken = (url: NextURL, signin: string) => {
   if (isRequiredAuthenticatedPaths(url.pathname)) {
-    return NextResponse.redirect(signin)
+    return redirectSignInPage(url.pathname, signin)
   }
   return NextResponse.next()
 }
@@ -59,7 +68,7 @@ export async function authMiddleware(
 
     // トークンリフレッシュに失敗したら、サインインからやり直し
     if (newTokens === null) {
-      return NextResponse.redirect(signin)
+      return redirectSignInPage(url.pathname, signin)
     }
 
     response = await setRefreshedCognitoTokenToCookie(

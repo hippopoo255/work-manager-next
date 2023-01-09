@@ -2,7 +2,7 @@ import clsx from 'clsx'
 import Link from 'next/link'
 import React from 'react'
 import { IconType } from 'react-icons'
-import { useLink } from '~/services/common'
+import { useLink } from '~/services/events/link'
 
 type Props = {
   Icon?: IconType

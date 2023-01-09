@@ -26,7 +26,7 @@ const AccountVerification: NextPageWithLayout = () => {
 export default AccountVerification
 
 AccountVerification.getLayout = (page) => (
-  <Layout title={i18n?.t('head.title.accountVerification')}>{page}</Layout>
+  <Layout title={i18n?.t('title.accountVerification')}>{page}</Layout>
 )
 
 export const getStaticProps = async ({

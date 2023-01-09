@@ -19,6 +19,7 @@ const BorderButton = (props: Props) => {
         [`--${props.size}`]: props.size ?? false,
         [`--${props.color}`]: props.color ?? false,
         [`--flat`]: props.flat ?? false,
+        [`--round`]: props.round ?? false,
       })}
       onClick={props.onClick}
       onMouseDown={handleMouseDown}

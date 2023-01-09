@@ -1,11 +1,11 @@
 import { ComponentMeta, ComponentStoryObj } from '@storybook/react'
-import { Button } from '~/components/elements/Button'
+import { BorderButton } from '~/components/elements/Button'
 import { withLayout } from '~/stories/init/withLayout'
-export default { component: Button } as ComponentMeta<typeof Button>
+export default { component: BorderButton } as ComponentMeta<typeof BorderButton>
 
-export const Default: ComponentStoryObj<typeof Button> = {
+export const Default: ComponentStoryObj<typeof BorderButton> = {
   args: {
-    text: 'Button',
+    text: 'BorderButton',
   },
   argTypes: {
     size: {

@@ -5,4 +5,7 @@ export const uri = {
   minutes: {
     index: '/minutes',
   },
+  task: {
+    index: '/author/task',
+  },
 }

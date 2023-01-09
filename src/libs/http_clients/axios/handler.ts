@@ -1,4 +1,5 @@
 import { AxiosResponse, AxiosError } from 'axios'
+import { i18n, I18n } from 'next-i18next'
 
 /**
  * 成功レスポンスのハンドリング
@@ -21,25 +22,32 @@ export const defaultSuccessHandler = <T = any, D = any>(
 export const defaultErrorHandler = <T = any, D = any>(
   error: AxiosError<T, D>
 ) => {
+  let message = ''
   switch (error.response?.status) {
     case 401:
-      // なにかする
+      message = i18n?.t('error.unAuthorized') ?? 'unAuthorized'
       break
     case 403:
-      // なにかする
+      message = i18n?.t('error.forbidden') ?? 'forbidden'
       break
     case 404:
-      // なにかする
+      message = i18n?.t('error.notFound') ?? 'No data was found'
       break
     case 422:
-      // なにかする
+      message = i18n?.t('error.invalid') ?? 'Invalid data'
       break
     case 500:
-      // なにかする
+      message = i18n?.t('error.serverError') ?? 'Server error'
       break
     default:
-      // なにかする
+      message = i18n?.t('error.serverError') ?? 'Server error'
       break
   }
-  return Promise.reject(error.response)
+  return Promise.reject({
+    ...error.response,
+    data: {
+      ...error.response?.data,
+      message,
+    },
+  })
 }
