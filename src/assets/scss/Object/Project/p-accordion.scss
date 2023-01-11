@@ -1,0 +1,28 @@
+@use "../../Foundation/function/accessibility";
+
+.p-accordion {
+  .p-accordion__body {
+    @apply duration-basis;
+
+    overflow-y: hidden;
+    transition-property: transform;
+    transform-origin: center top;
+  }
+
+  .p-accordion__trigger .u-toggle {
+    @apply duration-basis;
+
+    transition-property: transform;
+  }
+
+  &.--hidden {
+    .p-accordion__body {
+      height: 0;
+      transform: scale3d(1, 0, 0);
+    }
+
+    .p-accordion__trigger .u-toggle {
+      transform: rotate3d(0, 0, 1, -180deg);
+    }
+  }
+}
