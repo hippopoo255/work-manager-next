@@ -24,16 +24,13 @@ const SideMenu = ({ className, onToggle }: Props) => {
         </Link>
       </div>
       <div className="l-sidemenu__body">
-        <section className="l-sidemenu__section">
-          <nav className="l-sidemenu__nav">
-            <MenuList menu={menus.primary} onToggle={onToggle} />
-          </nav>
-        </section>
-        <section className="l-sidemenu__section">
-          <nav className="l-sidemenu__nav">
-            <MenuList menu={menus.secondary} onToggle={onToggle} />
-          </nav>
-        </section>
+        {(Object.keys(menus) as (keyof typeof menus)[]).map((k) => (
+          <section className="l-sidemenu__section" key={`menus_${k}`}>
+            <nav className="l-sidemenu__nav">
+              <MenuList menu={menus[k]} onToggle={onToggle} />
+            </nav>
+          </section>
+        ))}
         <section className="l-sidemenu__section --bottom">
           <ThemeToggle />
         </section>

@@ -10,7 +10,7 @@ export type SideMenu = Array<{
   children?: SideMenu
 }>
 
-type TKey = 'primary' | 'secondary'
+export type TKey = 'primary' | 'secondary'
 
 export const sideMenus: (t: TFunction) => { [k in TKey]: SideMenu } = (
   t: TFunction

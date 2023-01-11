@@ -1,6 +1,5 @@
-import React from 'react'
-import { IoIosArrowDown } from 'react-icons/io'
 import MenuRow from './MenuRow'
+import { Accordion } from '~/components/elements/Accordion'
 import { SideMenu } from '~/config/sideMenu'
 
 type Props = {
@@ -10,44 +9,42 @@ type Props = {
 
 const MenuList = ({ menu, onToggle }: Props) => {
   return (
-    <ul className="p-menu-list">
+    <div className="p-menu-list">
       {menu.map((item, i) => (
-        <li key={`menu_${i}`} className="p-menu-list__item">
+        <div key={`menu_${i}`} className="p-menu-list__row">
           {item.children === undefined ? (
             <MenuRow
               label={item.label}
               Icon={item.icon}
               path={item.path}
-              onToggle={onToggle}
+              onClick={onToggle}
             />
           ) : (
-            <details className="p-menu-list__details">
-              <summary className="p-menu-list__summary">
-                <MenuRow label={item.label} Icon={item.icon} />
-                <IoIosArrowDown
-                  size={16}
-                  color="current"
-                  className="p-menu-list__summary-icon"
-                />
-              </summary>
-              <ul className="p-menu-list__children">
-                {item.children.map((child, j) => (
-                  <li key={`item_${j}`} className="l-sidemenu__child">
-                    <MenuRow
-                      label={child.label}
-                      Icon={child.icon}
-                      path={child.path}
-                      onToggle={onToggle}
-                      child
-                    />
-                  </li>
-                ))}
-              </ul>
-            </details>
+            <Accordion
+              role="group"
+              areaControls={`menu_${i}`}
+              controller={
+                <div className="p-menu-list__row">
+                  <MenuRow label={item.label} Icon={item.icon} />
+                </div>
+              }
+            >
+              {item.children.map((child, j) => (
+                <div key={`item_${j}`} className="p-menu-list__row">
+                  <MenuRow
+                    label={child.label}
+                    Icon={child.icon}
+                    path={child.path}
+                    onClick={onToggle}
+                    child
+                  />
+                </div>
+              ))}
+            </Accordion>
           )}
-        </li>
+        </div>
       ))}
-    </ul>
+    </div>
   )
 }
 

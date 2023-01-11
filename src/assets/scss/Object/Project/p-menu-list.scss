@@ -1,29 +1,2 @@
 @use "../../Foundation/function/accessibility" as *;
 @use "../../Foundation/variable" as *;
-
-.p-menu-list {
-  .p-menu-list__item {
-
-  }
-
-  .p-menu-list__summary {
-    @apply relative flex justify-between items-center cursor-pointer;
-
-    padding: px(12) px($fontSizeBasis);
-    border-color: transparent;
-    border-style: solid;
-    border-width: 0 4px;
-  }
-
-  .p-menu-list__details {
-    transition-property: all;
-
-    &[open] {
-      .p-menu-list__summary {
-        .p-menu-list__summary-icon {
-          transform: rotate3d(0, 0, 1, 180deg);
-        }
-      }
-    }
-  }
-}
